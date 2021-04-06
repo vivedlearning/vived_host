@@ -15,7 +15,7 @@ function mockAssetLoader(assetURL:string):Promise<string> {
   })
 }
 
-export function makeUseCase(): BOUNDARY.AssetsUseCase {
+export function makeUseCase(): BOUNDARY.AssetUC {
   return new DefaultAssetUseCase(mockAssetLoader);
 }
 

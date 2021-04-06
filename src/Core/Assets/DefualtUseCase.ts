@@ -13,7 +13,7 @@ import {
   convertAsset_EntityToBoundary,
 } from "./utilities";
 
-export class DefaultAssetUseCase implements BOUNDARY.AssetsUseCase {
+export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
   private assetLookup = new Map<string, ENTITIES.Asset>();
   
   private assetFetcher: (url: string) => Promise<string>;

@@ -1,4 +1,4 @@
-export interface AssetsUseCase {
+export interface AssetUC {
   getAllAssets(): Asset[];
   getAsset(assetID: string): Asset | undefined;
   addAsset(assetData: Asset): void;
