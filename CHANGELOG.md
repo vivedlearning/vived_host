@@ -6,4 +6,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2021-04-06
 ### Added
-- Initial setup
+- Device Preview system
