@@ -1,5 +1,7 @@
 import { DevicePreviewUC, OnSelectedDeviceChange } from "../Core/DevicePreview";
 
+export interface DeviceInfo { id: string, name: string; x: number; y: number};
+
 export class DevicePreviewPM implements OnSelectedDeviceChange {
   public get useDevicePreview() {
     return this._useDevicePreview;
@@ -21,10 +23,7 @@ export class DevicePreviewPM implements OnSelectedDeviceChange {
   }
   private _selectedDeviceY = 0;
 
-  public get devices() {
-    return [...this._devices];
-  }
-  private _devices: { id: string, name: string; x: number; y: number }[] = [];
+  public devices = new Map<string, DeviceInfo[]>();
 
   public get selectedID() {
     return this._selectedID;
@@ -45,11 +44,19 @@ export class DevicePreviewPM implements OnSelectedDeviceChange {
       this._selectedID = selectedDevice.id;
     }
 
-    const deviceList = deviceUC.getDeviceList();
-    this._devices = deviceList.map((device) => {
-      const { id, name, x, y } = device;
-      return { id, name, x, y };
-    });
+    const categories = deviceUC.getCategoryList();
+    categories.forEach(category => {
+      const devicesInCategory = deviceUC.getDevicesInCategory(category);
+      const deviceList: DeviceInfo[] = devicesInCategory.map((device) => {
+        const { id, name, x, y } = device;
+        return { id, name, x, y };
+      });
+
+      if(deviceList.length > 0)
+      {
+        this.devices.set(category, deviceList);
+      }
+    })
 
     this.deviceUC = deviceUC;
     this.updateView = updateView;

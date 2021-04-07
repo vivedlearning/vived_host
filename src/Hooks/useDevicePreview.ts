@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { DevicePreviewUC } from "../Core/DevicePreview";
-import { DevicePreviewPM } from "../PresentationModels/DevicePreviewPM";
+import { useEffect, useRef, useState } from 'react';
+import { DevicePreviewUC } from '../Core/DevicePreview';
+import { DeviceInfo, DevicePreviewPM } from '../PresentationModels/DevicePreviewPM';
 
 export function useDevicePreview(devicePreviewUC: DevicePreviewUC) {
   const pm = useRef<DevicePreviewPM>();
   const [showPreview, setShowPreview] = useState(false);
-  const [previewName, setPreviewName] = useState("");
+  const [previewName, setPreviewName] = useState('');
   const [previewX, setPreviewX] = useState(0);
   const [previewY, setPreviewY] = useState(0);
-  const [previewID, setSelectedPreviewID] = useState("");
-  const [deviceList, setDeviceList] = useState<
-    { id: string, name: string; x: number; y: number }[]
-  >([]);
+  const [previewID, setSelectedPreviewID] = useState('');
+  const [deviceCategoryList, setDeviceCategoryList] = useState(new Map<string, DeviceInfo[]>());
 
   function updateView() {
     if (pm.current) {
@@ -19,7 +17,7 @@ export function useDevicePreview(devicePreviewUC: DevicePreviewUC) {
       setPreviewName(pm.current.selectedDeviceName);
       setPreviewX(pm.current.selectedDeviceX);
       setPreviewY(pm.current.selectedDeviceY);
-      setDeviceList([...pm.current.devices]);
+      setDeviceCategoryList(pm.current.devices);
       setSelectedPreviewID(pm.current.selectedID);
     }
   }
@@ -39,7 +37,7 @@ export function useDevicePreview(devicePreviewUC: DevicePreviewUC) {
     previewName,
     previewX,
     previewY,
-    deviceList,
+    deviceCategoryList,
     previewID,
   };
 }

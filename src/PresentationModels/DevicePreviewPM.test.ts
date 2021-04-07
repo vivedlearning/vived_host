@@ -17,18 +17,24 @@ function makeTestRig() {
       name: "device1",
       x: 10,
       y: 20,
+      pixelDensity: 3,
+      category: "A"
     },
     {
       id: "device2",
       name: "device2",
       x: 20,
       y: 30,
+      pixelDensity: 3,
+      category: "A"
     },
     {
       id: "device3",
       name: "device3",
       x: 30,
       y: 40,
+      pixelDensity: 3,
+      category: "B"
     },
   ]);
 
@@ -49,10 +55,12 @@ test("PM Intializes correctly", () => {
   expect(pm.selectedDeviceY).toEqual(30);
   expect(pm.useDevicePreview).toEqual(true);
   expect(pm.selectedID).toEqual("device2");
-  expect(pm.devices).toHaveLength(3);
-  expect(pm.devices[0].name).toEqual("device1");
-  expect(pm.devices[1].name).toEqual("device2");
-  expect(pm.devices[2].name).toEqual("device3");
+
+  expect(pm.devices.has("A")).toEqual(true);
+  expect(pm.devices.get("A")).toHaveLength(2);
+
+  expect(pm.devices.has("B")).toEqual(true);
+  expect(pm.devices.get("B")).toHaveLength(1);
 });
 
 test("View and PM Update when the use case changes", ()=>{
