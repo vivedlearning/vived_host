@@ -21,6 +21,8 @@ function makeTestRig(deviceCount: number) {
       name: `Device ${index + 1}`,
       x: (index + 1) * 10,
       y: (index + 1) * 10,
+      pixelDensity: 2,
+      category: `Category ${index + 1}`
     });
   }
   useCase.setDeviceList(devices);
@@ -47,18 +49,24 @@ test('Adding a list of devices', () => {
       name: 'device1',
       x: 10,
       y: 20,
+      pixelDensity: 2,
+      category: `Category`
     },
     {
       id: 'device2',
       name: 'device2',
       x: 20,
       y: 30,
+      pixelDensity: 2,
+      category: `Category`
     },
     {
       id: 'device3',
       name: 'device3',
       x: 30,
       y: 40,
+      pixelDensity: 2,
+      category: `Category`
     },
   ];
 
@@ -130,14 +138,59 @@ test('Adding a duplicate device should throw an error', () => {
       name: 'device1',
       x: 10,
       y: 20,
+      pixelDensity: 2,
+      category: `Category`
     },
     {
       id: 'device1',
       name: 'device2',
       x: 20,
       y: 30,
+      pixelDensity: 2,
+      category: `Category`
     },
   ];
 
   expect(() => useCase.setDeviceList(devices)).toThrowError(DuplicateDeviceIDError);
 });
+
+test("Get Category List", ()=>{
+  const { useCase } = makeTestRig(3);
+  expect(useCase.getCategoryList()).toHaveLength(3);
+})
+
+test("Get devices for a category", ()=>{
+  const { useCase } = makeTestRig(0);
+
+  const devices: DeviceInfo[] = [
+    {
+      id: 'device1',
+      name: 'device1',
+      x: 10,
+      y: 20,
+      pixelDensity: 2,
+      category: `Category A`
+    },
+    {
+      id: 'device2',
+      name: 'device2',
+      x: 20,
+      y: 30,
+      pixelDensity: 2,
+      category: `Category B`
+    },
+    {
+      id: 'device3',
+      name: 'device3',
+      x: 30,
+      y: 40,
+      pixelDensity: 2,
+      category: `Category B`
+    },
+  ];
+
+  useCase.setDeviceList(devices);
+
+  expect(useCase.getDevicesInCategory("Category A")).toHaveLength(1);
+  expect(useCase.getDevicesInCategory("Category B")).toHaveLength(2);
+})
