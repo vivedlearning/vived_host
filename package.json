@@ -1,5 +1,5 @@
 {
-  "name": "vivedlearning_host",
+  "name": "@vived/vivedlearning_host",
   "version": "1.0.0",
   "description": "Public Host package for the VIVED Learning App system",
   "main": "lib/index.js",
@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
-    "prepublishOnly": "npm testOnce && npm run lint",
+    "prepublishOnly": "npm run testOnce && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
@@ -41,5 +41,8 @@
   "dependencies": {
     "@types/react": "^17.0.5",
     "react": "^17.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
