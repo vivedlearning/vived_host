@@ -1,43 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
-import { DevicePreviewUC } from '../Core/DevicePreview';
-import { DeviceInfo, DevicePreviewPM } from '../PresentationModels/DevicePreviewPM';
+import { DevicePreviewListUC } from '../Core/DevicePreviewList';
+import {
+  DeviceInfo,
+  DevicePreviewListPM,
+  DevicePreviewListVM,
+} from '../Interface/PresentationModels/DevicePreviewListPM';
 
-export function useDevicePreview(devicePreviewUC: DevicePreviewUC) {
-  const pm = useRef<DevicePreviewPM>();
-  const [showPreview, setShowPreview] = useState(false);
-  const [previewName, setPreviewName] = useState('');
-  const [previewX, setPreviewX] = useState(0);
-  const [previewY, setPreviewY] = useState(0);
-  const [previewID, setSelectedPreviewID] = useState('');
-  const [deviceCategoryList, setDeviceCategoryList] = useState(new Map<string, DeviceInfo[]>());
-
-  function updateView() {
-    if (pm.current) {
-      setShowPreview(pm.current.useDevicePreview);
-      setPreviewName(pm.current.selectedDeviceName);
-      setPreviewX(pm.current.selectedDeviceX);
-      setPreviewY(pm.current.selectedDeviceY);
-      setDeviceCategoryList(pm.current.devices);
-      setSelectedPreviewID(pm.current.selectedID);
-    }
-  }
+export function useDevicePreview(devicePreviewUC: DevicePreviewListUC) {
+  const pm = useRef<DevicePreviewListPM>();
+  const [viewModel, setViewModel] = useState<DevicePreviewListVM>({
+    useDevicePreview: false,
+    selectedDeviceID: '',
+    selectedDeviceName: '',
+    selectedDeviceX: 0,
+    selectedDeviceY: 0,
+    devices: new Map<string, DeviceInfo[]>(),
+  });
 
   useEffect(() => {
     if (!pm.current) {
-      pm.current = new DevicePreviewPM(devicePreviewUC, updateView);
-      updateView();
+      pm.current = new DevicePreviewListPM(devicePreviewUC, (vm) => setViewModel(vm));
     }
     return () => {
       pm.current?.dispose();
     };
   }, [devicePreviewUC]);
 
-  return {
-    showPreview,
-    previewName,
-    previewX,
-    previewY,
-    deviceCategoryList,
-    previewID,
-  };
+  return viewModel;
 }

@@ -1,14 +1,16 @@
+import { AssetUCImp } from "./UseCase_Imp";
+
 export interface AssetUC {
-  getAllAssets(): Asset[];
-  getAsset(assetID: string): Asset | undefined;
-  addAsset(assetData: Asset): void;
-  addManyAssets(assetDatas: Asset[]): void;
-  getAssetsByType(type: AssetType, withTags?:string[]): Asset[];
-  getLatestVersionNumber(assetID: string, includeDrafts?:boolean): number | undefined;
-  isFileLoaded(assetID: string, version?:number): boolean;
-  loadFile(assetID: string, version?:number): Promise<void>;
-  getFileBlobURL(assetID: string, version?:number): string;
-  releaseAllBlobs(): void;
+  getAllAssets: () => Asset[];
+  getAsset: (assetID: string) => Asset | undefined;
+  addAsset: (assetData: Asset) => void;
+  addManyAssets: (assetDatas: Asset[]) => void;
+  getAssetsByType: (type: AssetType, withTags?:string[]) => Asset[];
+  getLatestVersionNumber: (assetID: string, includeDrafts?:boolean) => number | undefined;
+  isFileLoaded: (assetID: string, version?:number) => boolean;
+  loadFile: (assetID: string, version?:number) => Promise<void>;
+  getFileBlobURL: (assetID: string, version?:number) => string;
+  releaseAllBlobs: () => void;
 }
 
 export interface Asset {
@@ -38,3 +40,7 @@ export interface AssetAppData {
 
 export type Status = "DRAFT" | "PUBLISHED";
 export type AssetType = "GLB" | "IMAGE";
+
+export function makeAssetUC(assetFetcher: (url: string) => Promise<string>): AssetUC {
+  return new AssetUCImp(assetFetcher);
+}

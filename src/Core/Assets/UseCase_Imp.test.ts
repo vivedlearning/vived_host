@@ -4,7 +4,7 @@ import {
   DuplicateAssetID,
   EmptyAssetIDError,
   InvalidAssetID,
-} from "./errors";
+} from "./Errors";
 import { makeUseCase, mockBoundaryAsset, mockBoundaryAssetFile } from "./mocks";
 
 describe("Testing Asset Core", () => {

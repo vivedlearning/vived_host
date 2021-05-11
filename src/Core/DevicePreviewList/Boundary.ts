@@ -2,7 +2,7 @@ export interface OnSelectedDeviceChange {
   onSelectedDeviceChange: () => void;
 }
 
-export interface DevicePreviewUC {
+export interface DevicePreviewListUC {
   setDeviceList(devices: DeviceInfo[]): void;
   setSelectedDevice(id: string): void;
   getDeviceList(): DeviceInfo[];

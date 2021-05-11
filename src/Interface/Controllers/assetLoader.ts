@@ -1,5 +1,3 @@
-import { AssetUC, DefaultAssetUseCase } from '../Core';
-
 export function assetLoader(url: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     fetch(url)
@@ -10,8 +8,4 @@ export function assetLoader(url: string): Promise<string> {
       })
       .catch((e) => reject(e));
   });
-}
-
-export function makeAssetUC(): AssetUC {
-  return new DefaultAssetUseCase(assetLoader);
 }

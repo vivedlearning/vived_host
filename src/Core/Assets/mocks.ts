@@ -1,6 +1,6 @@
-import * as BOUNDARY from "./boundary";
-import { DefaultAssetUseCase } from "./DefualtUseCase";
-import * as ENTITIES from "./entities";
+import * as BOUNDARY from "./Boundary";
+import { AssetUCImp } from "./UseCase_Imp";
+import * as ENTITIES from "./Entities";
 
 
 
@@ -16,7 +16,7 @@ function mockAssetLoader(assetURL:string):Promise<string> {
 }
 
 export function makeUseCase(): BOUNDARY.AssetUC {
-  return new DefaultAssetUseCase(mockAssetLoader);
+  return new AssetUCImp(mockAssetLoader);
 }
 
 export function mockEntityAssetApp(id: string): ENTITIES.AssetAppData {

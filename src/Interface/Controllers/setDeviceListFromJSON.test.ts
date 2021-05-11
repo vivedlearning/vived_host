@@ -1,10 +1,8 @@
-import { DevicePreviewUC, DevicePreviewUCImp } from "../Core/DevicePreview";
+import { DevicePreviewListUC, makeDevicePreviewListUC } from "../../Core/DevicePreviewList";
 import {
-  clearSelectedDevicePreview,
-  selectDevicePreviewByID,
   setDeviceListFromJSON,
   DeviceList
-} from "./DevicePreview";
+} from "./setDeviceListFromJSON";
 
 const mockDeviceList:DeviceList = {
   "devices": [
@@ -23,8 +21,7 @@ const mockDeviceList:DeviceList = {
 }
 
 function makeUseCase() {
-  const useCase: DevicePreviewUC = new DevicePreviewUCImp();
-
+  const useCase = makeDevicePreviewListUC()
   useCase.setDeviceList([
     {
       id: 'device1',
@@ -56,22 +53,8 @@ function makeUseCase() {
 }
 
 test("Loading JSON", ()=> {
-  const useCase: DevicePreviewUC = new DevicePreviewUCImp();
+  const useCase = makeDevicePreviewListUC();
   setDeviceListFromJSON(mockDeviceList, useCase);
   expect(useCase.getDeviceList()).toHaveLength(11)
 })
 
-test("Selecting by index", () => {
-  const uc = makeUseCase();
-
-  selectDevicePreviewByID("device2", uc);
-  expect(uc.getSelectedDevice()?.id).toEqual("device2");
-});
-
-test("Clearing the selection", () => {
-  const uc = makeUseCase();
-  uc.setSelectedDevice("device2");
-
-  clearSelectedDevicePreview(uc);
-  expect(uc.getSelectedDevice()).toBeUndefined();
-});

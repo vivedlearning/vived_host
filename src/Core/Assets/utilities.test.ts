@@ -13,7 +13,7 @@ import {
   convertAssetFile_EntityToBoundary,
   convertAsset_BoundaryToEntity,
   convertAsset_EntityToBoundary,
-} from "./utilities";
+} from "./Utilities";
 
 test("Converting from an Entry to Data: check base data", () => {
   const entity = mockEntityAsset(

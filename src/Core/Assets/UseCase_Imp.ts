@@ -1,19 +1,19 @@
-import * as BOUNDARY from "./boundary";
-import * as ENTITIES from "./entities";
+import * as BOUNDARY from "./Boundary";
+import * as ENTITIES from "./Entities";
 import {
   AppFileVersionError,
   AssetHasNotBeenLoadedError,
   DuplicateAssetID,
   EmptyAssetIDError,
   InvalidAssetID,
-} from "./errors";
+} from "./Errors";
 import {
   convertAssetFile_EntityToBoundary,
   convertAsset_BoundaryToEntity,
   convertAsset_EntityToBoundary,
-} from "./utilities";
+} from "./Utilities";
 
-export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
+export class AssetUCImp implements BOUNDARY.AssetUC {
   private assetLookup = new Map<string, ENTITIES.Asset>();
   
   private assetFetcher: (url: string) => Promise<string>;
@@ -22,7 +22,7 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     this.assetFetcher = assetFetcher;
   }
 
-  releaseAllBlobs(): void {
+  releaseAllBlobs = (): void => {
     this.assetLookup.forEach((asset, id)=>{
       asset.files.forEach((file,i)=>{
         if(file.blobUrl)
@@ -36,7 +36,7 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     })
   }
 
-  getFileBlobURL(assetID: string, version?: number): string {
+  getFileBlobURL = (assetID: string, version?: number): string => {
     const assetFile = this.getAssetFile(assetID, version);
 
     if(!assetFile)
@@ -52,12 +52,12 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     return assetFile?.blobUrl ?? "";
   }
 
-  isFileLoaded(assetID: string, version?: number): boolean {
+  isFileLoaded = (assetID: string, version?: number): boolean => {
     const assetFile = this.getAssetFile(assetID, version);
     return assetFile?.blobUrl ? true : false;
   }
 
-  loadFile(assetID: string, version?: number): Promise<void> {
+  loadFile = (assetID: string, version?: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       const assetFile = this.getAssetFile(assetID, version);
 
@@ -83,7 +83,7 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     });
   }
 
-  getAllAssets(): BOUNDARY.Asset[] {
+  getAllAssets = (): BOUNDARY.Asset[] => {
     const assetDatas: BOUNDARY.Asset[] = [];
     this.assetLookup.forEach((asset) => {
       assetDatas.push(convertAsset_EntityToBoundary(asset));
@@ -92,10 +92,10 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     return assetDatas;
   }
 
-  getAssetFileVerion(
+  getAssetFileVerion = (
     assetID: string,
     version: number
-  ): BOUNDARY.AssetFile | undefined {
+  ): BOUNDARY.AssetFile | undefined => {
     const entity = this.getEntity(assetID);
 
     if (!entity) {
@@ -116,10 +116,10 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     }
   }
 
-  getLatestVersionNumber(
+  getLatestVersionNumber = (
     assetID: string,
     includeDrafts: boolean = false
-  ): number | undefined {
+  ): number | undefined => {
     const entity = this.getEntity(assetID);
 
     if (!entity) {
@@ -142,10 +142,10 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     }
   }
 
-  getAssetsByType(
+  getAssetsByType = (
     type: BOUNDARY.AssetType,
     withTags?: string[]
-  ): BOUNDARY.Asset[] {
+  ): BOUNDARY.Asset[] => {
     const assetDatas: BOUNDARY.Asset[] = [];
 
     this.assetLookup.forEach((asset) => {
@@ -159,7 +159,7 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     return assetDatas;
   }
 
-  getAsset(id: string): BOUNDARY.Asset | undefined {
+  getAsset = (id: string): BOUNDARY.Asset | undefined => {
     const entity = this.getEntity(id);
 
     if (entity) {
@@ -167,7 +167,7 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     }
   }
 
-  addAsset(assetData: BOUNDARY.Asset): void {
+  addAsset = (assetData: BOUNDARY.Asset): void => {
     if (this.assetLookup.has(assetData.id)) {
       throw new DuplicateAssetID(assetData.id);
     }
@@ -180,7 +180,7 @@ export class DefaultAssetUseCase implements BOUNDARY.AssetUC {
     this.assetLookup.set(entity.id, entity);
   }
 
-  addManyAssets(assetDatas: BOUNDARY.Asset[]): void {
+  addManyAssets = (assetDatas: BOUNDARY.Asset[]): void => {
     const newIds: string[] = [];
     assetDatas.forEach((assetData) => {
       const id = assetData.id;

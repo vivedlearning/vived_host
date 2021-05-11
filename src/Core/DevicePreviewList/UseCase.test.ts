@@ -1,5 +1,5 @@
-import { DeviceInfo, DevicePreviewUC, OnSelectedDeviceChange } from './boundary';
-import { DevicePreviewUCImp } from './DevicePreviewUCImp';
+import { DeviceInfo, DevicePreviewListUC, OnSelectedDeviceChange } from './Boundary';
+import { DevicePreviewListUCImp } from './UseCaseImp';
 import { DuplicateDeviceIDError } from './DuplicateDeviceIDError';
 import { InvalidDeviceIDError } from './InvalidDeviceIDError';
 
@@ -12,7 +12,7 @@ class MockObserver implements OnSelectedDeviceChange {
 }
 
 function makeTestRig(deviceCount: number) {
-  const useCase: DevicePreviewUC = new DevicePreviewUCImp();
+  const useCase: DevicePreviewListUC = new DevicePreviewListUCImp();
   const devices: DeviceInfo[] = [];
 
   for (let index = 0; index < deviceCount; index++) {

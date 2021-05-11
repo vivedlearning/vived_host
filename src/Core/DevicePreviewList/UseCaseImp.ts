@@ -1,9 +1,9 @@
-import * as BOUNDARY from './boundary';
+import * as BOUNDARY from './Boundary';
 import { DuplicateDeviceIDError } from './DuplicateDeviceIDError';
-import * as ENTITY from './entities';
+import * as ENTITY from './Entities';
 import { InvalidDeviceIDError } from './InvalidDeviceIDError';
 
-export class DevicePreviewUCImp implements BOUNDARY.DevicePreviewUC {
+export class DevicePreviewListUCImp implements BOUNDARY.DevicePreviewListUC {
   private selectedDevice = '';
   private devices = new Map<string, ENTITY.Device>();
   private observers: BOUNDARY.OnSelectedDeviceChange[] = [];
@@ -13,17 +13,11 @@ export class DevicePreviewUCImp implements BOUNDARY.DevicePreviewUC {
     const deviceArray = Array.from(this.devices.values());
     return deviceArray.map((d) => this.entityToBoundary(d));
   }
-
-  addObserver(observer: BOUNDARY.OnSelectedDeviceChange): void {
-    this.observers.push(observer);
+  private entityToBoundary(deviceEntity: ENTITY.Device): BOUNDARY.DeviceInfo {
+    const { id, name, x, y, pixelDensity, category } = deviceEntity;
+    return { id, name, x, y, pixelDensity, category };
   }
 
-  removeObserver(observer: BOUNDARY.OnSelectedDeviceChange): void {
-    const index = this.observers.indexOf(observer);
-    if (index >= 0) {
-      this.observers.splice(index, 1);
-    }
-  }
 
   setDeviceList(devices: BOUNDARY.DeviceInfo[]): void {
     devices.forEach((deviceInfo) => {
@@ -40,16 +34,20 @@ export class DevicePreviewUCImp implements BOUNDARY.DevicePreviewUC {
       }
     });
   }
+  private boundaryToEntity(device: BOUNDARY.DeviceInfo): ENTITY.Device {
+    const { id, name, x, y, pixelDensity, category } = device;
+    return { id, name, x, y, pixelDensity, category };
+  }
 
-  setSelectedDevice(id: string): void {
-    if (id === this.selectedDevice) return;
+  addObserver(observer: BOUNDARY.OnSelectedDeviceChange): void {
+    this.observers.push(observer);
+  }
 
-    const device = this.getDeviceByID(id);
-
-    if (!device) return;
-
-    this.selectedDevice = id;
-    this.notify();
+  removeObserver(observer: BOUNDARY.OnSelectedDeviceChange): void {
+    const index = this.observers.indexOf(observer);
+    if (index >= 0) {
+      this.observers.splice(index, 1);
+    }
   }
 
   getSelectedDevice(): BOUNDARY.DeviceInfo | undefined {
@@ -63,7 +61,27 @@ export class DevicePreviewUCImp implements BOUNDARY.DevicePreviewUC {
       return this.entityToBoundary(device);
     }
   }
+  private getDeviceByID(id: string) {
+    if (!this.devices.has(id)) {
+      throw new InvalidDeviceIDError(id);
+    }
 
+    return this.devices.get(id);
+  }
+
+  setSelectedDevice(id: string): void {
+    if (id === this.selectedDevice) return;
+
+    const device = this.getDeviceByID(id);
+
+    if (!device) return;
+
+    this.selectedDevice = id;
+    this.notify();
+  }
+  private notify() {
+    this.observers.forEach((obs) => obs.onSelectedDeviceChange());
+  }
   clearSelectedDevice(): void {
     if (this.selectedDevice) {
       this.selectedDevice = '';
@@ -74,7 +92,6 @@ export class DevicePreviewUCImp implements BOUNDARY.DevicePreviewUC {
   getCategoryList(): string[] {
     return [...this.catagories];
   }
-
   getDevicesInCategory(categoryName: string): BOUNDARY.DeviceInfo[] {
     const deviceArray = Array.from(this.devices.values());
 
@@ -88,27 +105,5 @@ export class DevicePreviewUCImp implements BOUNDARY.DevicePreviewUC {
     })
 
     return list;
-  }
-
-  private getDeviceByID(id: string) {
-    if (!this.devices.has(id)) {
-      throw new InvalidDeviceIDError(id);
-    }
-
-    return this.devices.get(id);
-  }
-
-  private entityToBoundary(deviceEntity: ENTITY.Device): BOUNDARY.DeviceInfo {
-    const { id, name, x, y, pixelDensity, category } = deviceEntity;
-    return { id, name, x, y, pixelDensity, category };
-  }
-
-  private boundaryToEntity(device: BOUNDARY.DeviceInfo): ENTITY.Device {
-    const { id, name, x, y, pixelDensity, category } = device;
-    return { id, name, x, y, pixelDensity, category };
-  }
-
-  private notify() {
-    this.observers.forEach((obs) => obs.onSelectedDeviceChange());
   }
 }

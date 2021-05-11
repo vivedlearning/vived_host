@@ -1,2 +1,2 @@
-export * from './DevicePreview';
+export * from './DevicePreviewList';
 export * from './Assets';

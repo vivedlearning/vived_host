@@ -1,5 +1,5 @@
-import * as BOUNDARY from "./boundary";
-import * as ENTITIES from "./entities";
+import * as BOUNDARY from "./Boundary";
+import * as ENTITIES from "./Entities";
 
 export function convertAsset_EntityToBoundary(
   asset: ENTITIES.Asset
@@ -13,7 +13,7 @@ export function convertAsset_EntityToBoundary(
     type,
     tags: [...tags],
     imageBlob,
-    files: files.map((file) => convertAssetFile_EntityToBoundary(file)),
+    files: files?.map((file) => convertAssetFile_EntityToBoundary(file)),
   };
 }
 
@@ -29,7 +29,7 @@ export function convertAsset_BoundaryToEntity(
     type,
     tags: [...tags],
     imageBlob,
-    files: files.map((file) => convertAssetFile_BoundarytoEntity(file)),
+    files: files?.map((file) => convertAssetFile_BoundarytoEntity(file)),
   };
 }
 
@@ -73,7 +73,7 @@ export function convertAssetFile_BoundarytoEntity(
     url,
     status,
     blobUrl,
-    appData: appData.map((data) => convertAssetAppData_BoundarytoEntity(data)),
+    appData: appData?.map((data) => convertAssetAppData_BoundarytoEntity(data)),
   };
 }
 
@@ -88,6 +88,6 @@ export function convertAssetFile_EntityToBoundary(
     url,
     status,
     blobUrl,
-    appData: appData.map((data) => convertAssetAppData_EntityToBoundary(data)),
+    appData: appData?.map((data) => convertAssetAppData_EntityToBoundary(data)),
   };
 }
