@@ -6,7 +6,7 @@ import {
   DevicePreviewListVM,
 } from '../Interface/PresentationModels/DevicePreviewListPM';
 
-export function useDevicePreview(devicePreviewUC: DevicePreviewListUC) {
+export function useDevicePreviewList(devicePreviewUC: DevicePreviewListUC) {
   const pm = useRef<DevicePreviewListPM>();
   const [viewModel, setViewModel] = useState<DevicePreviewListVM>({
     useDevicePreview: false,

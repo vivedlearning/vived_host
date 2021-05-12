@@ -1,1 +1,1 @@
-export {useDevicePreview} from "./useDevicePreview"
+export {useDevicePreviewList as useDevicePreview} from "./useDevicePreviewList"
