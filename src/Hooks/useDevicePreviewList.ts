@@ -6,7 +6,7 @@ import {
   DevicePreviewListVM,
 } from '../Interface/PresentationModels/DevicePreviewListPM';
 
-export function useDevicePreviewList(devicePreviewUC: DevicePreviewListUC) {
+export function useDevicePreviewList(devicePreviewUC: DevicePreviewListUC | undefined) {
   const pm = useRef<DevicePreviewListPM>();
   const [viewModel, setViewModel] = useState<DevicePreviewListVM>({
     useDevicePreview: false,
@@ -18,7 +18,7 @@ export function useDevicePreviewList(devicePreviewUC: DevicePreviewListUC) {
   });
 
   useEffect(() => {
-    if (!pm.current) {
+    if (devicePreviewUC && !pm.current) {
       pm.current = new DevicePreviewListPM(devicePreviewUC, (vm) => setViewModel(vm));
     }
     return () => {
