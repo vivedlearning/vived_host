@@ -10,4 +10,5 @@ export interface DispatchToAppUC {
   setDevicePreview(appID: string,x: number, y:number):void;
   startApp(appID: string, container: HTMLElement, initialState: string): void;
   transitionApp(appID: string, finalState: string, duration: number):void;
+  
 }
