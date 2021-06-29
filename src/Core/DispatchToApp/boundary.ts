@@ -2,6 +2,7 @@ import {AppPayloadVersions, GetAppPayloadVersionsRequest, Handler} from '@vived/
 
 export interface DispatchToAppUC {
   setAppHandler(appID: string, handler: Handler, payloadVersions: AppPayloadVersions): void;
+  removeAppHandler(appID: string):void;
   hasAppHandler(appID: string): boolean,
   showBabylonInspector(appID: string, show: boolean):void;
   setIsAuthoring(appID: string, isAuthoring: boolean):void;

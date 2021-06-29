@@ -64,6 +64,9 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
   hasAppHandler(appID: string): boolean {
     return this.appLookup.has(appID);
   }
+  removeAppHandler(appID: string): void {
+    this.appLookup.delete(appID);
+  }
 
   showBabylonInspector(appID: string, show: boolean): void {
     const app = this.getAppByID(appID);
@@ -218,7 +221,7 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
   }
 
   transitionApp(appID: string, finalState: string, duration: number): void {
-        const app = this.getAppByID(appID);
+    const app = this.getAppByID(appID);
     if (!app) return;
 
     const type = TRANSITION_APP;

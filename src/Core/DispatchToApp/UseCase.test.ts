@@ -291,3 +291,14 @@ test('An unsupported version of device preview playload should throw an error', 
 
   expect(() => uc.transitionApp('app1', 'final state', 7)).toThrowError(UnsupportedPayloadVersion);
 });
+
+test("Removing an app handler", ()=>{
+  const {uc, handler, payloadVersions} = makeTestRig();
+  uc.setAppHandler('app1', handler, payloadVersions);
+
+  expect(uc.hasAppHandler("app1")).toEqual(true);
+  
+  uc.removeAppHandler("app1");
+
+  expect(uc.hasAppHandler("app1")).toEqual(false);
+})
