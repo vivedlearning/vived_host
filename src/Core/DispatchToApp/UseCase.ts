@@ -4,8 +4,10 @@ import {
   DISPOSE_APP,
   Handler,
   Request,
+  SetAppStateRequest,
   SetDevicePreviewRequest,
   SetIsAuthoringRequest,
+  SET_APP_STATE,
   SET_DEVICE_PREVIEW,
   SET_IS_AUTHORING,
   ShowBabylonInspectorRequest,
@@ -14,8 +16,6 @@ import {
   START_APP,
   StopAppRequest,
   STOP_APP,
-  TransitionAppRequest,
-  TRANSITION_APP,
 } from '@vived/app-host-boundary';
 import { DispatchToAppUC } from './boundary';
 import { DispatchToAppEntity } from './Entity';
@@ -53,8 +53,8 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
       app.startAppPayloadVersion = payloadVersions.startApp;
     }
 
-    if (payloadVersions.transitionApp) {
-      app.transitionAppPayloadVersion = payloadVersions.transitionApp;
+    if (payloadVersions.setState) {
+      app.setAppStatePayloadVersion = payloadVersions.setState;
     }
 
     // This is where we will add support for future payloads
@@ -193,7 +193,7 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     }
   }
 
-  startApp(appID: string, container: HTMLElement, initialState: string): void {
+  startApp(appID: string, container: HTMLElement): void {
     const app = this.getAppByID(appID);
     if (!app) return;
 
@@ -209,40 +209,56 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
         version: 1,
         payload: {
           container,
-          initialState,
+          initialState: ""
+        },
+      };
+      this.dispatch(app, request);
+    } else if (payloadVersion === 2) {
+      const request: StartAppRequst = {
+        type,
+        version: 2,
+        payload: {
+          container
         },
       };
       this.dispatch(app, request);
     }
-    // This is where we will add support for future versions of the payload
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
   }
 
-  transitionApp(appID: string, finalState: string, duration: number): void {
+  setAppState(appID: string, finalState: string, duration?: number): void {
     const app = this.getAppByID(appID);
     if (!app) return;
 
-    const type = TRANSITION_APP;
-    const payloadVersion = app.transitionAppPayloadVersion;
+    const type = SET_APP_STATE;
+    const payloadVersion = app.setAppStatePayloadVersion;
     if (!payloadVersion) {
       throw new NoPayloadVersionSpecified(appID, type);
     }
 
     if (payloadVersion === 1) {
-      const request: TransitionAppRequest = {
+      const request: SetAppStateRequest = {
         type,
         version: 1,
+        payload: {
+          finalState,
+          duration: duration ?? 0,
+        },
+      };
+      this.dispatch(app, request);
+    } else if (payloadVersion === 2) {
+      const request: SetAppStateRequest = {
+        type,
+        version: 2,
         payload: {
           finalState,
           duration,
         },
       };
       this.dispatch(app, request);
-    }
-    // This is where we will add support for future versions of the payload
-    else {
+    } else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
   }

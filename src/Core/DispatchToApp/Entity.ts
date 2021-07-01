@@ -6,6 +6,6 @@ export interface DispatchToAppEntity {
   stopAppPayloadVersion?: number,
   setDevicePreviewPayloadVersion?:number,
   startAppPayloadVersion?: number
-  transitionAppPayloadVersion?:number
+  setAppStatePayloadVersion?:number
   getPayloadVersionsVersion?:number
 }

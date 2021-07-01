@@ -9,7 +9,6 @@ export interface DispatchToAppUC {
   disposeApp(appID: string): void;
   stopApp(appID: string): void;
   setDevicePreview(appID: string,x: number, y:number):void;
-  startApp(appID: string, container: HTMLElement, initialState: string): void;
-  transitionApp(appID: string, finalState: string, duration: number):void;
-  
+  startApp(appID: string, container: HTMLElement): void;
+  setAppState(appID: string, finalState: string, duration?: number):void;
 }

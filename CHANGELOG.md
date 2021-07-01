@@ -3,7 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
+## [2.3.0]
+### Added
+- Version 2 support for starting an app
+- Version 2 support for setting an app state
+### Changed
+- Transition app was renamed to Set App State
 ## [2.2.0]
 ### - Added
 - Use case and support for communicating with the apps
