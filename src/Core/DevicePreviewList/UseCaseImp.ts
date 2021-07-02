@@ -9,7 +9,7 @@ export class DevicePreviewListUCImp implements BOUNDARY.DevicePreviewListUC {
   private observers: BOUNDARY.OnSelectedDeviceChange[] = [];
   private catagories: string[] = [];
 
-  getDeviceList(): BOUNDARY.DeviceInfo[] {
+  getDeviceList = (): BOUNDARY.DeviceInfo[] => {
     const deviceArray = Array.from(this.devices.values());
     return deviceArray.map((d) => this.entityToBoundary(d));
   }
@@ -19,7 +19,7 @@ export class DevicePreviewListUCImp implements BOUNDARY.DevicePreviewListUC {
   }
 
 
-  setDeviceList(devices: BOUNDARY.DeviceInfo[]): void {
+  setDeviceList = (devices: BOUNDARY.DeviceInfo[]): void => {
     devices.forEach((deviceInfo) => {
       const device = this.boundaryToEntity(deviceInfo);
 
@@ -39,18 +39,18 @@ export class DevicePreviewListUCImp implements BOUNDARY.DevicePreviewListUC {
     return { id, name, x, y, pixelDensity, category };
   }
 
-  addObserver(observer: BOUNDARY.OnSelectedDeviceChange): void {
+  addObserver = (observer: BOUNDARY.OnSelectedDeviceChange): void => {
     this.observers.push(observer);
   }
 
-  removeObserver(observer: BOUNDARY.OnSelectedDeviceChange): void {
+  removeObserver = (observer: BOUNDARY.OnSelectedDeviceChange): void => {
     const index = this.observers.indexOf(observer);
     if (index >= 0) {
       this.observers.splice(index, 1);
     }
   }
 
-  getSelectedDevice(): BOUNDARY.DeviceInfo | undefined {
+  getSelectedDevice = (): BOUNDARY.DeviceInfo | undefined => {
     if (!this.selectedDevice) {
       return undefined;
     }
@@ -69,7 +69,7 @@ export class DevicePreviewListUCImp implements BOUNDARY.DevicePreviewListUC {
     return this.devices.get(id);
   }
 
-  setSelectedDevice(id: string): void {
+  setSelectedDevice = (id: string): void => {
     if (id === this.selectedDevice) return;
 
     const device = this.getDeviceByID(id);
@@ -82,17 +82,17 @@ export class DevicePreviewListUCImp implements BOUNDARY.DevicePreviewListUC {
   private notify() {
     this.observers.forEach((obs) => obs.onSelectedDeviceChange());
   }
-  clearSelectedDevice(): void {
+  clearSelectedDevice = (): void => {
     if (this.selectedDevice) {
       this.selectedDevice = '';
       this.notify();
     }
   }
 
-  getCategoryList(): string[] {
+  getCategoryList = (): string[] => {
     return [...this.catagories];
   }
-  getDevicesInCategory(categoryName: string): BOUNDARY.DeviceInfo[] {
+  getDevicesInCategory = (categoryName: string): BOUNDARY.DeviceInfo[] => {
     const deviceArray = Array.from(this.devices.values());
 
     const list: BOUNDARY.DeviceInfo[] = []
