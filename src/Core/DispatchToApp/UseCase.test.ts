@@ -122,12 +122,16 @@ test('Disposing the app', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   uc.setAppHandler('app1', handler, payloadVersions);
 
+  expect(uc.hasAppHandler("app1")).toEqual(true);
+
   uc.disposeApp('app1');
 
   expect(handler.mock.calls.length).toEqual(1);
   const request = handler.mock.calls[0][0] as DisposeAppRequest;
   expect(request.type).toEqual(DISPOSE_APP);
   expect(request.version).toEqual(1);
+
+  expect(uc.hasAppHandler("app1")).toEqual(false);
 });
 
 test('Disposing should throw an error for an unknown app', () => {
@@ -354,14 +358,3 @@ test('An unsupported version of device preview playload should throw an error', 
 
   expect(() => uc.setAppState('app1', 'final state', 7)).toThrowError(UnsupportedPayloadVersion);
 });
-
-test("Removing an app handler", ()=>{
-  const {uc, handler, payloadVersions} = makeTestRig();
-  uc.setAppHandler('app1', handler, payloadVersions);
-
-  expect(uc.hasAppHandler("app1")).toEqual(true);
-  
-  uc.removeAppHandler("app1");
-
-  expect(uc.hasAppHandler("app1")).toEqual(false);
-})

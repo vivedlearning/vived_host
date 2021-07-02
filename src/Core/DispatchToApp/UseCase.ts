@@ -64,9 +64,6 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
   hasAppHandler(appID: string): boolean {
     return this.appLookup.has(appID);
   }
-  removeAppHandler(appID: string): void {
-    this.appLookup.delete(appID);
-  }
 
   showBabylonInspector(appID: string, show: boolean): void {
     const app = this.getAppByID(appID);
@@ -124,6 +121,8 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     const app = this.getAppByID(appID);
     if (!app) return;
 
+    this.appLookup.delete(appID);
+
     const type = DISPOSE_APP;
     const payloadVersion = app.disposeAppPayloadVersion;
     if (!payloadVersion) {
@@ -141,6 +140,8 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
+
+    
   }
 
   stopApp(appID: string): void {
