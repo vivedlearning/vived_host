@@ -5,23 +5,23 @@ export interface DevicePreviewListVM {
   selectedDeviceName: string,
   selectedDeviceX: number,
   selectedDeviceY: number,
-  devices: Map<string, DeviceInfo[]>
+  devices: Map<string, DeviceInfoVM[]>
   selectedDeviceID: string;
 }
-export interface DeviceInfo { id: string, name: string; x: number; y: number};
+export interface DeviceInfoVM { id: string, name: string; x: number; y: number};
 
 export class DevicePreviewListPM implements OnSelectedDeviceChange {
 
   deviceUC: DevicePreviewListUC;
   updateView: (viewModel: DevicePreviewListVM) => void;
 
-  devices = new Map<string, DeviceInfo[]>();
+  devices = new Map<string, DeviceInfoVM[]>();
 
   constructor(deviceUC: DevicePreviewListUC, updateView: (viewModel: DevicePreviewListVM) => void) {
     const categories = deviceUC.getCategoryList();
     categories.forEach(category => {
       const devicesInCategory = deviceUC.getDevicesInCategory(category);
-      const deviceList: DeviceInfo[] = devicesInCategory.map((device) => {
+      const deviceList: DeviceInfoVM[] = devicesInCategory.map((device) => {
         const { id, name, x, y } = device;
         return { id, name, x, y };
       });
