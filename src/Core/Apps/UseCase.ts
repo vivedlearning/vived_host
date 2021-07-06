@@ -17,14 +17,15 @@ import {
   StopAppRequest,
   STOP_APP,
 } from '@vived/app-host-boundary';
-import { AppsUC } from './boundary';
+import { AppsUC, onAppsChange } from './boundary';
 import { AppEntity } from './Entity';
 import { NoPayloadVersionSpecified, UnableToFindAppByID, UnsupportedPayloadVersion } from './Errors';
 
 export class AppsUCImp implements AppsUC {
+  private observers: onAppsChange[] = [];
   private appLookup = new Map<string, AppEntity>();
 
-  addApp(appID: string, handler: Handler, payloadVersions: AppPayloadVersions): void {
+  addApp = (appID: string, handler: Handler, payloadVersions: AppPayloadVersions): void => {
     const app: AppEntity = {
       handler,
       isAuthoring: false,
@@ -63,14 +64,15 @@ export class AppsUCImp implements AppsUC {
     // This is where we will add support for future payloads
 
     this.appLookup.set(appID, app);
-  }
-  hasApp(appID: string): boolean {
+    this.notify();
+  };
+  hasApp = (appID: string): boolean => {
     return this.appLookup.has(appID);
-  }
-  removeApp(appID: string): void {
-    const app = this.appLookup.get(appID)
-    if(!app) return;
-  
+  };
+  removeApp = (appID: string): void => {
+    const app = this.appLookup.get(appID);
+    if (!app) return;
+
     const type = DISPOSE_APP;
     const payloadVersion = app.disposeAppPayloadVersion;
     if (!payloadVersion) {
@@ -86,15 +88,16 @@ export class AppsUCImp implements AppsUC {
     }
 
     this.appLookup.delete(appID);
-  }
+    this.notify();
+  };
 
-  getIsAuthoring(appID: string): boolean {
+  getIsAuthoring = (appID: string): boolean => {
     const app = this.getAppByID(appID);
     if (!app) return false;
 
     return app.isAuthoring;
-  }
-  setIsAuthoring(appID: string, isAuthoring: boolean): void {
+  };
+  setIsAuthoring = (appID: string, isAuthoring: boolean): void => {
     const app = this.getAppByID(appID);
     if (!app) return;
 
@@ -122,15 +125,17 @@ export class AppsUCImp implements AppsUC {
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
-  }
 
-  getShowBabylonInspector(appID: string): boolean {
+    this.notify();
+  };
+
+  getShowBabylonInspector = (appID: string): boolean => {
     const app = this.getAppByID(appID);
     if (!app) return false;
 
     return app.isInspecting;
-  }
-  setShowBabylonInspector(appID: string, showInspector: boolean): void {
+  };
+  setShowBabylonInspector = (appID: string, showInspector: boolean): void => {
     const app = this.getAppByID(appID);
     if (!app) return;
 
@@ -157,19 +162,21 @@ export class AppsUCImp implements AppsUC {
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
-  }
 
-  getAppIsRunning(appID: string): boolean {
+    this.notify();
+  };
+
+  getAppIsRunning = (appID: string): boolean => {
     const app = this.getAppByID(appID);
     if (!app) return false;
 
     return app.isRunning;
-  }
-  startApp(appID: string, container: HTMLElement): void {
+  };
+  startApp = (appID: string, container: HTMLElement): void => {
     const app = this.getAppByID(appID);
     if (!app) return;
 
-    if(app.isRunning) return;
+    if (app.isRunning) return;
 
     const type = START_APP;
     const payloadVersion = app.startAppPayloadVersion;
@@ -201,12 +208,13 @@ export class AppsUCImp implements AppsUC {
     }
 
     app.isRunning = true;
-  }
-  stopApp(appID: string): void {
+    this.notify();
+  };
+  stopApp = (appID: string): void => {
     const app = this.getAppByID(appID);
     if (!app) return;
 
-    if(!app.isRunning) return;
+    if (!app.isRunning) return;
 
     const payloadVersion = app.stopAppPayloadVersion;
     const type = STOP_APP;
@@ -227,9 +235,10 @@ export class AppsUCImp implements AppsUC {
     }
 
     app.isRunning = false;
-  }
+    this.notify();
+  };
 
-  setDevicePreview(appID: string, x: number, y: number): void {
+  setDevicePreview = (appID: string, x: number, y: number): void => {
     const app = this.getAppByID(appID);
     if (!app) return;
 
@@ -254,9 +263,9 @@ export class AppsUCImp implements AppsUC {
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
-  }
+  };
 
-  setAppState(appID: string, finalState: string, duration?: number): void {
+  setAppState = (appID: string, finalState: string, duration?: number): void => {
     const app = this.getAppByID(appID);
     if (!app) return;
 
@@ -289,7 +298,17 @@ export class AppsUCImp implements AppsUC {
     } else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
-  }
+  };
+
+  addObserver = (observer: onAppsChange): void => {
+    this.observers.push(observer);
+  };
+  removeObserver = (observer: onAppsChange): void => {
+    const index = this.observers.indexOf(observer);
+    if (index >= 0) {
+      this.observers.splice(index, 1);
+    }
+  };
 
   private getAppByID(id: string): AppEntity | undefined {
     const app = this.appLookup.get(id);
@@ -304,5 +323,9 @@ export class AppsUCImp implements AppsUC {
   private dispatch(app: AppEntity, request: Request) {
     const handler = app.handler as Handler;
     handler(request);
+  }
+
+  private notify() {
+    this.observers.forEach((obs) => obs());
   }
 }

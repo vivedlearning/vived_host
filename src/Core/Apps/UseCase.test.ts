@@ -37,18 +37,31 @@ function makeTestRig() {
   const handler = jest.fn();
   const payloadVersions = makePayloadVersions();
 
-  return {uc, handler, payloadVersions}
+  const observer = jest.fn();
+  uc.addObserver(observer);
+
+  return {uc, handler, payloadVersions, observer}
 }
 
 test('Adding an app', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   
   expect(uc.hasApp('app1')).toEqual(false);
 
   uc.addApp('app1', handler, payloadVersions);
 
   expect(uc.hasApp('app1')).toEqual(true);
+  expect(observer.mock.calls.length).toEqual(1);
 });
+
+test("Removing an observer", ()=> {
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
+  uc.removeObserver(observer);
+
+  uc.addApp('app1', handler, payloadVersions);
+
+  expect(observer.mock.calls.length).toEqual(0);
+})
 
 test('When an app is removed, it should also disposing the app', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
@@ -65,10 +78,27 @@ test('When an app is removed, it should also disposing the app', () => {
   expect(uc.hasApp("app1")).toEqual(false);
 });
 
+test("When an app is removed observers are notified", ()=>{
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
+  uc.addApp('app1', handler, payloadVersions);
+  expect(uc.hasApp("app1")).toEqual(true);
+  expect(observer.mock.calls.length).toEqual(1);
+
+  uc.removeApp('app1');
+  expect(observer.mock.calls.length).toEqual(2);
+})
+
+test("When an unknown app is removed it does not error but the observers are not notified", ()=>{
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
+  uc.removeApp('unknown');
+  expect(observer.mock.calls.length).toEqual(0);
+})
+
 test('Setting is authoring', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);
 
+  expect(observer.mock.calls.length).toEqual(1);
   expect(uc.getIsAuthoring("app1")).toEqual(false);
 
   uc.setIsAuthoring('app1', true);
@@ -80,20 +110,24 @@ test('Setting is authoring', () => {
   expect(request.type).toEqual(SET_IS_AUTHORING);
   expect(request.version).toEqual(1);
   expect(request.payload.isAuthoring).toEqual(true);
+
+  expect(observer.mock.calls.length).toEqual(2);
 });
 
 test("Setting is authoring should only call if there is a change", ()=>{
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);
   uc.setIsAuthoring('app1', true);
 
   expect(handler.mock.calls.length).toEqual(1);
+  expect(observer.mock.calls.length).toEqual(2);
 
   uc.setIsAuthoring('app1', true);
   uc.setIsAuthoring('app1', true);
   uc.setIsAuthoring('app1', true);
 
   expect(handler.mock.calls.length).toEqual(1);
+  expect(observer.mock.calls.length).toEqual(2);
 })
 
 test('Setting is authoring should throw an error for an unknown app', () => {
@@ -124,10 +158,11 @@ test('An unsupported version of save flag playload should throw an error', () =>
 });
 
 test('Setting the babylon inspector', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);
 
   expect(uc.getShowBabylonInspector("app1")).toEqual(false);
+  expect(observer.mock.calls.length).toEqual(1);
 
   uc.setShowBabylonInspector('app1', true);
 
@@ -138,14 +173,17 @@ test('Setting the babylon inspector', () => {
   expect(request.type).toEqual(SHOW_BABYLON_INSPECTOR);
   expect(request.version).toEqual(1);
   expect(request.payload.showBabylonInspector).toEqual(true);
+
+  expect(observer.mock.calls.length).toEqual(2);
 });
 
 test('Setting the babylon inspector should only dispatch if something changes', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);
   uc.setShowBabylonInspector('app1', true);
 
   expect(handler.mock.calls.length).toEqual(1);
+  expect(observer.mock.calls.length).toEqual(2);
   
   uc.setShowBabylonInspector('app1', true);
   uc.setShowBabylonInspector('app1', true);
@@ -153,6 +191,7 @@ test('Setting the babylon inspector should only dispatch if something changes', 
   uc.setShowBabylonInspector('app1', true);
 
   expect(handler.mock.calls.length).toEqual(1);
+  expect(observer.mock.calls.length).toEqual(2);
 });
 
 test('Setting babylon inspector should throw an error for an unknown app', () => {
@@ -240,10 +279,11 @@ test('An unsupported version of device preview playload should throw an error', 
 });
 
 test('Starting the app with payload version 1', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   payloadVersions.startApp = 1;
   uc.addApp('app1', handler, payloadVersions);
 
+  expect(observer.mock.calls.length).toEqual(1);
   expect(uc.getAppIsRunning("app1")).toEqual(false);
 
   const div = document.createElement('div');
@@ -258,6 +298,8 @@ test('Starting the app with payload version 1', () => {
   const payload = request.payload as StartAppPayloadV1;
   expect(payload.container).toEqual(div);
   expect(payload.initialState).toEqual('');
+
+  expect(observer.mock.calls.length).toEqual(2);
 });
 
 test('Setting start with payload version 2', () => {
@@ -281,7 +323,7 @@ test('Setting start with payload version 2', () => {
 });
 
 test('Starting an app should dispatch if the app needs to start', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   payloadVersions.startApp = 2;
   uc.addApp('app1', handler, payloadVersions);
   const div = document.createElement('div');
@@ -289,6 +331,7 @@ test('Starting an app should dispatch if the app needs to start', () => {
 
   expect(uc.getAppIsRunning("app1")).toEqual(true);
   expect(handler.mock.calls.length).toEqual(1);
+  expect(observer.mock.calls.length).toEqual(2);
 
   uc.startApp('app1', div);
   uc.startApp('app1', div);
@@ -296,6 +339,7 @@ test('Starting an app should dispatch if the app needs to start', () => {
   uc.startApp('app1', div);
   
   expect(handler.mock.calls.length).toEqual(1);
+  expect(observer.mock.calls.length).toEqual(2);
 });
 
 test('Starting should throw an error for an unknown app', () => {
@@ -327,11 +371,12 @@ test('An unsupported version of start playload should throw an error', () => {
 });
 
 test('Stopping the app', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);
   const div = document.createElement('div');
   uc.startApp('app1', div);
 
+  expect(observer.mock.calls.length).toEqual(2);
   expect(handler.mock.calls.length).toEqual(1);
   expect(uc.getAppIsRunning("app1")).toEqual(true);
 
@@ -343,16 +388,19 @@ test('Stopping the app', () => {
   const request = handler.mock.calls[1][0] as StopAppRequest;
   expect(request.type).toEqual(STOP_APP);
   expect(request.version).toEqual(1);
+
+  expect(observer.mock.calls.length).toEqual(3);
 });
 
 test("Stopping the app should dispatch if the app needs to stop", ()=>{
-  const {uc, handler, payloadVersions} = makeTestRig();
+  const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);
   const div = document.createElement('div');
   uc.startApp('app1', div);
   
   uc.stopApp('app1');
   expect(handler.mock.calls.length).toEqual(2);
+  expect(observer.mock.calls.length).toEqual(3);
 
   uc.stopApp('app1');
   uc.stopApp('app1');
@@ -360,6 +408,7 @@ test("Stopping the app should dispatch if the app needs to stop", ()=>{
   uc.stopApp('app1');
 
   expect(handler.mock.calls.length).toEqual(2);
+  expect(observer.mock.calls.length).toEqual(3);
 })
 
 test('Setting stop app should throw an error for an unknown app', () => {
