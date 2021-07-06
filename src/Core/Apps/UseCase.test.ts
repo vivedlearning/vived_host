@@ -17,7 +17,7 @@ import {
   StopAppRequest,
   STOP_APP,
 } from '@vived/app-host-boundary';
-import { makeDispatchToAppUC } from '.';
+import { makeAppsUC } from '.';
 import { NoPayloadVersionSpecified, UnableToFindAppByID, UnsupportedPayloadVersion } from './Errors';
 
 function makePayloadVersions(): AppPayloadVersions {
@@ -33,28 +33,47 @@ function makePayloadVersions(): AppPayloadVersions {
 }
 
 function makeTestRig() {
-  const uc = makeDispatchToAppUC();
+  const uc = makeAppsUC();
   const handler = jest.fn();
   const payloadVersions = makePayloadVersions();
 
   return {uc, handler, payloadVersions}
 }
 
-test('Setting an app handler', () => {
+test('Adding an app', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   
-  expect(uc.hasAppHandler('app1')).toEqual(false);
+  expect(uc.hasApp('app1')).toEqual(false);
 
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
-  expect(uc.hasAppHandler('app1')).toEqual(true);
+  expect(uc.hasApp('app1')).toEqual(true);
+});
+
+test('When an app is removed, it should also disposing the app', () => {
+  const {uc, handler, payloadVersions} = makeTestRig();
+  uc.addApp('app1', handler, payloadVersions);
+  expect(uc.hasApp("app1")).toEqual(true);
+
+  uc.removeApp('app1');
+
+  expect(handler.mock.calls.length).toEqual(1);
+  const request = handler.mock.calls[0][0] as DisposeAppRequest;
+  expect(request.type).toEqual(DISPOSE_APP);
+  expect(request.version).toEqual(1);
+
+  expect(uc.hasApp("app1")).toEqual(false);
 });
 
 test('Setting is authoring', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
+
+  expect(uc.getIsAuthoring("app1")).toEqual(false);
 
   uc.setIsAuthoring('app1', true);
+
+  expect(uc.getIsAuthoring("app1")).toEqual(true);
 
   expect(handler.mock.calls.length).toEqual(1);
   const request = handler.mock.calls[0][0] as SetIsAuthoringRequest;
@@ -63,15 +82,35 @@ test('Setting is authoring', () => {
   expect(request.payload.isAuthoring).toEqual(true);
 });
 
+test("Setting is authoring should only call if there is a change", ()=>{
+  const {uc, handler, payloadVersions} = makeTestRig();
+  uc.addApp('app1', handler, payloadVersions);
+  uc.setIsAuthoring('app1', true);
+
+  expect(handler.mock.calls.length).toEqual(1);
+
+  uc.setIsAuthoring('app1', true);
+  uc.setIsAuthoring('app1', true);
+  uc.setIsAuthoring('app1', true);
+
+  expect(handler.mock.calls.length).toEqual(1);
+})
+
 test('Setting is authoring should throw an error for an unknown app', () => {
   const {uc} = makeTestRig();
 
   expect(() => uc.setIsAuthoring('unknownApp', true)).toThrowError(UnableToFindAppByID);
 });
 
+test('Getting is authoring should throw an error for an unknown app', () => {
+  const {uc} = makeTestRig();
+
+  expect(() => uc.getIsAuthoring('unknownApp')).toThrowError(UnableToFindAppByID);
+});
+
 test('If app has no author payload version, it should throw an error when trying to set the flag', () => {
   const {uc, handler } = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
+  uc.addApp('app1', handler, {});
 
   expect(() => uc.setIsAuthoring('app1', true)).toThrowError(NoPayloadVersionSpecified);
 });
@@ -79,16 +118,20 @@ test('If app has no author payload version, it should throw an error when trying
 test('An unsupported version of save flag playload should throw an error', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.setIsAuthoring = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   expect(() => uc.setIsAuthoring('app1', true)).toThrowError(UnsupportedPayloadVersion);
 });
 
 test('Setting the babylon inspector', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
-  uc.showBabylonInspector('app1', true);
+  expect(uc.getShowBabylonInspector("app1")).toEqual(false);
+
+  uc.setShowBabylonInspector('app1', true);
+
+  expect(uc.getShowBabylonInspector("app1")).toEqual(true);
 
   expect(handler.mock.calls.length).toEqual(1);
   const request = handler.mock.calls[0][0] as ShowBabylonInspectorRequest;
@@ -97,102 +140,52 @@ test('Setting the babylon inspector', () => {
   expect(request.payload.showBabylonInspector).toEqual(true);
 });
 
+test('Setting the babylon inspector should only dispatch if something changes', () => {
+  const {uc, handler, payloadVersions} = makeTestRig();
+  uc.addApp('app1', handler, payloadVersions);
+  uc.setShowBabylonInspector('app1', true);
+
+  expect(handler.mock.calls.length).toEqual(1);
+  
+  uc.setShowBabylonInspector('app1', true);
+  uc.setShowBabylonInspector('app1', true);
+  uc.setShowBabylonInspector('app1', true);
+  uc.setShowBabylonInspector('app1', true);
+
+  expect(handler.mock.calls.length).toEqual(1);
+});
+
 test('Setting babylon inspector should throw an error for an unknown app', () => {
   const {uc} = makeTestRig();
 
-  expect(() => uc.showBabylonInspector('unknownApp', true)).toThrowError(UnableToFindAppByID);
+  expect(() => uc.setShowBabylonInspector('unknownApp', true)).toThrowError(UnableToFindAppByID);
+});
+
+test('Getting babylon inspector should throw an error for an unknown app', () => {
+  const {uc} = makeTestRig();
+
+  expect(() => uc.getShowBabylonInspector('unknownApp')).toThrowError(UnableToFindAppByID);
 });
 
 test('If app has no babylon inspector payload version, it should throw an error when trying to set the flag', () => {
   const {uc, handler} = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
+  uc.addApp('app1', handler, {});
 
-  expect(() => uc.showBabylonInspector('app1', true)).toThrowError(NoPayloadVersionSpecified);
+  expect(() => uc.setShowBabylonInspector('app1', true)).toThrowError(NoPayloadVersionSpecified);
 });
 
 test('An unsupported version of babylon inspector flag playload should throw an error', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.showBabylonInspector = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
-  expect(() => uc.showBabylonInspector('app1', true)).toThrowError(UnsupportedPayloadVersion);
-});
-
-test('Disposing the app', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
-  uc.setAppHandler('app1', handler, payloadVersions);
-
-  expect(uc.hasAppHandler("app1")).toEqual(true);
-
-  uc.disposeApp('app1');
-
-  expect(handler.mock.calls.length).toEqual(1);
-  const request = handler.mock.calls[0][0] as DisposeAppRequest;
-  expect(request.type).toEqual(DISPOSE_APP);
-  expect(request.version).toEqual(1);
-
-  expect(uc.hasAppHandler("app1")).toEqual(false);
-});
-
-test('Disposing should throw an error for an unknown app', () => {
-  const {uc} = makeTestRig();
-
-  expect(() => uc.disposeApp('unknownApp')).toThrowError(UnableToFindAppByID);
-});
-
-test('If app has no dispose payload version, it should throw an error when trying', () => {
-  const {uc, handler} = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
-
-  expect(() => uc.disposeApp('app1')).toThrowError(NoPayloadVersionSpecified);
-});
-
-test('An unsupported version of dispose playload should throw an error', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
-  payloadVersions.disposeApp = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
-
-  expect(() => uc.disposeApp('app1')).toThrowError(UnsupportedPayloadVersion);
-});
-
-test('Stopping the app', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
-  uc.setAppHandler('app1', handler, payloadVersions);
-
-  uc.stopApp('app1');
-
-  expect(handler.mock.calls.length).toEqual(1);
-  const request = handler.mock.calls[0][0] as StopAppRequest;
-  expect(request.type).toEqual(STOP_APP);
-  expect(request.version).toEqual(1);
-});
-
-test('Setting stop app should throw an error for an unknown app', () => {
-  const {uc} = makeTestRig();
-
-  expect(() => uc.stopApp('unknownApp')).toThrowError(UnableToFindAppByID);
-});
-
-test('If app has no stop app payload version, it should throw an error when trying calling it', () => {
-  const {uc, handler} = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
-
-  expect(() => uc.stopApp('app1')).toThrowError(NoPayloadVersionSpecified);
-});
-
-test('An unsupported version of stop app playload should throw an error', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
-
-  payloadVersions.stopApp = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
-
-  expect(() => uc.stopApp('app1')).toThrowError(UnsupportedPayloadVersion);
+  expect(() => uc.setShowBabylonInspector('app1', true)).toThrowError(UnsupportedPayloadVersion);
 });
 
 test('Setting the device preview', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
 
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   uc.setDevicePreview('app1', 222, 333);
 
@@ -212,7 +205,7 @@ test('Setting device preview should throw an error for an unknown app', () => {
 
 test('If app has no device preview payload version, it should throw an error when trying to set the flag', () => {
   const {uc, handler} = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
+  uc.addApp('app1', handler, {});
 
   expect(() => uc.setDevicePreview('app1', 222, 333)).toThrowError(NoPayloadVersionSpecified);
 });
@@ -220,18 +213,43 @@ test('If app has no device preview payload version, it should throw an error whe
 test('An unsupported version of device preview playload should throw an error', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.setDevicePreview = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   expect(() => uc.setDevicePreview('app1', 222, 333)).toThrowError(UnsupportedPayloadVersion);
 });
 
-test('Setting start with payload version 1', () => {
+test('Setting device preview should throw an error for an unknown app', () => {
+  const {uc} = makeTestRig();
+
+  expect(() => uc.setAppState('unknown', 'final state', 7)).toThrowError(UnableToFindAppByID);
+});
+
+test('If app has no device preview payload version, it should throw an error when trying to set the flag', () => {
+  const {uc, handler} = makeTestRig();
+  uc.addApp('app1', handler, {});
+
+  expect(() => uc.setAppState('app1', 'final state', 7)).toThrowError(NoPayloadVersionSpecified);
+});
+
+test('An unsupported version of device preview playload should throw an error', () => {
+  const {uc, handler, payloadVersions} = makeTestRig();
+  payloadVersions.setState = -1;
+  uc.addApp('app1', handler, payloadVersions);
+
+  expect(() => uc.setAppState('app1', 'final state', 7)).toThrowError(UnsupportedPayloadVersion);
+});
+
+test('Starting the app with payload version 1', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.startApp = 1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
+
+  expect(uc.getAppIsRunning("app1")).toEqual(false);
 
   const div = document.createElement('div');
   uc.startApp('app1', div);
+
+  expect(uc.getAppIsRunning("app1")).toEqual(true);
 
   expect(handler.mock.calls.length).toEqual(1);
   const request = handler.mock.calls[0][0] as StartAppRequst;
@@ -245,10 +263,14 @@ test('Setting start with payload version 1', () => {
 test('Setting start with payload version 2', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.startApp = 2;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
+
+  expect(uc.getAppIsRunning("app1")).toEqual(false);
 
   const div = document.createElement('div');
   uc.startApp('app1', div);
+
+  expect(uc.getAppIsRunning("app1")).toEqual(true);
 
   expect(handler.mock.calls.length).toEqual(1);
   const request = handler.mock.calls[0][0] as StartAppRequst;
@@ -258,15 +280,38 @@ test('Setting start with payload version 2', () => {
   expect(payload.container).toEqual(div);
 });
 
+test('Starting an app should dispatch if the app needs to start', () => {
+  const {uc, handler, payloadVersions} = makeTestRig();
+  payloadVersions.startApp = 2;
+  uc.addApp('app1', handler, payloadVersions);
+  const div = document.createElement('div');
+  uc.startApp('app1', div);
+
+  expect(uc.getAppIsRunning("app1")).toEqual(true);
+  expect(handler.mock.calls.length).toEqual(1);
+
+  uc.startApp('app1', div);
+  uc.startApp('app1', div);
+  uc.startApp('app1', div);
+  uc.startApp('app1', div);
+  
+  expect(handler.mock.calls.length).toEqual(1);
+});
+
 test('Starting should throw an error for an unknown app', () => {
   const {uc } = makeTestRig();
   const div = document.createElement('div');
   expect(() => uc.startApp('unknown app', div)).toThrowError(UnableToFindAppByID);
 });
 
+test('Getting is running should throw an error for an unknown app', () => {
+  const {uc } = makeTestRig();
+  expect(() => uc.getAppIsRunning('unknown app')).toThrowError(UnableToFindAppByID);
+});
+
 test('If app has no start payload version, it should throw an error when trying to set the flag', () => {
   const {uc, handler} = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
+  uc.addApp('app1', handler, {});
 
   const div = document.createElement('div');
   expect(() => uc.startApp('app1', div)).toThrowError(NoPayloadVersionSpecified);
@@ -275,16 +320,78 @@ test('If app has no start payload version, it should throw an error when trying 
 test('An unsupported version of start playload should throw an error', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.startApp = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   const div = document.createElement('div');
   expect(() => uc.startApp('app1', div)).toThrowError(UnsupportedPayloadVersion);
 });
 
+test('Stopping the app', () => {
+  const {uc, handler, payloadVersions} = makeTestRig();
+  uc.addApp('app1', handler, payloadVersions);
+  const div = document.createElement('div');
+  uc.startApp('app1', div);
+
+  expect(handler.mock.calls.length).toEqual(1);
+  expect(uc.getAppIsRunning("app1")).toEqual(true);
+
+  uc.stopApp('app1');
+
+  expect(uc.getAppIsRunning("app1")).toEqual(false);
+
+  expect(handler.mock.calls.length).toEqual(2);
+  const request = handler.mock.calls[1][0] as StopAppRequest;
+  expect(request.type).toEqual(STOP_APP);
+  expect(request.version).toEqual(1);
+});
+
+test("Stopping the app should dispatch if the app needs to stop", ()=>{
+  const {uc, handler, payloadVersions} = makeTestRig();
+  uc.addApp('app1', handler, payloadVersions);
+  const div = document.createElement('div');
+  uc.startApp('app1', div);
+  
+  uc.stopApp('app1');
+  expect(handler.mock.calls.length).toEqual(2);
+
+  uc.stopApp('app1');
+  uc.stopApp('app1');
+  uc.stopApp('app1');
+  uc.stopApp('app1');
+
+  expect(handler.mock.calls.length).toEqual(2);
+})
+
+test('Setting stop app should throw an error for an unknown app', () => {
+  const {uc} = makeTestRig();
+
+  expect(() => uc.stopApp('unknownApp')).toThrowError(UnableToFindAppByID);
+});
+
+test('If app has no stop app payload version, it should throw an error when trying calling it', () => {
+  const {uc, handler} = makeTestRig();
+  uc.addApp('app1', handler, {startApp:1});
+  const div = document.createElement('div');
+  uc.startApp('app1', div);
+
+  expect(() => uc.stopApp('app1')).toThrowError(NoPayloadVersionSpecified);
+});
+
+test('An unsupported version of stop app playload should throw an error', () => {
+  const {uc, handler, payloadVersions} = makeTestRig();
+  
+  payloadVersions.stopApp = -1;
+  uc.addApp('app1', handler, payloadVersions);
+  const div = document.createElement('div');
+  uc.startApp('app1', div);
+
+  expect(() => uc.stopApp('app1')).toThrowError(UnsupportedPayloadVersion);
+});
+
 test('Setting app state with payload version 1', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.setState = 1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   uc.setAppState('app1', 'final state', 7);
 
@@ -299,7 +406,7 @@ test('Setting app state with payload version 1', () => {
 test('Setting app state with payload version 1 and not specifying duration', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.setState = 1;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   uc.setAppState('app1', 'final state');
 
@@ -311,7 +418,7 @@ test('Setting app state with payload version 1 and not specifying duration', () 
 test('Setting app state with payload version 2', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.setState = 2;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   uc.setAppState('app1', 'final state', 7);
 
@@ -326,7 +433,7 @@ test('Setting app state with payload version 2', () => {
 test('Setting app state with payload version 2 with no duration specified', () => {
   const {uc, handler, payloadVersions} = makeTestRig();
   payloadVersions.setState = 2;
-  uc.setAppHandler('app1', handler, payloadVersions);
+  uc.addApp('app1', handler, payloadVersions);
 
   uc.setAppState('app1', 'final state');
 
@@ -336,25 +443,4 @@ test('Setting app state with payload version 2 with no duration specified', () =
   expect(request.version).toEqual(2);
   expect(request.payload.finalState).toEqual('final state');
   expect(request.payload.duration).toBeUndefined();
-});
-
-test('Setting device preview should throw an error for an unknown app', () => {
-  const {uc} = makeTestRig();
-
-  expect(() => uc.setAppState('unknown', 'final state', 7)).toThrowError(UnableToFindAppByID);
-});
-
-test('If app has no device preview payload version, it should throw an error when trying to set the flag', () => {
-  const {uc, handler} = makeTestRig();
-  uc.setAppHandler('app1', handler, {});
-
-  expect(() => uc.setAppState('app1', 'final state', 7)).toThrowError(NoPayloadVersionSpecified);
-});
-
-test('An unsupported version of device preview playload should throw an error', () => {
-  const {uc, handler, payloadVersions} = makeTestRig();
-  payloadVersions.setState = -1;
-  uc.setAppHandler('app1', handler, payloadVersions);
-
-  expect(() => uc.setAppState('app1', 'final state', 7)).toThrowError(UnsupportedPayloadVersion);
 });

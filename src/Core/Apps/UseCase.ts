@@ -17,16 +17,19 @@ import {
   StopAppRequest,
   STOP_APP,
 } from '@vived/app-host-boundary';
-import { DispatchToAppUC } from './boundary';
-import { DispatchToAppEntity } from './Entity';
+import { AppsUC } from './boundary';
+import { AppEntity } from './Entity';
 import { NoPayloadVersionSpecified, UnableToFindAppByID, UnsupportedPayloadVersion } from './Errors';
 
-export class DispatchToAppUCImp implements DispatchToAppUC {
-  private appLookup = new Map<string, DispatchToAppEntity>();
+export class AppsUCImp implements AppsUC {
+  private appLookup = new Map<string, AppEntity>();
 
-  setAppHandler(appID: string, handler: Handler, payloadVersions: AppPayloadVersions): void {
-    const app: DispatchToAppEntity = {
+  addApp(appID: string, handler: Handler, payloadVersions: AppPayloadVersions): void {
+    const app: AppEntity = {
       handler,
+      isAuthoring: false,
+      isInspecting: false,
+      isRunning: false,
     };
 
     if (payloadVersions.setIsAuthoring) {
@@ -61,39 +64,43 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
 
     this.appLookup.set(appID, app);
   }
-  hasAppHandler(appID: string): boolean {
+  hasApp(appID: string): boolean {
     return this.appLookup.has(appID);
   }
-
-  showBabylonInspector(appID: string, show: boolean): void {
-    const app = this.getAppByID(appID);
-    if (!app) return;
-
-    const type = SHOW_BABYLON_INSPECTOR;
-    const payloadVersion = app.showBabylonInspectorPayloadVersion;
+  removeApp(appID: string): void {
+    const app = this.appLookup.get(appID)
+    if(!app) return;
+  
+    const type = DISPOSE_APP;
+    const payloadVersion = app.disposeAppPayloadVersion;
     if (!payloadVersion) {
       throw new NoPayloadVersionSpecified(appID, type);
     }
 
     if (payloadVersion === 1) {
-      const request: ShowBabylonInspectorRequest = {
+      const request: DisposeAppRequest = {
         type,
         version: 1,
-        payload: {
-          showBabylonInspector: show,
-        },
       };
       this.dispatch(app, request);
     }
-    // This is where we will add support for future versions of the payload
-    else {
-      throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
-    }
+
+    this.appLookup.delete(appID);
   }
 
+  getIsAuthoring(appID: string): boolean {
+    const app = this.getAppByID(appID);
+    if (!app) return false;
+
+    return app.isAuthoring;
+  }
   setIsAuthoring(appID: string, isAuthoring: boolean): void {
     const app = this.getAppByID(appID);
     if (!app) return;
+
+    if (app.isAuthoring === isAuthoring) return;
+
+    app.isAuthoring = isAuthoring;
 
     const type = SET_IS_AUTHORING;
     const payloadVersion = app.setIsAuthoringPayloadVersion;
@@ -117,22 +124,32 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     }
   }
 
-  disposeApp(appID: string): void {
+  getShowBabylonInspector(appID: string): boolean {
+    const app = this.getAppByID(appID);
+    if (!app) return false;
+
+    return app.isInspecting;
+  }
+  setShowBabylonInspector(appID: string, showInspector: boolean): void {
     const app = this.getAppByID(appID);
     if (!app) return;
 
-    this.appLookup.delete(appID);
+    if (app.isInspecting === showInspector) return;
+    app.isInspecting = showInspector;
 
-    const type = DISPOSE_APP;
-    const payloadVersion = app.disposeAppPayloadVersion;
+    const type = SHOW_BABYLON_INSPECTOR;
+    const payloadVersion = app.showBabylonInspectorPayloadVersion;
     if (!payloadVersion) {
       throw new NoPayloadVersionSpecified(appID, type);
     }
 
     if (payloadVersion === 1) {
-      const request: DisposeAppRequest = {
+      const request: ShowBabylonInspectorRequest = {
         type,
         version: 1,
+        payload: {
+          showBabylonInspector: showInspector,
+        },
       };
       this.dispatch(app, request);
     }
@@ -140,13 +157,56 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
-
-    
   }
 
+  getAppIsRunning(appID: string): boolean {
+    const app = this.getAppByID(appID);
+    if (!app) return false;
+
+    return app.isRunning;
+  }
+  startApp(appID: string, container: HTMLElement): void {
+    const app = this.getAppByID(appID);
+    if (!app) return;
+
+    if(app.isRunning) return;
+
+    const type = START_APP;
+    const payloadVersion = app.startAppPayloadVersion;
+    if (!payloadVersion) {
+      throw new NoPayloadVersionSpecified(appID, type);
+    }
+
+    if (payloadVersion === 1) {
+      const request: StartAppRequst = {
+        type,
+        version: 1,
+        payload: {
+          container,
+          initialState: '',
+        },
+      };
+      this.dispatch(app, request);
+    } else if (payloadVersion === 2) {
+      const request: StartAppRequst = {
+        type,
+        version: 2,
+        payload: {
+          container,
+        },
+      };
+      this.dispatch(app, request);
+    } else {
+      throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
+    }
+
+    app.isRunning = true;
+  }
   stopApp(appID: string): void {
     const app = this.getAppByID(appID);
     if (!app) return;
+
+    if(!app.isRunning) return;
 
     const payloadVersion = app.stopAppPayloadVersion;
     const type = STOP_APP;
@@ -165,6 +225,8 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
+
+    app.isRunning = false;
   }
 
   setDevicePreview(appID: string, x: number, y: number): void {
@@ -189,41 +251,6 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
       this.dispatch(app, request);
     }
     // This is where we will add support for future versions of the payload
-    else {
-      throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
-    }
-  }
-
-  startApp(appID: string, container: HTMLElement): void {
-    const app = this.getAppByID(appID);
-    if (!app) return;
-
-    const type = START_APP;
-    const payloadVersion = app.startAppPayloadVersion;
-    if (!payloadVersion) {
-      throw new NoPayloadVersionSpecified(appID, type);
-    }
-
-    if (payloadVersion === 1) {
-      const request: StartAppRequst = {
-        type,
-        version: 1,
-        payload: {
-          container,
-          initialState: ""
-        },
-      };
-      this.dispatch(app, request);
-    } else if (payloadVersion === 2) {
-      const request: StartAppRequst = {
-        type,
-        version: 2,
-        payload: {
-          container
-        },
-      };
-      this.dispatch(app, request);
-    }
     else {
       throw new UnsupportedPayloadVersion(appID, type, payloadVersion);
     }
@@ -264,7 +291,7 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     }
   }
 
-  private getAppByID(id: string): DispatchToAppEntity | undefined {
+  private getAppByID(id: string): AppEntity | undefined {
     const app = this.appLookup.get(id);
 
     if (!app) {
@@ -274,7 +301,7 @@ export class DispatchToAppUCImp implements DispatchToAppUC {
     return app;
   }
 
-  private dispatch(app: DispatchToAppEntity, request: Request) {
+  private dispatch(app: AppEntity, request: Request) {
     const handler = app.handler as Handler;
     handler(request);
   }

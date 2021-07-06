@@ -1,0 +1,1 @@
+export { assetLoader } from './assetLoader';

@@ -1,4 +1,4 @@
-export interface DispatchToAppEntity {
+export interface AppEntity {
   handler: unknown,
   setIsAuthoringPayloadVersion?: number
   showBabylonInspectorPayloadVersion?: number
@@ -8,4 +8,7 @@ export interface DispatchToAppEntity {
   startAppPayloadVersion?: number
   setAppStatePayloadVersion?:number
   getPayloadVersionsVersion?:number
+  isAuthoring: boolean,
+  isRunning: boolean,
+  isInspecting: boolean
 }
