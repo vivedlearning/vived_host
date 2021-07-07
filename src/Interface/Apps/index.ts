@@ -1,2 +1,2 @@
-export * from "./HostRequestHandler"
+export * from "./hostHandler"
 export * from "./getAppPayloadVersions"
