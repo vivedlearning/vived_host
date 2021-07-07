@@ -94,6 +94,33 @@ test("When an unknown app is removed it does not error but the observers are not
   expect(observer.mock.calls.length).toEqual(0);
 })
 
+test("Removing all apps", ()=>{
+  const {uc, payloadVersions, observer} = makeTestRig();
+
+  const app1Handler = jest.fn();
+  uc.addApp('app1', app1Handler, payloadVersions);
+  const app2Handler = jest.fn();
+  uc.addApp('app2', app2Handler, payloadVersions);
+
+  observer.mockClear();
+
+  uc.removeAllApps();
+
+  expect(uc.hasApp('app1')).toEqual(false);
+  expect(app1Handler.mock.calls.length).toEqual(1);
+  const request1 = app1Handler.mock.calls[0][0] as DisposeAppRequest;
+  expect(request1.type).toEqual(DISPOSE_APP);
+  expect(request1.version).toEqual(1);
+
+  expect(uc.hasApp('app2')).toEqual(false);
+  expect(app2Handler.mock.calls.length).toEqual(1);
+  const request2 = app2Handler.mock.calls[0][0] as DisposeAppRequest;
+  expect(request2.type).toEqual(DISPOSE_APP);
+  expect(request2.version).toEqual(1);
+
+  expect(observer.mock.calls.length).toEqual(1);
+})
+
 test('Setting is authoring', () => {
   const {uc, handler, payloadVersions, observer} = makeTestRig();
   uc.addApp('app1', handler, payloadVersions);

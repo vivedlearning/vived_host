@@ -1,5 +1,10 @@
 export interface AppEntity {
   handler: unknown,
+
+  isAuthoring: boolean,
+  isRunning: boolean,
+  isInspecting: boolean
+
   setIsAuthoringPayloadVersion?: number
   showBabylonInspectorPayloadVersion?: number
   disposeAppPayloadVersion?: number,
@@ -8,7 +13,5 @@ export interface AppEntity {
   startAppPayloadVersion?: number
   setAppStatePayloadVersion?:number
   getPayloadVersionsVersion?:number
-  isAuthoring: boolean,
-  isRunning: boolean,
-  isInspecting: boolean
+  
 }

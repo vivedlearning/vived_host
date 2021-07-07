@@ -69,7 +69,7 @@ export class AppsUCImp implements AppsUC {
   hasApp = (appID: string): boolean => {
     return this.appLookup.has(appID);
   };
-  removeApp = (appID: string): void => {
+  removeApp = (appID: string, notify = true): void => {
     const app = this.appLookup.get(appID);
     if (!app) return;
 
@@ -88,8 +88,15 @@ export class AppsUCImp implements AppsUC {
     }
 
     this.appLookup.delete(appID);
-    this.notify();
+
+    if (notify) this.notify();
   };
+  removeAllApps = (): void => {
+    const appIDs = Array.from(this.appLookup.keys());
+
+    appIDs.forEach((appID) => this.removeApp(appID, false));
+    this.notify();
+  }
 
   getIsAuthoring = (appID: string): boolean => {
     const app = this.getAppByID(appID);
