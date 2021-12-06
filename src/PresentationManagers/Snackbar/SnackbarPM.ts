@@ -1,6 +1,4 @@
-import { SnackbarObserver, SnackbarUC } from "../../Core/Snackbar";
-import { Snackbar } from "../../Core/Snackbar/Entity";
-
+import { Snackbar, SnackbarRepo } from "../..";
 
 export interface SnackbarVM {
     message: string | undefined;
@@ -8,25 +6,17 @@ export interface SnackbarVM {
     actionButtonText: string | undefined;
 }
 
-export class SnackbarPM implements SnackbarObserver {
-    private snackbarUC: SnackbarUC;
+export class SnackbarPM {
+    private snackbarRepo: SnackbarRepo;
     private updateView: (viewModel: SnackbarVM) => void;
 
-    constructor(
-        snackbarUC: SnackbarUC,
-        updateView: (viewMode: SnackbarVM) => void
-    ) {
-        this.snackbarUC = snackbarUC;
-        this.updateView = updateView;
-        this.doUpdateView(undefined);
-        this.snackbarUC.addObserver(this);
-    }    
+    
 
     dispose() {
-        this.snackbarUC.removeObserver(this);
+        this.snackbarRepo.removeObserver(this.doUpdateView);
     }
 
-    private doUpdateView(snackbar: Snackbar | undefined): void {
+    private doUpdateView = (snackbar: Snackbar | undefined): void => {
         let model: SnackbarVM = {
             message: undefined,
             durationInSeconds: 0,
@@ -44,8 +34,14 @@ export class SnackbarPM implements SnackbarObserver {
         this.updateView(model);
     }
 
-    onSnackbarChange(snackbar: Snackbar | undefined): void {
-        this.doUpdateView(snackbar);
-    }
+    constructor(
+      snackbarUC: SnackbarRepo,
+      updateView: (viewMode: SnackbarVM) => void
+  ) {
+      this.snackbarRepo = snackbarUC;
+      this.updateView = updateView;
+      this.doUpdateView(undefined);
+      this.snackbarRepo.addObserver(this.doUpdateView);
+  }    
 
 }
