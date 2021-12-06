@@ -1,5 +1,4 @@
 export * from "./Assets"
 export * from "./DialogSnackbar"
-export * from "./Apps"
 export * from "./DevicePreviewList"
 export * from "./DialogSnackbar"
