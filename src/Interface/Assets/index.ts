@@ -1,1 +1,0 @@
-export { assetLoader } from './assetLoader';
