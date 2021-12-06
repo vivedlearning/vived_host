@@ -1,6 +1,4 @@
-import { DialogObserver, DialogUC } from "../../Core/Dialog";
-import { Dialog } from "../../Core/Dialog/Entity";
-
+import { Dialog, DialogRepo } from "../..";
 
 export interface DialogVM {
     showDialog: boolean;
@@ -10,29 +8,15 @@ export interface DialogVM {
     secondaryActionText: string | undefined;
 }
 
-export class DialogPM implements DialogObserver {
-    private dialogUC: DialogUC;
+export class DialogPM {
+    private dialogRepo: DialogRepo;
     private updateView: (viewModel: DialogVM) => void;
 
-    constructor(
-        dialogUC: DialogUC,
-        updateView: (viewMode: DialogVM) => void
-    ) {
-        this.dialogUC = dialogUC;
-        this.updateView = updateView;
-        this.doUpdateView(undefined);
-        this.dialogUC.addObserver(this);
-    }
-
     dispose() {
-        this.dialogUC.removeObserver(this);
+        this.dialogRepo.removeObserver(this.doUpdateView);
     }
 
-    onDialogChange(dialog: Dialog | undefined): void {
-        this.doUpdateView(dialog);
-    }
-
-    private doUpdateView(dialog: Dialog | undefined): void {
+    private doUpdateView = (dialog: Dialog | undefined): void => {
         let model: DialogVM = {
             showDialog: false,
             title: undefined,
@@ -52,5 +36,15 @@ export class DialogPM implements DialogObserver {
         }
 
         this.updateView(model);
+    }
+
+    constructor(
+      dialogRepo: DialogRepo,
+        updateView: (viewMode: DialogVM) => void
+    ) {
+        this.dialogRepo = dialogRepo;
+        this.updateView = updateView;
+        this.doUpdateView(undefined);
+        this.dialogRepo.addObserver(this.doUpdateView);
     }
 }

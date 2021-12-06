@@ -1,4 +1,4 @@
-import { makeDevicePreview } from '..';
+import { makeDevicePreview } from '../..';
 import { setDeviceListFromJSON, DeviceList } from './setDeviceListFromJSON';
 
 const mockDeviceList: DeviceList = {

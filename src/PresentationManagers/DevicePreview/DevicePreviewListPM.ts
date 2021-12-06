@@ -1,4 +1,5 @@
-import { DevicePreview } from '..';
+import { DevicePreview } from "../..";
+
 
 export interface DevicePreviewListVM {
   useDevicePreview: boolean;

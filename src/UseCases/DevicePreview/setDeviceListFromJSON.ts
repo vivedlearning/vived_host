@@ -1,4 +1,4 @@
-import { DevicePreview } from '..';
+import { DevicePreview } from '../..';
 
 export function setDeviceListFromJSON(deviceList: DeviceList, devicePreview: DevicePreview) {
   devicePreview.deviceList = deviceList.devices;

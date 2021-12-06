@@ -1,5 +1,5 @@
 
-import { makeDevicePreview } from "..";
+import { makeDevicePreview } from "../..";
 import { DevicePreviewListPM, DevicePreviewListVM } from "./DevicePreviewListPM";
 
 function makeTestRig() {

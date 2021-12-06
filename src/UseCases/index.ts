@@ -1,1 +1,1 @@
-export * from './setDeviceListFromJSON';
+export * from './DevicePreview/setDeviceListFromJSON';
