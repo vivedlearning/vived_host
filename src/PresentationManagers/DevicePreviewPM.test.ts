@@ -1,10 +1,11 @@
-import { makeDevicePreviewListUC } from "../../Core/DevicePreviewList";
+
+import { makeDevicePreview } from "..";
 import { DevicePreviewListPM, DevicePreviewListVM } from "./DevicePreviewListPM";
 
 function makeTestRig() {
-  const useCase = makeDevicePreviewListUC();
+  const devicePreview = makeDevicePreview();
 
-  useCase.setDeviceList([
+  devicePreview.deviceList = [
     {
       id: "device1",
       name: "device1",
@@ -29,12 +30,12 @@ function makeTestRig() {
       pixelDensity: 3,
       category: "B"
     },
-  ]);
+  ];
 
   const viewCallback = jest.fn();
-  const pm = new DevicePreviewListPM(useCase, viewCallback);
+  const pm = new DevicePreviewListPM(devicePreview, viewCallback);
 
-  return { useCase, pm, viewCallback };
+  return { devicePreview, pm, viewCallback };
 }
 
 function getViewCallbackCount(callback: jest.Mock<any, any>): number {
@@ -54,12 +55,12 @@ function getLastViewModel(callback: jest.Mock<any, any>): DevicePreviewListVM | 
 }
 
 test("PM Intializes correctly", () => {
-  const { useCase } = makeTestRig();
-  useCase.setSelectedDevice("device2");
+  const { devicePreview } = makeTestRig();
+  devicePreview.setSelectedDevice("device2");
 
   const callback = jest.fn();
   // tslint:disable-next-line: no-unused-expression
-  new DevicePreviewListPM(useCase, callback);
+  new DevicePreviewListPM(devicePreview, callback);
 
   const vm = getLastViewModel(callback);
 
@@ -69,16 +70,16 @@ test("PM Intializes correctly", () => {
   expect(vm?.useDevicePreview).toEqual(true);
   expect(vm?.selectedDeviceID).toEqual("device2");
 
-  expect(vm?.devices.has("A")).toEqual(true);
-  expect(vm?.devices.get("A")).toHaveLength(2);
+  expect(vm?.catagorizedDevices.has("A")).toEqual(true);
+  expect(vm?.catagorizedDevices.get("A")).toHaveLength(2);
 
-  expect(vm?.devices.has("B")).toEqual(true);
-  expect(vm?.devices.get("B")).toHaveLength(1);
+  expect(vm?.catagorizedDevices.has("B")).toEqual(true);
+  expect(vm?.catagorizedDevices.get("B")).toHaveLength(1);
 });
 
 test("View and PM Update when the use case changes", ()=>{
-  const { useCase, pm, viewCallback } = makeTestRig();
-  useCase.setSelectedDevice("device2");
+  const { devicePreview, pm, viewCallback } = makeTestRig();
+  devicePreview.setSelectedDevice("device2");
   
   const callbackCnt = getViewCallbackCount(viewCallback);
   expect(callbackCnt).toEqual(2);
@@ -90,7 +91,7 @@ test("View and PM Update when the use case changes", ()=>{
   expect(vm?.useDevicePreview).toEqual(true);
   expect(vm?.selectedDeviceID).toEqual("device2");
 
-  useCase.clearSelectedDevice();
+  devicePreview.clearSelectedDevice();
 
   const callbackCnt2 = getViewCallbackCount(viewCallback);
   expect(callbackCnt2).toEqual(3);
@@ -104,11 +105,11 @@ test("View and PM Update when the use case changes", ()=>{
 })
 
 test("PM can be disposed", ()=>{
-  const { useCase, pm, viewCallback } = makeTestRig();
+  const { devicePreview, pm, viewCallback } = makeTestRig();
 
   pm.dispose();
 
-  useCase.setSelectedDevice("device2");
+  devicePreview.setSelectedDevice("device2");
 
   const callbackCnt = getViewCallbackCount(viewCallback);
   expect(callbackCnt).toEqual(1);
