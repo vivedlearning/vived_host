@@ -39,7 +39,6 @@
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {},
   "publishConfig": {
     "access": "public"
   }
