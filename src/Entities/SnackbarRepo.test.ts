@@ -76,23 +76,28 @@ test('Calling the active action', () => {
 test('Snackbar with empty text throws error', () => {
   const { snackbarRepo } = makeTestRig();
 
-  expect(() => snackbarRepo.makeSnackbar('')).toThrowError();
+  const snackResult = snackbarRepo.makeSnackbar('');
+  expect(snackResult.isRejected).toEqual(true);
+  expect(snackResult.error).not.toBeUndefined();
 });
 
 test('Snackbar with negative time throws error', () => {
   const { snackbarRepo } = makeTestRig();
 
-  expect(() => snackbarRepo.makeSnackbar('testing', undefined, -2)).toThrowError();
+  const snackResult = snackbarRepo.makeSnackbar('testing', undefined, -2);
+  expect(snackResult.isRejected).toEqual(true);
+  expect(snackResult.error).not.toBeUndefined();
 });
 
 test('Snackbar with negative time throws error', () => {
   const { snackbarRepo } = makeTestRig();
-  expect(() =>
-    snackbarRepo.makeSnackbar('testing', {
-      actionButtonText: '',
-      action: () => {
-        const test = 2;
-      },
-    }),
-  ).toThrowError();
+  const snackResult = snackbarRepo.makeSnackbar('testing', {
+    actionButtonText: '',
+    action: () => {
+      const test = 2;
+    },
+  });
+
+  expect(snackResult.isRejected).toEqual(true);
+  expect(snackResult.error).not.toBeUndefined();
 });

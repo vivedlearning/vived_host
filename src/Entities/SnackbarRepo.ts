@@ -1,3 +1,4 @@
+import { reject, resolve, Result } from '../ValueObjects/Result';
 import { ObserverList } from './ObserverList';
 
 export interface Snackbar {
@@ -14,7 +15,7 @@ export interface SnackbarAction {
 export type SnackbarObserver = (snackbar: Snackbar | undefined) => void;
 
 export interface SnackbarRepo {
-  makeSnackbar: (message: string, snackbarAction?: SnackbarAction, durationInSeconds?: number) => void;
+  makeSnackbar: (message: string, snackbarAction?: SnackbarAction, durationInSeconds?: number) => Result<null, Error>;
   getCurrentSnackbar: () => Snackbar | undefined;
   dismissActiveSnackbar: () => void;
   callActiveSnackbarAction: () => void;
@@ -41,18 +42,21 @@ class SnackbarRepoImp implements SnackbarRepo {
     message: string,
     snackbarAction?: SnackbarAction | undefined,
     durationInSeconds?: number | undefined,
-  ) => {
+  ): Result<null, Error> => {
     if (message.trim().length === 0) {
-      throw new Error('Snackbar must have a message');
+      const err = new Error('Snackbar must have a message');
+      return reject(err);
     }
 
     if (snackbarAction && snackbarAction.actionButtonText.trim().length === 0) {
-      throw new Error('If a Snackbar has an action then the action button text cannot be empty');
+      const err = new Error('If a Snackbar has an action then the action button text cannot be empty');
+      return reject(err);
     }
 
     const duration = durationInSeconds ?? this.defaultDurationInSeconds;
     if (duration <= 0) {
-      throw new Error(`${duration} is an invalid duration for a Snackbar`);
+      const err = new Error(`${duration} is an invalid duration for a Snackbar`);
+      return reject(err);
     }
 
     const snackbar: Snackbar = {
@@ -64,6 +68,8 @@ class SnackbarRepoImp implements SnackbarRepo {
     this.snackbarQueue.push(snackbar);
     this.observers.notify(this.getCurrentSnackbar());
     this.monitorSnackbarTime();
+
+    return resolve(null);
   };
 
   getCurrentSnackbar = (): Snackbar | undefined => {
@@ -118,5 +124,4 @@ class SnackbarRepoImp implements SnackbarRepo {
     }
     this.monitoringSnackbarTime = false;
   }
-
 }
