@@ -114,6 +114,7 @@ class SnackbarRepoImp implements SnackbarRepo {
       if (currentSnackbar) {
         let currentTimeout = currentSnackbar.durationInSeconds;
         while (this.getCurrentSnackbar() === currentSnackbar && currentTimeout > 0) {
+          // tslint:disable-next-line:no-shadowed-variable
           await new Promise((resolve) => setTimeout(resolve, loopFrequencyInSeconds * 1000));
           currentTimeout -= loopFrequencyInSeconds;
         }

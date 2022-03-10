@@ -31,8 +31,7 @@ export class Version {
 
     let latest: Version | undefined;
 
-    for (let i = 0; i < versions.length; i++) {
-      const v = versions[i];
+    for(const v of versions) {
 
       if (v.major !== major) continue;
 
@@ -62,8 +61,7 @@ export class Version {
 
     let latest: Version | undefined;
 
-    for (let i = 0; i < versions.length; i++) {
-      const v = versions[i];
+    for(const v of versions) {
 
       if (v.major !== major) continue;
       if (v.minor !== minor) continue;
@@ -91,8 +89,8 @@ export class Version {
       return reject(err);
     }
 
-    const major = parseInt(stringSplit[0]);
-    const minor = parseInt(stringSplit[1]);
+    const major = parseInt(stringSplit[0], 10);
+    const minor = parseInt(stringSplit[1], 10);
     const patchLabel = stringSplit[2];
     let patch = NaN;
     let label: string | undefined;
@@ -101,10 +99,10 @@ export class Version {
 
     if (indexOfDash > 0) {
       const patchStr = patchLabel.substring(0, indexOfDash);
-      patch = parseInt(patchStr);
+      patch = parseInt(patchStr, 10);
       label = patchLabel.substring(indexOfDash + 1);
     } else {
-      patch = parseInt(patchLabel);
+      patch = parseInt(patchLabel, 10);
     }
 
     if (isNaN(major)) {
