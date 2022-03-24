@@ -1,12 +1,12 @@
-import { ObserverList } from "./ObserverList";
+import { ObserverList } from './ObserverList';
 
-export type LogSeverity = "LOG" | "WARNING" | "ERROR" | "FATAL";
+export type LogSeverity = 'LOG' | 'WARNING' | 'ERROR' | 'FATAL';
 
-export type FilterBy = "sender" | "severity" | "message";
+export type FilterBy = 'sender' | 'severity' | 'message';
 
 export type Log = { sender: string; message: string; severity: LogSeverity };
 
-export type Instructions = "NOTHING" | "SHOWLOG" | "SHOWALL" | "DOWNLOAD";
+export type Instructions = 'NOTHING' | 'SHOWLOG' | 'SHOWALL' | 'DOWNLOAD';
 
 export type ObservedLog = {
   instruction: Instructions;
@@ -46,8 +46,8 @@ export interface Logger {
 
   downloadLogs: () => void;
 
-  getAllLogs: ()=> Log[];
-  getFilteredLogs: ()=>Log[];
+  getAllLogs: () => Log[];
+  getFilteredLogs: () => Log[];
 }
 
 export function makeLoggerEntity(): Logger {
@@ -61,7 +61,6 @@ class LoggerImp implements Logger {
   private logAddedObservers = new ObserverList<Log>();
   private filterBy: FilterBy | undefined = undefined;
   private filterValue: string | undefined = undefined;
-
 
   addLogSaveObserver = (observer: OnLogSaved): void => {
     this.saveObservers.add(observer);
@@ -83,7 +82,7 @@ class LoggerImp implements Logger {
     const allLogs = this.getFilteredLogs();
 
     this.saveObservers.notify({
-      instruction: "SHOWALL",
+      instruction: 'SHOWALL',
       payload: allLogs,
     });
   }
@@ -103,22 +102,22 @@ class LoggerImp implements Logger {
   }
 
   log = (sender: string, message: string): void => {
-    const log = this.setNewLog(sender, message, "LOG");
+    const log = this.setNewLog(sender, message, 'LOG');
     this.logAddedObservers.notify(log);
   };
 
   warn = (sender: string, message: string): void => {
-    const log = this.setNewLog(sender, message, "WARNING");
+    const log = this.setNewLog(sender, message, 'WARNING');
     this.logAddedObservers.notify(log);
   };
 
   error = (sender: string, message: string): void => {
-    const log = this.setNewLog(sender, message, "ERROR");
+    const log = this.setNewLog(sender, message, 'ERROR');
     this.logAddedObservers.notify(log);
   };
 
   fatal = (sender: string, message: string): void => {
-    const log = this.setNewLog(sender, message, "FATAL");
+    const log = this.setNewLog(sender, message, 'FATAL');
     this.logAddedObservers.notify(log);
   };
 
@@ -133,7 +132,7 @@ class LoggerImp implements Logger {
 
     if (this.showLog) {
       this.saveObservers.notify({
-        instruction: "SHOWLOG",
+        instruction: 'SHOWLOG',
         payload: log,
       });
     }
@@ -146,12 +145,12 @@ class LoggerImp implements Logger {
   };
 
   downloadLogs = (): void => {
-    let logs = this.getAllLogs();
+    const logs = this.getAllLogs();
 
     this.saveObservers.notify({
-      instruction: "DOWNLOAD",
+      instruction: 'DOWNLOAD',
       payload: {
-        filename: "playerLogs.json",
+        filename: 'playerLogs.json',
         fileData: {
           filterBy: this.filterBy,
           filterValue: this.filterValue,
@@ -162,23 +161,19 @@ class LoggerImp implements Logger {
   };
 
   getAllLogs = (): Log[] => {
-    return [...this.logItems]
-  }
+    return [...this.logItems];
+  };
 
   getFilteredLogs = (): Log[] => {
     return this.logItems.filter((item) => this.filterFormula(item));
-  }
+  };
 
   filterFormula(item: Log): Log | undefined {
     if (this.filterBy) {
-      let currentValue = item[this.filterBy]
-          .toString()
-          .toLocaleLowerCase()
-          .trim(),
-        desiredValue =
-          this.filterValue?.toString().toLocaleLowerCase().trim() ?? "",
-        exactMatch = currentValue === desiredValue,
-        similarMatch = currentValue.includes(desiredValue);
+      const currentValue = item[this.filterBy].toString().toLocaleLowerCase().trim();
+      const desiredValue = this.filterValue?.toString().toLocaleLowerCase().trim() ?? '';
+      const exactMatch = currentValue === desiredValue;
+      const similarMatch = currentValue.includes(desiredValue);
 
       if (exactMatch || similarMatch) {
         return item;
