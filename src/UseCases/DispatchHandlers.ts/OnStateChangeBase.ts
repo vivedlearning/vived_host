@@ -1,0 +1,61 @@
+import {
+  ActionNotImplemented,
+  HostHandler,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVerion,
+} from '../../Entities';
+
+export type OnStateChangeAction = (state: object, validationErrorMessage?: string) => void;
+
+export class OnStateChangeBase extends RequestHandler {
+  readonly requestType = 'ON_STATE_CHANGE';
+
+  action: OnStateChangeAction = () => {
+    throw new ActionNotImplemented(this.requestType);
+  };
+
+  handleRequest = (version: number, payload: unknown) => {
+    if (version === 1) {
+      const { stateObject } = this.castPayloadV1(payload);
+      this.action(stateObject);
+    } else if (version === 2) {
+      const { stateObject, validationErrorMessage } = this.castPayloadV2(payload);
+      this.action(stateObject, validationErrorMessage);
+    } else {
+      throw new UnsupportedRequestVerion(this.requestType, version);
+    }
+  };
+
+  private castPayloadV1(payload: unknown): Payload_V1 {
+    const castPayload = payload as Payload_V1;
+    if (castPayload.stateObject === undefined) {
+      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+    }
+
+    return castPayload;
+  }
+
+  private castPayloadV2(payload: unknown): Payload_V2 {
+    const castPayload = payload as Payload_V2;
+    if (castPayload.stateObject === undefined) {
+      throw new UnableToParsePayload(this.requestType, 2, JSON.stringify(payload));
+    }
+
+    return castPayload;
+  }
+
+  constructor(hostHandler: HostHandler) {
+    super();
+    hostHandler.registerRequestHandler(this);
+  }
+}
+
+type Payload_V1 = {
+  stateObject: object;
+};
+
+type Payload_V2 = {
+  stateObject: object;
+  validationErrorMessage?: string;
+};

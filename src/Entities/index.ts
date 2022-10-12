@@ -6,4 +6,5 @@ export * from './MemoizedNumber';
 export * from './MemoizedString';
 export * from './ObserverList';
 export * from './Logger';
-export * from './ChallengeResults'
+export * from './ChallengeResults';
+export * from './HostHandler';
