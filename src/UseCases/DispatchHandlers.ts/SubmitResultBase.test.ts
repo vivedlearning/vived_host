@@ -1,9 +1,9 @@
 import { makeHostHandler } from '../../Entities';
-import { MultiHitResultV1, SubmitResult } from './SubmitResultBase';
+import { MultiHitResultV1, SubmitResultBase } from './SubmitResultBase';
 
 function makeTestRig() {
   const hostHandler = makeHostHandler();
-  const onStateChange = new SubmitResult(hostHandler);
+  const onStateChange = new SubmitResultBase(hostHandler);
   return { hostHandler, onStateChange };
 }
 
@@ -11,7 +11,7 @@ describe('Submit Result Base Handler', () => {
   it('Registers as a handler when constructed', () => {
     const hostHandler = makeHostHandler();
     hostHandler.registerRequestHandler = jest.fn();
-    const onStateChange = new SubmitResult(hostHandler);
+    const onStateChange = new SubmitResultBase(hostHandler);
     expect(hostHandler.registerRequestHandler).toBeCalledWith(onStateChange);
   });
 

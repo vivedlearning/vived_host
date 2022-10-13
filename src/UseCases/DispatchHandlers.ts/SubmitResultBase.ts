@@ -29,12 +29,12 @@ export type ScoreResultV1 = {
   maxScore: number;
 };
 
-export type SubmitHitResultAction = (type: ResultType, result: Results, description: string) => void;
+export type SubmitResultAction = (type: ResultType, result: Results, description: string) => void;
 
-export class SubmitResult extends RequestHandler {
+export class SubmitResultBase extends RequestHandler {
   readonly requestType = 'SUBMIT_RESULTS';
 
-  action: SubmitHitResultAction = () => {
+  action: SubmitResultAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
 
