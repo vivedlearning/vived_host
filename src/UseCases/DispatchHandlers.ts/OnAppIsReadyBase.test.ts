@@ -1,17 +1,17 @@
 import { makeHostHandler } from '../../Entities';
-import { OnStateCompleteBase } from './OnStateCompleteBase';
+import { OnAppIsReadyBase } from './OnAppIsReadyBase';
 
 function makeTestRig() {
   const hostHandler = makeHostHandler();
-  const onStateComplete = new OnStateCompleteBase(hostHandler);
+  const onStateComplete = new OnAppIsReadyBase(hostHandler);
   return { hostHandler, onStateComplete };
 }
 
-describe('On State Complete Base Handler', () => {
+describe('On App Ready Base Handler', () => {
   it('Registers as a handler when constructed', () => {
     const hostHandler = makeHostHandler();
     hostHandler.registerRequestHandler = jest.fn();
-    const onStateComplete = new OnStateCompleteBase(hostHandler);
+    const onStateComplete = new OnAppIsReadyBase(hostHandler);
     expect(hostHandler.registerRequestHandler).toBeCalledWith(onStateComplete);
   });
 
@@ -32,7 +32,7 @@ describe('On State Complete Base Handler', () => {
 
   it('Throws for an unsupported version', () => {
     const { onStateComplete } = makeTestRig();
-
+    
     expect(() => onStateComplete.handleRequest(-1)).toThrowError();
   });
 });
