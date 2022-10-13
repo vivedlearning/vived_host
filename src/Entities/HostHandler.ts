@@ -1,10 +1,4 @@
-export type Handler = (request: Request) => void;
-
-export interface Request {
-  type: string;
-  version: number;
-  payload?: unknown;
-}
+import { Handler, Request } from "./HostBoundary";
 
 export abstract class RequestHandler {
   abstract readonly requestType: string;

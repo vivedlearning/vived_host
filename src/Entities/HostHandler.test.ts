@@ -1,4 +1,5 @@
-import { RequestHandler, makeHostHandler, UnsupportedRequestVerion, Request } from './HostHandler';
+import { RequestHandler, makeHostHandler, UnsupportedRequestVerion } from './HostHandler';
+import { Request } from './HostBoundary';
 
 class MockHandler extends RequestHandler {
   readonly requestType: string = 'A_REQUEST';
