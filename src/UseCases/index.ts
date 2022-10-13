@@ -1,1 +1,1 @@
-export * from "./DispatchHandlers.ts"
+export * from "./Handlers"
