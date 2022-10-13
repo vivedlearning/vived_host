@@ -1,3 +1,4 @@
+export * from './GetAssetBlobBase';
 export * from './GetAssetFolderURLBase';
 export * from './GetAssetMetaBase';
 export * from './OnAppIsReadyBase';
