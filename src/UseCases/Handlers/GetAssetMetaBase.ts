@@ -12,7 +12,7 @@ export type GetAssetMetaAction = (
 ) => void;
 
 export class GetAssetMetaBase extends RequestHandler {
-  readonly requestType = "GET_ASSET";
+  readonly requestType = "GET_ASSET_META";
 
   action: GetAssetMetaAction = () => {
     throw new ActionNotImplemented(this.requestType);
