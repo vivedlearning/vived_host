@@ -74,7 +74,7 @@ export class SubmitResultBase extends RequestHandler {
   }
 }
 
-//Payload V1 is unsupported
+// Payload V1 is unsupported
 
 type Payload_V2 = {
   tries: number;
