@@ -18,9 +18,39 @@ export function makeHostDispatcher(): HostDispatcher {
 
 class HostDistpatcherImp extends HostDispatcher {
   private appHandler?: Handler;
+  private appHandlerVersion = 0;
+  private appPayloadVersions = new Map<string, number>();
 
   registerAppHandler = (appHandler: Handler) => {
     this.appHandler = appHandler;
+    this.getAppHandlerVersion();
+  };
+
+  private getAppHandlerVersion() {
+    const type = 'GET_APP_HANDLER_VERSION';
+    const payload = { callback: this.setupVersion };
+
+    try {
+      this.doDispatch(type, 1, payload);
+    } catch {
+      //All good. this is probably an older app
+    }
+  }
+
+  private setupVersion = (version: number) => {
+    //Apps before app package version 2.27 will not reach this
+    this.appHandlerVersion = version;
+    this.getPayloadVersions();
+  };
+
+  private getPayloadVersions() {
+    const type = 'GET_APP_PAYLOAD_VERSION';
+    const payload = { callback: this.setupPayloadVersions };
+    this.doDispatch(type, 2, payload);
+  }
+
+  private setupPayloadVersions = (payloadVersion: Map<string, number>) => {
+    this.appPayloadVersions = payloadVersion;
   };
 
   dispatch = (request: Request) => {
@@ -33,75 +63,68 @@ class HostDistpatcherImp extends HostDispatcher {
   };
 
   showBabylonInspector = (show: boolean) => {
-    const request: Request = {
-      type: 'SHOW_BABYLON_INSPECTOR',
-      version: 1,
-      payload: {
-        showBabylonInspector: show,
-      },
+    const type = 'SHOW_BABYLON_INSPECTOR';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+    const payload = {
+      showBabylonInspector: show,
     };
-
-    this.dispatch(request);
+    this.doDispatch(type, version, payload);
   };
 
   setIsAuthoring = (isAuthoring: boolean) => {
-    const request: Request = {
-      type: 'SET_IS_AUTHORING',
-      version: 1,
-      payload: {
-        isAuthoring,
-      },
-    };
-
-    this.dispatch(request);
+    const type = 'SET_IS_AUTHORING';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+    const payload = { isAuthoring };
+    this.doDispatch(type, version, payload);
   };
 
   disposeApp = () => {
-    const request: Request = {
-      type: 'DISPOSE_APP',
-      version: 1,
-    };
-
-    this.dispatch(request);
+    const type = 'DISPOSE_APP';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+    this.doDispatch(type, version);
   };
 
   stopApp = () => {
-    const request: Request = {
-      type: 'STOP_APP',
-      version: 1,
-    };
-
-    this.dispatch(request);
+    const type = 'STOP_APP';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+    this.doDispatch(type, version);
   };
 
   startApp = (container: HTMLElement) => {
-    const request: Request = {
-      type: 'START_APP',
-      version: 2,
-      payload: {
-        container,
-      },
+    const type = 'START_APP';
+    const version = this.appPayloadVersions.get(type) ?? 2;
+    const payload = {
+      container,
     };
-
-    this.dispatch(request);
+    this.doDispatch(type, version, payload);
   };
 
   setState = (finalState: string, duration?: number | undefined) => {
-    const request: Request = {
-      type: 'SET_APP_STATE',
-      version: 2,
-      payload: {
-        finalState,
-        duration,
-      },
+    const type = 'SET_APP_STATE';
+    const version = this.appPayloadVersions.get(type) ?? 2;
+    const payload = {
+      finalState,
+      duration,
     };
-    this.dispatch(request);
+    this.doDispatch(type, version, payload);
   };
 
-  setDevicePreview = (x: number, y: number) => {
+  private doDispatch(type: string, version: number, payload?: unknown) {
     const request: Request = {
-      type: 'SET_DEVICE_PREVIEW',
-      version: 1,
+      type,
+      version,
+      payload,
+    };
+    this.dispatch(request);
+  }
+
+  setDevicePreview = (x: number, y: number) => {
+    const type = 'SET_DEVICE_PREVIEW';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+
+    const request: Request = {
+      type,
+      version,
       payload: {
         x,
         y,
