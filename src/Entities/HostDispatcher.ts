@@ -33,12 +33,12 @@ class HostDistpatcherImp extends HostDispatcher {
     try {
       this.doDispatch(type, 1, payload);
     } catch {
-      //All good. this is probably an older app
+      // All good. this is probably an older app
     }
   }
 
   private setupVersion = (version: number) => {
-    //Apps before app package version 2.27 will not reach this
+    // Apps before app package version 2.27 will not reach this
     this.appHandlerVersion = version;
     this.getPayloadVersions();
   };
