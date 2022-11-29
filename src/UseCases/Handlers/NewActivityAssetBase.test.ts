@@ -3,42 +3,44 @@ import { NewActivityAssetBase } from './NewActivityAssetBase';
 
 function makeTestRig() {
   const hostHandler = makeHostHandler();
-  const getAssetMetaBase = new NewActivityAssetBase(hostHandler);
-  return { hostHandler, getAssetMetaBase };
+  const newActivityAssetBase = new NewActivityAssetBase(hostHandler);
+  return { hostHandler, newActivityAssetBase };
 }
 
 describe('Get Asset Blob Base Handler', () => {
   it('Registers as a handler when constructed', () => {
     const hostHandler = makeHostHandler();
     hostHandler.registerRequestHandler = jest.fn();
-    const getAssetMetaBase = new NewActivityAssetBase(hostHandler);
-    expect(hostHandler.registerRequestHandler).toBeCalledWith(getAssetMetaBase);
+    const newActivityAssetBase = new NewActivityAssetBase(hostHandler);
+    expect(hostHandler.registerRequestHandler).toBeCalledWith(newActivityAssetBase);
   });
 
   it('Throws an error if the action is not overwritten', () => {
-    const { getAssetMetaBase } = makeTestRig();
+    const { newActivityAssetBase } = makeTestRig();
 
     const mockFile = new File([], 'file.name');
 
-    expect(() => getAssetMetaBase.action(mockFile, jest.fn())).toThrowError();
+    expect(() => newActivityAssetBase.action(mockFile, jest.fn())).toThrowError();
   });
 
   it('Triggers the action for v1', () => {
-    const { getAssetMetaBase } = makeTestRig();
-    getAssetMetaBase.action = jest.fn();
+    const { newActivityAssetBase } = makeTestRig();
+    newActivityAssetBase.action = jest.fn();
+
+    const mockFile = new File([], 'file.name');
 
     const mockCallback = jest.fn();
     const payload = {
-      assetID: 'anAsset',
+      file: mockFile,
       callback: mockCallback,
     };
-    getAssetMetaBase.handleRequest(1, payload);
+    newActivityAssetBase.handleRequest(1, payload);
 
-    expect(getAssetMetaBase.action).toBeCalledWith('anAsset', mockCallback);
+    expect(newActivityAssetBase.action).toBeCalledWith(mockFile, mockCallback);
   });
 
   it('Throws for an unsupported version', () => {
-    const { getAssetMetaBase } = makeTestRig();
+    const { newActivityAssetBase } = makeTestRig();
 
     const mockCallback = jest.fn();
     const payload = {
@@ -46,17 +48,17 @@ describe('Get Asset Blob Base Handler', () => {
       callback: mockCallback,
     };
 
-    expect(() => getAssetMetaBase.handleRequest(-1, payload)).toThrowError();
+    expect(() => newActivityAssetBase.handleRequest(-1, payload)).toThrowError();
   });
 
   it('Throws if the payload is bungled', () => {
-    const { getAssetMetaBase } = makeTestRig();
-    getAssetMetaBase.action = jest.fn();
+    const { newActivityAssetBase } = makeTestRig();
+    newActivityAssetBase.action = jest.fn();
 
     const payload = {
       foo: 'bar',
     };
 
-    expect(() => getAssetMetaBase.handleRequest(1, payload)).toThrowError();
+    expect(() => newActivityAssetBase.handleRequest(1, payload)).toThrowError();
   });
 });
