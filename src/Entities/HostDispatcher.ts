@@ -10,6 +10,8 @@ export abstract class HostDispatcher {
   abstract startApp: (container: HTMLElement) => void;
   abstract setState: (finalState: string, duration?: number) => void;
   abstract setDevicePreview: (x: number, y: number) => void;
+  abstract startZSpace: (device: string, session: any) => void;
+  abstract stopZSpace: () => void;
 }
 
 export function makeHostDispatcher(): HostDispatcher {
@@ -129,6 +131,32 @@ class HostDistpatcherImp extends HostDispatcher {
         x,
         y,
       },
+    };
+    this.dispatch(request);
+  };
+
+  startZSpace = (device: string, session: any) => {
+    const type = 'START_ZSPACE';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+
+    const request: Request = {
+      type,
+      version,
+      payload: {
+        device,
+        session,
+      },
+    };
+    this.dispatch(request);
+  };
+
+  stopZSpace = () => {
+    const type = 'STOP_ZSPACE';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+
+    const request: Request = {
+      type,
+      version,
     };
     this.dispatch(request);
   };

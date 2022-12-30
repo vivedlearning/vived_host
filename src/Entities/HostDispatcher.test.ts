@@ -63,7 +63,7 @@ describe('Host Dispatcher', () => {
     expect(spy).toBeCalledTimes(1);
   });
 
-  it("Dispatches GET_APP_PAYLOAD_VERSION if the version responds", ()=>{
+  it('Dispatches GET_APP_PAYLOAD_VERSION if the version responds', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
@@ -74,7 +74,7 @@ describe('Host Dispatcher', () => {
     const request = spy.mock.calls[1][0] as Request;
     expect(request.type).toEqual('GET_APP_PAYLOAD_VERSION');
     expect(request.version).toEqual(2);
-  })
+  });
 
   it('Dispataches show babylon inspector with the default version number', () => {
     const { hostDispatcher, mockHandler } = makeTestRig();
@@ -96,7 +96,7 @@ describe('Host Dispatcher', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("SHOW_BABYLON_INSPECTOR", 15)
+    mockHandler.payloadVersions.set('SHOW_BABYLON_INSPECTOR', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -134,7 +134,7 @@ describe('Host Dispatcher', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("SET_IS_AUTHORING", 15)
+    mockHandler.payloadVersions.set('SET_IS_AUTHORING', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -169,7 +169,7 @@ describe('Host Dispatcher', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("DISPOSE_APP", 15)
+    mockHandler.payloadVersions.set('DISPOSE_APP', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -195,13 +195,13 @@ describe('Host Dispatcher', () => {
     hostDispatcher.stopApp();
 
     expect(mockHandler).toBeCalledWith(expectedRequest);
-  });  
-  
+  });
+
   it('Dispatches stop app with the app payload version number', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("STOP_APP", 15)
+    mockHandler.payloadVersions.set('STOP_APP', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -237,7 +237,7 @@ describe('Host Dispatcher', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("SET_DEVICE_PREVIEW", 15)
+    mockHandler.payloadVersions.set('SET_DEVICE_PREVIEW', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -277,7 +277,7 @@ describe('Host Dispatcher', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("START_APP", 15)
+    mockHandler.payloadVersions.set('START_APP', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
     const element = document.createElement('div');
@@ -317,7 +317,7 @@ describe('Host Dispatcher', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set("SET_APP_STATE", 15)
+    mockHandler.payloadVersions.set('SET_APP_STATE', 15);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -332,6 +332,84 @@ describe('Host Dispatcher', () => {
     };
 
     hostDispatcher.setState('Some State', 5);
+
+    expect(spy).toBeCalledWith(expectedRequest);
+  });
+
+  it('Dispatches stop zSpace with the default version number', () => {
+    const { hostDispatcher, mockHandler } = makeTestRig();
+
+    const expectedRequest: Request = {
+      type: 'STOP_ZSPACE',
+      version: 1,
+    };
+
+    hostDispatcher.stopZSpace();
+
+    expect(mockHandler).toBeCalledWith(expectedRequest);
+  });
+
+  it('Dispatches stop zSpace with the app payload version number', () => {
+    const hostDispatcher = makeHostDispatcher();
+    const mockHandler = new MockHandler();
+    mockHandler.handlerVersion = 1;
+    mockHandler.payloadVersions.set('STOP_ZSPACE', 15);
+    const spy = jest.spyOn(mockHandler, 'handler');
+    hostDispatcher.registerAppHandler(mockHandler.handler);
+
+    spy.mockClear();
+    const expectedRequest: Request = {
+      type: 'STOP_ZSPACE',
+      version: 15,
+    };
+
+    hostDispatcher.stopZSpace();
+
+    expect(spy).toBeCalledWith(expectedRequest);
+  });
+
+  it('Dispatches start zSpace with the default version number', () => {
+    const { hostDispatcher, mockHandler } = makeTestRig();
+
+    const mockDevice = 'some device';
+    const mockSession = { foo: 'bar' };
+
+    const expectedRequest: Request = {
+      type: 'START_ZSPACE',
+      version: 1,
+      payload: {
+        device: mockDevice,
+        session: mockSession,
+      },
+    };
+
+    hostDispatcher.startZSpace(mockDevice, mockSession);
+
+    expect(mockHandler).toBeCalledWith(expectedRequest);
+  });
+
+  it('Dispatches start zSpace with the app payload version number', () => {
+    const hostDispatcher = makeHostDispatcher();
+    const mockHandler = new MockHandler();
+    mockHandler.handlerVersion = 1;
+    mockHandler.payloadVersions.set('START_ZSPACE', 15);
+    const spy = jest.spyOn(mockHandler, 'handler');
+    hostDispatcher.registerAppHandler(mockHandler.handler);
+
+    spy.mockClear();
+
+    const mockDevice = 'some device';
+    const mockSession = { foo: 'bar' };
+    const expectedRequest: Request = {
+      type: 'START_ZSPACE',
+      version: 15,
+      payload: {
+        device: mockDevice,
+        session: mockSession,
+      },
+    };
+
+    hostDispatcher.startZSpace(mockDevice, mockSession);
 
     expect(spy).toBeCalledWith(expectedRequest);
   });
