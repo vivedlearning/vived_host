@@ -1,50 +1,90 @@
-import { Dialog, DialogRepo } from "../..";
+import { DialogBase, DialogRepo } from "../../Entities";
+
 
 export interface DialogVM {
-    showDialog: boolean;
-    title: string | undefined;
-    message: string;
-    primaryActionText: string;
-    secondaryActionText: string | undefined;
+  open: boolean;
+  type?: string;
+  dialog?: DialogBase;
+  preventOutsideDismiss?: boolean
 }
 
 export class DialogPM {
-    private dialogRepo: DialogRepo;
-    private updateView: (viewModel: DialogVM) => void;
+  private observingDialog: DialogBase | null = null;
+  private lastVM?: DialogVM;
 
-    dispose() {
-        this.dialogRepo.removeObserver(this.doUpdateView);
-    }
+  doUpdateView = () => {
+    let vm: DialogVM = {open: false};
 
-    private doUpdateView = (dialog: Dialog | undefined): void => {
-        let model: DialogVM = {
-            showDialog: false,
-            title: undefined,
-            message: "",
-            primaryActionText: "",
-            secondaryActionText: undefined
-        }
+    const currentDialog = this.repo.activeDialog;
 
-        if (dialog) {
-            model = {
-                showDialog: true,
-                title: dialog.title ?? undefined,
-                message: dialog.message,
-                primaryActionText: dialog.primaryAction.text,
-                secondaryActionText: dialog.secondaryAction ? dialog.secondaryAction.text : undefined
-            }
-        }
-
-        this.updateView(model);
-    }
-
-    constructor(
-      dialogRepo: DialogRepo,
-        updateView: (viewMode: DialogVM) => void
+    if (
+      currentDialog
     ) {
-        this.dialogRepo = dialogRepo;
-        this.updateView = updateView;
-        this.doUpdateView(undefined);
-        this.dialogRepo.addObserver(this.doUpdateView);
+      this.updateAlertObserver(currentDialog);
+
+      vm = {
+        open: currentDialog.isOpen,
+        type: currentDialog.type,
+        dialog: currentDialog ,
+        preventOutsideDismiss: currentDialog.preventOutsideDismiss
+      };
+    } else {
+      this.updateAlertObserver(null);
     }
+
+    if (!this.vmHasChanged(vm)) return;
+
+    this.updateView(vm);
+    this.lastVM = vm;
+  };
+
+  updateAlertObserver(alert: DialogBase | null) {
+    if (alert === this.observingDialog) return;
+
+    if (this.observingDialog !== null) {
+      this.observingDialog.removeObserver(this.doUpdateView);
+    }
+
+    if (alert !== null) {
+      alert.addObserver(this.doUpdateView);
+    }
+
+    this.observingDialog = alert;
+  }
+
+  private vmHasChanged(vm: DialogVM | null): boolean {
+    if (this.lastVM === undefined) return true;
+
+    if (vm === null && this.lastVM === null) return false;
+
+    if (
+      vm?.open === this.lastVM?.open &&
+      vm?.type === this.lastVM?.type &&
+      vm?.dialog === this.lastVM?.dialog
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  dispose = () => {
+    this.repo.removeObserver(this.doUpdateView);
+    if (this.observingDialog) {
+      this.observingDialog.removeObserver(this.doUpdateView);
+    }
+  };
+
+  constructor(
+    private repo: DialogRepo,
+    private updateView: (vm: DialogVM) => void
+  ) {
+    repo.addObserver(this.doUpdateView);
+    this.doUpdateView();
+  }
 }
+
+export const defualtDialogVM: DialogVM = {
+  open: false
+};
+

@@ -7,6 +7,8 @@ function makeTestRig() {
   return { hostHandler, newActivityAssetBase };
 }
 
+
+
 describe('Get Asset Blob Base Handler', () => {
   it('Registers as a handler when constructed', () => {
     const hostHandler = makeHostHandler();
@@ -26,6 +28,13 @@ describe('Get Asset Blob Base Handler', () => {
   it('Triggers the action for v1', () => {
     const { newActivityAssetBase } = makeTestRig();
     newActivityAssetBase.action = jest.fn();
+
+    global.File = class MockFile {
+      filename: string;
+      constructor(parts: (string | Blob | ArrayBuffer | ArrayBufferView)[], filename: string, properties ? : FilePropertyBag) {
+        this.filename = filename;
+      }
+    }
 
     const mockFile = new File([], 'file.name');
 
