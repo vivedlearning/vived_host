@@ -29,13 +29,6 @@ describe('Get Asset Blob Base Handler', () => {
     const { newActivityAssetBase } = makeTestRig();
     newActivityAssetBase.action = jest.fn();
 
-    global.File = class MockFile {
-      filename: string;
-      constructor(parts: (string | Blob | ArrayBuffer | ArrayBufferView)[], filename: string, properties ? : FilePropertyBag) {
-        this.filename = filename;
-      }
-    }
-
     const mockFile = new File([], 'file.name');
 
     const mockCallback = jest.fn();
