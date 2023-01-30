@@ -18,9 +18,13 @@ export class ConfirmDialogPM {
     let vm: ConfirmDialogVM = {
       message: "",
       title: "",
-      cancel: ()=>{},
+      cancel: ()=>{
+        console.warn("[ConfirmDialogVM.cancel] empty VM!")
+      },
       cancelButtonLabel: "",
-      confirm: ()=>{},
+      confirm: ()=>{
+        console.warn("[ConfirmDialogVM.confirm] empty VM!")
+      },
       confirmButtonLabel: ""
     };
 
@@ -96,8 +100,12 @@ export class ConfirmDialogPM {
 export const defaultConfirmDialogVM: ConfirmDialogVM = {
   message: "",
   title: "",
-  cancel: ()=>{},
+  cancel: ()=>{
+    console.warn("[ConfirmDialogVM.cancel] default VM!")
+  },
   cancelButtonLabel: "",
-  confirm: ()=>{},
+  confirm: ()=>{
+    console.warn("[ConfirmDialogVM.confirm] default VM!")
+  },
   confirmButtonLabel: ""
 };
