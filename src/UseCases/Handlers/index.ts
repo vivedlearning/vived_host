@@ -4,13 +4,15 @@ export * from './GetAssetMetaBase';
 export * from './GoToNextStateBase';
 export * from './GoToPreviousStateBase';
 export * from './HasNextStateBase';
-export * from './HasPreviousStateBase'
+export * from './HasPreviousStateBase';
 export * from './GetAssetsForOwnerBase';
 export * from './NewActivityAssetBase';
 export * from './OnAppIsReadyBase';
 export * from './OnStateChangeBase';
 export * from './OnStateCompleteBase';
 export * from './RegisterExternalStyleSheetsBase';
+export * from './ShowAlertBase';
+export * from './ShowConfirmBase';
 export * from './StartZSpaceBase';
 export * from './StopZSpaceBase';
 export * from './SubmitLogBase';

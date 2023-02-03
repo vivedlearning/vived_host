@@ -1,6 +1,6 @@
 {
   "name": "@vived/vivedlearning_host",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "Public Host package for the VIVED Learning App system",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
