@@ -1,8 +1,8 @@
-import { ObserverList } from "./ObserverList";
+import { ObserverList } from './ObserverList';
 
 export type OnChallengeResultsChange = () => void;
 
-export type ChallengeResultType = "HIT" | "MULTIHIT" | "QUALITY" | "SCORE";
+export type ChallengeResultType = 'HIT' | 'MULTIHIT' | 'QUALITY' | 'SCORE' | 'PROGRESS';
 
 export interface ChallengeResult {
   slideID: string;
@@ -13,11 +13,16 @@ export interface ChallengeResult {
     | ChallengeResultHitData
     | ChallengeResultMultiHitData
     | ChallengeResultQualityData
-    | ChallengeResultScoreData;
+    | ChallengeResultScoreData
+    | ChallengeResultProgressData;
 }
 
 export interface ChallengeResultHitData {
   success: boolean;
+}
+
+export interface ChallengeResultProgressData {
+  maxProgress: number;
 }
 
 export interface ChallengeResultMultiHitData {
@@ -38,34 +43,23 @@ export interface ChallengeResultScoreData {
 
 export interface ChallengeResults {
   results: ChallengeResult[];
-  submitHitResult: (
-    slideID: string,
-    success: boolean,
-    tries: number,
-    message: string
-  ) => void;
+  submitHitResult: (slideID: string, success: boolean, tries: number, message: string) => void;
+
   submitMultiHitResult: (
     slideID: string,
     hits: number,
     misses: number,
     unanswered: number,
     tries: number,
-    message: string
+    message: string,
   ) => void;
-  submitQualityResult: (
-    slideID: string,
-    stars: number,
-    maxStars: number,
-    tries: number,
-    message: string
-  ) => void;
-  submitScoreResult: (
-    slideID: string,
-    score: number,
-    maxScore: number,
-    tries: number,
-    message: string
-  ) => void;
+
+  submitQualityResult: (slideID: string, stars: number, maxStars: number, tries: number, message: string) => void;
+
+  submitScoreResult: (slideID: string, score: number, maxScore: number, tries: number, message: string) => void;
+
+  submitProgressResult: (slideID: string, maxProgress: number, message: string) => void;
+
   getResultForSlide: (slideID: string) => ChallengeResult | undefined;
 
   addObserver: (observer: OnChallengeResultsChange) => void;
@@ -85,12 +79,7 @@ class ChallengeResultsImp implements ChallengeResults {
     return Array.from(this.resultLookup.values());
   }
 
-  submitHitResult = (
-    slideID: string,
-    success: boolean,
-    tries: number,
-    message: string
-  ): void => {
+  submitHitResult = (slideID: string, success: boolean, tries: number, message: string): void => {
     const resultData: ChallengeResultHitData = {
       success,
     };
@@ -99,7 +88,7 @@ class ChallengeResultsImp implements ChallengeResults {
       message,
       resultData,
       tries,
-      type: "HIT",
+      type: 'HIT',
     };
 
     this.resultLookup.set(slideID, result);
@@ -112,7 +101,7 @@ class ChallengeResultsImp implements ChallengeResults {
     misses: number,
     unanswered: number,
     tries: number,
-    message: string
+    message: string,
   ): void => {
     const resultData: ChallengeResultMultiHitData = {
       hits,
@@ -124,20 +113,14 @@ class ChallengeResultsImp implements ChallengeResults {
       message,
       resultData,
       tries,
-      type: "MULTIHIT",
+      type: 'MULTIHIT',
     };
 
     this.resultLookup.set(slideID, result);
     this.observers.notify();
   };
 
-  submitQualityResult = (
-    slideID: string,
-    stars: number,
-    maxStars: number,
-    tries: number,
-    message: string
-  ): void => {
+  submitQualityResult = (slideID: string, stars: number, maxStars: number, tries: number, message: string): void => {
     const resultData: ChallengeResultQualityData = {
       stars,
       maxStars,
@@ -147,20 +130,14 @@ class ChallengeResultsImp implements ChallengeResults {
       message,
       resultData,
       tries,
-      type: "QUALITY",
+      type: 'QUALITY',
     };
 
     this.resultLookup.set(slideID, result);
     this.observers.notify();
   };
 
-  submitScoreResult = (
-    slideID: string,
-    score: number,
-    maxScore: number,
-    tries: number,
-    message: string
-  ): void => {
+  submitScoreResult = (slideID: string, score: number, maxScore: number, tries: number, message: string): void => {
     const resultData: ChallengeResultScoreData = {
       score,
       maxScore,
@@ -170,7 +147,7 @@ class ChallengeResultsImp implements ChallengeResults {
       message,
       resultData,
       tries,
-      type: "SCORE",
+      type: 'SCORE',
     };
 
     this.resultLookup.set(slideID, result);
@@ -181,10 +158,31 @@ class ChallengeResultsImp implements ChallengeResults {
     return this.resultLookup.get(slideID);
   };
 
+  submitProgressResult = (slideID: string, maxProgress: number, message: string): void => {
+    const currentResult = this.getResultForSlide(slideID);
+    if (currentResult && (currentResult.resultData as ChallengeResultProgressData).maxProgress > maxProgress) {
+      return;
+    }
+
+    const resultData: ChallengeResultProgressData = {
+      maxProgress,
+    };
+    const result: ChallengeResult = {
+      slideID,
+      message,
+      resultData,
+      tries: 1,
+      type: 'PROGRESS',
+    };
+
+    this.resultLookup.set(slideID, result);
+    this.observers.notify();
+  };
+
   addObserver = (observer: OnChallengeResultsChange): void => {
     this.observers.add(observer);
   };
-  
+
   removeObserver = (observer: OnChallengeResultsChange): void => {
     this.observers.remove(observer);
   };

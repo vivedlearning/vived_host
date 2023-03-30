@@ -6,8 +6,8 @@ import {
   UnsupportedRequestVerion,
 } from '../../Entities';
 
-export type ResultType = 'HIT_V1' | 'MULTIHIT_V1' | 'QUALITY_V1' | 'SCORE_V1';
-export type Results = HitResultV1 | MultiHitResultV1 | QualityResultV1 | ScoreResultV1;
+export type ResultType = 'HIT_V1' | 'MULTIHIT_V1' | 'QUALITY_V1' | 'SCORE_V1' | "PROGRESS_V1";
+export type Results = HitResultV1 | MultiHitResultV1 | QualityResultV1 | ScoreResultV1 | ProgressResultV1;
 
 export type HitResultV1 = {
   success: boolean;
@@ -27,6 +27,10 @@ export type QualityResultV1 = {
 export type ScoreResultV1 = {
   score: number;
   maxScore: number;
+};
+
+export type ProgressResultV1 = {
+  progress: number;
 };
 
 export type SubmitResultAction = (type: ResultType, result: Results, description: string) => void;

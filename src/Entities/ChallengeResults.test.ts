@@ -1,4 +1,4 @@
-import { makeChallengeResults, ChallengeResultHitData, ChallengeResultMultiHitData, ChallengeResultQualityData, ChallengeResultScoreData } from "./ChallengeResults";
+import { makeChallengeResults, ChallengeResultHitData, ChallengeResultMultiHitData, ChallengeResultQualityData, ChallengeResultScoreData, ChallengeResultProgressData } from "./ChallengeResults";
 
 function makeTestRig() {
   const results = makeChallengeResults();
@@ -217,6 +217,70 @@ describe("Results Entity", ()=>{
     results.submitQualityResult("slide2", 1, 2, 2, "A challenge!");
     results.submitMultiHitResult("slide3", 10, 20, 30, 2, "A challenge!");
     results.submitHitResult("slide4", false, 1, "A challenge!");
+
+    expect(observer).not.toBeCalled();
+  })
+
+  it("Adds a progress results", ()=>{
+    const {results, observer} = makeTestRig();
+
+    expect(results.results).toHaveLength(0);
+    results.submitProgressResult("slide1", 0.5, "A challenge!");
+    expect(results.results).toHaveLength(1);
+    const result = results.results[0];
+
+    expect(result.slideID).toEqual("slide1");
+    expect(result.tries).toEqual(1);
+    expect(result.message).toEqual("A challenge!");
+    expect(result.type).toEqual("PROGRESS");
+
+    const data = result.resultData as ChallengeResultProgressData;
+    expect(data.maxProgress).toEqual(0.5);
+
+    expect(observer).toBeCalled();
+  });
+
+  it("Updates a progress result if that slide result already exists", ()=>{
+    const {results, observer} = makeTestRig();
+
+    results.submitProgressResult("slide1", 0.5, "A challenge!");
+    expect(results.results).toHaveLength(1);
+
+    results.submitProgressResult("slide1", 0.75, "A challenge!");
+    expect(results.results).toHaveLength(1);
+
+    const result = results.results[0];
+
+    expect(result.slideID).toEqual("slide1");
+    expect(result.tries).toEqual(1);
+    expect(result.message).toEqual("A challenge!");
+    expect(result.type).toEqual("PROGRESS");
+
+    const data = result.resultData as ChallengeResultProgressData;
+    expect(data.maxProgress).toEqual(0.75);
+
+    expect(observer).toBeCalled();
+  })
+
+  it("It does not update if the new progress is less than the previous", ()=>{
+    const {results, observer} = makeTestRig();
+
+    results.submitProgressResult("slide1", 0.75, "A challenge!");
+    expect(results.results).toHaveLength(1);
+    observer.mockClear();
+
+    results.submitProgressResult("slide1", 0.5, "A challenge!");
+    expect(results.results).toHaveLength(1);
+
+    const result = results.results[0];
+
+    expect(result.slideID).toEqual("slide1");
+    expect(result.tries).toEqual(1);
+    expect(result.message).toEqual("A challenge!");
+    expect(result.type).toEqual("PROGRESS");
+
+    const data = result.resultData as ChallengeResultProgressData;
+    expect(data.maxProgress).toEqual(0.75);
 
     expect(observer).not.toBeCalled();
   })
