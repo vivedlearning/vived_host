@@ -7,11 +7,11 @@ describe('MarkDown Editor Dialog', () => {
       initialText: 'initial text',
     };
 
-    const alert = new DialogMarkDownEditor(data);
-    alert.isOpen = true;
-    alert.cancel();
+    const markDownEditor = new DialogMarkDownEditor(data);
+    markDownEditor.isOpen = true;
+    markDownEditor.cancel();
 
-    expect(alert.isOpen).toEqual(false);
+    expect(markDownEditor.isOpen).toEqual(false);
   });
 
   it('Sets the open to false when accept is called', () => {
@@ -20,11 +20,11 @@ describe('MarkDown Editor Dialog', () => {
       initialText: 'initial text',
     };
 
-    const alert = new DialogMarkDownEditor(data);
-    alert.isOpen = true;
-    alert.confirm();
+    const markDownEditor = new DialogMarkDownEditor(data);
+    markDownEditor.isOpen = true;
+    markDownEditor.confirm();
 
-    expect(alert.isOpen).toEqual(false);
+    expect(markDownEditor.isOpen).toEqual(false);
   });
 
   it('Calls the onAccept when accepted', () => {
@@ -33,8 +33,8 @@ describe('MarkDown Editor Dialog', () => {
       initialText: 'initial text',
     };
 
-    const alert = new DialogMarkDownEditor(data);
-    alert.confirm();
+    const markDownEditor = new DialogMarkDownEditor(data);
+    markDownEditor.confirm();
 
     expect(data.onConfirm).toBeCalled();
   });
