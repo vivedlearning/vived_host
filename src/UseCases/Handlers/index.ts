@@ -17,4 +17,5 @@ export * from './StartZSpaceBase';
 export * from './StopZSpaceBase';
 export * from './SubmitLogBase';
 export * from './SubmitResultBase';
+export * from './ShowMarkDownEditor';
 export * from './ShowSelectModelBase';
