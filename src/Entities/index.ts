@@ -1,3 +1,6 @@
+export * from './Asset';
+export * from './AssetRepo';
+export * from './Auth';
 export * from './ChallengeResults';
 export * from './DevicePreview';
 export * from './DialogAlert';
@@ -16,3 +19,4 @@ export * from './ObservableEntity';
 export * from './ObserverList';
 export * from './SnackbarRepo';
 export * from './DialogMarkDownEditor';
+export * from './VivedAPI';
