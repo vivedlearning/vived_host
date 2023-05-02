@@ -8,7 +8,8 @@ import {
 
 export interface ShowMarkDownEditorActionDTO {
   initialText: string;
-  confirmCallback: () => void;
+  submitCallback: (text: string) => void;
+  validateString?: (text: string) => string | null;
 }
 
 export type ShowMarkDownEditorAction = (confirmData: ShowMarkDownEditorActionDTO) => void;
@@ -31,7 +32,7 @@ export class ShowMarkDownEditor extends RequestHandler {
 
   private castPayloadV1(payload: unknown): ShowMarkDownEditorActionDTO {
     const castPayload = payload as Payload_V1;
-    if (castPayload.initialText === undefined || castPayload.confirmCallback === undefined) {
+    if (castPayload.initialText === undefined || castPayload.submitCallback === undefined) {
       throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
     }
 
@@ -46,5 +47,6 @@ export class ShowMarkDownEditor extends RequestHandler {
 
 type Payload_V1 = {
   initialText: string;
-  confirmCallback: () => void;
+  submitCallback: (text: string) => void;
+  validateString?: (text: string) => string | null;
 };
