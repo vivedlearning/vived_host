@@ -52,7 +52,7 @@ class AssetRepoImp extends AssetRepo {
     }
 
     getAssetByID(id: string): Asset | undefined {
-        let foundAsset: Asset | undefined = undefined;
+        let foundAsset: Asset | undefined;
         this._assets.forEach(asset => {
             if (asset.id === id) {
                 foundAsset = asset;

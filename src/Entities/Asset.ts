@@ -142,7 +142,7 @@ class AssetImp extends Asset {
     }
 
     getLinkedAssetByType(type: string): string[] {
-        let rVal: string[] = [];
+        const rVal: string[] = [];
 
         this._linkedAssets.forEach(asset => {
             if (asset.type === type) {
