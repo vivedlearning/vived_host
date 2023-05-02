@@ -18,3 +18,4 @@ export * from './StopZSpaceBase';
 export * from './SubmitLogBase';
 export * from './SubmitResultBase';
 export * from './ShowMarkDownEditorBase';
+export * from './ShowSelectModelBase';
