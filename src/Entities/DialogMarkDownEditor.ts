@@ -2,7 +2,7 @@ import { DialogBase } from './DialogBase';
 
 export interface DialogMarkDownEditorDTO {
   initialText: string;
-  onConfirm?: () => void;
+  onConfirm: (text: string) => void;
 }
 
 export const markDownEditorDialogType = 'MARKDOWN_EDITOR';
@@ -16,12 +16,10 @@ export class DialogMarkDownEditor extends DialogBase {
     this.isOpen = false;
   };
 
-  private postConfirm?: () => void;
-  confirm = () => {
+  private postConfirm: (text: string) => void;
+  confirm = (text: string) => {
     this.isOpen = false;
-    if (this.postConfirm) {
-      this.postConfirm();
-    }
+    this.postConfirm(text);
   };
 
   constructor(data: DialogMarkDownEditorDTO) {
