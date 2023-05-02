@@ -1,9 +1,9 @@
 import { makeHostHandler } from '../../Entities';
-import { ShowMarkDownEditorActionDTO, ShowMarkDownEditor } from './ShowMarkDownEditor';
+import { ShowMarkDownEditorActionDTO, ShowMarkDownEditorBase } from './ShowMarkDownEditorBase';
 
 function makeTestRig() {
   const hostHandler = makeHostHandler();
-  const getAssetMetaBase = new ShowMarkDownEditor(hostHandler);
+  const getAssetMetaBase = new ShowMarkDownEditorBase(hostHandler);
   return { hostHandler, getAssetMetaBase };
 }
 
@@ -26,7 +26,7 @@ describe('Show MarkDown Editor Handler', () => {
   it('Registers as a handler when constructed', () => {
     const hostHandler = makeHostHandler();
     hostHandler.registerRequestHandler = jest.fn();
-    const getAssetMetaBase = new ShowMarkDownEditor(hostHandler);
+    const getAssetMetaBase = new ShowMarkDownEditorBase(hostHandler);
     expect(hostHandler.registerRequestHandler).toBeCalledWith(getAssetMetaBase);
   });
 

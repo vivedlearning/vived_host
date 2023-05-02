@@ -14,7 +14,7 @@ export interface ShowMarkDownEditorActionDTO {
 
 export type ShowMarkDownEditorAction = (confirmData: ShowMarkDownEditorActionDTO) => void;
 
-export class ShowMarkDownEditor extends RequestHandler {
+export class ShowMarkDownEditorBase extends RequestHandler {
   readonly requestType = 'SHOW_MARKDOWN_EDITOR';
 
   action: ShowMarkDownEditorAction = () => {
