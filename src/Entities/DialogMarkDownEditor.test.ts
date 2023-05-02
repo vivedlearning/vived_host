@@ -22,7 +22,7 @@ describe('MarkDown Editor Dialog', () => {
 
     const markDownEditor = new DialogMarkDownEditor(data);
     markDownEditor.isOpen = true;
-    markDownEditor.confirm();
+    markDownEditor.confirm('MarkDown Text');
 
     expect(markDownEditor.isOpen).toEqual(false);
   });
@@ -34,7 +34,7 @@ describe('MarkDown Editor Dialog', () => {
     };
 
     const markDownEditor = new DialogMarkDownEditor(data);
-    markDownEditor.confirm();
+    markDownEditor.confirm('MarkDown Text');
 
     expect(data.onConfirm).toBeCalled();
   });

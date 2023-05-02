@@ -7,10 +7,18 @@ function makeTestRig() {
   return { hostHandler, getAssetMetaBase };
 }
 
-function makeBasicDTO(): ShowMarkDownEditorActionDTO {
+function makeBasicDTO(withOptional: boolean = true): ShowMarkDownEditorActionDTO {
+  if (!withOptional) {
+    return {
+      initialText: 'initial text',
+      submitCallback: jest.fn(),
+    };
+  }
+
   return {
     initialText: 'initial text',
-    confirmCallback: jest.fn(),
+    submitCallback: jest.fn(),
+    validateString: jest.fn(),
   };
 }
 
@@ -32,14 +40,24 @@ describe('Show MarkDown Editor Handler', () => {
     const { getAssetMetaBase } = makeTestRig();
     getAssetMetaBase.action = jest.fn();
 
-    const expectDTO = makeBasicDTO();
-    const payload = {
-      initialText: expectDTO.initialText,
-      confirmCallback: expectDTO.confirmCallback,
+    const expectDTOWithOptional = makeBasicDTO();
+    const payloadWithOptional = {
+      initialText: expectDTOWithOptional.initialText,
+      submitCallback: expectDTOWithOptional.submitCallback,
+      validateString: expectDTOWithOptional.validateString,
     };
-    getAssetMetaBase.handleRequest(1, payload);
+    getAssetMetaBase.handleRequest(1, payloadWithOptional);
 
-    expect(getAssetMetaBase.action).toBeCalledWith(expectDTO);
+    expect(getAssetMetaBase.action).toBeCalledWith(expectDTOWithOptional);
+
+    const expectDTOWithoutOptional = makeBasicDTO(false);
+    const payloadWithoutOptional = {
+      initialText: expectDTOWithoutOptional.initialText,
+      submitCallback: expectDTOWithoutOptional.submitCallback,
+    };
+    getAssetMetaBase.handleRequest(1, payloadWithoutOptional);
+
+    expect(getAssetMetaBase.action).toBeCalledWith(expectDTOWithoutOptional);
   });
 
   it('Throws for an unsupported version', () => {

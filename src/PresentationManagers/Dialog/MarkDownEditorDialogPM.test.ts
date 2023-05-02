@@ -25,6 +25,7 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data: DialogMarkDownEditorDTO = {
       initialText: 'initial text',
+      onConfirm: jest.fn(),
     };
 
     const markDownEditor = new DialogMarkDownEditor(data);
@@ -43,11 +44,12 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data: DialogMarkDownEditorDTO = {
       initialText: 'initial text',
+      onConfirm: jest.fn(),
     };
     const markDownEditor = new DialogMarkDownEditor(data);
     repo.submitDialog(markDownEditor);
 
-    markDownEditor.confirm();
+    markDownEditor.confirm('MarkDown Text');
     view.mockClear();
     repo.activeDialogHasClosed();
 
@@ -60,11 +62,12 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data: DialogMarkDownEditorDTO = {
       initialText: 'initial text',
+      onConfirm: jest.fn(),
     };
     const markDownEditor = new DialogMarkDownEditor(data);
     repo.submitDialog(markDownEditor);
 
-    markDownEditor.confirm();
+    markDownEditor.confirm('MarkDown Text');
     repo.activeDialogHasClosed();
     view.mockClear();
 
@@ -86,6 +89,7 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data: DialogMarkDownEditorDTO = {
       initialText: 'initial text',
+      onConfirm: jest.fn(),
     };
     const markDownEditor = new DialogMarkDownEditor(data);
     repo.submitDialog(markDownEditor);
@@ -102,6 +106,7 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data: DialogMarkDownEditorDTO = {
       initialText: 'initial text',
+      onConfirm: jest.fn(),
     };
     const markDownEditor = new DialogMarkDownEditor(data);
     repo.submitDialog(markDownEditor);
@@ -118,12 +123,14 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data1: DialogMarkDownEditorDTO = {
       initialText: 'initial text1',
+      onConfirm: jest.fn(),
     };
     const markDownEditor1 = new DialogMarkDownEditor(data1);
     repo.submitDialog(markDownEditor1);
 
     const data2: DialogMarkDownEditorDTO = {
       initialText: 'initial text2',
+      onConfirm: jest.fn(),
     };
     const markDownEditor2 = new DialogMarkDownEditor(data2);
     repo.submitDialog(markDownEditor2);
@@ -140,12 +147,14 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data1: DialogMarkDownEditorDTO = {
       initialText: 'initial text1',
+      onConfirm: jest.fn(),
     };
     const markDownEditor1 = new DialogMarkDownEditor(data1);
     repo.submitDialog(markDownEditor1);
 
     const data2: DialogMarkDownEditorDTO = {
       initialText: 'initial text2',
+      onConfirm: jest.fn(),
     };
     const markDownEditor2 = new DialogMarkDownEditor(data2);
     repo.submitDialog(markDownEditor2);
@@ -164,6 +173,7 @@ describe('MarkDown Editor Dialog PM', () => {
 
     const data: DialogMarkDownEditorDTO = {
       initialText: 'initial text',
+      onConfirm: jest.fn(),
     };
     const markDownEditor = new DialogMarkDownEditor(data);
     repo.submitDialog(markDownEditor);
@@ -171,7 +181,7 @@ describe('MarkDown Editor Dialog PM', () => {
 
     pm.dispose();
 
-    markDownEditor.confirm();
+    markDownEditor.confirm('MarkDown Text');
     repo.activeDialogHasClosed();
 
     expect(view).not.toBeCalled();

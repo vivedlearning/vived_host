@@ -2,7 +2,7 @@ import { markDownEditorDialogType, DialogMarkDownEditor, DialogRepo } from '../.
 
 export interface MarkDownEditorDialogVM {
   initialText: string;
-  confirm: () => void;
+  confirm: (text: string) => void;
 }
 
 export class MarkDownEditorDialogPM {
@@ -12,7 +12,7 @@ export class MarkDownEditorDialogPM {
   doUpdateView = () => {
     let vm: MarkDownEditorDialogVM = {
       initialText: '',
-      confirm: () => {
+      confirm: (text: string) => {
         console.warn('[MarkDownEditorDialogVM.confirm] empty VM!');
       },
     };
@@ -74,7 +74,7 @@ export class MarkDownEditorDialogPM {
 
 export const defaultMarkDownEditorDialogVM: MarkDownEditorDialogVM = {
   initialText: '',
-  confirm: () => {
+  confirm: (text: string) => {
     console.warn('[MarkDownEditorDialogVM.confirm] default VM!');
   },
 };
