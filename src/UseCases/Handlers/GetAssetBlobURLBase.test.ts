@@ -1,10 +1,10 @@
 
 import { makeHostHandler } from "../../Entities";
-import { GetAssetBlobBase } from "./GetAssetBlobBase";
+import { GetAssetBlobURLBase } from "./GetAssetBlobURLBase";
 
 function makeTestRig() {
   const hostHandler = makeHostHandler();
-  const getAssetMetaBase = new GetAssetBlobBase(hostHandler);
+  const getAssetMetaBase = new GetAssetBlobURLBase(hostHandler);
   return { hostHandler, getAssetMetaBase };
 }
 
@@ -12,7 +12,7 @@ describe("Get Asset Blob Base Handler", () => {
   it("Registers as a handler when constructed", () => {
     const hostHandler = makeHostHandler();
     hostHandler.registerRequestHandler = jest.fn();
-    const getAssetMetaBase = new GetAssetBlobBase(hostHandler);
+    const getAssetMetaBase = new GetAssetBlobURLBase(hostHandler);
     expect(hostHandler.registerRequestHandler).toBeCalledWith(getAssetMetaBase);
   });
 

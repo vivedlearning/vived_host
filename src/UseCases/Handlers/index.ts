@@ -1,4 +1,5 @@
-export * from './GetAssetBlobBase';
+export * from './CallbackAssetDTO';
+export * from './GetAssetBlobURLBase';
 export * from './GetAssetFolderURLBase';
 export * from './GetAssetMetaBase';
 export * from './GoToNextStateBase';
@@ -6,6 +7,7 @@ export * from './GoToPreviousStateBase';
 export * from './HasNextStateBase';
 export * from './HasPreviousStateBase';
 export * from './GetAssetsForOwnerBase';
+export * from './GetLinkedAssetsBase';
 export * from './NewActivityAssetBase';
 export * from './OnAppIsReadyBase';
 export * from './OnStateChangeBase';

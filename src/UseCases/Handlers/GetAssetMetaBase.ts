@@ -1,10 +1,5 @@
 import { ActionNotImplemented, HostHandler, RequestHandler, UnableToParsePayload, UnsupportedRequestVerion } from "../../Entities";
-
-export interface CallbackAssetMeta {
-  id: string;
-  name: string;
-  description: string;
-}
+import { CallbackAssetMeta } from "./CallbackAssetDTO";
 
 export type GetAssetMetaAction = (
   assetID: string,

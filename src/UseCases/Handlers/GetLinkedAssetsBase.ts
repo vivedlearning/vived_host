@@ -7,19 +7,24 @@ import {
 } from '../../Entities';
 import { CallbackAssetMeta } from './CallbackAssetDTO';
 
-export type GetOwnerAssetsMetaAction = (ownerID: string, callback: (assetMetas: CallbackAssetMeta[]) => void) => void;
 
-export class GetAssetsForOwnerBase extends RequestHandler {
-  readonly requestType = 'GET_ASSET_FOR_OWNER';
+export type GetLinkedAssetsAction = (
+  assetID: string,
+  type: string,
+  callback: (linkedAssets: CallbackAssetMeta[] | undefined) => void,
+) => void;
 
-  action: GetOwnerAssetsMetaAction = () => {
+export class GetLinkedAssetsBase extends RequestHandler {
+  readonly requestType = 'GET_LINKED_ASSETS';
+
+  action: GetLinkedAssetsAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
 
   handleRequest = (version: number, payload: unknown) => {
     if (version === 1) {
-      const { ownerID, callback } = this.castPayloadV1(payload);
-      this.action(ownerID, callback);
+      const { assetID, callback, type } = this.castPayloadV1(payload);
+      this.action(assetID, type, callback);
     } else {
       throw new UnsupportedRequestVerion(this.requestType, version);
     }
@@ -27,7 +32,7 @@ export class GetAssetsForOwnerBase extends RequestHandler {
 
   private castPayloadV1(payload: unknown): Payload_V1 {
     const castPayload = payload as Payload_V1;
-    if (!castPayload.ownerID || !castPayload.callback) {
+    if (!castPayload.assetID || !castPayload.callback || !castPayload.type) {
       throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
     }
 
@@ -41,6 +46,7 @@ export class GetAssetsForOwnerBase extends RequestHandler {
 }
 
 type Payload_V1 = {
-  ownerID: string;
-  callback: (assetMetas: CallbackAssetMeta[]) => void;
+  assetID: string;
+  type: string;
+  callback: (linkedAssets: CallbackAssetMeta[] | undefined) => void;
 };
