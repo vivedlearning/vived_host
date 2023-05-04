@@ -1,14 +1,14 @@
 import { ActionNotImplemented, HostHandler, RequestHandler, UnableToParsePayload, UnsupportedRequestVerion } from "../../Entities";
 
-export type GetAssetBlobAction = (
+export type GetAssetBlobURLAction = (
   assetID: string,
   callback: (blobURL: string | undefined) => void
 ) => void;
 
-export class GetAssetBlobBase extends RequestHandler {
+export class GetAssetBlobURLBase extends RequestHandler {
   readonly requestType = "GET_ASSET_BLOB";
 
-  action: GetAssetBlobAction = () => {
+  action: GetAssetBlobURLAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
 
