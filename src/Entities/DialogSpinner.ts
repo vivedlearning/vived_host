@@ -19,14 +19,14 @@ export class DialogSpinner extends DialogBase {
     this.memoizedMessage.val = val;
   }
 
-  override set isOpen(open: boolean) {
+  set isOpen(open: boolean) {
     if (open && this.createdAt === undefined) {
       this.createdAt = Date.now();
     }
     this.memoizedOpen.val = open;
   }
 
-  override get isOpen() {
+  get isOpen() {
     return this.memoizedOpen.val;
   }
 
