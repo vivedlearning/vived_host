@@ -22,3 +22,4 @@ export * from './SubmitResultBase';
 export * from './ShowMarkDownEditorBase';
 export * from './ShowSelectModelBase';
 export * from './IsAssetFetchedBase';
+export * from './ShowSpinnerBase';
