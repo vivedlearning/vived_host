@@ -21,3 +21,4 @@ export * from './SubmitLogBase';
 export * from './SubmitResultBase';
 export * from './ShowMarkDownEditorBase';
 export * from './ShowSelectModelBase';
+export * from './ShowSpinnerBase';
