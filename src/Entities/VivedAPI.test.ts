@@ -180,4 +180,33 @@ describe('Vived API Entity', () => {
       new Error(`API function deleteAsset has not been injected`),
     );
   });
+
+  it("Rejects if fetch app is called before it is injected", async () => {
+    const api = makeVivedAPI();
+
+    await expect(api.fetchApp("appID", "1.2.3")).rejects.toEqual(
+      new Error(`API function fetchApp has not been injected`)
+    );
+  });
+
+  it("Allows the fetchChannelAppIds to be injected", async () => {
+    const api = makeVivedAPI();
+    const mockFetchApp = jest.fn();
+    mockFetchApp.mockReturnValueOnce({
+      interfaceVersion: "1.2.3",
+      assetFolderURL: "url.to.assets",
+      entrypoints: ["entry1", "entry2"],
+    });
+
+    api.fetchApp = mockFetchApp;
+
+    const apps = await api.fetchApp("appID", "1.2.3");
+
+    expect(mockFetchApp).toBeCalledWith("appID", "1.2.3");
+    expect(apps).toEqual({
+      interfaceVersion: "1.2.3",
+      assetFolderURL: "url.to.assets",
+      entrypoints: ["entry1", "entry2"],
+    });
+  });
 });

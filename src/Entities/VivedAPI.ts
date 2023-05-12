@@ -17,6 +17,12 @@ export interface NewAssetDTO {
   file: File;
 }
 
+export interface AppDTO {
+  interfaceVersion: string;
+  assetFolderURL: string;
+  entrypoints: string[];
+}
+
 export abstract class VivedAPI extends ObservableEntity {
   abstract baseUrl: string;
 
@@ -34,6 +40,7 @@ export abstract class VivedAPI extends ObservableEntity {
   abstract createNewAsset: (data: NewAssetDTO) => Promise<AssetDTO>;
   abstract postAssetFile: (assetID: string, file: File) => Promise<void>;
   abstract deleteAsset: (assetID: string) => Promise<void>;
+  abstract fetchApp(appID: string, version: string): Promise<AppDTO>;  
 }
 
 export function makeVivedAPI(): VivedAPI {
@@ -96,6 +103,10 @@ class VivedAPIImp extends VivedAPI {
   deleteAsset = (assetID: string): Promise<void> => {
     return Promise.reject(this.functionNotInjectedError('deleteAsset'));
   };
+
+  fetchApp(appID: string, version: string): Promise<AppDTO> {
+    return Promise.reject(this.functionNotInjectedError("fetchApp"));
+  } 
 
   private functionNotInjectedError(functionName: string): Error {
     return new Error(`API function ${functionName} has not been injected`);
