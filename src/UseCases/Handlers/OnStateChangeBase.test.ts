@@ -18,7 +18,7 @@ describe('On State Change Handler', () => {
   it('Throws an error if the action is not overwritten', () => {
     const { onStateChange } = makeTestRig();
 
-    expect(() => onStateChange.action({ foo: 'bar' })).toThrowError();
+    expect(() => onStateChange.action({ foo: 'bar' }, [])).toThrowError();
   });
 
   it('Triggers the action for v1', () => {
@@ -30,7 +30,7 @@ describe('On State Change Handler', () => {
     };
     onStateChange.handleRequest(1, payload);
 
-    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' });
+    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' }, []);
   });
 
   it('Triggers the action for v2 with  a validation messag', () => {
@@ -43,7 +43,7 @@ describe('On State Change Handler', () => {
     };
     onStateChange.handleRequest(2, payload);
 
-    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' }, 'Something is wrong');
+    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' }, [], 'Something is wrong');
   });
 
   it('Triggers the action for v2 without a validation message', () => {
@@ -55,7 +55,7 @@ describe('On State Change Handler', () => {
     };
     onStateChange.handleRequest(2, payload);
 
-    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' }, undefined);
+    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' }, [], undefined);
   });
 
   it('Throws for an unsupported version', () => {
@@ -90,5 +90,30 @@ describe('On State Change Handler', () => {
     };
 
     expect(() => onStateChange.handleRequest(2, payload)).toThrowError();
+  });
+
+  it('Triggers the action for v3 with  a validation message', () => {
+    const { onStateChange } = makeTestRig();
+    onStateChange.action = jest.fn();
+
+    const payload = {
+      stateObject: { foo: 'bar' },
+      assets: ['id1', 'id2'],
+      validationErrorMessage: 'Something is wrong',
+    };
+    onStateChange.handleRequest(3, payload);
+
+    expect(onStateChange.action).toBeCalledWith({ foo: 'bar' }, ['id1', 'id2'], 'Something is wrong');
+  });
+
+  it('Throws if the v3 payload is bungled', () => {
+    const { onStateChange } = makeTestRig();
+    onStateChange.action = jest.fn();
+
+    const payload = {
+      foo: 'bar',
+    };
+
+    expect(() => onStateChange.handleRequest(3, payload)).toThrowError();
   });
 });
