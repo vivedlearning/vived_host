@@ -22,4 +22,8 @@ export class DialogSelectModel extends DialogBase {
   set isReady(isReady: boolean) {
     this.memoizedIsReady.val = isReady;
   }
+
+  constructor() {
+    super(selectModelDialogType);
+  }
 }
