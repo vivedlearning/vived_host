@@ -376,14 +376,15 @@ describe('Host Dispatcher', () => {
 
     const expectedRequest: Request = {
       type: 'START_ZSPACE',
-      version: 1,
+      version: 2,
       payload: {
         device: mockDevice,
         session: mockSession,
+        emulate: true
       },
     };
 
-    hostDispatcher.startZSpace(mockDevice, mockSession);
+    hostDispatcher.startZSpace(mockDevice, mockSession, true);
 
     expect(mockHandler).toBeCalledWith(expectedRequest);
   });
@@ -406,10 +407,11 @@ describe('Host Dispatcher', () => {
       payload: {
         device: mockDevice,
         session: mockSession,
+        emulate: true
       },
     };
 
-    hostDispatcher.startZSpace(mockDevice, mockSession);
+    hostDispatcher.startZSpace(mockDevice, mockSession, true);
 
     expect(spy).toBeCalledWith(expectedRequest);
   });
