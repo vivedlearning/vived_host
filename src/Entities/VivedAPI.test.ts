@@ -141,6 +141,7 @@ describe('Vived API Entity', () => {
 
     await expect(
       vivedAPI.postAssetMeta({
+        ownerId: 'ownerId',
         archived: false,
         description: 'a description',
         filename: 'file.name',
@@ -168,9 +169,9 @@ describe('Vived API Entity', () => {
   it('Rejects if post new asset file is called before it is injected', async () => {
     const { vivedAPI } = makeTestRig();
 
-    await expect(
-      vivedAPI.postAssetFile("asset1", new File([], 'some.filename')),
-    ).rejects.toEqual(new Error(`API function postAssetFile has not been injected`));
+    await expect(vivedAPI.postAssetFile('asset1', new File([], 'some.filename'))).rejects.toEqual(
+      new Error(`API function postAssetFile has not been injected`),
+    );
   });
 
   it('Rejects if delete Asset is called before it is injected', async () => {
@@ -181,32 +182,45 @@ describe('Vived API Entity', () => {
     );
   });
 
-  it("Rejects if fetch app is called before it is injected", async () => {
+  it('Rejects if fetch app is called before it is injected', async () => {
     const api = makeVivedAPI();
 
-    await expect(api.fetchApp("appID", "1.2.3")).rejects.toEqual(
-      new Error(`API function fetchApp has not been injected`)
+    await expect(api.fetchApp('appID', '1.2.3')).rejects.toEqual(
+      new Error(`API function fetchApp has not been injected`),
     );
   });
 
-  it("Allows the fetchChannelAppIds to be injected", async () => {
+  it('Allows the fetchChannelAppIds to be injected', async () => {
     const api = makeVivedAPI();
     const mockFetchApp = jest.fn();
     mockFetchApp.mockReturnValueOnce({
-      interfaceVersion: "1.2.3",
-      assetFolderURL: "url.to.assets",
-      entrypoints: ["entry1", "entry2"],
+      interfaceVersion: '1.2.3',
+      assetFolderURL: 'url.to.assets',
+      entrypoints: ['entry1', 'entry2'],
     });
 
     api.fetchApp = mockFetchApp;
 
-    const apps = await api.fetchApp("appID", "1.2.3");
+    const apps = await api.fetchApp('appID', '1.2.3');
 
-    expect(mockFetchApp).toBeCalledWith("appID", "1.2.3");
+    expect(mockFetchApp).toBeCalledWith('appID', '1.2.3');
     expect(apps).toEqual({
-      interfaceVersion: "1.2.3",
-      assetFolderURL: "url.to.assets",
-      entrypoints: ["entry1", "entry2"],
+      interfaceVersion: '1.2.3',
+      assetFolderURL: 'url.to.assets',
+      entrypoints: ['entry1', 'entry2'],
     });
+  });
+
+  it('Rejects if update asset is called before it is injected', async () => {
+    const api = makeVivedAPI();
+
+    await expect(
+      api.updateAsset({
+        id: 'assetID',
+        name: 'asset name',
+        description: 'asset description',
+        archived: true,
+      }),
+    ).rejects.toEqual(new Error(`API function updateAsset has not been injected`));
   });
 });

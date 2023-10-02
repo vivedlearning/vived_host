@@ -2,6 +2,7 @@ import { ObservableEntity } from './ObservableEntity';
 
 export interface AssetDTO {
   id: string;
+  ownerId: string;
   name: string;
   description: string;
   archived: boolean;
@@ -15,6 +16,14 @@ export interface NewAssetDTO {
   description: string;
   ownerID: string;
   file: File;
+}
+
+export interface UpdateAssetDTO {
+  id: string;
+  name?: string;
+  description?: string;
+  archived?: boolean;
+  file?: File;
 }
 
 export interface AppDTO {
@@ -37,10 +46,11 @@ export abstract class VivedAPI extends ObservableEntity {
   abstract fetchAssetsForOwner: (ownerID: string) => Promise<AssetDTO[]>;
   abstract setAssetArchived: (assetID: string, archived: boolean) => Promise<void>;
   abstract postAssetMeta: (data: AssetDTO) => Promise<void>;
-  abstract createNewAsset: (data: NewAssetDTO) => Promise<AssetDTO>;
+  abstract createNewAsset: (data: NewAssetDTO) => Promise<string>;
   abstract postAssetFile: (assetID: string, file: File) => Promise<void>;
-  abstract deleteAsset: (assetID: string) => Promise<void>;
-  abstract fetchApp(appID: string, version: string): Promise<AppDTO>;  
+  abstract deleteAsset: (assetID: string) => Promise<string>;
+  abstract fetchApp(appID: string, version: string): Promise<AppDTO>;
+  abstract updateAsset(data: UpdateAssetDTO): Promise<string>;
 }
 
 export function makeVivedAPI(): VivedAPI {
@@ -92,21 +102,25 @@ class VivedAPIImp extends VivedAPI {
     return Promise.reject(this.functionNotInjectedError('postAssetMeta'));
   };
 
-  createNewAsset = (data: NewAssetDTO): Promise<AssetDTO> => {
+  createNewAsset = (data: NewAssetDTO): Promise<string> => {
     return Promise.reject(this.functionNotInjectedError('createNewAsset'));
   };
 
   postAssetFile = (assetID: string, file: File): Promise<void> => {
     return Promise.reject(this.functionNotInjectedError('postAssetFile'));
   };
-  
-  deleteAsset = (assetID: string): Promise<void> => {
+
+  deleteAsset = (assetID: string): Promise<string> => {
     return Promise.reject(this.functionNotInjectedError('deleteAsset'));
   };
 
   fetchApp(appID: string, version: string): Promise<AppDTO> {
-    return Promise.reject(this.functionNotInjectedError("fetchApp"));
-  } 
+    return Promise.reject(this.functionNotInjectedError('fetchApp'));
+  }
+
+  updateAsset(data: UpdateAssetDTO): Promise<string> {
+    return Promise.reject(this.functionNotInjectedError('updateAsset'));
+  }
 
   private functionNotInjectedError(functionName: string): Error {
     return new Error(`API function ${functionName} has not been injected`);
