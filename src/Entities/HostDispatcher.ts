@@ -10,7 +10,7 @@ export abstract class HostDispatcher {
   abstract startApp: (container: HTMLElement) => void;
   abstract setState: (finalState: string, duration?: number) => void;
   abstract setDevicePreview: (x: number, y: number) => void;
-  abstract startZSpace: (device: string, session: any, emulate: boolean) => void;
+  abstract startZSpace: (deviceScaleFactor: number, session: any, emulate: boolean) => void;
   abstract stopZSpace: () => void;
 }
 
@@ -135,7 +135,7 @@ class HostDistpatcherImp extends HostDispatcher {
     this.dispatch(request);
   };
 
-  startZSpace = (device: string, session: any, emulate: boolean) => {
+  startZSpace = (deviceScaleFactor: number, session: any, emulate: boolean) => {
     const type = 'START_ZSPACE';
     const version = this.appPayloadVersions.get(type) ?? 2;
 
@@ -143,9 +143,9 @@ class HostDistpatcherImp extends HostDispatcher {
       type,
       version,
       payload: {
-        device,
+        deviceScaleFactor,
         session,
-        emulate
+        emulate,
       },
     };
     this.dispatch(request);
