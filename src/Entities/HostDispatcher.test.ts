@@ -371,20 +371,18 @@ describe('Host Dispatcher', () => {
   it('Dispatches start zSpace with the default version number', () => {
     const { hostDispatcher, mockHandler } = makeTestRig();
 
-    const mockDeviceScaleFactor = 2;
     const mockSession = { foo: 'bar' };
 
     const expectedRequest: Request = {
       type: 'START_ZSPACE',
       version: 2,
       payload: {
-        deviceScaleFactor: mockDeviceScaleFactor,
         session: mockSession,
         emulate: true,
       },
     };
 
-    hostDispatcher.startZSpace(mockDeviceScaleFactor, mockSession, true);
+    hostDispatcher.startZSpace(mockSession, true);
 
     expect(mockHandler).toBeCalledWith(expectedRequest);
   });
@@ -399,19 +397,17 @@ describe('Host Dispatcher', () => {
 
     spy.mockClear();
 
-    const mockDeviceScaleFactor = 2;
     const mockSession = { foo: 'bar' };
     const expectedRequest: Request = {
       type: 'START_ZSPACE',
       version: 15,
       payload: {
-        deviceScaleFactor: mockDeviceScaleFactor,
         session: mockSession,
         emulate: true,
       },
     };
 
-    hostDispatcher.startZSpace(mockDeviceScaleFactor, mockSession, true);
+    hostDispatcher.startZSpace(mockSession, true);
 
     expect(spy).toBeCalledWith(expectedRequest);
   });
