@@ -411,6 +411,48 @@ describe('Host Dispatcher', () => {
 
     expect(spy).toBeCalledWith(expectedRequest);
   });
+
+  it('Dispatches set theme colors with the default version number', () => {
+    const { hostDispatcher, mockHandler } = makeTestRig();
+
+    const mockColors = { primary: 'primary', onPrimary: 'onPrimary' };
+
+    const expectedRequest: Request = {
+      type: 'SET_THEME_COLORS',
+      version: 1,
+      payload: {
+        colors: mockColors,
+      },
+    };
+
+    hostDispatcher.setThemeColors(mockColors);
+
+    expect(mockHandler).toBeCalledWith(expectedRequest);
+  });
+
+  it('Dispatches set theme colors with the app payload version number', () => {
+    const hostDispatcher = makeHostDispatcher();
+    const mockHandler = new MockHandler();
+    mockHandler.handlerVersion = 1;
+    mockHandler.payloadVersions.set('SET_THEME_COLORS', 15);
+    const spy = jest.spyOn(mockHandler, 'handler');
+    hostDispatcher.registerAppHandler(mockHandler.handler);
+
+    spy.mockClear();
+
+    const mockColors = { primary: 'primary', onPrimary: 'onPrimary' };
+    const expectedRequest: Request = {
+      type: 'SET_THEME_COLORS',
+      version: 15,
+      payload: {
+        colors: mockColors,
+      },
+    };
+
+    hostDispatcher.setThemeColors(mockColors);
+
+    expect(spy).toBeCalledWith(expectedRequest);
+  });
 });
 
 class MockHandler {

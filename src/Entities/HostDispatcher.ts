@@ -12,6 +12,7 @@ export abstract class HostDispatcher {
   abstract setDevicePreview: (x: number, y: number) => void;
   abstract startZSpace: (session: any, emulate: boolean) => void;
   abstract stopZSpace: () => void;
+  abstract setThemeColors: (colors: object) => void;
 }
 
 export function makeHostDispatcher(): HostDispatcher {
@@ -157,6 +158,20 @@ class HostDistpatcherImp extends HostDispatcher {
     const request: Request = {
       type,
       version,
+    };
+    this.dispatch(request);
+  };
+
+  setThemeColors = (colors: object) => {
+    const type = 'SET_THEME_COLORS';
+    const version = this.appPayloadVersions.get(type) ?? 1;
+
+    const request: Request = {
+      type,
+      version,
+      payload: {
+        colors,
+      },
     };
     this.dispatch(request);
   };
