@@ -24,3 +24,4 @@ export * from './ShowSelectModelBase';
 export * from './IsAssetFetchedBase';
 export * from './ShowSpinnerBase';
 export * from './IsZSpaceAvailableBase';
+export * from './SetThemeColorsBase';
