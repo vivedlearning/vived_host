@@ -138,17 +138,30 @@ class HostDistpatcherImp extends HostDispatcher {
 
   startZSpace = (session: any, emulate: boolean) => {
     const type = 'START_ZSPACE';
-    const version = this.appPayloadVersions.get(type) ?? 2;
+    const version = this.appPayloadVersions.get(type) ?? 3;
 
-    const request: Request = {
-      type,
-      version,
-      payload: {
-        session,
-        emulate,
-      },
-    };
-    this.dispatch(request);
+    if (version === 2) {
+      const request: Request = {
+        type,
+        version,
+        payload: {
+          device: 'INSPIRE',
+          session,
+          emulate,
+        },
+      };
+      this.dispatch(request);
+    } else {
+      const request: Request = {
+        type,
+        version,
+        payload: {
+          session,
+          emulate,
+        },
+      };
+      this.dispatch(request);
+    }
   };
 
   stopZSpace = () => {

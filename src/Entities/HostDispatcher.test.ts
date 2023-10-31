@@ -375,7 +375,7 @@ describe('Host Dispatcher', () => {
 
     const expectedRequest: Request = {
       type: 'START_ZSPACE',
-      version: 2,
+      version: 3,
       payload: {
         session: mockSession,
         emulate: true,
@@ -387,11 +387,11 @@ describe('Host Dispatcher', () => {
     expect(mockHandler).toBeCalledWith(expectedRequest);
   });
 
-  it('Dispatches start zSpace with the app payload version number', () => {
+  it('Dispatches start zSpace with the app payload version number 2', () => {
     const hostDispatcher = makeHostDispatcher();
     const mockHandler = new MockHandler();
     mockHandler.handlerVersion = 1;
-    mockHandler.payloadVersions.set('START_ZSPACE', 15);
+    mockHandler.payloadVersions.set('START_ZSPACE', 2);
     const spy = jest.spyOn(mockHandler, 'handler');
     hostDispatcher.registerAppHandler(mockHandler.handler);
 
@@ -400,7 +400,33 @@ describe('Host Dispatcher', () => {
     const mockSession = { foo: 'bar' };
     const expectedRequest: Request = {
       type: 'START_ZSPACE',
-      version: 15,
+      version: 2,
+      payload: {
+        device: "INSPIRE",
+        session: mockSession,
+        emulate: true,
+      },
+    };
+
+    hostDispatcher.startZSpace(mockSession, true);
+
+    expect(spy).toBeCalledWith(expectedRequest);
+  });
+
+  it('Dispatches start zSpace with the app payload version number 3', () => {
+    const hostDispatcher = makeHostDispatcher();
+    const mockHandler = new MockHandler();
+    mockHandler.handlerVersion = 1;
+    mockHandler.payloadVersions.set('START_ZSPACE', 3);
+    const spy = jest.spyOn(mockHandler, 'handler');
+    hostDispatcher.registerAppHandler(mockHandler.handler);
+
+    spy.mockClear();
+
+    const mockSession = { foo: 'bar' };
+    const expectedRequest: Request = {
+      type: 'START_ZSPACE',
+      version: 3,
       payload: {
         session: mockSession,
         emulate: true,
