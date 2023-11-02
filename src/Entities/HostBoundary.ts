@@ -5,3 +5,9 @@ export interface Request {
   version: number;
   payload?: unknown;
 }
+
+// tslint:disable-next-line: class-name
+export interface VIVEDApp_3 {
+  mount(hostRequestHandler: Handler): Handler;
+  mountDev(container: HTMLElement): void;
+}
