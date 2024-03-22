@@ -130,37 +130,21 @@ export class Version {
     return version;
   }
 
+  static AreEqual(v1: Version, v2: Version): boolean {
+    if(v1.major !== v2.major) return false;
+    if(v1.minor !== v2.minor) return false;
+    if(v1.patch !== v2.patch) return false;
+    if(v1.stage !== v2.stage) return false;
+    if(v1.label !== v2.label) return false;
+    return true;
+  }
+
   readonly major: number;
   readonly minor: number;
   readonly patch: number;
   readonly stage: VersionStage;
   readonly label?: string;
-
-  toString = (): string => {
-    let rVal = `${this.major}.${this.minor}.${this.patch}`;
-
-    if (this.stage === VersionStage.ALPHA) {
-      rVal = rVal + '-alpha';
-    } else if (this.stage === VersionStage.BETA) {
-      rVal = rVal + '-beta';
-    }
-
-    if (this.label) {
-      rVal = rVal + `-${this.label}`;
-    }
-
-    return rVal;
-  };
-
-  equals = (otherVersion: Version): boolean => {
-    if (otherVersion.major !== this.major) return false;
-    if (otherVersion.minor !== this.minor) return false;
-    if (otherVersion.patch !== this.patch) return false;
-    if (otherVersion.label !== this.label) return false;
-    if (otherVersion.stage !== this.stage) return false;
-
-    return true;
-  };
+  readonly displayString: string;
 
   constructor(major: number, minor: number, patch: number, stage: VersionStage, label?: string) {
     this.major = major;
@@ -168,5 +152,19 @@ export class Version {
     this.patch = patch;
     this.stage = stage;
     this.label = label;
+
+    let strVal = `${major}.${minor}.${patch}`;
+
+    if (stage === VersionStage.ALPHA) {
+      strVal = strVal + '-alpha';
+    } else if (this.stage === VersionStage.BETA) {
+      strVal = strVal + '-beta';
+    }
+
+    if (this.label) {
+      strVal = strVal + `-${label}`;
+    }
+
+    this.displayString = strVal;
   }
 }

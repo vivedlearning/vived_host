@@ -7,7 +7,7 @@ test('Initialization', () => {
   expect(version.patch).toEqual(3);
   expect(version.stage).toEqual(VersionStage.BETA);
   expect(version.label).toEqual('yo');
-  expect(version.toString()).toEqual('1.2.3-beta-yo');
+  expect(version.displayString).toEqual('1.2.3-beta-yo');
 });
 
 test('Without a label', () => {
@@ -17,17 +17,17 @@ test('Without a label', () => {
   expect(version.patch).toEqual(3);
   expect(version.stage).toEqual(VersionStage.ALPHA);
   expect(version.label).toBeUndefined();
-  expect(version.toString()).toEqual('1.2.3-alpha');
+  expect(version.displayString).toEqual('1.2.3-alpha');
 });
 
-test('Equals', () => {
-  const version = new Version(1, 2, 3, VersionStage.ALPHA);
-  expect(version.equals(new Version(1, 2, 3, VersionStage.ALPHA))).toEqual(true);
-  expect(version.equals(new Version(1, 2, 4, VersionStage.ALPHA))).toEqual(false);
-  expect(version.equals(new Version(1, 3, 3, VersionStage.ALPHA))).toEqual(false);
-  expect(version.equals(new Version(2, 2, 3, VersionStage.ALPHA))).toEqual(false);
-  expect(version.equals(new Version(1, 2, 3, VersionStage.BETA))).toEqual(false);
-  expect(version.equals(new Version(1, 2, 3, VersionStage.ALPHA, 'pasta'))).toEqual(false);
+test('Display string does not include a release string', () => {
+  const v1 = new Version(1, 2, 3, VersionStage.RELEASED, 'yo');
+
+  expect(v1.displayString).toEqual('1.2.3-yo');
+
+  const v2 = new Version(1, 2, 3, VersionStage.RELEASED);
+
+  expect(v2.displayString).toEqual('1.2.3');
 });
 
 describe('Getting the latest from a list', () => {
@@ -340,5 +340,43 @@ describe('Version from string', () => {
     const version = Version.FromString('1.2.3', VersionStage.BETA);
 
     expect(version.stage).toEqual(VersionStage.BETA);
+  });
+});
+
+describe('Testing are equal', () => {
+  it('Returns true if equal', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    expect(Version.AreEqual(v1, v2)).toEqual(true);
+  });
+
+  it('Returns false if the majors are different', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(2, 2, 3, VersionStage.ALPHA, 'yo');
+    expect(Version.AreEqual(v1, v2)).toEqual(false);
+  });
+
+  it('Returns false if the minors are different', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 1, 3, VersionStage.ALPHA, 'yo');
+    expect(Version.AreEqual(v1, v2)).toEqual(false);
+  });
+
+  it('Returns false if the patches are different', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 2, 2, VersionStage.ALPHA, 'yo');
+    expect(Version.AreEqual(v1, v2)).toEqual(false);
+  });
+
+  it('Returns false if the stages are different', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 2, 3, VersionStage.BETA, 'yo');
+    expect(Version.AreEqual(v1, v2)).toEqual(false);
+  });
+
+  it('Returns false if the labels are different', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 2, 3, VersionStage.ALPHA);
+    expect(Version.AreEqual(v1, v2)).toEqual(false);
   });
 });
