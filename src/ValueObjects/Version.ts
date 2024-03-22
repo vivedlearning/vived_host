@@ -1,12 +1,28 @@
-import { reject, resolve, Result } from "../ValueObjects/Result";
+import { reject, resolve, Result } from '../ValueObjects/Result';
+
+export enum VersionStage {
+  RELEASED = 'released',
+  BETA = 'beta',
+  ALPHA = 'alpha',
+}
 
 export class Version {
-  static GetLatest(versions: Version[]): Version | undefined {
-    if (versions.length === 0) return undefined;
+  static GetLatest(
+    versions: Version[],
+    considerPreReleasedStage?: VersionStage.ALPHA | VersionStage.BETA,
+  ): Version | undefined {
+    let latest: Version | undefined = undefined;
 
-    let latest = new Version(0, 0, 0);
+    for (let i = 0; i < versions.length; i++) {
+      const v = versions[i];
 
-    versions.forEach((v) => {
+      if (v.stage !== VersionStage.RELEASED && v.stage !== considerPreReleasedStage) continue;
+
+      if (latest === undefined) {
+        latest = v;
+        continue;
+      }
+
       if (v.major > latest.major) {
         latest = v;
       } else if (v.major === latest.major) {
@@ -18,21 +34,20 @@ export class Version {
           }
         }
       }
-    });
+    }
 
     return latest;
   }
 
   static GetLatestWithMajor(
     versions: Version[],
-    major: number
+    major: number,
+    considerPreReleasedStage?: VersionStage.ALPHA | VersionStage.BETA,
   ): Version | undefined {
-    if (versions.length === 0) return undefined;
-
     let latest: Version | undefined;
 
-    for(const v of versions) {
-
+    for (const v of versions) {
+      if (v.stage !== VersionStage.RELEASED && v.stage !== considerPreReleasedStage) continue;
       if (v.major !== major) continue;
 
       if (latest === undefined) {
@@ -55,14 +70,13 @@ export class Version {
   static GetLatestWithMajorMinor(
     versions: Version[],
     major: number,
-    minor: number
+    minor: number,
+    considerPreReleasedStage?: VersionStage.ALPHA | VersionStage.BETA,
   ): Version | undefined {
-    if (versions.length === 0) return undefined;
-
     let latest: Version | undefined;
 
-    for(const v of versions) {
-
+    for (const v of versions) {
+      if (v.stage !== VersionStage.RELEASED && v.stage !== considerPreReleasedStage) continue;
       if (v.major !== major) continue;
       if (v.minor !== minor) continue;
 
@@ -79,14 +93,11 @@ export class Version {
     return latest;
   }
 
-  static FromString(versionString: string): Result<Version, Error> {
-    const stringSplit = versionString.split(".");
+  static FromString(versionString: string, stage: VersionStage = VersionStage.RELEASED): Version {
+    const stringSplit = versionString.split('.');
 
     if (stringSplit.length !== 3) {
-      const err = new Error(
-        `Unable to parse version string: ${versionString} because it could not be split into 3 parts`
-      );
-      return reject(err);
+      throw new Error(`Unable to parse version string: ${versionString} because it could not be split into 3 parts`);
     }
 
     const major = parseInt(stringSplit[0], 10);
@@ -95,7 +106,7 @@ export class Version {
     let patch = NaN;
     let label: string | undefined;
 
-    const indexOfDash = patchLabel.indexOf("-");
+    const indexOfDash = patchLabel.indexOf('-');
 
     if (indexOfDash > 0) {
       const patchStr = patchLabel.substring(0, indexOfDash);
@@ -106,39 +117,39 @@ export class Version {
     }
 
     if (isNaN(major)) {
-      const err = new Error(
-        `Unable to parse version string: ${versionString} because Major is not a number`
-      );
-      return reject(err);
+      throw new Error(`Unable to parse version string: ${versionString} because Major is not a number`);
     }
     if (isNaN(minor)) {
-      const err = new Error(
-        `Unable to parse version string: ${versionString} because Minor is not a number`
-      );
-      return reject(err);
+      throw new Error(`Unable to parse version string: ${versionString} because Minor is not a number`);
     }
     if (isNaN(patch)) {
-      const err = new Error(
-        `Unable to parse version string: ${versionString} because Patch is not a number`
-      );
-      return reject(err);
+      throw new Error(`Unable to parse version string: ${versionString} because Patch is not a number`);
     }
 
-    const version = new Version(major, minor, patch, label);
-    return resolve(version);
+    const version = new Version(major, minor, patch, stage, label);
+    return version;
   }
 
   readonly major: number;
   readonly minor: number;
   readonly patch: number;
+  readonly stage: VersionStage;
   readonly label?: string;
 
   toString = (): string => {
-    if (this.label) {
-      return `${this.major}.${this.minor}.${this.patch}-${this.label}`;
-    } else {
-      return `${this.major}.${this.minor}.${this.patch}`;
+    let rVal = `${this.major}.${this.minor}.${this.patch}`;
+
+    if (this.stage === VersionStage.ALPHA) {
+      rVal = rVal + '-alpha';
+    } else if (this.stage === VersionStage.BETA) {
+      rVal = rVal + '-beta';
     }
+
+    if (this.label) {
+      rVal = rVal + `-${this.label}`;
+    }
+
+    return rVal;
   };
 
   equals = (otherVersion: Version): boolean => {
@@ -146,14 +157,16 @@ export class Version {
     if (otherVersion.minor !== this.minor) return false;
     if (otherVersion.patch !== this.patch) return false;
     if (otherVersion.label !== this.label) return false;
+    if (otherVersion.stage !== this.stage) return false;
 
     return true;
   };
 
-  constructor(major: number, minor: number, patch: number, label?: string) {
+  constructor(major: number, minor: number, patch: number, stage: VersionStage, label?: string) {
     this.major = major;
     this.minor = minor;
     this.patch = patch;
+    this.stage = stage;
     this.label = label;
   }
 }

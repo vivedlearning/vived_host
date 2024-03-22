@@ -1,168 +1,344 @@
-import { Version } from "./Version"
+import { Version, VersionStage } from './Version';
 
-test("Inialization", ()=>{
-  const version = new Version(1,2,3,"yo");
+test('Initialization', () => {
+  const version = new Version(1, 2, 3, VersionStage.BETA, 'yo');
   expect(version.major).toEqual(1);
   expect(version.minor).toEqual(2);
   expect(version.patch).toEqual(3);
-  expect(version.label).toEqual("yo");
-  expect(version.toString()).toEqual("1.2.3-yo");
-})
+  expect(version.stage).toEqual(VersionStage.BETA);
+  expect(version.label).toEqual('yo');
+  expect(version.toString()).toEqual('1.2.3-beta-yo');
+});
 
-test("Without a label", ()=>{
-  const version = new Version(1,2,3);
+test('Without a label', () => {
+  const version = new Version(1, 2, 3, VersionStage.ALPHA);
   expect(version.major).toEqual(1);
   expect(version.minor).toEqual(2);
   expect(version.patch).toEqual(3);
-  expect(version.label).toBeUndefined()
-  expect(version.toString()).toEqual("1.2.3");
-})
+  expect(version.stage).toEqual(VersionStage.ALPHA);
+  expect(version.label).toBeUndefined();
+  expect(version.toString()).toEqual('1.2.3-alpha');
+});
 
-test("Equals", ()=>{
-  const version = new Version(1,2,3);
-  expect(version.equals(new Version(1,2,3))).toEqual(true);
-  expect(version.equals(new Version(1,2,4))).toEqual(false);
-  expect(version.equals(new Version(1,3,3))).toEqual(false);
-  expect(version.equals(new Version(2,2,3))).toEqual(false);
-  expect(version.equals(new Version(1,2,3, "pasta"))).toEqual(false);
-})
+test('Equals', () => {
+  const version = new Version(1, 2, 3, VersionStage.ALPHA);
+  expect(version.equals(new Version(1, 2, 3, VersionStage.ALPHA))).toEqual(true);
+  expect(version.equals(new Version(1, 2, 4, VersionStage.ALPHA))).toEqual(false);
+  expect(version.equals(new Version(1, 3, 3, VersionStage.ALPHA))).toEqual(false);
+  expect(version.equals(new Version(2, 2, 3, VersionStage.ALPHA))).toEqual(false);
+  expect(version.equals(new Version(1, 2, 3, VersionStage.BETA))).toEqual(false);
+  expect(version.equals(new Version(1, 2, 3, VersionStage.ALPHA, 'pasta'))).toEqual(false);
+});
 
-test("Getting the latest from list", ()=>{
-  const version1 = new Version(1,2,3);
-  const version2 = new Version(0,2,3);
-  const version3 = new Version(1,2,4);
-  const version4 = new Version(0,0,4);
-  const versions = [
-    version1,
-    version2,
-    version3,
-    version4
-  ]
+describe('Getting the latest from a list', () => {
+  it('Gets the latest from list', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-  const latest = Version.GetLatest(versions);
+    const latest = Version.GetLatest(versions);
 
-  expect(latest).toEqual(version3);
-})
+    expect(latest).toEqual(version3);
+  });
 
-test("Getting the latest from list returns undefined if the list is empty", ()=>{
-  const latest = Version.GetLatest([]);
-  expect(latest).toBeUndefined();
-})
+  it('Returns undefined if there is no released version', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.ALPHA);
+    const version2 = new Version(0, 2, 3, VersionStage.BETA);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const version4 = new Version(0, 0, 4, VersionStage.BETA);
+    const versions = [version1, version2, version3, version4];
 
-test("Getting the latest major", ()=>{
-  const version1 = new Version(2,2,3);
-  const version2 = new Version(0,2,3);
-  const version3 = new Version(1,2,4);
-  const version4 = new Version(0,3,4);
-  const versions = [
-    version1,
-    version2,
-    version3,
-    version4
-  ]
+    const latest = Version.GetLatest(versions);
 
-  const latest = Version.GetLatestWithMajor(versions, 0);
+    expect(latest).toBeUndefined();
+  });
 
-  expect(latest).toEqual(version4);
-})
+  it('Returns undefined if the list is empty', () => {
+    const latest = Version.GetLatest([]);
+    expect(latest).toBeUndefined();
+  });
 
-test("Getting the latest with a bad major returns undefined", ()=>{
-  const version1 = new Version(2,2,3);
-  const version2 = new Version(0,2,3);
-  const version3 = new Version(1,2,4);
-  const version4 = new Version(0,3,4);
-  const versions = [
-    version1,
-    version2,
-    version3,
-    version4
-  ]
+  it('Only considers Released by default', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.BETA);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-  const latest = Version.GetLatestWithMajor(versions, 4);
+    const latest = Version.GetLatest(versions);
 
-  expect(latest).toBeUndefined();
-})
+    expect(latest).toEqual(version2);
+  });
 
-test("Getting the latest major minor", ()=>{
-  const version1 = new Version(1,2,3);
-  const version2 = new Version(0,2,3);
-  const version3 = new Version(1,2,4);
-  const version4 = new Version(0,3,4);
-  const versions = [
-    version1,
-    version2,
-    version3,
-    version4
-  ]
+  it('Can consider Alpha', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.BETA);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-  const latest = Version.GetLatestWithMajorMinor(versions, 1, 2);
+    const latest = Version.GetLatest(versions, VersionStage.ALPHA);
 
-  expect(latest).toEqual(version3);
-})
+    expect(latest).toEqual(version3);
+  });
 
-test("Getting the latest major minor can return undefined", ()=>{
-  const version1 = new Version(1,2,3);
-  const version2 = new Version(0,2,3);
-  const version3 = new Version(1,2,4);
-  const version4 = new Version(0,3,4);
-  const versions = [
-    version1,
-    version2,
-    version3,
-    version4
-  ]
+  it('Gets the latest from list even if alpha is considered', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.ALPHA);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-  const latest = Version.GetLatestWithMajorMinor(versions, 1, 3);
+    const latest = Version.GetLatest(versions, VersionStage.ALPHA);
 
-  expect(latest).toBeUndefined();
-})
+    expect(latest).toEqual(version3);
+  });
 
-test("From string", ()=>{
-  const result = Version.FromString("1.2.3");
-  expect(result.isResolved).toEqual(true);
+  it('Can consider Beta', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.BETA);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-  expect(result.value?.major).toEqual(1);
-  expect(result.value?.minor).toEqual(2);
-  expect(result.value?.patch).toEqual(3);
-  expect(result.value?.label).toBeUndefined();
-})
+    const latest = Version.GetLatest(versions, VersionStage.BETA);
 
-test("From string with label", ()=>{
-  const result = Version.FromString("1.2.3-your-mom");
-  expect(result.isResolved).toEqual(true);
+    expect(latest).toEqual(version1);
+  });
 
-  expect(result.value?.major).toEqual(1);
-  expect(result.value?.minor).toEqual(2);
-  expect(result.value?.patch).toEqual(3);
-  expect(result.value?.label).toEqual("your-mom");
-})
+  it('Gets the latest from list even if beta is considered', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.BETA);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-test("Not enough parts rejects", ()=>{
-  const result = Version.FromString("1.2");
-  expect(result.isRejected).toEqual(true);
-  expect(result.error).not.toBeUndefined();
-})
+    const latest = Version.GetLatest(versions, VersionStage.BETA);
 
-test("Too many parts rejects", ()=>{
-  const result = Version.FromString("1.2.3.4");
-  expect(result.isRejected).toEqual(true);
-  expect(result.error).not.toBeUndefined();
-})
+    expect(latest).toEqual(version3);
+  });
+});
 
-test("Major is not a number should reject", ()=>{
-  const result = Version.FromString("boo.2.3");
-  expect(result.isRejected).toEqual(true);
-  expect(result.error).not.toBeUndefined();
-})
+describe('Getting the latest major', () => {
+  it('Gets the latest major', () => {
+    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 3, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
 
-test("Minor is not a number should reject", ()=>{
-  const result = Version.FromString("1.boo.3");
-  expect(result.isRejected).toEqual(true);
-  expect(result.error).not.toBeUndefined();
-})
+    const latest = Version.GetLatestWithMajor(versions, 0);
 
-test("Patch is not a number should reject", ()=>{
-  const result = Version.FromString("1.2.boo");
-  expect(result.isRejected).toEqual(true);
-  expect(result.error).not.toBeUndefined();
-})
+    expect(latest).toEqual(version4);
+  });
+
+  it('Returns undefined if there are no majors that match', () => {
+    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 3, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajor(versions, 4);
+
+    expect(latest).toBeUndefined();
+  });
+
+  it('Returns undefined if there are no released', () => {
+    const version1 = new Version(2, 2, 3, VersionStage.ALPHA);
+    const version2 = new Version(0, 2, 3, VersionStage.BETA);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const version4 = new Version(0, 3, 4, VersionStage.BETA);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajor(versions, 0);
+
+    expect(latest).toBeUndefined();
+  });
+
+  it('Only considers release by default', () => {
+    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(0, 2, 4, VersionStage.BETA);
+    const version4 = new Version(0, 3, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajor(versions, 0);
+
+    expect(latest).toEqual(version2);
+  });
+
+  it('Gets the latest major while consider alpha', () => {
+    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(0, 2, 4, VersionStage.BETA);
+    const version4 = new Version(0, 3, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajor(versions, 0, VersionStage.ALPHA);
+
+    expect(latest).toEqual(version4);
+  });
+
+  it('Gets the latest major while consider beta', () => {
+    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(0, 2, 4, VersionStage.BETA);
+    const version4 = new Version(0, 3, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajor(versions, 0, VersionStage.BETA);
+
+    expect(latest).toEqual(version3);
+  });
+});
+
+describe('Get the latest major/minor', () => {
+  it('Get the latest major/minor combo', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 3, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2);
+
+    expect(latest).toEqual(version3);
+  });
+
+  it('Returns undefined if there are no major/minor combos', () => {
+    const version1 = new Version(1, 2, 3, VersionStage.RELEASED);
+    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
+    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
+    const version4 = new Version(0, 3, 4, VersionStage.RELEASED);
+    const versions = [version1, version2, version3, version4];
+
+    const latest = Version.GetLatestWithMajorMinor(versions, 1, 3);
+
+    expect(latest).toBeUndefined();
+  });
+
+  it('Only considers released by default', () => {
+    const version1 = new Version(1, 2, 2, VersionStage.RELEASED);
+    const version2 = new Version(1, 2, 3, VersionStage.BETA);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3];
+
+    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2);
+
+    expect(latest).toEqual(version1);
+  });
+
+  it('Returns undefined if there are no released versions', () => {
+    const version1 = new Version(1, 2, 2, VersionStage.BETA);
+    const version2 = new Version(1, 2, 3, VersionStage.BETA);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3];
+
+    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2);
+
+    expect(latest).toBeUndefined();
+  });
+
+  it('Considers Alpha releases', () => {
+    const version1 = new Version(1, 2, 2, VersionStage.RELEASED);
+    const version2 = new Version(1, 2, 3, VersionStage.BETA);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3];
+
+    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2, VersionStage.ALPHA);
+
+    expect(latest).toEqual(version3);
+  });
+
+  it('Considers Beta releases', () => {
+    const version1 = new Version(1, 2, 2, VersionStage.RELEASED);
+    const version2 = new Version(1, 2, 3, VersionStage.BETA);
+    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
+    const versions = [version1, version2, version3];
+
+    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2, VersionStage.BETA);
+
+    expect(latest).toEqual(version2);
+  });
+});
+
+describe('Version from string', () => {
+  it('Forms the version from string', () => {
+    const version = Version.FromString('1.2.3');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toBeUndefined();
+  });
+
+  it('Forms the version from string with label', () => {
+    const version = Version.FromString('1.2.3-your-mom');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toEqual('your-mom');
+  });
+
+  it('Throws if there are not enough parts', () => {
+    expect.assertions(1);
+
+    try {
+      Version.FromString('1.2');
+    } catch (e) {
+      expect(e).not.toBeUndefined();
+    }
+  });
+
+  it('Throws if there are too many parts', () => {
+    expect.assertions(1);
+    try {
+      Version.FromString('1.2.3.4');
+    } catch (e) {
+      expect(e).not.toBeUndefined();
+    }
+  });
+
+  it('Throws if major is not a number', () => {
+    expect.assertions(1);
+    try {
+      Version.FromString('boo.2.3');
+    } catch (e) {
+      expect(e).not.toBeUndefined();
+    }
+  });
+
+  it('Throws if minor is not a number', () => {
+    expect.assertions(1);
+    try {
+      Version.FromString('1.boo.3');
+    } catch (e) {
+      expect(e).not.toBeUndefined();
+    }
+  });
+
+  it('Throws if patch is not a number', () => {
+    expect.assertions(1);
+    try {
+      Version.FromString('1.2.boo');
+    } catch (e) {
+      expect(e).not.toBeUndefined();
+    }
+  });
+
+  it('Defaults the Stage to Released', () => {
+    const version = Version.FromString('1.2.3');
+
+    expect(version.stage).toEqual(VersionStage.RELEASED);
+  });
+
+  it('Can set the stage', () => {
+    const version = Version.FromString('1.2.3', VersionStage.BETA);
+
+    expect(version.stage).toEqual(VersionStage.BETA);
+  });
+});
