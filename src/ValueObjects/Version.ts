@@ -139,6 +139,14 @@ export class Version {
     return true;
   }
 
+  static IsNewerVersion(a: Version, b: Version): boolean {
+    if(a.major < b.major) return true;
+    if(a.minor < b.minor) return true;
+    if(a.patch < b.patch) return true;
+
+    return false;
+  }
+
   readonly major: number;
   readonly minor: number;
   readonly patch: number;

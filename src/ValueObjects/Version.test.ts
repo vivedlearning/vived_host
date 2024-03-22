@@ -380,3 +380,29 @@ describe('Testing are equal', () => {
     expect(Version.AreEqual(v1, v2)).toEqual(false);
   });
 });
+
+describe('Testing for a newer version', () => {
+  it('Returns true if the major version is larger', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(2, 2, 3, VersionStage.BETA);
+    expect(Version.IsNewerVersion(v1, v2)).toEqual(true);
+  });
+
+  it('Returns true if the minor version is larger', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 3, 3, VersionStage.BETA);
+    expect(Version.IsNewerVersion(v1, v2)).toEqual(true);
+  });
+
+  it('Returns true if the patch version is larger', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 2, 4, VersionStage.BETA);
+    expect(Version.IsNewerVersion(v1, v2)).toEqual(true);
+  });
+
+  it('Returns false if equal', () => {
+    const v1 = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    const v2 = new Version(1, 2, 3, VersionStage.BETA);
+    expect(Version.IsNewerVersion(v1, v2)).toEqual(false);
+  });
+});
