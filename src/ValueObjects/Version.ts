@@ -1,5 +1,3 @@
-import { reject, resolve, Result } from '../ValueObjects/Result';
-
 export enum VersionStage {
   RELEASED = 'released',
   BETA = 'beta',
@@ -9,14 +7,11 @@ export enum VersionStage {
 export class Version {
   static GetLatest(
     versions: Version[],
-    considerPreReleasedStage?: VersionStage.ALPHA | VersionStage.BETA,
   ): Version | undefined {
     let latest: Version | undefined = undefined;
 
     for (let i = 0; i < versions.length; i++) {
       const v = versions[i];
-
-      if (v.stage !== VersionStage.RELEASED && v.stage !== considerPreReleasedStage) continue;
 
       if (latest === undefined) {
         latest = v;
@@ -42,12 +37,10 @@ export class Version {
   static GetLatestWithMajor(
     versions: Version[],
     major: number,
-    considerPreReleasedStage?: VersionStage.ALPHA | VersionStage.BETA,
   ): Version | undefined {
     let latest: Version | undefined;
 
     for (const v of versions) {
-      if (v.stage !== VersionStage.RELEASED && v.stage !== considerPreReleasedStage) continue;
       if (v.major !== major) continue;
 
       if (latest === undefined) {
@@ -71,12 +64,10 @@ export class Version {
     versions: Version[],
     major: number,
     minor: number,
-    considerPreReleasedStage?: VersionStage.ALPHA | VersionStage.BETA,
   ): Version | undefined {
     let latest: Version | undefined;
 
     for (const v of versions) {
-      if (v.stage !== VersionStage.RELEASED && v.stage !== considerPreReleasedStage) continue;
       if (v.major !== major) continue;
       if (v.minor !== minor) continue;
 
@@ -93,7 +84,7 @@ export class Version {
     return latest;
   }
 
-  static FromString(versionString: string, stage: VersionStage = VersionStage.RELEASED): Version {
+  static FromString(versionString: string): Version {
     const stringSplit = versionString.split('.');
 
     if (stringSplit.length !== 3) {
@@ -102,18 +93,18 @@ export class Version {
 
     const major = parseInt(stringSplit[0], 10);
     const minor = parseInt(stringSplit[1], 10);
-    const patchLabel = stringSplit[2];
+    const patchStageLabel = stringSplit[2];
     let patch = NaN;
-    let label: string | undefined;
+    let stageLabel: string | undefined;
 
-    const indexOfDash = patchLabel.indexOf('-');
+    const indexOfDash = patchStageLabel.indexOf('-');
 
     if (indexOfDash > 0) {
-      const patchStr = patchLabel.substring(0, indexOfDash);
+      const patchStr = patchStageLabel.substring(0, indexOfDash);
       patch = parseInt(patchStr, 10);
-      label = patchLabel.substring(indexOfDash + 1);
+      stageLabel = patchStageLabel.substring(indexOfDash + 1);
     } else {
-      patch = parseInt(patchLabel, 10);
+      patch = parseInt(patchStageLabel, 10);
     }
 
     if (isNaN(major)) {
@@ -126,23 +117,53 @@ export class Version {
       throw new Error(`Unable to parse version string: ${versionString} because Patch is not a number`);
     }
 
+    let stage = VersionStage.RELEASED;
+    let label: string | undefined = undefined;
+
+    if (stageLabel) {
+      const stageLabelSplit = stageLabel.split('-');
+
+      if (stageLabelSplit.length > 0) {
+        const stringAsStage = this.stringToStage(stageLabelSplit[0]);
+
+        if (stringAsStage === undefined) {
+          label = stageLabel;
+        } else {
+          stage = stringAsStage;
+          if (stageLabelSplit.length > 1) {
+            label = stageLabel.replace(`${stageLabelSplit[0]}-`, '');
+          }
+        }
+      }
+    }
+
     const version = new Version(major, minor, patch, stage, label);
     return version;
   }
 
+  private static stringToStage(str: string): VersionStage | undefined {
+    if (str === VersionStage.ALPHA) {
+      return VersionStage.ALPHA;
+    } else if (str === VersionStage.BETA) {
+      return VersionStage.BETA;
+    }
+
+    return undefined;
+  }
+
   static AreEqual(v1: Version, v2: Version): boolean {
-    if(v1.major !== v2.major) return false;
-    if(v1.minor !== v2.minor) return false;
-    if(v1.patch !== v2.patch) return false;
-    if(v1.stage !== v2.stage) return false;
-    if(v1.label !== v2.label) return false;
+    if (v1.major !== v2.major) return false;
+    if (v1.minor !== v2.minor) return false;
+    if (v1.patch !== v2.patch) return false;
+    if (v1.stage !== v2.stage) return false;
+    if (v1.label !== v2.label) return false;
     return true;
   }
 
   static IsNewerVersion(a: Version, b: Version): boolean {
-    if(a.major < b.major) return true;
-    if(a.minor < b.minor) return true;
-    if(a.patch < b.patch) return true;
+    if (a.major < b.major) return true;
+    if (a.minor < b.minor) return true;
+    if (a.patch < b.patch) return true;
 
     return false;
   }
@@ -153,6 +174,7 @@ export class Version {
   readonly stage: VersionStage;
   readonly label?: string;
   readonly displayString: string;
+  readonly baseVersionString: string;
 
   constructor(major: number, minor: number, patch: number, stage: VersionStage, label?: string) {
     this.major = major;
@@ -161,18 +183,19 @@ export class Version {
     this.stage = stage;
     this.label = label;
 
-    let strVal = `${major}.${minor}.${patch}`;
+    this.baseVersionString= `${major}.${minor}.${patch}`;
 
+    let displayString = this.baseVersionString;
     if (stage === VersionStage.ALPHA) {
-      strVal = strVal + '-alpha';
+      displayString = displayString + '-alpha';
     } else if (this.stage === VersionStage.BETA) {
-      strVal = strVal + '-beta';
+      displayString = displayString + '-beta';
     }
 
     if (this.label) {
-      strVal = strVal + `-${label}`;
+      displayString = displayString + `-${label}`;
     }
 
-    this.displayString = strVal;
+    this.displayString = displayString;
   }
 }

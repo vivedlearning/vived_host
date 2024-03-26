@@ -7,7 +7,6 @@ test('Initialization', () => {
   expect(version.patch).toEqual(3);
   expect(version.stage).toEqual(VersionStage.BETA);
   expect(version.label).toEqual('yo');
-  expect(version.displayString).toEqual('1.2.3-beta-yo');
 });
 
 test('Without a label', () => {
@@ -17,17 +16,70 @@ test('Without a label', () => {
   expect(version.patch).toEqual(3);
   expect(version.stage).toEqual(VersionStage.ALPHA);
   expect(version.label).toBeUndefined();
-  expect(version.displayString).toEqual('1.2.3-alpha');
 });
 
-test('Display string does not include a release string', () => {
-  const v1 = new Version(1, 2, 3, VersionStage.RELEASED, 'yo');
+describe('Version strings', () => {
+  it('Shows alpha after the version', () => {
+    const version = new Version(1, 2, 3, VersionStage.ALPHA);
+    expect(version.displayString).toEqual('1.2.3-alpha');
+  });
 
-  expect(v1.displayString).toEqual('1.2.3-yo');
+  it('Appends the label after alpha', () => {
+    const version = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    expect(version.displayString).toEqual('1.2.3-alpha-yo');
+  });
 
-  const v2 = new Version(1, 2, 3, VersionStage.RELEASED);
+  it('Shows beta after the version', () => {
+    const version = new Version(1, 2, 3, VersionStage.BETA);
+    expect(version.displayString).toEqual('1.2.3-beta');
+  });
 
-  expect(v2.displayString).toEqual('1.2.3');
+  it('Appends the label after beta', () => {
+    const version = new Version(1, 2, 3, VersionStage.BETA, 'yo');
+    expect(version.displayString).toEqual('1.2.3-beta-yo');
+  });
+
+  it('Does not show a release string', () => {
+    const version = new Version(1, 2, 3, VersionStage.RELEASED);
+    expect(version.displayString).toEqual('1.2.3');
+  });
+
+  it('Appends the label after version for release', () => {
+    const version = new Version(1, 2, 3, VersionStage.RELEASED, 'yo');
+    expect(version.displayString).toEqual('1.2.3-yo');
+  });
+});
+
+describe('Version strings', () => {
+  it('Returns the stripped string for a release without label', () => {
+    const version = new Version(1, 2, 3, VersionStage.RELEASED);
+    expect(version.baseVersionString).toEqual('1.2.3');
+  });
+
+  it('Returns the stripped string for a release with a label', () => {
+    const version = new Version(1, 2, 3, VersionStage.RELEASED, 'yo');
+    expect(version.baseVersionString).toEqual('1.2.3');
+  });
+
+  it('Returns the stripped string for an alpha without label', () => {
+    const version = new Version(1, 2, 3, VersionStage.ALPHA);
+    expect(version.baseVersionString).toEqual('1.2.3');
+  });
+
+  it('Returns the stripped string for an alpha with a label', () => {
+    const version = new Version(1, 2, 3, VersionStage.ALPHA, 'yo');
+    expect(version.baseVersionString).toEqual('1.2.3');
+  });
+
+  it('Returns the stripped string for a beta without label', () => {
+    const version = new Version(1, 2, 3, VersionStage.BETA);
+    expect(version.baseVersionString).toEqual('1.2.3');
+  });
+
+  it('Returns the stripped string for a beta with a label', () => {
+    const version = new Version(1, 2, 3, VersionStage.BETA, 'yo');
+    expect(version.baseVersionString).toEqual('1.2.3');
+  });
 });
 
 describe('Getting the latest from a list', () => {
@@ -43,7 +95,7 @@ describe('Getting the latest from a list', () => {
     expect(latest).toEqual(version3);
   });
 
-  it('Returns undefined if there is no released version', () => {
+  it('Returns the latest regardless of the stage', () => {
     const version1 = new Version(1, 2, 3, VersionStage.ALPHA);
     const version2 = new Version(0, 2, 3, VersionStage.BETA);
     const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
@@ -52,72 +104,12 @@ describe('Getting the latest from a list', () => {
 
     const latest = Version.GetLatest(versions);
 
-    expect(latest).toBeUndefined();
+    expect(latest).toEqual(version3);
   });
 
   it('Returns undefined if the list is empty', () => {
     const latest = Version.GetLatest([]);
     expect(latest).toBeUndefined();
-  });
-
-  it('Only considers Released by default', () => {
-    const version1 = new Version(1, 2, 3, VersionStage.BETA);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
-    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatest(versions);
-
-    expect(latest).toEqual(version2);
-  });
-
-  it('Can consider Alpha', () => {
-    const version1 = new Version(1, 2, 3, VersionStage.BETA);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
-    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatest(versions, VersionStage.ALPHA);
-
-    expect(latest).toEqual(version3);
-  });
-
-  it('Gets the latest from list even if alpha is considered', () => {
-    const version1 = new Version(1, 2, 3, VersionStage.ALPHA);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
-    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatest(versions, VersionStage.ALPHA);
-
-    expect(latest).toEqual(version3);
-  });
-
-  it('Can consider Beta', () => {
-    const version1 = new Version(1, 2, 3, VersionStage.BETA);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
-    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatest(versions, VersionStage.BETA);
-
-    expect(latest).toEqual(version1);
-  });
-
-  it('Gets the latest from list even if beta is considered', () => {
-    const version1 = new Version(1, 2, 3, VersionStage.BETA);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(1, 2, 4, VersionStage.RELEASED);
-    const version4 = new Version(0, 0, 4, VersionStage.RELEASED);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatest(versions, VersionStage.BETA);
-
-    expect(latest).toEqual(version3);
   });
 });
 
@@ -146,7 +138,7 @@ describe('Getting the latest major', () => {
     expect(latest).toBeUndefined();
   });
 
-  it('Returns undefined if there are no released', () => {
+  it('Gets the latest major regardless of stage', () => {
     const version1 = new Version(2, 2, 3, VersionStage.ALPHA);
     const version2 = new Version(0, 2, 3, VersionStage.BETA);
     const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
@@ -155,43 +147,7 @@ describe('Getting the latest major', () => {
 
     const latest = Version.GetLatestWithMajor(versions, 0);
 
-    expect(latest).toBeUndefined();
-  });
-
-  it('Only considers release by default', () => {
-    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(0, 2, 4, VersionStage.BETA);
-    const version4 = new Version(0, 3, 4, VersionStage.ALPHA);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatestWithMajor(versions, 0);
-
-    expect(latest).toEqual(version2);
-  });
-
-  it('Gets the latest major while consider alpha', () => {
-    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(0, 2, 4, VersionStage.BETA);
-    const version4 = new Version(0, 3, 4, VersionStage.ALPHA);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatestWithMajor(versions, 0, VersionStage.ALPHA);
-
     expect(latest).toEqual(version4);
-  });
-
-  it('Gets the latest major while consider beta', () => {
-    const version1 = new Version(2, 2, 3, VersionStage.RELEASED);
-    const version2 = new Version(0, 2, 3, VersionStage.RELEASED);
-    const version3 = new Version(0, 2, 4, VersionStage.BETA);
-    const version4 = new Version(0, 3, 4, VersionStage.ALPHA);
-    const versions = [version1, version2, version3, version4];
-
-    const latest = Version.GetLatestWithMajor(versions, 0, VersionStage.BETA);
-
-    expect(latest).toEqual(version3);
   });
 });
 
@@ -220,48 +176,15 @@ describe('Get the latest major/minor', () => {
     expect(latest).toBeUndefined();
   });
 
-  it('Only considers released by default', () => {
+  it('Get the latest major/minor combo regardless of stage', () => {
     const version1 = new Version(1, 2, 2, VersionStage.RELEASED);
     const version2 = new Version(1, 2, 3, VersionStage.BETA);
     const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
     const versions = [version1, version2, version3];
 
     const latest = Version.GetLatestWithMajorMinor(versions, 1, 2);
-
-    expect(latest).toEqual(version1);
-  });
-
-  it('Returns undefined if there are no released versions', () => {
-    const version1 = new Version(1, 2, 2, VersionStage.BETA);
-    const version2 = new Version(1, 2, 3, VersionStage.BETA);
-    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
-    const versions = [version1, version2, version3];
-
-    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2);
-
-    expect(latest).toBeUndefined();
-  });
-
-  it('Considers Alpha releases', () => {
-    const version1 = new Version(1, 2, 2, VersionStage.RELEASED);
-    const version2 = new Version(1, 2, 3, VersionStage.BETA);
-    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
-    const versions = [version1, version2, version3];
-
-    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2, VersionStage.ALPHA);
 
     expect(latest).toEqual(version3);
-  });
-
-  it('Considers Beta releases', () => {
-    const version1 = new Version(1, 2, 2, VersionStage.RELEASED);
-    const version2 = new Version(1, 2, 3, VersionStage.BETA);
-    const version3 = new Version(1, 2, 4, VersionStage.ALPHA);
-    const versions = [version1, version2, version3];
-
-    const latest = Version.GetLatestWithMajorMinor(versions, 1, 2, VersionStage.BETA);
-
-    expect(latest).toEqual(version2);
   });
 });
 
@@ -273,15 +196,67 @@ describe('Version from string', () => {
     expect(version.minor).toEqual(2);
     expect(version.patch).toEqual(3);
     expect(version.label).toBeUndefined();
+    expect(version.stage).toEqual(VersionStage.RELEASED);
   });
 
-  it('Forms the version from string with label', () => {
+  it('Gets the alpha stage from the string', () => {
+    const version = Version.FromString('1.2.3-alpha');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toBeUndefined();
+    expect(version.stage).toEqual(VersionStage.ALPHA);
+  });
+
+  it('Gets the alpha stage and label from the string', () => {
+    const version = Version.FromString('1.2.3-alpha-your-mom');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toEqual('your-mom');
+    expect(version.stage).toEqual(VersionStage.ALPHA);
+  });
+
+  it('Gets the beta stage from the string', () => {
+    const version = Version.FromString('1.2.3-beta');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toBeUndefined();
+    expect(version.stage).toEqual(VersionStage.BETA);
+  });
+
+  it('Gets the beta stage and label from the string', () => {
+    const version = Version.FromString('1.2.3-beta-your-mom');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toEqual('your-mom');
+    expect(version.stage).toEqual(VersionStage.BETA);
+  });
+
+  it('Gets the label for a released stage from the string', () => {
+    const version = Version.FromString('1.2.3-yo');
+
+    expect(version.major).toEqual(1);
+    expect(version.minor).toEqual(2);
+    expect(version.patch).toEqual(3);
+    expect(version.label).toEqual('yo');
+    expect(version.stage).toEqual(VersionStage.RELEASED);
+  });
+
+  it('Forms the version from string with a hyphenated label', () => {
     const version = Version.FromString('1.2.3-your-mom');
 
     expect(version.major).toEqual(1);
     expect(version.minor).toEqual(2);
     expect(version.patch).toEqual(3);
     expect(version.label).toEqual('your-mom');
+    expect(version.stage).toEqual(VersionStage.RELEASED);
   });
 
   it('Throws if there are not enough parts', () => {
@@ -328,18 +303,6 @@ describe('Version from string', () => {
     } catch (e) {
       expect(e).not.toBeUndefined();
     }
-  });
-
-  it('Defaults the Stage to Released', () => {
-    const version = Version.FromString('1.2.3');
-
-    expect(version.stage).toEqual(VersionStage.RELEASED);
-  });
-
-  it('Can set the stage', () => {
-    const version = Version.FromString('1.2.3', VersionStage.BETA);
-
-    expect(version.stage).toEqual(VersionStage.BETA);
   });
 });
 

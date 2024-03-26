@@ -40,5 +40,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@types/uuid": "^9.0.8",
+    "uuid": "^9.0.1"
   }
 }
