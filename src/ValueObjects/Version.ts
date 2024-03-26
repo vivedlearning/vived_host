@@ -8,11 +8,9 @@ export class Version {
   static GetLatest(
     versions: Version[],
   ): Version | undefined {
-    let latest: Version | undefined = undefined;
+    let latest: Version | undefined;
 
-    for (let i = 0; i < versions.length; i++) {
-      const v = versions[i];
-
+    for(const v of versions){
       if (latest === undefined) {
         latest = v;
         continue;
@@ -118,7 +116,7 @@ export class Version {
     }
 
     let stage = VersionStage.RELEASED;
-    let label: string | undefined = undefined;
+    let label: string | undefined;
 
     if (stageLabel) {
       const stageLabelSplit = stageLabel.split('-');
