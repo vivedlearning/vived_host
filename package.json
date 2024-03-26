@@ -1,6 +1,6 @@
 {
   "name": "@vived/vivedlearning_host",
-  "version": "2.29.0",
+  "version": "2.30.0",
   "description": "Public Host package for the VIVED Learning App system",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -40,5 +40,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@types/uuid": "^9.0.8",
+    "uuid": "^9.0.1"
   }
 }
