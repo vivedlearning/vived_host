@@ -1,6 +1,6 @@
 import { HostAppObject } from './HostAppObject';
 import { HostAppObjectPM } from './HostAppObjectPM';
-import { makeAppObjectRepo } from './HostAppObjectRepo';
+import { makeHostAppObjectRepo } from './HostAppObjectRepo';
 
 interface MockVM {
   val: number;
@@ -24,7 +24,7 @@ class MockPM extends HostAppObjectPM<MockVM> {
 }
 
 function makeTestRig() {
-  const appObjects = makeAppObjectRepo();
+  const appObjects = makeHostAppObjectRepo();
   const appObj = appObjects.getOrCreate('appObj');
 
   return { appObj, appObjects };

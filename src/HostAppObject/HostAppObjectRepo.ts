@@ -29,7 +29,7 @@ export abstract class HostAppObjectRepo extends ObservableEntity {
   abstract removedAppObjectRemovedObserver: (observer: (addedEntity: HostAppObject) => void) => void;
 }
 
-export function makeAppObjectRepo(): HostAppObjectRepo {
+export function makeHostAppObjectRepo(): HostAppObjectRepo {
   return new AppObjectRepoImp();
 }
 
@@ -146,7 +146,7 @@ class AppObjectRepoImp extends HostAppObjectRepo {
 
   registerSingleton(component: HostAppObjectComponent): void {
     if (this.singletons.has(component.type)) {
-      this.submitWarning('AppObjectRepo', `Singleton for type ${component.type} already exists. Relpacing`);
+      this.submitWarning('AppObjectRepo', `Singleton for type ${component.type} already exists. Replacing`);
     }
 
     this.singletons.set(component.type, component);

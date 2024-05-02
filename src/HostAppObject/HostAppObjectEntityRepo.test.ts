@@ -1,7 +1,7 @@
 import { HostAppObject, makeAppObject } from './HostAppObject';
 import { HostAppObjectEntity } from './HostAppObjectEntity';
 import { HostAppObjectEntityRepo } from './HostAppObjectEntityRepo';
-import { makeAppObjectRepo } from './HostAppObjectRepo';
+import { makeHostAppObjectRepo } from './HostAppObjectRepo';
 
 class MockAppEntity extends HostAppObjectEntity {
   static type: string = 'mockEntity';
@@ -24,7 +24,7 @@ class MockEntityRepoImp extends HostAppObjectEntityRepo<MockAppEntity> {
 }
 
 function makeTestRig() {
-  const appObjects = makeAppObjectRepo();
+  const appObjects = makeHostAppObjectRepo();
   const repoAppObj = makeAppObject('repo', appObjects);
   const repo = new MockEntityRepoImp(repoAppObj);
 

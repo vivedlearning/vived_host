@@ -1,9 +1,9 @@
 import { HostAppObject, makeAppObject } from './HostAppObject';
 import { HostAppObjectComponent } from './HostAppObjectComponent';
-import { makeAppObjectRepo } from './HostAppObjectRepo';
+import { makeHostAppObjectRepo } from './HostAppObjectRepo';
 
 function makeTestRig() {
-  const repo = makeAppObjectRepo();
+  const repo = makeHostAppObjectRepo();
 
   const observer = jest.fn();
   repo.addObserver(observer);
