@@ -1,13 +1,13 @@
-import { AppObject } from "./AppObject";
-import { AppObjectPM } from "./AppObjectPM";
-import { makeAppObjectRepo } from "./AppObjectRepo";
+import { HostAppObject } from './HostAppObject';
+import { HostAppObjectPM } from './HostAppObjectPM';
+import { makeAppObjectRepo } from './HostAppObjectRepo';
 
 interface MockVM {
   val: number;
 }
 
-class MockPM extends AppObjectPM<MockVM> {
-  static readonly type = "MockPM";
+class MockPM extends HostAppObjectPM<MockVM> {
+  static readonly type = 'MockPM';
 
   readonly defaultVM = { val: 0 };
   get currentVM(): MockVM {
@@ -18,20 +18,20 @@ class MockPM extends AppObjectPM<MockVM> {
     return a.val === b.val;
   }
 
-  constructor(appObj: AppObject) {
+  constructor(appObj: HostAppObject) {
     super(appObj, MockPM.type);
   }
 }
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
-  const appObj = appObjects.getOrCreate("appObj");
+  const appObj = appObjects.getOrCreate('appObj');
 
   return { appObj, appObjects };
 }
 
-describe("App Object PM", () => {
-  it("Initializes with the last VM if it has been set", () => {
+describe('App Object PM', () => {
+  it('Initializes with the last VM if it has been set', () => {
     const { appObj } = makeTestRig();
     const pm = new MockPM(appObj);
     const view = jest.fn();
@@ -43,7 +43,7 @@ describe("App Object PM", () => {
     expect(view).toBeCalledWith({ val: 6 });
   });
 
-  it("Adds a view but does not call it if no VM has been set", () => {
+  it('Adds a view but does not call it if no VM has been set', () => {
     const { appObj } = makeTestRig();
     const pm = new MockPM(appObj);
     const view = jest.fn();
@@ -70,7 +70,7 @@ describe("App Object PM", () => {
     expect(view).not.toBeCalled();
   });
 
-  it("Removes a view", () => {
+  it('Removes a view', () => {
     const { appObj } = makeTestRig();
     const pm = new MockPM(appObj);
     const view = jest.fn();
@@ -86,7 +86,7 @@ describe("App Object PM", () => {
     expect(view).not.toBeCalled();
   });
 
-  it("Can be disposed", () => {
+  it('Can be disposed', () => {
     const { appObj } = makeTestRig();
     const pm = new MockPM(appObj);
     const view = jest.fn();
@@ -101,7 +101,7 @@ describe("App Object PM", () => {
     expect(view).not.toBeCalled();
   });
 
-  it("Adds itself to the App Object", () => {
+  it('Adds itself to the App Object', () => {
     const { appObj } = makeTestRig();
 
     expect(appObj.hasComponent(MockPM.type)).toEqual(false);
@@ -111,7 +111,7 @@ describe("App Object PM", () => {
     expect(appObj.hasComponent(MockPM.type)).toEqual(true);
   });
 
-  it("Removes itself from the App Object when disposed", () => {
+  it('Removes itself from the App Object when disposed', () => {
     const { appObj } = makeTestRig();
     const pm = new MockPM(appObj);
 
@@ -122,23 +122,20 @@ describe("App Object PM", () => {
     expect(appObj.hasComponent(MockPM.type)).toEqual(false);
   });
 
-  it("Returns the repo", () => {
+  it('Returns the repo', () => {
     const { appObj, appObjects } = makeTestRig();
 
     const pm = new MockPM(appObj);
     expect(pm.appObjects).toEqual(appObjects);
   });
 
-  it("Forwards a warn to the App Object Repo warn", () => {
+  it('Forwards a warn to the App Object Repo warn', () => {
     const { appObj, appObjects } = makeTestRig();
     appObjects.submitWarning = jest.fn();
 
     const pm = new MockPM(appObj);
-    pm.warn("Some warning");
+    pm.warn('Some warning');
 
-    expect(appObjects.submitWarning).toBeCalledWith(
-      `appObj/MockPM`,
-      "Some warning"
-    );
+    expect(appObjects.submitWarning).toBeCalledWith(`appObj/MockPM`, 'Some warning');
   });
 });

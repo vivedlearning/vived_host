@@ -1,23 +1,23 @@
-import { ObserverList } from "../Entities";
-import { AppObject } from "./AppObject";
-import { AppObjectComponent } from "./AppObjectComponent";
+import { ObserverList } from '../Entities';
+import { HostAppObject } from './HostAppObject';
+import { HostAppObjectComponent } from './HostAppObjectComponent';
 
-export type AppObjectEntityObserver = () => void;
+export type HostAppObjectEntityObserver = () => void;
 
-export class AppObjectEntity extends AppObjectComponent {
+export class HostAppObjectEntity extends HostAppObjectComponent {
   private onDisposeObserverList = new ObserverList<void>();
-  addOnDisposeObserver = (observer: AppObjectEntityObserver) => {
+  addOnDisposeObserver = (observer: HostAppObjectEntityObserver) => {
     this.onDisposeObserverList.add(observer);
   };
-  removeOnDisposeObserver = (observer: AppObjectEntityObserver): void => {
+  removeOnDisposeObserver = (observer: HostAppObjectEntityObserver): void => {
     this.onDisposeObserverList.remove(observer);
   };
 
   private onChangeObserverList = new ObserverList<void>();
-  addChangeObserver = (observer: AppObjectEntityObserver): void => {
+  addChangeObserver = (observer: HostAppObjectEntityObserver): void => {
     this.onChangeObserverList.add(observer);
   };
-  removeChangeObserver = (observer: AppObjectEntityObserver): void => {
+  removeChangeObserver = (observer: HostAppObjectEntityObserver): void => {
     this.onChangeObserverList.remove(observer);
   };
 
@@ -35,9 +35,9 @@ export class AppObjectEntity extends AppObjectComponent {
     super.dispose();
   }
 
-  constructor(appObject: AppObject, type: string) {
-    super(appObject, type)
-    
+  constructor(appObject: HostAppObject, type: string) {
+    super(appObject, type);
+
     this.addChangeObserver(appObject.notify);
   }
 }

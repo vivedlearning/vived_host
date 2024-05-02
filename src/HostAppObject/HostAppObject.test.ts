@@ -1,31 +1,31 @@
-import { AppObject, makeAppObject } from "./AppObject";
-import { AppObjectComponent } from "./AppObjectComponent";
-import { makeAppObjectRepo } from "./AppObjectRepo";
+import { HostAppObject, makeAppObject } from './HostAppObject';
+import { HostAppObjectComponent } from './HostAppObjectComponent';
+import { makeAppObjectRepo } from './AppObjectRepo';
 
 export function makeTestRig() {
   const repo = makeAppObjectRepo();
-  const appObj = makeAppObject("obj id", repo);
+  const appObj = makeAppObject('obj id', repo);
   const observer = jest.fn();
   appObj.addObserver(observer);
 
   return { repo, appObj, observer };
 }
 
-describe("App Object", () => {
-  it("Adds itself to the repo", () => {
+describe('App Object', () => {
+  it('Adds itself to the repo', () => {
     const { repo, appObj } = makeTestRig();
 
     expect(repo.has(appObj.id)).toEqual(true);
   });
 
-  it("Removes itself from the repo when disposed", () => {
+  it('Removes itself from the repo when disposed', () => {
     const { repo, appObj } = makeTestRig();
 
     appObj.dispose();
     expect(repo.has(appObj.id)).toEqual(false);
   });
 
-  it("Checks to see it has a component", () => {
+  it('Checks to see it has a component', () => {
     const { appObj } = makeTestRig();
 
     expect(appObj.hasComponent(MockComponent.type)).toEqual(false);
@@ -35,7 +35,7 @@ describe("App Object", () => {
     expect(appObj.hasComponent(MockComponent.type)).toEqual(true);
   });
 
-  it("Notifies when an component is added", () => {
+  it('Notifies when an component is added', () => {
     const { appObj, observer } = makeTestRig();
 
     new MockComponent(appObj);
@@ -43,7 +43,7 @@ describe("App Object", () => {
     expect(observer).toBeCalled();
   });
 
-  it("Gets a component", () => {
+  it('Gets a component', () => {
     const { appObj } = makeTestRig();
 
     expect(appObj.getComponent(MockComponent.type)).toEqual(undefined);
@@ -53,7 +53,7 @@ describe("App Object", () => {
     expect(appObj.getComponent(MockComponent.type)).toEqual(mockComponent);
   });
 
-  it("Warns if a component is replaced", () => {
+  it('Warns if a component is replaced', () => {
     const { appObj } = makeTestRig();
 
     console.warn = jest.fn();
@@ -65,7 +65,7 @@ describe("App Object", () => {
     expect(console.warn).toBeCalled();
   });
 
-  it("Returns the component list", () => {
+  it('Returns the component list', () => {
     const { appObj } = makeTestRig();
 
     expect(appObj.allComponents()).toEqual([]);
@@ -74,15 +74,15 @@ describe("App Object", () => {
     appObj.addComponent(mockComponent);
 
     const anotherMockComponent = new AnotherMockComponent(appObj);
-    appObj.addComponent(anotherMockComponent)
+    appObj.addComponent(anotherMockComponent);
 
     expect(appObj.allComponents()).toEqual([mockComponent, anotherMockComponent]);
   });
 
-  it("Removes a component", () => {
+  it('Removes a component', () => {
     const { appObj } = makeTestRig();
     const comp = new MockComponent(appObj);
-    appObj.addComponent(comp)
+    appObj.addComponent(comp);
 
     expect(appObj.hasComponent(MockComponent.type)).toEqual(true);
 
@@ -91,10 +91,10 @@ describe("App Object", () => {
     expect(appObj.hasComponent(MockComponent.type)).toEqual(false);
   });
 
-  it("Notifies when an component is removed", () => {
+  it('Notifies when an component is removed', () => {
     const { appObj, observer } = makeTestRig();
     const comp = new MockComponent(appObj);
-    appObj.addComponent(comp)
+    appObj.addComponent(comp);
     observer.mockClear();
 
     appObj.removeComponent(MockComponent.type);
@@ -104,24 +104,24 @@ describe("App Object", () => {
     expect(observer).toHaveBeenCalledTimes(1);
   });
 
-  it("Disposes all components when the App Object is disposed", () => {
+  it('Disposes all components when the App Object is disposed', () => {
     const { appObj } = makeTestRig();
 
     const comp = new MockComponent(appObj);
-    appObj.addComponent(comp)
+    appObj.addComponent(comp);
 
-    const spy = jest.spyOn(comp, "dispose");
+    const spy = jest.spyOn(comp, 'dispose');
 
     appObj.dispose();
 
     expect(spy).toBeCalled();
   });
 
-  it("Clears the component list when disposed", () => {
+  it('Clears the component list when disposed', () => {
     const { appObj } = makeTestRig();
 
     const comp = new MockComponent(appObj);
-    appObj.addComponent(comp)
+    appObj.addComponent(comp);
 
     expect(appObj.allComponents()).toHaveLength(1);
 
@@ -130,29 +130,29 @@ describe("App Object", () => {
     expect(appObj.allComponents()).toHaveLength(0);
   });
 
-  it("If an entity is replace, it disposes the original", () => {
+  it('If an entity is replace, it disposes the original', () => {
     const { appObj } = makeTestRig();
 
     const comp = new MockComponent(appObj);
-    appObj.addComponent(comp)
+    appObj.addComponent(comp);
 
-    const spy = jest.spyOn(comp, "dispose");
-    appObj.addComponent(new MockComponent(appObj))
+    const spy = jest.spyOn(comp, 'dispose');
+    appObj.addComponent(new MockComponent(appObj));
 
     expect(spy).toBeCalled();
   });
 });
 
-class MockComponent extends AppObjectComponent {
-  static readonly type: string = "mockComponent";
-  constructor(appObject: AppObject) {
-    super(appObject, MockComponent.type)
+class MockComponent extends HostAppObjectComponent {
+  static readonly type: string = 'mockComponent';
+  constructor(appObject: HostAppObject) {
+    super(appObject, MockComponent.type);
   }
 }
 
-class AnotherMockComponent extends AppObjectComponent {
-  static readonly type: string = "mockComponent2";
-  constructor(appObject: AppObject) {
-    super(appObject, AnotherMockComponent.type)
+class AnotherMockComponent extends HostAppObjectComponent {
+  static readonly type: string = 'mockComponent2';
+  constructor(appObject: HostAppObject) {
+    super(appObject, AnotherMockComponent.type);
   }
 }

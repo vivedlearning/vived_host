@@ -1,11 +1,11 @@
-import { AppObject, makeAppObject } from "./AppObject";
-import { AppObjectComponent } from "./AppObjectComponent";
+import { HostAppObject, makeAppObject } from "./HostAppObject";
+import { HostAppObjectComponent } from "./HostAppObjectComponent";
 import { makeAppObjectRepo } from "./AppObjectRepo";
 
 function makeTestRig() {
   const appObjectRepo = makeAppObjectRepo();
   const appObj = makeAppObject("appObj", appObjectRepo);
-  const appObjectComponent = new AppObjectComponent(appObj, "aComponent");
+  const appObjectComponent = new HostAppObjectComponent(appObj, "aComponent");
 
   return { appObjectComponent, appObj, appObjectRepo };
 }
@@ -173,10 +173,10 @@ describe("App Object Component", () => {
   });
 });
 
-class MockComponent extends AppObjectComponent {
+class MockComponent extends HostAppObjectComponent {
   static type = "MockComponent";
 
-  constructor(appObject: AppObject) {
+  constructor(appObject: HostAppObject) {
     super(appObject, MockComponent.type);
   }
 }

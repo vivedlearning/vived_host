@@ -1,21 +1,19 @@
-import { AppObject } from "./AppObject";
-import { AppObjectRepo } from "./AppObjectRepo";
+import { HostAppObject } from './HostAppObject';
+import { HostAppObjectRepo } from './HostAppObjectRepo';
 
-export class AppObjectComponent {
+export class HostAppObjectComponent {
   readonly type: string;
-  readonly appObject: AppObject;
-  get appObjects(): AppObjectRepo {
+  readonly appObject: HostAppObject;
+  get appObjects(): HostAppObjectRepo {
     return this.appObject.appObjectRepo;
   }
 
-  private cachedSingletons = new Map<string, AppObjectComponent>();
-  getCachedSingleton<T extends AppObjectComponent>(
-    type: string
-  ): T | undefined {
+  private cachedSingletons = new Map<string, HostAppObjectComponent>();
+  getCachedSingleton<T extends HostAppObjectComponent>(type: string): T | undefined {
     if (!this.cachedSingletons.has(type)) {
       const component = this.appObjects.getSingleton(type);
       if (!component) {
-        this.warn("Unable to get cached singleton type " + type);
+        this.warn('Unable to get cached singleton type ' + type);
       } else {
         this.cachedSingletons.set(type, component);
       }
@@ -24,29 +22,29 @@ export class AppObjectComponent {
     return this.cachedSingletons.get(type) as T;
   }
 
-  getSingleton <T extends AppObjectComponent>(
+  getSingleton<T extends HostAppObjectComponent>(
     type: string,
-    logType: "LOG" | "WARN" | "ERROR" = "WARN"
+    logType: 'LOG' | 'WARN' | 'ERROR' = 'WARN',
   ): T | undefined {
     const comp = this.appObjects.getSingleton<T>(type);
 
     if (!comp) {
-      const msg = "Unable to get singleton type " + type;
+      const msg = 'Unable to get singleton type ' + type;
       switch (logType) {
-        case "ERROR":
+        case 'ERROR':
           this.error(msg);
           break;
-        case "LOG":
+        case 'LOG':
           this.log(msg);
           break;
-        case "WARN":
+        case 'WARN':
           this.warn(msg);
           break;
       }
     }
 
     return comp;
-  };
+  }
 
   dispose() {
     if (this.appObject.getComponent(this.type) === this) {
@@ -58,15 +56,15 @@ export class AppObjectComponent {
     this.appObjects.submitLog(`${this.appObject.id}/${this.type}`, message);
   }
 
-  warn(message: string){
+  warn(message: string) {
     this.appObjects.submitWarning(`${this.appObject.id}/${this.type}`, message);
-  };
+  }
 
   error(message: string) {
     this.appObjects.submitError(`${this.appObject.id}/${this.type}`, message);
   }
 
-  constructor(appObject: AppObject, type: string) {
+  constructor(appObject: HostAppObject, type: string) {
     this.appObject = appObject;
     this.type = type;
     appObject.addComponent(this);

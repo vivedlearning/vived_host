@@ -1,40 +1,38 @@
-import { ObservableEntity } from "../Entities";
-import { AppObjectComponent } from "./AppObjectComponent";
-import { AppObjectRepo } from "./AppObjectRepo";
+import { ObservableEntity } from '../Entities';
+import { HostAppObjectComponent } from './HostAppObjectComponent';
+import { HostAppObjectRepo } from './HostAppObjectRepo';
 
-export abstract class AppObject extends ObservableEntity {
+export abstract class HostAppObject extends ObservableEntity {
   abstract readonly id: string;
-  abstract readonly appObjectRepo: AppObjectRepo;
+  abstract readonly appObjectRepo: HostAppObjectRepo;
 
   abstract hasComponent(type: string): boolean;
-  abstract addComponent(component: AppObjectComponent): void;
-  abstract getComponent<T extends AppObjectComponent>(type: string): T | undefined;
+  abstract addComponent(component: HostAppObjectComponent): void;
+  abstract getComponent<T extends HostAppObjectComponent>(type: string): T | undefined;
   abstract removeComponent(type: string): void;
-  abstract allComponents(): AppObjectComponent[];
+  abstract allComponents(): HostAppObjectComponent[];
 
   abstract dispose(): void;
 }
 
-export function makeAppObject(id: string, repo: AppObjectRepo): AppObject {
+export function makeAppObject(id: string, repo: HostAppObjectRepo): HostAppObject {
   return new AppObjectImp(id, repo);
 }
 
-class AppObjectImp extends AppObject {
+class AppObjectImp extends HostAppObject {
   readonly id: string;
-  readonly appObjectRepo: AppObjectRepo;
+  readonly appObjectRepo: HostAppObjectRepo;
 
-  private componentLookup = new Map<string, AppObjectComponent>();
+  private componentLookup = new Map<string, HostAppObjectComponent>();
 
   hasComponent(type: string): boolean {
     return this.componentLookup.has(type);
   }
 
-  addComponent(component: AppObjectComponent): void {
+  addComponent(component: HostAppObjectComponent): void {
     const currentComponent = this.componentLookup.get(component.type);
     if (currentComponent) {
-      console.warn(
-        `[AppObject] Component ${component.type} is being replaced on ${this.id}`
-      );
+      console.warn(`[AppObject] Component ${component.type} is being replaced on ${this.id}`);
       currentComponent.dispose();
     }
 
@@ -42,7 +40,7 @@ class AppObjectImp extends AppObject {
     this.notify();
   }
 
-  getComponent<T extends AppObjectComponent>(type: string): T | undefined {
+  getComponent<T extends HostAppObjectComponent>(type: string): T | undefined {
     if (this.componentLookup.has(type)) {
       return this.componentLookup.get(type) as T;
     } else {
@@ -59,22 +57,21 @@ class AppObjectImp extends AppObject {
     this.notify();
   }
 
-  allComponents(): AppObjectComponent[] {
+  allComponents(): HostAppObjectComponent[] {
     return Array.from(this.componentLookup.values());
   }
-
 
   dispose = (): void => {
     const components = Array.from(this.componentLookup.values());
     this.componentLookup.clear();
-    components.forEach(c => c.dispose());
+    components.forEach((c) => c.dispose());
 
     if (this.appObjectRepo.has(this.id)) {
       this.appObjectRepo.remove(this.id);
     }
   };
 
-  constructor(id: string, repo: AppObjectRepo) {
+  constructor(id: string, repo: HostAppObjectRepo) {
     super();
     this.id = id;
     this.appObjectRepo = repo;

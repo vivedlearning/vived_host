@@ -1,10 +1,7 @@
-import { ObserverList } from "../Entities";
-import { AppObjectEntity } from "./AppObjectEntity";
+import { ObserverList } from '../Entities';
+import { HostAppObjectEntity } from './HostAppObjectEntity';
 
-export class AppObjectEntityRepo<
-  T extends AppObjectEntity
-> extends AppObjectEntity {
-
+export class HostAppObjectEntityRepo<T extends HostAppObjectEntity> extends HostAppObjectEntity {
   private entityLookup = new Map<string, T>();
 
   private onEntityAddedObservers = new ObserverList<T>();
@@ -19,9 +16,7 @@ export class AppObjectEntityRepo<
   addEntityRemovedObserver = (observer: (removedEntity: T) => void) => {
     this.onEntityRemovedObservers.add(observer);
   };
-  removeEntityRemovedObserver = (
-    observer: (removedEntity: T) => void
-  ): void => {
+  removeEntityRemovedObserver = (observer: (removedEntity: T) => void): void => {
     this.onEntityRemovedObservers.remove(observer);
   };
 
@@ -39,7 +34,7 @@ export class AppObjectEntityRepo<
     entity.addChangeObserver(this.notifyOnChange);
     this.notifyOnChange();
     this.onEntityAddedObservers.notify(entity);
-  };
+  }
 
   removeForAppObject = (id: string) => {
     const existing = this.entityLookup.get(id);

@@ -1,8 +1,7 @@
-import { ObserverList } from "../Entities";
-import { AppObject } from "./AppObject";
-import { AppObjectComponent } from "./AppObjectComponent";
+import { ObserverList } from '../Entities';
+import { HostAppObjectComponent } from './HostAppObjectComponent';
 
-export abstract class AppObjectPM<T> extends AppObjectComponent {
+export abstract class HostAppObjectPM<T> extends HostAppObjectComponent {
   abstract vmsAreEqual(a: T, b: T): boolean;
 
   private _lastVM?: T;
