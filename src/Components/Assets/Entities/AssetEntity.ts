@@ -5,17 +5,36 @@ export abstract class AssetEntity extends HostAppObjectEntity {
   static type = 'AssetEntity';
 
   abstract readonly id: string;
-  abstract get archived(): boolean;
-  abstract set archived(archived: boolean);
+
   abstract get name(): string;
   abstract set name(name: string);
+
   abstract get description(): string;
   abstract set description(description: string);
+
+  abstract get archived(): boolean;
+  abstract set archived(archived: boolean);
+
   abstract get filename(): string;
   abstract set filename(filename: string);
+
+  abstract get fileURL(): string;
+  abstract set fileURL(fileURL: string);
+
   abstract setFile(file: File): void;
-  abstract get blobURL(): string | undefined;
   abstract get file(): File | undefined;
+  abstract get blobURL(): string | undefined;
+
+  abstract get linkedAssets(): { type: string; id: string }[];
+  abstract addLinkedAsset(type: string, id: string): void;
+  abstract removeLinkedAsset(type: string, id: string): void;
+  abstract getLinkedAssetByType(type: string): string[];
+
+  abstract get isFetchingFile(): boolean;
+  abstract set isFetchingFile(isFetchingFile: boolean);
+
+  abstract get fetchError(): Error | undefined;
+  abstract set fetchError(fetchError: Error | undefined);
 
   static get(appObject: HostAppObject): AssetEntity | undefined {
     const asset = appObject.getComponent<AssetEntity>(AssetEntity.type);
@@ -29,66 +48,153 @@ export abstract class AssetEntity extends HostAppObjectEntity {
   }
 }
 
-export function makeAsset(appObject: HostAppObject): AssetEntity {
+export function makeAssetEntity(appObject: HostAppObject): AssetEntity {
   return new AssetImp(appObject);
 }
 
 class AssetImp extends AssetEntity {
-  readonly id: string;
-
-  private memoizedArchived = new MemoizedBoolean(false, this.notifyOnChange);
-  get archived(): boolean {
-    return this.memoizedArchived.val;
-  }
-  set archived(archived: boolean) {
-    this.memoizedArchived.val = archived;
+  get id(): string {
+    return this.appObject.id;
   }
 
-  private memoizedName = new MemoizedString('', this.notifyOnChange);
+  private _memoizedName: MemoizedString = new MemoizedString('', this.notifyOnChange);
   get name(): string {
-    return this.memoizedName.val;
+    return this._memoizedName.val;
   }
+
   set name(name: string) {
-    this.memoizedName.val = name;
+    this._memoizedName.val = name;
   }
 
-  private memoizedDesc = new MemoizedString('', this.notifyOnChange);
+  private _memoizedDescription: MemoizedString = new MemoizedString('', this.notifyOnChange);
   get description(): string {
-    return this.memoizedDesc.val;
+    return this._memoizedDescription.val;
   }
+
   set description(description: string) {
-    this.memoizedDesc.val = description;
+    this._memoizedDescription.val = description;
   }
 
-  private memoizedFilename = new MemoizedString('', this.notifyOnChange);
+  private _memoizedArchived: MemoizedBoolean = new MemoizedBoolean(false, this.notifyOnChange);
+  get archived(): boolean {
+    return this._memoizedArchived.val;
+  }
+
+  set archived(archived: boolean) {
+    this._memoizedArchived.val = archived;
+  }
+
+  private _memoizedFilename: MemoizedString = new MemoizedString('', this.notifyOnChange);
   get filename(): string {
-    return this.memoizedFilename.val;
-  }
-  set filename(filename: string) {
-    this.memoizedFilename.val = filename;
+    return this._memoizedFilename.val;
   }
 
-  setFile(file: File): void {
-    this._file = file;
-    const blobURL = URL.createObjectURL(file);
-    this.memoizedURL.val = blobURL;
+  private _memoizedFileURL: MemoizedString = new MemoizedString('', this.notifyOnChange);
+  set filename(name: string) {
+    this._memoizedFilename.val = name;
   }
-  private _file: File | undefined;
+  get fileURL(): string {
+    return this._memoizedFileURL.val;
+  }
+
+  set fileURL(name: string) {
+    this._memoizedFileURL.val = name;
+  }
+
+  private _file: File | undefined = undefined;
+  private _blobURL: string | undefined = undefined;
+
+  setFile = (file: File) => {
+    this._file = file;
+    this._blobURL = URL.createObjectURL(file);
+    this.notifyOnChange();
+  };
+
   get file(): File | undefined {
     return this._file;
   }
 
-  private memoizedURL = new MemoizedString('', this.notifyOnChange);
   get blobURL(): string | undefined {
-    if (this.memoizedURL.val === '') {
-      return undefined;
-    } else {
-      return this.memoizedURL.val;
-    }
+    return this._blobURL;
   }
+
+  private _linkedAssets: { type: string; id: string }[] = [];
+  get linkedAssets(): { type: string; id: string }[] {
+    return [...this._linkedAssets];
+  }
+
+  addLinkedAsset = (type: string, id: string) => {
+    const existingAsset = this._linkedAssets.find((asset) => {
+      return asset.id === id;
+    });
+
+    if (existingAsset === undefined) {
+      this._linkedAssets.push({
+        id,
+        type,
+      });
+      this.notifyOnChange();
+    }
+  };
+
+  removeLinkedAsset = (type: string, id: string) => {
+    let foundAsset: boolean = false;
+    this._linkedAssets.forEach((asset) => {
+      if (asset.type === type && asset.id === id) {
+        foundAsset = true;
+      }
+    });
+
+    if (foundAsset) {
+      this._linkedAssets = this._linkedAssets.filter((asset) => asset.id !== id);
+      this.notifyOnChange();
+    }
+  };
+
+  getLinkedAssetByType = (type: string): string[] => {
+    const rVal: string[] = [];
+
+    this._linkedAssets.forEach((asset) => {
+      if (asset.type === type) {
+        rVal.push(asset.id);
+      }
+    });
+
+    return rVal;
+  };
+
+  private _memoizedIsFetchingFile: MemoizedBoolean = new MemoizedBoolean(false, this.notifyOnChange);
+  get isFetchingFile(): boolean {
+    return this._memoizedIsFetchingFile.val;
+  }
+  set isFetchingFile(archived: boolean) {
+    this._memoizedIsFetchingFile.val = archived;
+  }
+
+  private _fetchError: Error | undefined = undefined;
+  get fetchError(): Error | undefined {
+    return this._fetchError;
+  }
+  set fetchError(fetchError: Error | undefined) {
+    if (fetchError === undefined && this.fetchError === undefined) return;
+
+    if (fetchError !== undefined && this.fetchError !== undefined && fetchError.message === this.fetchError.message)
+      return;
+
+    this._fetchError = fetchError;
+    this.notifyOnChange();
+  }
+
+  dispose = () => {
+    if (this._blobURL !== undefined) {
+      URL.revokeObjectURL(this._blobURL);
+      this._blobURL = undefined;
+      this.notifyOnChange();
+    }
+    super.dispose();
+  };
 
   constructor(appObject: HostAppObject) {
     super(appObject, AssetEntity.type);
-    this.id = appObject.id;
   }
 }

@@ -1,5 +1,3 @@
-export * from './Asset';
-export * from './AssetRepo';
 export * from './Auth';
 export * from './ChallengeResults';
 export * from './DevicePreview';

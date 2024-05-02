@@ -1,10 +1,10 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { AssetEntity, makeAsset } from './AssetEntity';
+import { AssetEntity, makeAssetEntity } from './AssetEntity';
 
 function makeTestRig() {
   const appObjectRepo = makeHostAppObjectRepo();
   const appObject = appObjectRepo.getOrCreate('asset1');
-  const asset = makeAsset(appObject);
+  const asset = makeAssetEntity(appObject);
   const observer = jest.fn();
   asset.addChangeObserver(observer);
   return { asset, observer, appObject, appObjectRepo };
@@ -16,150 +16,216 @@ describe('Asset Entity', () => {
     expect(asset.id).toEqual('asset1');
   });
 
-  it('Notifies when the archived flag changes', () => {
+  it("Sets the name and notifies if there's a change", () => {
     const { asset, observer } = makeTestRig();
+    const valueToSet = 'some name';
+    observer.mockClear();
 
-    expect(asset.archived).toEqual(false);
-
-    asset.archived = true;
-
-    expect(asset.archived).toEqual(true);
+    asset.name = valueToSet;
+    expect(asset.name).toEqual(valueToSet);
     expect(observer).toBeCalled();
 
     observer.mockClear();
-
-    asset.archived = false;
-
-    expect(asset.archived).toEqual(false);
-    expect(observer).toBeCalled();
-  });
-
-  it('Does not notify if there is no change in the archived val', () => {
-    const { asset, observer } = makeTestRig();
-
-    expect(asset.archived).toEqual(false);
-
-    asset.archived = false;
-    asset.archived = false;
-    asset.archived = false;
-
+    asset.name = valueToSet;
+    asset.name = valueToSet;
     expect(observer).not.toBeCalled();
   });
 
-  it('Notifies when the name changes', () => {
+  it("Sets the description and notifies if there's a change", () => {
     const { asset, observer } = makeTestRig();
-
-    expect(asset.name).toEqual('');
-
-    asset.name = 'A Name';
-
-    expect(asset.name).toEqual('A Name');
-    expect(observer).toBeCalled();
-  });
-
-  it('Does not notify if there is no change in the name val', () => {
-    const { asset, observer } = makeTestRig();
-
-    asset.name = 'A Name';
+    const valueToSet = 'some description';
     observer.mockClear();
 
-    asset.name = 'A Name';
-    asset.name = 'A Name';
-    asset.name = 'A Name';
+    asset.description = valueToSet;
+    expect(asset.description).toEqual(valueToSet);
+    expect(observer).toBeCalled();
 
+    observer.mockClear();
+    asset.description = valueToSet;
+    asset.description = valueToSet;
     expect(observer).not.toBeCalled();
   });
 
-  it('Notifies when the description changes', () => {
+  it("Sets archived and notifies if there's a change", () => {
     const { asset, observer } = makeTestRig();
-
-    expect(asset.description).toEqual('');
-
-    asset.description = 'A desc';
-
-    expect(asset.description).toEqual('A desc');
-    expect(observer).toBeCalled();
-  });
-
-  it('Does not notify if there is no change in the description val', () => {
-    const { asset, observer } = makeTestRig();
-
-    asset.description = 'A desc';
+    const valueToSet = true;
     observer.mockClear();
 
-    asset.description = 'A desc';
-    asset.description = 'A desc';
-    asset.description = 'A desc';
+    asset.archived = valueToSet;
+    expect(asset.archived).toEqual(valueToSet);
+    expect(observer).toBeCalled();
 
+    observer.mockClear();
+    asset.archived = valueToSet;
+    asset.archived = valueToSet;
     expect(observer).not.toBeCalled();
   });
 
-  it('Notifies when the filename changes', () => {
+  it("Sets the filename and notifies if there's a change", () => {
     const { asset, observer } = makeTestRig();
-
-    expect(asset.description).toEqual('');
-
-    asset.filename = 'someFile.file';
-
-    expect(asset.filename).toEqual('someFile.file');
-    expect(observer).toBeCalled();
-  });
-
-  it('Does not notify if there is no change in the filename val', () => {
-    const { asset, observer } = makeTestRig();
-
-    asset.filename = 'someFile.file';
+    const valueToSet = 'some filename';
     observer.mockClear();
 
-    asset.filename = 'someFile.file';
-    asset.filename = 'someFile.file';
-    asset.filename = 'someFile.file';
+    asset.filename = valueToSet;
+    expect(asset.filename).toEqual(valueToSet);
+    expect(observer).toBeCalled();
 
+    observer.mockClear();
+    asset.filename = valueToSet;
+    asset.filename = valueToSet;
     expect(observer).not.toBeCalled();
   });
 
-  it('Notifies when the blob url changes', () => {
+  it("Sets the fileURL and notifies if there's a change", () => {
     const { asset, observer } = makeTestRig();
+    const valueToSet = 'some file url';
+    observer.mockClear();
 
-    URL.createObjectURL = jest.fn().mockReturnValue('www.aURL.com');
-
-    expect(asset.blobURL).toBeUndefined();
-
-    const file = new File([], 'a.file');
-
-    asset.setFile(file);
-
-    expect(asset.blobURL).toEqual('www.aURL.com');
+    asset.fileURL = valueToSet;
+    expect(asset.fileURL).toEqual(valueToSet);
     expect(observer).toBeCalled();
+
+    observer.mockClear();
+    asset.fileURL = valueToSet;
+    asset.fileURL = valueToSet;
+    expect(observer).not.toBeCalled();
   });
 
-  it('Stores the file', () => {
-    const { asset } = makeTestRig();
-
-    URL.createObjectURL = jest.fn().mockReturnValue('www.aURL.com');
+  it('Sets the file and blob url when a file is set and notifies', () => {
+    const { asset, observer } = makeTestRig();
+    const testUrl = 'www.someURL.com';
+    URL.createObjectURL = jest.fn().mockReturnValue(testUrl);
 
     expect(asset.file).toBeUndefined();
+    expect(asset.blobURL).toBeUndefined();
+    observer.mockClear();
 
-    const file = new File([], 'a.file');
-
+    const file: File = new File(['file data'], 'filename');
     asset.setFile(file);
 
+    expect(URL.createObjectURL).toBeCalled();
+    expect(observer).toBeCalled();
     expect(asset.file).toEqual(file);
+    expect(asset.blobURL).toEqual(testUrl);
   });
 
-  it('Gets the component off an app object', () => {
-    const { asset, appObject } = makeTestRig();
+  it("Can add a linked asset and notifies if it's a new id", () => {
+    const { asset, observer } = makeTestRig();
 
-    expect(AssetEntity.get(appObject)).toEqual(asset);
+    expect(asset.linkedAssets).toEqual([]);
+    observer.mockClear();
+
+    asset.addLinkedAsset('model', 'id1');
+    expect(asset.linkedAssets.length).toEqual(1);
+    expect(asset.linkedAssets[0]).toEqual({ type: 'model', id: 'id1' });
+    expect(observer).toBeCalled();
+    observer.mockClear();
+
+    asset.addLinkedAsset('model', 'id2');
+    expect(asset.linkedAssets.length).toEqual(2);
+    expect(asset.linkedAssets[1]).toEqual({ type: 'model', id: 'id2' });
+    expect(observer).toBeCalled();
+    observer.mockClear();
+
+    asset.addLinkedAsset('picture', 'id1');
+    expect(asset.linkedAssets.length).toEqual(2);
+    expect(observer).not.toBeCalled();
   });
 
-  it('Warns if it cannot find the asset on an AO', () => {
-    const { appObjectRepo } = makeTestRig();
+  it('Can remove a linked asset and notifies of a change', () => {
+    const { asset, observer } = makeTestRig();
+    asset.addLinkedAsset('model', 'id1');
+    asset.addLinkedAsset('model', 'id2');
+    asset.addLinkedAsset('picture', 'id3');
 
-    const newAO = appObjectRepo.getOrCreate('AnAppObject');
-    appObjectRepo.submitWarning = jest.fn();
+    expect(asset.linkedAssets.length).toEqual(3);
+    observer.mockClear();
 
-    expect(AssetEntity.get(newAO)).toEqual(undefined);
-    expect(appObjectRepo.submitWarning).toBeCalled();
+    asset.removeLinkedAsset('model', 'id2');
+    expect(asset.linkedAssets.length).toEqual(2);
+    expect(observer).toBeCalled();
+    observer.mockClear();
+
+    asset.removeLinkedAsset('model', 'id2');
+    asset.removeLinkedAsset('model', 'wrong id');
+    asset.removeLinkedAsset('wrong type', 'id1');
+    asset.removeLinkedAsset('picture', 'id1');
+    expect(asset.linkedAssets.length).toEqual(2);
+    expect(observer).not.toBeCalled();
+  });
+
+  it('Can get linked assets by type', () => {
+    const { asset } = makeTestRig();
+    asset.addLinkedAsset('model', 'id1');
+    asset.addLinkedAsset('model', 'id2');
+    asset.addLinkedAsset('picture', 'id3');
+
+    const models: string[] = asset.getLinkedAssetByType('model');
+    expect(models.length).toEqual(2);
+    expect(models[0]).toEqual('id1');
+    expect(models[1]).toEqual('id2');
+
+    const pictures: string[] = asset.getLinkedAssetByType('picture');
+    expect(pictures.length).toEqual(1);
+    expect(pictures[0]).toEqual('id3');
+
+    const somethings: string[] = asset.getLinkedAssetByType('something');
+    expect(somethings.length).toEqual(0);
+  });
+
+  it("Sets is fetching file and notifies if there's a change", () => {
+    const { asset, observer } = makeTestRig();
+    const valueToSet = true;
+    observer.mockClear();
+
+    asset.isFetchingFile = valueToSet;
+    expect(asset.isFetchingFile).toEqual(valueToSet);
+    expect(observer).toBeCalled();
+
+    observer.mockClear();
+    asset.isFetchingFile = valueToSet;
+    asset.isFetchingFile = valueToSet;
+    expect(observer).not.toBeCalled();
+  });
+
+  it("Sets fetch error and notifies if there's a change", () => {
+    const { asset, observer } = makeTestRig();
+    expect(asset.fetchError).toEqual(undefined);
+    observer.mockClear();
+
+    asset.fetchError = undefined;
+    expect(observer).not.toBeCalled();
+
+    const errorToSet: Error = new Error('something wrong');
+
+    asset.fetchError = errorToSet;
+    expect(asset.fetchError).toEqual(errorToSet);
+    expect(observer).toBeCalled();
+    observer.mockClear();
+
+    asset.fetchError = errorToSet;
+    asset.fetchError = errorToSet;
+    expect(observer).not.toBeCalled();
+  });
+
+  it('Can dispose the blob url', () => {
+    const { asset, observer } = makeTestRig();
+    URL.createObjectURL = jest.fn().mockReturnValue('www.someURL.com');
+    URL.revokeObjectURL = jest.fn();
+    observer.mockClear();
+
+    asset.dispose();
+    expect(URL.revokeObjectURL).not.toBeCalled();
+    expect(observer).not.toBeCalled();
+
+    const file: File = new File(['file data'], 'filename');
+    asset.setFile(file);
+    expect(asset.file).toBeDefined();
+    expect(asset.blobURL).toBeDefined();
+    observer.mockClear();
+
+    asset.dispose();
+    expect(URL.revokeObjectURL).toBeCalled();
+    expect(asset.blobURL).toEqual(undefined);
   });
 });
