@@ -1,12 +1,20 @@
 import { AssetDTO, NewAssetDTO } from '../../../Entities';
 import { HostAppObjectRepo, makeHostAppObjectRepo } from '../../../HostAppObject';
-import { makeAssetEntity } from './AssetEntity';
+import { AssetEntity, makeAssetEntity } from './AssetEntity';
 import { APIComms, makeAssetRepository, NO_API_COMMS_ERROR, NO_ASSET_ERROR } from './AssetRepository';
+
+function makeAssetFactory(appObjects: HostAppObjectRepo) {
+  return function (id: string): AssetEntity {
+    const ao = appObjects.getOrCreate(id);
+    return makeAssetEntity(ao);
+  };
+}
 
 function makeTestRig() {
   const appObjectRepo = makeHostAppObjectRepo();
   const repoAO = appObjectRepo.getOrCreate('AssetRepo');
   const assetRepo = makeAssetRepository(repoAO);
+  assetRepo.assetFactory = makeAssetFactory(appObjectRepo);
 
   const mockedComms = makeMockComms(appObjectRepo);
   assetRepo.apiComms = mockedComms;

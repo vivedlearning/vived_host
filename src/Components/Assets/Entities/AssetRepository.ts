@@ -31,6 +31,7 @@ export abstract class AssetRepository extends HostAppObjectEntity {
   abstract updateAssetFile(assetID: string, file: File): Promise<void>;
   abstract deleteAsset(assetID: string): Promise<void>;
   abstract updateAsset(data: UpdateAssetDTO): Promise<AssetDTO>;
+  abstract assetFactory(id: string): AssetEntity;
 }
 
 export function makeAssetRepository(appObj: HostAppObject): AssetRepository {
@@ -43,6 +44,10 @@ class AssetRepositoryImp extends AssetRepository {
 
   set apiComms(comms: APIComms) {
     this._apiComms = comms;
+  }
+
+  assetFactory(id: string): AssetEntity {
+    throw new Error('Asset factory has not been injected');
   }
 
   updateAsset = (data: UpdateAssetDTO): Promise<AssetDTO> => {
@@ -58,8 +63,6 @@ class AssetRepositoryImp extends AssetRepository {
     return new Promise<AssetDTO>((resolve, reject) => {
       this._apiComms!.updateAsset(data)
         .then((updatedAsset) => {
-          console.log(updatedAsset);
-
           asset.name = updatedAsset.name;
           asset.description = updatedAsset.description;
           asset.archived = updatedAsset.archived;
@@ -216,8 +219,7 @@ class AssetRepositoryImp extends AssetRepository {
   };
 
   private assetFromDTO = (meta: AssetDTO): AssetEntity => {
-    const assetAO = this.appObjects.getOrCreate(meta.id);
-    const asset = makeAssetEntity(assetAO);
+    const asset = this.assetFactory(meta.id);
     asset.description = meta.description;
     asset.name = meta.name;
     asset.archived = meta.archived;
@@ -260,8 +262,7 @@ class AssetRepositoryImp extends AssetRepository {
       this._apiComms!.createNewAsset(data)
 
         .then((assetId: string) => {
-          const assetAO = this.appObjects.getOrCreate(assetId);
-          const asset = makeAssetEntity(assetAO);
+          const asset = this.assetFactory(assetId);
           asset.description = data.description;
           asset.name = data.name;
           asset.archived = false;
@@ -330,5 +331,3 @@ class AssetRepositoryImp extends AssetRepository {
 export const NO_API_COMMS_ERROR = new Error('API Communications have not been injected');
 
 export const NO_ASSET_ERROR = new Error('Unable to find asset by id');
-
-
