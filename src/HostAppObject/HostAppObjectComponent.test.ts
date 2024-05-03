@@ -1,9 +1,9 @@
 import { HostAppObject, makeAppObject } from "./HostAppObject";
 import { HostAppObjectComponent } from "./HostAppObjectComponent";
-import { makeAppObjectRepo } from "./AppObjectRepo";
+import { makeHostAppObjectRepo } from './HostAppObjectRepo';
 
 function makeTestRig() {
-  const appObjectRepo = makeAppObjectRepo();
+  const appObjectRepo = makeHostAppObjectRepo();
   const appObj = makeAppObject("appObj", appObjectRepo);
   const appObjectComponent = new HostAppObjectComponent(appObj, "aComponent");
 

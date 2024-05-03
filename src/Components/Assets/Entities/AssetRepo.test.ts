@@ -1,7 +1,7 @@
 import { AssetDTO, NewAssetDTO } from '../../../Entities';
 import { HostAppObjectRepo, makeHostAppObjectRepo } from '../../../HostAppObject';
 import { AssetEntity, makeAssetEntity } from './AssetEntity';
-import { APIComms, makeAssetRepository, NO_API_COMMS_ERROR, NO_ASSET_ERROR } from './AssetRepository';
+import { APIComms, AssetRepo, makeAssetRepo, NO_API_COMMS_ERROR, NO_ASSET_ERROR } from './AssetRepo';
 
 function makeAssetFactory(appObjects: HostAppObjectRepo) {
   return function (id: string): AssetEntity {
@@ -13,13 +13,15 @@ function makeAssetFactory(appObjects: HostAppObjectRepo) {
 function makeTestRig() {
   const appObjectRepo = makeHostAppObjectRepo();
   const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-  const assetRepo = makeAssetRepository(repoAO);
+  const spyRegisterSingleton = jest.spyOn(appObjectRepo, 'registerSingleton');
+
+  const assetRepo = makeAssetRepo(repoAO);
   assetRepo.assetFactory = makeAssetFactory(appObjectRepo);
 
   const mockedComms = makeMockComms(appObjectRepo);
   assetRepo.apiComms = mockedComms;
 
-  return { assetRepo, mockedComms, appObjectRepo };
+  return { assetRepo, mockedComms, appObjectRepo, spyRegisterSingleton };
 }
 
 function makeMockComms(appObjects: HostAppObjectRepo): APIComms {
@@ -94,7 +96,7 @@ describe('Asset Repository', () => {
   it('Rejects when getting asset meta and no comms have been injected', () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     expect.assertions(1);
     return expect(assetRepo.getAsset('asset1')).rejects.toEqual(NO_API_COMMS_ERROR);
@@ -149,7 +151,7 @@ describe('Asset Repository', () => {
   it('Rejects when getting an asset blob and no blob fetcher has been injected', () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     expect.assertions(1);
     return expect(assetRepo.getAssetBlobURL('asset1')).rejects.toEqual(NO_API_COMMS_ERROR);
@@ -190,7 +192,7 @@ describe('Asset Repository', () => {
   it('Fetches the assets for an owner rejects if the fetcher has not been injected', () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     expect.assertions(1);
     return expect(assetRepo.getAssetsForOwner('ownerID')).rejects.toEqual(NO_API_COMMS_ERROR);
@@ -227,7 +229,7 @@ describe('Asset Repository', () => {
   it('Archiving an asset rejects if the poster has not been injected', async () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     expect.assertions(1);
     return expect(assetRepo.setAssetArchived('asset1', true)).rejects.toEqual(NO_API_COMMS_ERROR);
@@ -320,7 +322,7 @@ describe('Asset Repository', () => {
   it('Editing an asset rejects if the poster has not been injected', async () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     const data: AssetDTO = {
       archived: true,
@@ -451,7 +453,7 @@ describe('Asset Repository', () => {
   it('Rejects when trying to add an asset and no comms have been injected', async () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     const newAssetData: NewAssetDTO = {
       description: 'a new asset',
@@ -498,7 +500,7 @@ describe('Asset Repository', () => {
   it('Rejects when trying to post a new asset file and no comms have been injected', async () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     const newFile = new File([], '');
 
@@ -566,7 +568,7 @@ describe('Asset Repository', () => {
   it('Rejects when trying to delete an asset and no comms have been injected', async () => {
     const appObjectRepo = makeHostAppObjectRepo();
     const repoAO = appObjectRepo.getOrCreate('AssetRepo');
-    const assetRepo = makeAssetRepository(repoAO);
+    const assetRepo = makeAssetRepo(repoAO);
 
     expect.assertions(1);
     return expect(assetRepo.deleteAsset('asset1')).rejects.toEqual(NO_API_COMMS_ERROR);
@@ -613,5 +615,15 @@ describe('Asset Repository', () => {
 
     expect.assertions(1);
     return expect(assetRepo.deleteAsset('asset1')).rejects.toEqual(new Error('Unable to find asset by id'));
+  });
+
+  it('Gets the singleton', () => {
+    const { assetRepo, appObjectRepo } = makeTestRig();
+    expect(AssetRepo.get(appObjectRepo)).toEqual(assetRepo);
+  });
+
+  it('Registers as the singleton', () => {
+    const { assetRepo, spyRegisterSingleton } = makeTestRig();
+    expect(spyRegisterSingleton).toBeCalledWith(assetRepo);
   });
 });

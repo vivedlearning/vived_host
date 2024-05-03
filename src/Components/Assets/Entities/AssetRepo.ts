@@ -1,5 +1,5 @@
 import { AssetDTO, NewAssetDTO, UpdateAssetDTO } from '../../../Entities';
-import { HostAppObject, HostAppObjectEntity } from '../../../HostAppObject';
+import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
 import { AssetEntity, makeAssetEntity } from './AssetEntity';
 
 export interface APIComms {
@@ -14,7 +14,7 @@ export interface APIComms {
   updateAsset: (data: UpdateAssetDTO) => Promise<AssetDTO>;
 }
 
-export abstract class AssetRepository extends HostAppObjectEntity {
+export abstract class AssetRepo extends HostAppObjectEntity {
   static type = 'AssetRepository';
 
   abstract set apiComms(comms: APIComms);
@@ -32,13 +32,17 @@ export abstract class AssetRepository extends HostAppObjectEntity {
   abstract deleteAsset(assetID: string): Promise<void>;
   abstract updateAsset(data: UpdateAssetDTO): Promise<AssetDTO>;
   abstract assetFactory(id: string): AssetEntity;
+
+  static get(hostAppObjects: HostAppObjectRepo): AssetRepo | undefined {
+    return getSingletonComponent(AssetRepo.type, hostAppObjects);
+  }
 }
 
-export function makeAssetRepository(appObj: HostAppObject): AssetRepository {
+export function makeAssetRepo(appObj: HostAppObject): AssetRepo {
   return new AssetRepositoryImp(appObj);
 }
 
-class AssetRepositoryImp extends AssetRepository {
+class AssetRepositoryImp extends AssetRepo {
   private assetLookup = new Map<string, AssetEntity>();
   private _apiComms?: APIComms;
 
@@ -324,7 +328,9 @@ class AssetRepositoryImp extends AssetRepository {
   };
 
   constructor(appObj: HostAppObject) {
-    super(appObj, AssetRepository.type);
+    super(appObj, AssetRepo.type);
+
+    this.appObjects.registerSingleton(this);
   }
 }
 
