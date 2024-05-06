@@ -1,5 +1,6 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
 import { AppAssetsEntity, makeAppAssets } from './AppAssetsEntity';
+import { makeAssetEntity } from './AssetEntity';
 
 function makeTestRig() {
   const appObjectRepo = makeHostAppObjectRepo();
@@ -99,4 +100,51 @@ describe('App Asset Sandbox Entity', () => {
     const { appAssets, spyRegisterSingleton } = makeTestRig();
     expect(spyRegisterSingleton).toBeCalledWith(appAssets);
   });
+
+  it('Notifies when the editing asset is set', () => {
+    const { appAssets, appObjectRepo, observer } = makeTestRig();
+
+    const asset = makeAssetEntity(appObjectRepo.getOrCreate('asset1'));
+
+    observer.mockClear();
+
+    appAssets.editingAsset = asset;
+    appAssets.editingAsset = asset;
+    appAssets.editingAsset = asset;
+
+    expect(observer).toBeCalledTimes(1);
+
+    observer.mockClear();
+
+    appAssets.editingAsset = undefined;
+    appAssets.editingAsset = undefined;
+    appAssets.editingAsset = undefined;
+
+    expect(observer).toBeCalledTimes(1);
+  });
+
+  it("Forwards notifications from the edited asset", ()=>{
+    const { appAssets, appObjectRepo, observer } = makeTestRig();
+
+    const asset = makeAssetEntity(appObjectRepo.getOrCreate('asset1'));
+    appAssets.editingAsset = asset;
+    observer.mockClear();
+
+    asset.name = "Something else";
+
+    expect(observer).toBeCalled();
+  })
+
+  it("Stops forwarding notifications from the edited asset when cleared", ()=>{
+    const { appAssets, appObjectRepo, observer } = makeTestRig();
+
+    const asset = makeAssetEntity(appObjectRepo.getOrCreate('asset1'));
+    appAssets.editingAsset = asset;
+    appAssets.editingAsset = undefined;
+    observer.mockClear();
+
+    asset.name = "Something else";
+
+    expect(observer).not.toBeCalled();
+  })
 });

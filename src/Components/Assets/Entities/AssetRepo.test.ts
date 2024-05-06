@@ -297,6 +297,17 @@ describe('Asset Repository', () => {
     expect(returnedAsset).toEqual(asset);
   });
 
+  it("Checks for an asset", ()=>{
+    const { assetRepo, appObjectRepo } = makeTestRig();
+
+    expect(assetRepo.hasAsset("asset1")).toEqual(false);
+
+    const asset = makeAssetEntity(appObjectRepo.getOrCreate('asset1'))
+    assetRepo.addAsset(asset);
+
+    expect(assetRepo.hasAsset("asset1")).toEqual(true);
+  })
+
   it('Checks for a fetched asset', () => {
     const { assetRepo, appObjectRepo } = makeTestRig();
 

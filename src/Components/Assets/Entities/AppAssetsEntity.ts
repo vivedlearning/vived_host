@@ -9,7 +9,10 @@ export abstract class AppAssetsEntity extends HostAppObjectEntity {
   abstract add(assetID: string): void;
   abstract has(assetID: string): boolean;
   abstract remove(assetID: string): void;
-  abstract editingAsset: AssetEntity | undefined;
+
+  abstract get editingAsset(): AssetEntity | undefined;
+  abstract set editingAsset(val: AssetEntity | undefined);
+
   abstract get showArchived(): boolean;
   abstract set showArchived(show: boolean);
 
@@ -23,8 +26,28 @@ export function makeAppAssets(appObj: HostAppObject): AppAssetsEntity {
 }
 
 class AppAssetsImp extends AppAssetsEntity {
-  public editingAsset: AssetEntity | undefined;
   private appAssets: string[] = [];
+
+  private _editingAsset: AssetEntity | undefined;
+  get editingAsset(): AssetEntity | undefined {
+    return this._editingAsset;
+  }
+
+  set editingAsset(val: AssetEntity | undefined) {
+    if (val?.id === this._editingAsset?.id) return;
+
+    if (this._editingAsset) {
+      this._editingAsset.removeChangeObserver(this.notifyOnChange);
+    }
+
+    this._editingAsset = val;
+
+    if (this._editingAsset) {
+      this._editingAsset.addChangeObserver(this.notifyOnChange);
+    }
+
+    this.notifyOnChange();
+  }
 
   getAll = (): string[] => {
     return [...this.appAssets];

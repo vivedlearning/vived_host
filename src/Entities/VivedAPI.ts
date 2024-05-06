@@ -34,9 +34,9 @@ export interface AppDTO {
 
 export abstract class VivedAPI extends ObservableEntity {
   abstract baseUrl: string;
-
   abstract get userAuthToken(): string | undefined;
   abstract set userAuthToken(token: string | undefined);
+  
   abstract clearAuthToken(): void;
 
   abstract getEndpointURL(endpoint: string): URL;

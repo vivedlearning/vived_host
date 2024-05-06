@@ -20,6 +20,7 @@ export abstract class AssetRepo extends HostAppObjectEntity {
   abstract set apiComms(comms: APIComms);
 
   abstract addAsset(asset: AssetEntity): void;
+  abstract hasAsset(id: string): boolean;
   abstract hasFetchedAsset(assetID: string): boolean;
   abstract getFetchedAsset(assetID: string): AssetEntity | undefined;
   abstract getAsset(assetID: string): Promise<AssetEntity>;
@@ -49,6 +50,10 @@ class AssetRepositoryImp extends AssetRepo {
   set apiComms(comms: APIComms) {
     this._apiComms = comms;
   }
+
+  hasAsset = (id: string): boolean => {
+    return this.assetLookup.has(id);
+  };
 
   assetFactory(id: string): AssetEntity {
     throw new Error('Asset factory has not been injected');

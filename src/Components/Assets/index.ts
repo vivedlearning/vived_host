@@ -6,4 +6,5 @@ export * from './Entities/AssetRepo';
 
 export * from './PMs/AppAssetListPM';
 export * from './PMs/AssetPM';
+export * from './PMs/EditingAppAssetPM';
 export * from './PMs/ShowArchivedAppAssetPM';
