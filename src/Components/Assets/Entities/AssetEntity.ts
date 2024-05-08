@@ -12,6 +12,9 @@ export abstract class AssetEntity extends HostAppObjectEntity {
   abstract get description(): string;
   abstract set description(description: string);
 
+  abstract get owner(): string;
+  abstract set owner(val: string);
+
   abstract get archived(): boolean;
   abstract set archived(archived: boolean);
 
@@ -24,6 +27,7 @@ export abstract class AssetEntity extends HostAppObjectEntity {
   abstract setFile(file: File): void;
   abstract get file(): File | undefined;
   abstract get blobURL(): string | undefined;
+  abstract get fileHasBeenFetched(): boolean;
 
   abstract get linkedAssets(): { type: string; id: string }[];
   abstract addLinkedAsset(type: string, id: string): void;
@@ -64,6 +68,15 @@ class AssetImp extends AssetEntity {
 
   set name(name: string) {
     this._memoizedName.val = name;
+  }
+
+  private _memoizedOwner: MemoizedString = new MemoizedString('', this.notifyOnChange);
+  get owner(): string {
+    return this._memoizedOwner.val;
+  }
+
+  set owner(val: string) {
+    this._memoizedOwner.val = val;
   }
 
   private _memoizedDescription: MemoizedString = new MemoizedString('', this.notifyOnChange);
@@ -116,6 +129,10 @@ class AssetImp extends AssetEntity {
 
   get blobURL(): string | undefined {
     return this._blobURL;
+  }
+
+  get fileHasBeenFetched(): boolean {
+    return this._file !== undefined;
   }
 
   private _linkedAssets: { type: string; id: string }[] = [];

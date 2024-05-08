@@ -31,6 +31,18 @@ describe('Asset Entity', () => {
     expect(observer).not.toBeCalled();
   });
 
+  it("Sets the owner and notifies if there's a change", () => {
+    const { asset, observer } = makeTestRig();
+    observer.mockClear();
+
+    asset.owner = 'some owner';
+    asset.owner = 'some owner';
+    asset.owner = 'some owner';
+
+    expect(asset.owner).toEqual('some owner');
+    expect(observer).toBeCalledTimes(1);
+  });
+
   it("Sets the description and notifies if there's a change", () => {
     const { asset, observer } = makeTestRig();
     const valueToSet = 'some description';
@@ -107,6 +119,17 @@ describe('Asset Entity', () => {
     expect(observer).toBeCalled();
     expect(asset.file).toEqual(file);
     expect(asset.blobURL).toEqual(testUrl);
+  });
+
+  it('Sets fileHasBeenFetched to true after a file has been added', () => {
+    const { asset } = makeTestRig();
+
+    expect(asset.fileHasBeenFetched).toEqual(false);
+
+    const file: File = new File(['file data'], 'filename');
+    asset.setFile(file);
+
+    expect(asset.fileHasBeenFetched).toEqual(true);
   });
 
   it("Can add a linked asset and notifies if it's a new id", () => {
