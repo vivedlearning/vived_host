@@ -17,4 +17,3 @@ export * from './ObservableEntity';
 export * from './ObserverList';
 export * from './SnackbarRepo';
 export * from './DialogMarkDownEditor';
-export * from './VivedAPI';

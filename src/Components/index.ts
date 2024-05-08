@@ -1,1 +1,2 @@
-export * from "./Assets"
+export * from './Assets';
+export * from './VivedAPI';
