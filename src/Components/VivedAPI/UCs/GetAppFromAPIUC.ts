@@ -1,7 +1,7 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
-import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
-import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
+import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
+import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
+import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
+import { SignedAuthTokenUC } from './SignedAuthTokenUC';
 
 export interface GetAppResponseDTO {
   interfaceVersion: string;
@@ -9,29 +9,27 @@ export interface GetAppResponseDTO {
   entrypoints: string[];
 }
 
-export abstract class GetAppUC extends HostAppObjectUC {
-  static type = "GetAppUC";
+export abstract class GetAppFromAPIUC extends HostAppObjectUC {
+  static type = 'GetAppFromAPIUC';
 
   abstract getApp(appID: string, version: string): Promise<GetAppResponseDTO>;
 
-  static get(appObjects: HostAppObjectRepo): GetAppUC | undefined {
-    return getSingletonComponent(GetAppUC.type, appObjects);
+  static get(appObjects: HostAppObjectRepo): GetAppFromAPIUC | undefined {
+    return getSingletonComponent(GetAppFromAPIUC.type, appObjects);
   }
 }
 
-export function makeGetAppUC(appObject: HostAppObject): GetAppUC {
+export function makeGetAppFromAPIUC(appObject: HostAppObject): GetAppFromAPIUC {
   return new GetAppUCImp(appObject);
 }
 
-class GetAppUCImp extends GetAppUC {
+class GetAppUCImp extends GetAppFromAPIUC {
   private get jsonRequester() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
-      ?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
   }
 
   private get getAuthToken() {
-    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)?.getUserAuthToken;
   }
 
   private get vivedAPI() {
@@ -50,16 +48,14 @@ class GetAppUCImp extends GetAppUC {
     return new Promise((resolve, reject) => {
       getAuthToken()
         .then((token) => {
-          const endpointURL = vivedAPI.getEndpointURL(
-            `apps/${appID}/${version}`
-          );
-          endpointURL.searchParams.set("function_version", "2");
+          const endpointURL = vivedAPI.getEndpointURL(`apps/${appID}/${version}`);
+          endpointURL.searchParams.set('function_version', '2');
 
           const options: RequestJSONOptions = {
-            method: "GET",
+            method: 'GET',
             headers: {
-              Authorization: "Bearer " + token
-            }
+              Authorization: 'Bearer ' + token,
+            },
           };
 
           return jsonRequester(endpointURL, options);
@@ -70,7 +66,7 @@ class GetAppUCImp extends GetAppUC {
           const appDTO: GetAppResponseDTO = {
             interfaceVersion: app.appInterfaceVersion,
             assetFolderURL: app.baseAssetsUrl,
-            entrypoints: [...app.files]
+            entrypoints: [...app.files],
           };
 
           resolve(appDTO);
@@ -83,7 +79,7 @@ class GetAppUCImp extends GetAppUC {
   };
 
   constructor(appObject: HostAppObject) {
-    super(appObject, GetAppUC.type);
+    super(appObject, GetAppFromAPIUC.type);
     this.appObjects.registerSingleton(this);
   }
 }

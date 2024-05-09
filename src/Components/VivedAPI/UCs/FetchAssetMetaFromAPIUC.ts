@@ -1,6 +1,6 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
-import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
+import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
+import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
+import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
 
 export interface AssetMetaDTO {
   id: string;
@@ -13,26 +13,23 @@ export interface AssetMetaDTO {
   linkedAssets: { type: string; asset: AssetMetaDTO }[];
 }
 
-export abstract class FetchAssetMetaUC extends HostAppObjectUC {
-  static type = "FetchAssetMetaUC";
+export abstract class FetchAssetMetaFromAPIUC extends HostAppObjectUC {
+  static type = 'FetchAssetMetaFromAPIUC';
 
   abstract doFetch(assetID: string): Promise<AssetMetaDTO>;
 
-  static get(appObjects: HostAppObjectRepo): FetchAssetMetaUC | undefined {
-    return getSingletonComponent(FetchAssetMetaUC.type, appObjects);
+  static get(appObjects: HostAppObjectRepo): FetchAssetMetaFromAPIUC | undefined {
+    return getSingletonComponent(FetchAssetMetaFromAPIUC.type, appObjects);
   }
 }
 
-export function makeFetchAssetMetaUC(
-  appObject: HostAppObject
-): FetchAssetMetaUC {
+export function makeFetchAssetMetaFromAPIUC(appObject: HostAppObject): FetchAssetMetaFromAPIUC {
   return new FetchAssetMetaUCImp(appObject);
 }
 
-class FetchAssetMetaUCImp extends FetchAssetMetaUC {
+class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
   private get requestJSON() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
-      ?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
   }
 
   private get vivedAPI(): VivedAPIEntity | undefined {
@@ -50,7 +47,7 @@ class FetchAssetMetaUCImp extends FetchAssetMetaUC {
     return new Promise<AssetMetaDTO>((resolve, reject) => {
       const endpointUrl = vivedAPI.getEndpointURL(`assets/${assetID}`);
       const options: RequestJSONOptions = {
-        method: "GET"
+        method: 'GET',
       };
 
       requestJSON(endpointUrl, options)
@@ -68,7 +65,7 @@ class FetchAssetMetaUCImp extends FetchAssetMetaUC {
   }
 
   constructor(appObject: HostAppObject) {
-    super(appObject, FetchAssetMetaUC.type);
+    super(appObject, FetchAssetMetaFromAPIUC.type);
     this.appObjects.registerSingleton(this);
   }
 }
@@ -92,7 +89,7 @@ function responseToDTO(resp: BaseAssetResp): AssetMetaDTO {
   const linkedAssets = resp.linkedAssets.map((linkedAssetResp) => {
     return {
       type: linkedAssetResp.type,
-      asset: responseToDTO(linkedAssetResp.asset)
+      asset: responseToDTO(linkedAssetResp.asset),
     };
   });
 
@@ -104,7 +101,7 @@ function responseToDTO(resp: BaseAssetResp): AssetMetaDTO {
     id: resp.id,
     name: resp.name,
     linkedAssets,
-    ownerId: resp.ownerId
+    ownerId: resp.ownerId,
   };
 
   return dto;

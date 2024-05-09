@@ -1,16 +1,14 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { GetAssetsForOwnerUC } from "../UCs/GetAssetsForOwnerUC";
+import { HostAppObject, HostAppObjectRepo } from '../../../HostAppObject';
+import { GetAssetsForOwnerFromAPIUC } from '../UCs/GetAssetsForOwnerFromAPIUC';
 
-export class MockGetAssetsForOwnerUC extends GetAssetsForOwnerUC {
+export class MockGetAssetsForOwnerFromAPIUC extends GetAssetsForOwnerFromAPIUC {
   getAssets = jest.fn();
 
   constructor(appObject: HostAppObject) {
-    super(appObject, GetAssetsForOwnerUC.type);
+    super(appObject, GetAssetsForOwnerFromAPIUC.type);
   }
 }
 
-export function makeMockGetAssetsForOwnerUC(appObjects: HostAppObjectRepo) {
-  return new MockGetAssetsForOwnerUC(
-    appObjects.getOrCreate("MockGetAssetsForOwnerUC")
-  );
+export function makeMockGetAssetsForOwnerFromAPIUC(appObjects: HostAppObjectRepo) {
+  return new MockGetAssetsForOwnerFromAPIUC(appObjects.getOrCreate('MockGetAssetsForOwnerFromAPIUC'));
 }

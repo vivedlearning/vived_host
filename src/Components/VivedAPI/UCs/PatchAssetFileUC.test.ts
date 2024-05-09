@@ -46,12 +46,13 @@ describe("Patch Asset Is Archived UC", () => {
     expect(PatchAssetFileUC.get(appObjects)).toEqual(uc);
   });
 
-  it("Resolves", async () => {
+  it("Resolves with a new filename", async () => {
     const { uc } = makeTestRig();
 
-    return expect(
-      uc.doPatch("asset1", new File([], "some.filename"))
-    ).resolves.toEqual(undefined);
+    const filename = await uc.doPatch("asset1", new File([], "some.filename"));
+
+    expect(filename).not.toEqual("some.filename");
+    expect(filename).toContain(".filename");
   });
 
   it("Warns and rejects if the JSON Request rejects", () => {

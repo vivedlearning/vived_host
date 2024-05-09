@@ -8,7 +8,7 @@ import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 export abstract class PatchAssetFileUC extends HostAppObjectUC {
   static type = "PatchAssetFileUC";
 
-  abstract doPatch(assetId: string, file: File): Promise<void>;
+  abstract doPatch(assetId: string, file: File): Promise<string>;
 
   static get(appObjects: HostAppObjectRepo): PatchAssetFileUC | undefined {
     return getSingletonComponent(PatchAssetFileUC.type, appObjects);
@@ -40,7 +40,7 @@ class PatchAssetFileUCImp extends PatchAssetFileUC {
     return this.getCachedSingleton<VivedAPIEntity>(VivedAPIEntity.type);
   }
 
-  doPatch = (assetId: string, file: File): Promise<void> => {
+  doPatch = (assetId: string, file: File): Promise<string> => {
     const getAuthToken = this.getAuthToken;
     const vivedAPI = this.vivedAPI;
     const jsonRequester = this.jsonRequester;
@@ -81,7 +81,7 @@ class PatchAssetFileUCImp extends PatchAssetFileUC {
           return jsonRequester(url, options);
         })
         .then((_) => {
-          resolve();
+          resolve(filename);
         })
         .catch((e) => {
           reject(e);
