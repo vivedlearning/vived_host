@@ -6,8 +6,10 @@ function makeTestRig() {
   const singletonSpy = jest.spyOn(appObjects, 'registerSingleton');
 
   const vivedApi = new VivedAPIEntity(appObjects.getOrCreate('ao'));
+  const observer = jest.fn();
+  vivedApi.addChangeObserver(observer);
 
-  return { vivedApi, appObjects, singletonSpy };
+  return { vivedApi, appObjects, singletonSpy, observer };
 }
 
 describe('JSON Requester', () => {
@@ -31,5 +33,18 @@ describe('JSON Requester', () => {
     const expectedURL = `${vivedApi.baseUrl}/someEndpoint`;
 
     expect(endpoint.toString()).toEqual(expectedURL);
+  });
+
+  it('Notifies when the user token changes', () => {
+    const { vivedApi, observer } = makeTestRig();
+
+    observer.mockClear();
+
+    vivedApi.userToken = 'userToken';
+    vivedApi.userToken = 'userToken';
+    vivedApi.userToken = 'userToken';
+
+    expect(observer).toBeCalledTimes(1);
+    expect(vivedApi.userToken).toEqual('userToken');
   });
 });

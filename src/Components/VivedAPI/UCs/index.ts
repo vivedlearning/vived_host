@@ -13,3 +13,4 @@ export * from './PatchAssetMetaUC';
 export * from './PatchAssetUC';
 export * from './PostNewAssetUC';
 export * from './SignedAuthTokenUC';
+export * from './UserAuthUC';

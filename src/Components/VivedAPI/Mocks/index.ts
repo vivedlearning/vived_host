@@ -13,3 +13,4 @@ export * from './MockPatchAssetMetaUC';
 export * from './MockPatchAssetUC';
 export * from './MockPostNewAssetUC';
 export * from './MockSignedAuthToken';
+export * from './MockUserLoginUC';
