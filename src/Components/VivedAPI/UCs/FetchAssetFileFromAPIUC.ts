@@ -21,7 +21,7 @@ class FetchAssetFileUCImp extends FetchAssetFileFromAPIUC {
     return this.getCachedSingleton<BlobRequestUC>(BlobRequestUC.type)?.doRequest;
   }
 
-  doFetch(asset: AssetEntity): Promise<File> {
+  doFetch = (asset: AssetEntity): Promise<File> => {
     const requestBlob = this.requestBlob;
     if (!requestBlob) {
       return Promise.reject();

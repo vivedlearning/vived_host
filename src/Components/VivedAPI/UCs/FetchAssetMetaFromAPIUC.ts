@@ -26,7 +26,7 @@ class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
     return this.getCachedSingleton<VivedAPIEntity>(VivedAPIEntity.type);
   }
 
-  doFetch(assetID: string): Promise<AssetDTO> {
+  doFetch = (assetID: string): Promise<AssetDTO> => {
     const vivedAPI = this.vivedAPI;
     const requestJSON = this.requestJSON;
 
