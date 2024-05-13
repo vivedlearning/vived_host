@@ -1,5 +1,6 @@
 import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
 import { AppAssetsEntity } from '../Entities/AppAssetsEntity';
+import { AssetRepo } from '../Entities/AssetRepo';
 
 export class AppAssetListPM extends HostAppObjectPM<string[]> {
   static type = 'AppAssetListPM';
@@ -9,6 +10,10 @@ export class AppAssetListPM extends HostAppObjectPM<string[]> {
   }
 
   private appAssets?: AppAssetsEntity;
+
+  private get assetRepo() {
+    return this.getCachedSingleton<AssetRepo>(AssetRepo.type);
+  }
 
   vmsAreEqual(a: string[], b: string[]): boolean {
     if (a.length !== b.length) return false;
@@ -26,8 +31,23 @@ export class AppAssetListPM extends HostAppObjectPM<string[]> {
 
   private onAppAssetsChange = () => {
     if (!this.appAssets) return;
-    const assetIDs = this.appAssets.getAll();
-    this.doUpdateView(assetIDs);
+    const allAppAssets = this.appAssets.getAll();
+
+    if (this.appAssets.showArchived) {
+      this.doUpdateView(allAppAssets);
+      return;
+    }
+
+    const nonArchivedAssets: string[] = [];
+
+    allAppAssets.forEach((assetID) => {
+      const asset = this.assetRepo?.get(assetID);
+      if (asset && asset.archived === false) {
+        nonArchivedAssets.push(assetID);
+      }
+    });
+
+    this.doUpdateView(nonArchivedAssets);
   };
 
   constructor(appObject: HostAppObject) {
