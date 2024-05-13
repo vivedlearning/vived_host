@@ -1,26 +1,13 @@
 import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
+import { AssetDTO } from '../../Assets';
 import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
 import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
 import { SignedAuthTokenUC } from './SignedAuthTokenUC';
 
-export interface OwnerAssetDTO {
-  id: string;
-  ownerId: string;
-  name: string;
-  description: string;
-  archived: boolean;
-  filename: string;
-  fileURL: string;
-  linkedAssets: {
-    type: string;
-    asset: OwnerAssetDTO;
-  }[];
-}
-
 export abstract class GetAssetsForOwnerFromAPIUC extends HostAppObjectUC {
   static type = 'GetAssetsForOwnerFromAPIUC';
 
-  abstract getAssets(ownerID: string): Promise<OwnerAssetDTO[]>;
+  abstract getAssets(ownerID: string): Promise<AssetDTO[]>;
 
   static get(appObjects: HostAppObjectRepo): GetAssetsForOwnerFromAPIUC | undefined {
     return getSingletonComponent(GetAssetsForOwnerFromAPIUC.type, appObjects);
@@ -44,7 +31,7 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
     return this.getCachedSingleton<VivedAPIEntity>(VivedAPIEntity.type);
   }
 
-  getAssets = (ownerID: string): Promise<OwnerAssetDTO[]> => {
+  getAssets = (ownerID: string): Promise<AssetDTO[]> => {
     const getAuthToken = this.getAuthToken;
     const vivedAPI = this.vivedAPI;
     const jsonRequester = this.jsonRequester;
@@ -69,7 +56,7 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
           return jsonRequester(url, options);
         })
         .then((resp: APIResp) => {
-          const ownerAssets: OwnerAssetDTO[] = resp.assets.map((asset) => {
+          const ownerAssets: AssetDTO[] = resp.assets.map((asset) => {
             return this.responseToDTO(asset);
           });
 
@@ -82,7 +69,7 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
     });
   };
 
-  private responseToDTO(resp: BaseAssetResp): OwnerAssetDTO {
+  private responseToDTO(resp: BaseAssetResp): AssetDTO {
     const linkedAssets = resp.linkedAssets.map((linkedAssetResp) => {
       return {
         type: linkedAssetResp.type,
@@ -90,7 +77,7 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
       };
     });
 
-    const dto: OwnerAssetDTO = {
+    const dto: AssetDTO = {
       archived: resp.archived,
       description: resp.description,
       fileURL: resp.fileURL,

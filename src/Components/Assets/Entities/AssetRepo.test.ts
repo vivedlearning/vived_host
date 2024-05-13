@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
 import { makeAssetEntity } from './AssetEntity';
-import { AssetRepo, makeAssetRepo } from './AssetRepo';
+import { AssetDTO, AssetRepo, makeAssetRepo } from './AssetRepo';
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -117,51 +117,116 @@ describe('Asset Repository', () => {
     expect(observer).toBeCalledTimes(1);
   });
 
-  it("Removes an asset", ()=>{
+  it('Removes an asset', () => {
     const { assetRepo } = makeTestRig();
 
     assetRepo.getOrCreate('asset1');
     expect(assetRepo.getAll()).toHaveLength(1);
     expect(assetRepo.has('asset1')).toEqual(true);
 
-    assetRepo.remove("asset1");
+    assetRepo.remove('asset1');
 
     expect(assetRepo.getAll()).toHaveLength(0);
     expect(assetRepo.has('asset1')).toEqual(false);
-  })
+  });
 
-  it("Notifies when an asset is removed", ()=>{
+  it('Notifies when an asset is removed', () => {
     const { assetRepo, observer } = makeTestRig();
 
     assetRepo.getOrCreate('asset1');
     observer.mockClear();
 
-
-    assetRepo.remove("asset1");
-    assetRepo.remove("asset1");
-    assetRepo.remove("asset1");
-    assetRepo.remove("asset1");
+    assetRepo.remove('asset1');
+    assetRepo.remove('asset1');
+    assetRepo.remove('asset1');
+    assetRepo.remove('asset1');
 
     expect(observer).toBeCalledTimes(1);
-  })
+  });
 
-  it("Gets assets for an owner", ()=>{
-    const { assetRepo, observer } = makeTestRig();
+  it('Forms up the base asset from data as expected', async () => {
+    const { assetRepo } = makeTestRig();
 
-    const asset1 = assetRepo.getOrCreate('asset1');
-    const asset2 = assetRepo.getOrCreate('asset2');
-    const asset3 = assetRepo.getOrCreate('asset3');
+    const dto = makeBaseDTO();
+    const returnedAsset = assetRepo.addFromDTO(dto);
 
-    asset1.owner = "owner1";
-    asset2.owner = "owner1";
-    asset3.owner = "owner2";
+    expect(returnedAsset.id).toEqual('baseAsset');
+    expect(returnedAsset.name).toEqual('baseAsset Name');
+    expect(returnedAsset.description).toEqual('baseAsset Description');
+    expect(returnedAsset.archived).toEqual(false);
+    expect(returnedAsset.filename).toEqual('baseAsset_file.name');
+    expect(returnedAsset?.fileURL).toEqual('www.baseAsset.com');
+    expect(returnedAsset.owner).toEqual('baseAsset Owner');
+  });
 
-    const assetForOwner = assetRepo.getAssetsForOwner("owner1");
+  it('Adds the asset from data to the repo', async () => {
+    const { assetRepo } = makeTestRig();
 
-    expect(assetForOwner).toHaveLength(2);
-    expect(assetForOwner).toEqual([
-      asset1,
-      asset2
-    ])
-  })
+    expect(assetRepo.has('baseAsset')).toEqual(false);
+
+    const dto = makeBaseDTO();
+    assetRepo.addFromDTO(dto);
+
+    expect(assetRepo.has('baseAsset')).toEqual(true);
+  });
+
+  it('Adds up the linked asset from data to the repo', async () => {
+    const { assetRepo } = makeTestRig();
+
+    expect(assetRepo.has('linkedAsset')).toEqual(false);
+
+    const dto = makeBaseDTO();
+    assetRepo.addFromDTO(dto);
+
+    expect(assetRepo.has('linkedAsset')).toEqual(true);
+  });
+
+  it('Sets up the linked asset from the data', async () => {
+    const { assetRepo } = makeTestRig();
+
+    const dto = makeBaseDTO();
+    assetRepo.addFromDTO(dto);
+
+    const linkedAsset = assetRepo.get('linkedAsset');
+    expect(linkedAsset?.id).toEqual('linkedAsset');
+    expect(linkedAsset?.name).toEqual('linkedAsset Name');
+    expect(linkedAsset?.description).toEqual('linkedAsset Description');
+    expect(linkedAsset?.archived).toEqual(true);
+    expect(linkedAsset?.filename).toEqual('linkedAsset_file.name');
+    expect(linkedAsset?.fileURL).toEqual('www.linkedAsset.com');
+    expect(linkedAsset?.owner).toEqual('linkedAsset Owner');
+  });
+
+  it('Adds the link to the base asset', async () => {
+    const { assetRepo } = makeTestRig();
+
+    const dto = makeBaseDTO();
+    const asset = assetRepo.addFromDTO(dto);
+
+    expect(asset.getLinkedAssetByType('someLinkType')).toEqual(['linkedAsset']);
+  });
 });
+
+function makeBaseDTO(): AssetDTO {
+  const baseAsset = makeDTO('baseAsset');
+  const linkedAsset = makeDTO('linkedAsset');
+
+  linkedAsset.archived = true;
+
+  (baseAsset.linkedAssets as any) = [{ type: 'someLinkType', asset: linkedAsset }];
+
+  return baseAsset;
+}
+
+function makeDTO(id: string): AssetDTO {
+  return {
+    id,
+    ownerId: `${id} Owner`,
+    name: `${id} Name`,
+    description: `${id} Description`,
+    archived: false,
+    filename: `${id}_file.name`,
+    fileURL: `www.${id}.com`,
+    linkedAssets: [],
+  };
+}

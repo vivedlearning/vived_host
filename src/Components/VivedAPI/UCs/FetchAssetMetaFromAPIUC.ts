@@ -1,22 +1,12 @@
 import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
+import { AssetDTO } from '../../Assets';
 import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
 import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
-
-export interface AssetMetaDTO {
-  id: string;
-  ownerId: string;
-  name: string;
-  description: string;
-  archived: boolean;
-  filename: string;
-  fileURL: string;
-  linkedAssets: { type: string; asset: AssetMetaDTO }[];
-}
 
 export abstract class FetchAssetMetaFromAPIUC extends HostAppObjectUC {
   static type = 'FetchAssetMetaFromAPIUC';
 
-  abstract doFetch(assetID: string): Promise<AssetMetaDTO>;
+  abstract doFetch(assetID: string): Promise<AssetDTO>;
 
   static get(appObjects: HostAppObjectRepo): FetchAssetMetaFromAPIUC | undefined {
     return getSingletonComponent(FetchAssetMetaFromAPIUC.type, appObjects);
@@ -36,7 +26,7 @@ class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
     return this.getCachedSingleton<VivedAPIEntity>(VivedAPIEntity.type);
   }
 
-  doFetch(assetID: string): Promise<AssetMetaDTO> {
+  doFetch(assetID: string): Promise<AssetDTO> {
     const vivedAPI = this.vivedAPI;
     const requestJSON = this.requestJSON;
 
@@ -44,7 +34,7 @@ class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
       return Promise.reject();
     }
 
-    return new Promise<AssetMetaDTO>((resolve, reject) => {
+    return new Promise<AssetDTO>((resolve, reject) => {
       const endpointUrl = vivedAPI.getEndpointURL(`assets/${assetID}`);
       const options: RequestJSONOptions = {
         method: 'GET',
@@ -85,7 +75,7 @@ interface BaseAssetResp {
   linkedAssets: { type: string; asset: BaseAssetResp }[];
 }
 
-function responseToDTO(resp: BaseAssetResp): AssetMetaDTO {
+function responseToDTO(resp: BaseAssetResp): AssetDTO {
   const linkedAssets = resp.linkedAssets.map((linkedAssetResp) => {
     return {
       type: linkedAssetResp.type,
@@ -93,7 +83,7 @@ function responseToDTO(resp: BaseAssetResp): AssetMetaDTO {
     };
   });
 
-  const dto: AssetMetaDTO = {
+  const dto: AssetDTO = {
     archived: resp.archived,
     description: resp.description,
     fileURL: resp.fileURL,
