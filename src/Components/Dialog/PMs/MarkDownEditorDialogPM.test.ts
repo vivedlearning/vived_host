@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogMarkDownEditorDTO, DialogMarkDownEntity } from '../Entities';
+import { DialogMarkDownEditorDTO, MarkDownEditorDialogEntity } from '../Entities';
 import { MarkDownEditorDialogPM, MarkDownEditorDialogVM } from './MarkDownEditorDialogPM';
 
 function makeTestRig() {
@@ -12,7 +12,7 @@ function makeTestRig() {
     onConfirm: mockConfirm,
   };
 
-  const dialog = new DialogMarkDownEntity(data, ao);
+  const dialog = new MarkDownEditorDialogEntity(data, ao);
   const pm = new MarkDownEditorDialogPM(ao);
 
   return { pm, dialog, appObjects, mockConfirm };

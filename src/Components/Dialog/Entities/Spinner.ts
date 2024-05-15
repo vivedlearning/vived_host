@@ -9,19 +9,19 @@ export interface DialogSpinnerDTO {
   title: string;
 }
 
-export class DialogSpinnerEntity extends Dialog {
-  static type = 'DialogSpinnerEntity';
+export class SpinnerDialogEntity extends Dialog {
+  static type = 'SpinnerDialogEntity';
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): DialogSpinnerEntity | undefined {
+  static get(assetID: string, appObjects: HostAppObjectRepo): SpinnerDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('DialogSpinnerEntity.get', 'Unable to find app object');
+      appObjects.submitWarning('SpinnerDialogEntity.get', 'Unable to find app object');
       return undefined;
     }
 
-    const uc = appObject.getComponent<DialogSpinnerEntity>(DialogSpinnerEntity.type);
+    const uc = appObject.getComponent<SpinnerDialogEntity>(SpinnerDialogEntity.type);
     if (!uc) {
-      appObjects.submitWarning('DialogSpinnerEntity.get', 'App Object does not have DialogSpinnerEntity');
+      appObjects.submitWarning('SpinnerDialogEntity.get', 'App Object does not have SpinnerDialogEntity');
       return undefined;
     }
 
@@ -74,7 +74,7 @@ export class DialogSpinnerEntity extends Dialog {
   };
 
   constructor(data: DialogSpinnerDTO, appObject: HostAppObject) {
-    super(appObject, DialogSpinnerEntity.type);
+    super(appObject, SpinnerDialogEntity.type);
     this.memoizedMessage = new MemoizedString(data.message, this.notifyOnChange);
     this.title = data.title;
   }

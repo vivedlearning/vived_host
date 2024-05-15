@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { DialogSpinnerEntity } from '../Entities';
+import { SpinnerDialogEntity } from '../Entities';
 
 export interface SpinnerDialogVM {
   message: string;
@@ -25,7 +25,7 @@ export class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
     return pm;
   }
 
-  private dialog?: DialogSpinnerEntity;
+  private dialog?: SpinnerDialogEntity;
 
   vmsAreEqual(a: SpinnerDialogVM, b: SpinnerDialogVM): boolean {
     if (a.message !== b.message) return false;
@@ -46,7 +46,7 @@ export class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
   constructor(appObject: HostAppObject) {
     super(appObject, SpinnerDialogPM.type);
 
-    this.dialog = appObject.getComponent<DialogSpinnerEntity>(DialogSpinnerEntity.type);
+    this.dialog = appObject.getComponent<SpinnerDialogEntity>(SpinnerDialogEntity.type);
     if (!this.dialog) {
       this.error('PM added to an app object that does not have a DialogSpinnerEntity');
       return;

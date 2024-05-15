@@ -1,5 +1,5 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
-import {DialogMarkDownEntity} from "../Entities/DialogMarkDownEditor"
+import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
+import { MarkDownEditorDialogEntity } from '../Entities/MarkDownEditor';
 
 export interface MarkDownEditorDialogVM {
   initialText: string;
@@ -25,7 +25,7 @@ export class MarkDownEditorDialogPM extends HostAppObjectPM<MarkDownEditorDialog
     return pm;
   }
 
-  private dialog?: DialogMarkDownEntity;
+  private dialog?: MarkDownEditorDialogEntity;
 
   vmsAreEqual(a: MarkDownEditorDialogVM, b: MarkDownEditorDialogVM): boolean {
     if (a.initialText !== b.initialText) return false;
@@ -44,7 +44,7 @@ export class MarkDownEditorDialogPM extends HostAppObjectPM<MarkDownEditorDialog
   constructor(appObject: HostAppObject) {
     super(appObject, MarkDownEditorDialogPM.type);
 
-    this.dialog = appObject.getComponent<DialogMarkDownEntity>(DialogMarkDownEntity.type);
+    this.dialog = appObject.getComponent<MarkDownEditorDialogEntity>(MarkDownEditorDialogEntity.type);
     if (!this.dialog) {
       this.error('PM added to an app object that does not have a DialogMarkDownEntity');
       return;

@@ -9,19 +9,19 @@ export interface DialogMarkDownEditorDTO {
 
 export const markDownEditorDialogType = 'MARKDOWN_EDITOR';
 
-export class DialogMarkDownEntity extends Dialog {
-  static type = 'DialogMarkDownEntity';
+export class MarkDownEditorDialogEntity extends Dialog {
+  static type = 'MarkDownEditorDialogEntity';
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): DialogMarkDownEntity | undefined {
+  static get(assetID: string, appObjects: HostAppObjectRepo): MarkDownEditorDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('DialogMarkDownEntity.get', 'Unable to find app object');
+      appObjects.submitWarning('MarkDownEditorDialogEntity.get', 'Unable to find app object');
       return undefined;
     }
 
-    const uc = appObject.getComponent<DialogMarkDownEntity>(DialogMarkDownEntity.type);
+    const uc = appObject.getComponent<MarkDownEditorDialogEntity>(MarkDownEditorDialogEntity.type);
     if (!uc) {
-      appObjects.submitWarning('DialogMarkDownEntity.get', 'App Object does not have DialogAlertEntity');
+      appObjects.submitWarning('MarkDownEditorDialogEntity.get', 'App Object does not have DialogAlertEntity');
       return undefined;
     }
 
@@ -51,7 +51,7 @@ export class DialogMarkDownEntity extends Dialog {
   }
 
   constructor(data: DialogMarkDownEditorDTO, appObject: HostAppObject) {
-    super(appObject, DialogMarkDownEntity.type);
+    super(appObject, MarkDownEditorDialogEntity.type);
     this.initialText = data.initialText;
     this.postConfirm = data.onConfirm;
   }

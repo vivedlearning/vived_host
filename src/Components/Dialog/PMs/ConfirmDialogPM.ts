@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { DialogConfirmEntity } from '../Entities';
+import { ConfirmDialogEntity } from '../Entities';
 
 export interface ConfirmDialogVM {
   message: string;
@@ -29,7 +29,7 @@ export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
     return pm;
   }
 
-  private dialog?: DialogConfirmEntity;
+  private dialog?: ConfirmDialogEntity;
 
   vmsAreEqual(a: ConfirmDialogVM, b: ConfirmDialogVM): boolean {
     if (a.message !== b.message) return false;
@@ -56,7 +56,7 @@ export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
   constructor(appObject: HostAppObject) {
     super(appObject, ConfirmDialogPM.type);
 
-    this.dialog = appObject.getComponent<DialogConfirmEntity>(DialogConfirmEntity.type);
+    this.dialog = appObject.getComponent<ConfirmDialogEntity>(ConfirmDialogEntity.type);
     if (!this.dialog) {
       this.error('PM added to an app object that does not have a DialogConfirmEntity');
       return;

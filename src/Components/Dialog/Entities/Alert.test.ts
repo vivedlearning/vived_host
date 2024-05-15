@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogAlertEntity, DialogAlertDTO, alertDialogType } from './DialogAlert';
+import { AlertDialogEntity, DialogAlertDTO, alertDialogType } from './Alert';
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -13,7 +13,7 @@ function makeTestRig() {
     preventOutsideDismiss: true,
   };
 
-  const alert = new DialogAlertEntity(data, ao);
+  const alert = new AlertDialogEntity(data, ao);
   const observer = jest.fn();
   alert.addChangeObserver(observer);
 
@@ -84,7 +84,7 @@ describe('Alert Dialog', () => {
 
     appObjects.submitWarning = jest.fn();
 
-    DialogAlertEntity.get('unknownID', appObjects);
+    AlertDialogEntity.get('unknownID', appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
@@ -95,7 +95,7 @@ describe('Alert Dialog', () => {
     appObjects.submitWarning = jest.fn();
 
     appObjects.getOrCreate('anAppObject');
-    DialogAlertEntity.get('anAppObject', appObjects);
+    AlertDialogEntity.get('anAppObject', appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
@@ -103,7 +103,7 @@ describe('Alert Dialog', () => {
   it('Returns the UC when getting', () => {
     const { appObjects, alert } = makeTestRig();
 
-    const returnedUC = DialogAlertEntity.get('dialog1', appObjects);
+    const returnedUC = AlertDialogEntity.get('dialog1', appObjects);
 
     expect(returnedUC).toEqual(alert);
   });

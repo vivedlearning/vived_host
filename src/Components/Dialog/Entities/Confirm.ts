@@ -13,19 +13,19 @@ export interface DialogConfirmDTO {
 
 export const confirmDialogType = 'CONFIRM';
 
-export class DialogConfirmEntity extends Dialog {
-  static type = 'DialogConfirmEntity';
+export class ConfirmDialogEntity extends Dialog {
+  static type = 'ConfirmDialogEntity';
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): DialogConfirmEntity | undefined {
+  static get(assetID: string, appObjects: HostAppObjectRepo): ConfirmDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('DialogConfirmEntity.get', 'Unable to find app object');
+      appObjects.submitWarning('ConfirmDialogEntity.get', 'Unable to find app object');
       return undefined;
     }
 
-    const uc = appObject.getComponent<DialogConfirmEntity>(DialogConfirmEntity.type);
+    const uc = appObject.getComponent<ConfirmDialogEntity>(ConfirmDialogEntity.type);
     if (!uc) {
-      appObjects.submitWarning('DialogConfirmEntity.get', 'App Object does not have DialogConfirmEntity');
+      appObjects.submitWarning('ConfirmDialogEntity.get', 'App Object does not have ConfirmDialogEntity');
       return undefined;
     }
 
@@ -64,7 +64,7 @@ export class DialogConfirmEntity extends Dialog {
   }
 
   constructor(data: DialogConfirmDTO, appObject: HostAppObject) {
-    super(appObject, DialogConfirmEntity.type);
+    super(appObject, ConfirmDialogEntity.type);
 
     this.confirmButtonLabel = data.confirmButtonLabel;
     this.cancelButtonLabel = data.cancelButtonLabel;

@@ -12,19 +12,19 @@ export interface DialogAlertDTO {
 
 export const alertDialogType = 'ALERT';
 
-export class DialogAlertEntity extends Dialog {
-  static type = 'DialogAlertEntity';
+export class AlertDialogEntity extends Dialog {
+  static type = 'AlertDialogEntity';
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): DialogAlertEntity | undefined {
+  static get(assetID: string, appObjects: HostAppObjectRepo): AlertDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('DialogAlertEntity.get', 'Unable to find app object');
+      appObjects.submitWarning('AlertDialogEntity.get', 'Unable to find app object');
       return undefined;
     }
 
-    const uc = appObject.getComponent<DialogAlertEntity>(DialogAlertEntity.type);
+    const uc = appObject.getComponent<AlertDialogEntity>(AlertDialogEntity.type);
     if (!uc) {
-      appObjects.submitWarning('DialogAlertEntity.get', 'App Object does not have DialogAlertEntity');
+      appObjects.submitWarning('AlertDialogEntity.get', 'App Object does not have AlertDialogEntity');
       return undefined;
     }
 
@@ -54,7 +54,7 @@ export class DialogAlertEntity extends Dialog {
   }
 
   constructor(data: DialogAlertDTO, appObject: HostAppObject) {
-    super(appObject, DialogAlertEntity.type);
+    super(appObject, AlertDialogEntity.type);
     this.buttonLabel = data.buttonLabel;
     this.message = data.message;
     this.title = data.title;

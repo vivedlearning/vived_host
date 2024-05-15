@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogSpinnerEntity, spinnerDialogType, DialogSpinnerDTO } from './DialogSpinner';
+import { SpinnerDialogEntity, spinnerDialogType, DialogSpinnerDTO } from './Spinner';
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -10,7 +10,7 @@ function makeTestRig() {
     title: 'title',
   };
 
-  const spinner = new DialogSpinnerEntity(dto, ao);
+  const spinner = new SpinnerDialogEntity(dto, ao);
   const observer = jest.fn();
   spinner.addChangeObserver(observer);
 
@@ -139,7 +139,7 @@ describe('Spinner Dialog', () => {
 
     appObjects.submitWarning = jest.fn();
 
-    DialogSpinnerEntity.get('unknownID', appObjects);
+    SpinnerDialogEntity.get('unknownID', appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
@@ -150,7 +150,7 @@ describe('Spinner Dialog', () => {
     appObjects.submitWarning = jest.fn();
 
     appObjects.getOrCreate('anAppObject');
-    DialogSpinnerEntity.get('anAppObject', appObjects);
+    SpinnerDialogEntity.get('anAppObject', appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
@@ -158,7 +158,7 @@ describe('Spinner Dialog', () => {
   it('Returns the UC when getting', () => {
     const { appObjects, spinner } = makeTestRig();
 
-    const returnedUC = DialogSpinnerEntity.get('dialog1', appObjects);
+    const returnedUC = SpinnerDialogEntity.get('dialog1', appObjects);
 
     expect(returnedUC).toEqual(spinner);
   });

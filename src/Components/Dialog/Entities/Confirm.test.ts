@@ -1,37 +1,49 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogMarkDownEntity, DialogMarkDownEditorDTO, markDownEditorDialogType } from './DialogMarkDownEditor';
+import { confirmDialogType, DialogConfirmDTO, ConfirmDialogEntity } from './Confirm';
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const ao = appObjects.getOrCreate('dialog1');
   appObjects;
-  const data: DialogMarkDownEditorDTO = {
+
+  const data: DialogConfirmDTO = {
+    confirmButtonLabel: 'confirm label',
+    cancelButtonLabel: 'cancel label',
+    message: 'a message',
+    onCancel: jest.fn(),
     onConfirm: jest.fn(),
-    initialText: 'initial text',
+    title: 'a title',
   };
 
-  const dialog = new DialogMarkDownEntity(data, ao);
+  const dialog = new ConfirmDialogEntity(data, ao);
   const observer = jest.fn();
   dialog.addChangeObserver(observer);
 
   return { dialog, observer, data, appObjects };
 }
 
-describe('MarkDown Editor Dialog', () => {
+describe('Alert Dialog', () => {
   it('Sets the open to false when cancel is called', () => {
     const { dialog } = makeTestRig();
-
     dialog.isOpen = true;
     dialog.cancel();
 
     expect(dialog.isOpen).toEqual(false);
   });
 
+  it('Calls the onCancel when cancelled', () => {
+    const { dialog, data } = makeTestRig();
+
+    dialog.cancel();
+
+    expect(data.onCancel).toBeCalled();
+  });
+
   it('Sets the open to false when accept is called', () => {
     const { dialog } = makeTestRig();
 
     dialog.isOpen = true;
-    dialog.confirm('MarkDown Text');
+    dialog.confirm();
 
     expect(dialog.isOpen).toEqual(false);
   });
@@ -39,7 +51,7 @@ describe('MarkDown Editor Dialog', () => {
   it('Calls the onAccept when accepted', () => {
     const { dialog, data } = makeTestRig();
 
-    dialog.confirm('MarkDown Text');
+    dialog.confirm();
 
     expect(data.onConfirm).toBeCalled();
   });
@@ -47,19 +59,22 @@ describe('MarkDown Editor Dialog', () => {
   it('Applies the data', () => {
     const { dialog, data } = makeTestRig();
 
-    expect(dialog.initialText).toEqual(data.initialText);
+    expect(dialog.message).toEqual(data.message);
+    expect(dialog.confirmButtonLabel).toEqual(data.confirmButtonLabel);
+    expect(dialog.cancelButtonLabel).toEqual(data.cancelButtonLabel);
+    expect(dialog.title).toEqual(data.title);
+  });
+
+  it('Sets the dialog type', () => {
+    const { dialog } = makeTestRig();
+
+    expect(dialog.dialogType).toEqual(confirmDialogType);
   });
 
   it('Disable outside dismiss', () => {
     const { dialog } = makeTestRig();
 
     expect(dialog.preventOutsideDismiss).toEqual(true);
-  });
-
-  it('Sets the dialog type', () => {
-    const { dialog } = makeTestRig();
-
-    expect(dialog.dialogType).toEqual(markDownEditorDialogType);
   });
 
   it('Notifies when the is open flag changes', () => {
@@ -93,7 +108,7 @@ describe('MarkDown Editor Dialog', () => {
 
     appObjects.submitWarning = jest.fn();
 
-    DialogMarkDownEntity.get('unknownID', appObjects);
+    ConfirmDialogEntity.get('unknownID', appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
@@ -104,7 +119,7 @@ describe('MarkDown Editor Dialog', () => {
     appObjects.submitWarning = jest.fn();
 
     appObjects.getOrCreate('anAppObject');
-    DialogMarkDownEntity.get('anAppObject', appObjects);
+    ConfirmDialogEntity.get('anAppObject', appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
@@ -112,7 +127,7 @@ describe('MarkDown Editor Dialog', () => {
   it('Returns the UC when getting', () => {
     const { appObjects, dialog } = makeTestRig();
 
-    const returnedUC = DialogMarkDownEntity.get('dialog1', appObjects);
+    const returnedUC = ConfirmDialogEntity.get('dialog1', appObjects);
 
     expect(returnedUC).toEqual(dialog);
   });

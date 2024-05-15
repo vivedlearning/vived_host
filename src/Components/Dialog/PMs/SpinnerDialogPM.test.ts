@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogSpinnerEntity, DialogSpinnerDTO } from '../Entities';
+import { SpinnerDialogEntity, DialogSpinnerDTO } from '../Entities';
 import { SpinnerDialogPM, SpinnerDialogVM } from './SpinnerDialogPM';
 
 function makeTestRig() {
@@ -10,7 +10,7 @@ function makeTestRig() {
     message: 'a message',
     title: 'title',
   };
-  const dialog = new DialogSpinnerEntity(dto, ao);
+  const dialog = new SpinnerDialogEntity(dto, ao);
   const pm = new SpinnerDialogPM(ao);
 
   return { pm, dialog, appObjects };

@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogAlertEntity } from './DialogAlert';
+import { AlertDialogEntity } from './Alert';
 import { DialogQueue, makeDialogQueue } from './DialogQueue';
 
 function makeTestRig() {
@@ -30,7 +30,7 @@ describe('Dialog Repo Entity', () => {
   it('Allows a dialog to be submitted', () => {
     const { dialogRepo, appObjects } = makeTestRig();
 
-    const alert = new DialogAlertEntity(
+    const alert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -46,7 +46,7 @@ describe('Dialog Repo Entity', () => {
 
   it('Calls the show when a dialog is added and it is the active one', () => {
     const { dialogRepo, observer, appObjects } = makeTestRig();
-    const alert = new DialogAlertEntity(
+    const alert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -62,7 +62,7 @@ describe('Dialog Repo Entity', () => {
 
   it('Dismisses the active dialog', () => {
     const { dialogRepo, observer, appObjects } = makeTestRig();
-    const alert = new DialogAlertEntity(
+    const alert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -92,7 +92,7 @@ describe('Dialog Repo Entity', () => {
 
   it('Sets the next dialog in the queue as active', () => {
     const { dialogRepo, observer, appObjects } = makeTestRig();
-    const firstAlert = new DialogAlertEntity(
+    const firstAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -102,7 +102,7 @@ describe('Dialog Repo Entity', () => {
     );
     dialogRepo.submitDialog(firstAlert);
 
-    const secondAlert = new DialogAlertEntity(
+    const secondAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -124,7 +124,7 @@ describe('Dialog Repo Entity', () => {
 
   it('Sets the open when it is time to show the second dialog', () => {
     const { dialogRepo, appObjects } = makeTestRig();
-    const firstAlert = new DialogAlertEntity(
+    const firstAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -134,7 +134,7 @@ describe('Dialog Repo Entity', () => {
     );
     dialogRepo.submitDialog(firstAlert);
 
-    const secondAlert = new DialogAlertEntity(
+    const secondAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -153,7 +153,7 @@ describe('Dialog Repo Entity', () => {
 
   it('Forwards notifications from the dialogs in the queue', () => {
     const { dialogRepo, appObjects, observer } = makeTestRig();
-    const firstAlert = new DialogAlertEntity(
+    const firstAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -163,7 +163,7 @@ describe('Dialog Repo Entity', () => {
     );
     dialogRepo.submitDialog(firstAlert);
 
-    const secondAlert = new DialogAlertEntity(
+    const secondAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -184,7 +184,7 @@ describe('Dialog Repo Entity', () => {
 
   it('Stops forwarding when the dialog is dismissed', () => {
     const { dialogRepo, appObjects, observer } = makeTestRig();
-    const firstAlert = new DialogAlertEntity(
+    const firstAlert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',

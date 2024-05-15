@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { DialogAlertEntity } from '../Entities';
+import { AlertDialogEntity } from '../Entities';
 
 export interface AlertDialogVM {
   message: string;
@@ -27,12 +27,12 @@ export class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
     return pm;
   }
 
-  private alert?: DialogAlertEntity;
+  private alert?: AlertDialogEntity;
 
   vmsAreEqual(a: AlertDialogVM, b: AlertDialogVM): boolean {
-    if(a.message !== b.message) return false;
-    if(a.title !== b.title) return false;
-    if(a.buttonLabel !== b.buttonLabel) return false;
+    if (a.message !== b.message) return false;
+    if (a.title !== b.title) return false;
+    if (a.buttonLabel !== b.buttonLabel) return false;
 
     return true;
   }
@@ -51,7 +51,7 @@ export class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
   constructor(appObject: HostAppObject) {
     super(appObject, AlertDialogPM.type);
 
-    this.alert = appObject.getComponent<DialogAlertEntity>(DialogAlertEntity.type);
+    this.alert = appObject.getComponent<AlertDialogEntity>(AlertDialogEntity.type);
     if (!this.alert) {
       this.error('PM added to an app object that does not have a DialogAlertEntity');
       return;

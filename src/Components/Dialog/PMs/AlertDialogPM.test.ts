@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogAlertDTO, DialogAlertEntity } from '../Entities';
+import { DialogAlertDTO, AlertDialogEntity } from '../Entities';
 import { AlertDialogPM, AlertDialogVM } from './AlertDialogPM';
 
 function makeTestRig() {
@@ -12,7 +12,7 @@ function makeTestRig() {
     onClose: jest.fn(),
     title: 'a title',
   };
-  const dialog = new DialogAlertEntity(data, ao);
+  const dialog = new AlertDialogEntity(data, ao);
   const pm = new AlertDialogPM(ao);
 
   return { pm, dialog, appObjects };
