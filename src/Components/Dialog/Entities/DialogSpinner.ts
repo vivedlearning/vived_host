@@ -1,0 +1,81 @@
+import { MemoizedBoolean, MemoizedString } from '../../../Entities';
+import { HostAppObject, HostAppObjectRepo } from '../../../HostAppObject';
+import { Dialog } from './DialogQueue';
+
+export const spinnerDialogType = 'SPINNER';
+
+export interface DialogSpinnerDTO {
+  message: string;
+  title: string;
+}
+
+export class DialogSpinnerEntity extends Dialog {
+  static type = 'DialogSpinnerEntity';
+
+  static get(assetID: string, appObjects: HostAppObjectRepo): DialogSpinnerEntity | undefined {
+    const appObject = appObjects.get(assetID);
+    if (!appObject) {
+      appObjects.submitWarning('DialogSpinnerEntity.get', 'Unable to find app object');
+      return undefined;
+    }
+
+    const uc = appObject.getComponent<DialogSpinnerEntity>(DialogSpinnerEntity.type);
+    if (!uc) {
+      appObjects.submitWarning('DialogSpinnerEntity.get', 'App Object does not have DialogSpinnerEntity');
+      return undefined;
+    }
+
+    return uc;
+  }
+
+  readonly dialogType = spinnerDialogType;
+  readonly mininumuLifespan = 2000;
+  readonly title: string;
+  private createdAt?: number;
+
+  readonly preventOutsideDismiss = true;
+
+  private memoizedMessage: MemoizedString;
+  get message(): string {
+    return this.memoizedMessage.val;
+  }
+  set message(val: string) {
+    this.memoizedMessage.val = val;
+  }
+
+  private _isOpen = new MemoizedBoolean(false, this.notifyOnChange);
+  set isOpen(open: boolean) {
+    if (open && this.createdAt === undefined) {
+      this.createdAt = Date.now();
+    }
+    this._isOpen.val = open;
+  }
+
+  get isOpen() {
+    return this._isOpen.val;
+  }
+
+  close = () => {
+    if (this.createdAt === undefined) {
+      this.isOpen = false;
+      return;
+    }
+
+    const timeAlive = Date.now() - this.createdAt;
+    const timeleft = this.mininumuLifespan - timeAlive;
+
+    if (timeleft <= 0) {
+      this.isOpen = false;
+    } else {
+      setTimeout(() => {
+        this.isOpen = false;
+      }, timeleft);
+    }
+  };
+
+  constructor(data: DialogSpinnerDTO, appObject: HostAppObject) {
+    super(appObject, DialogSpinnerEntity.type);
+    this.memoizedMessage = new MemoizedString(data.message, this.notifyOnChange);
+    this.title = data.title;
+  }
+}

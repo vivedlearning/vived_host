@@ -1,0 +1,81 @@
+import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
+import { DialogConfirmEntity } from '../Entities';
+
+export interface ConfirmDialogVM {
+  message: string;
+  title: string;
+  cancelButtonLabel: string;
+  confirmButtonLabel: string;
+  cancel: () => void;
+  confirm: () => void;
+}
+
+export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
+  static type = 'ConfirmDialogPM';
+
+  static get(assetID: string, appObjects: HostAppObjectRepo): ConfirmDialogPM | undefined {
+    const appObject = appObjects.get(assetID);
+    if (!appObject) {
+      appObjects.submitWarning('ConfirmDialogPM.get', 'Unable to find app object');
+      return undefined;
+    }
+
+    const pm = appObject.getComponent<ConfirmDialogPM>(ConfirmDialogPM.type);
+    if (!pm) {
+      appObjects.submitWarning('ConfirmDialogPM.get', 'App Object does not have ConfirmDialogPM');
+      return undefined;
+    }
+
+    return pm;
+  }
+
+  private dialog?: DialogConfirmEntity;
+
+  vmsAreEqual(a: ConfirmDialogVM, b: ConfirmDialogVM): boolean {
+    if (a.message !== b.message) return false;
+    if (a.title !== b.title) return false;
+    if (a.cancelButtonLabel !== b.cancelButtonLabel) return false;
+    if (a.confirmButtonLabel !== b.confirmButtonLabel) return false;
+
+    return true;
+  }
+
+  onAlertChange = () => {
+    if (!this.dialog) return;
+
+    this.doUpdateView({
+      confirmButtonLabel: this.dialog.confirmButtonLabel,
+      cancelButtonLabel: this.dialog.cancelButtonLabel,
+      cancel: this.dialog.cancel,
+      message: this.dialog.message,
+      title: this.dialog.title,
+      confirm: this.dialog.confirm,
+    });
+  };
+
+  constructor(appObject: HostAppObject) {
+    super(appObject, ConfirmDialogPM.type);
+
+    this.dialog = appObject.getComponent<DialogConfirmEntity>(DialogConfirmEntity.type);
+    if (!this.dialog) {
+      this.error('PM added to an app object that does not have a DialogConfirmEntity');
+      return;
+    }
+
+    this.dialog.addChangeObserver(this.onAlertChange);
+    this.onAlertChange();
+  }
+}
+
+export const defaultConfirmDialogVM: ConfirmDialogVM = {
+  message: '',
+  title: '',
+  cancel: () => {
+    console.warn('[ConfirmDialogVM.cancel] default VM');
+  },
+  cancelButtonLabel: '',
+  confirm: () => {
+    console.warn('[ConfirmDialogVM.confirm] default VM');
+  },
+  confirmButtonLabel: '',
+};
