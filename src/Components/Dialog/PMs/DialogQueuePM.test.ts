@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { DialogAlertEntity } from '../Entities';
+import { AlertDialogEntity } from '../Entities';
 import { makeDialogQueue } from '../Entities/DialogQueue';
 import { DialogQueuePM, DialogVM } from './DialogQueuePM';
 
@@ -110,7 +110,7 @@ describe('Dialog PM', () => {
   it('Update the VM when a dialog become active', () => {
     const { queue, pm, appObjects } = makeTestRig();
 
-    const alert = new DialogAlertEntity(
+    const alert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -128,7 +128,7 @@ describe('Dialog PM', () => {
   it('Update the VM when a dialog changes', () => {
     const { queue, pm, appObjects } = makeTestRig();
 
-    const alert = new DialogAlertEntity(
+    const alert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',
@@ -148,7 +148,7 @@ describe('Dialog PM', () => {
   it('Update the VM when the dialog closes and the next dialog is null', () => {
     const { queue, pm, appObjects } = makeTestRig();
 
-    const alert = new DialogAlertEntity(
+    const alert = new AlertDialogEntity(
       {
         buttonLabel: 'button',
         message: 'message',

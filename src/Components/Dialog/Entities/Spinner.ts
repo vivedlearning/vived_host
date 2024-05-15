@@ -50,7 +50,6 @@ export class SpinnerDialogEntity extends Dialog {
     }
     this._isOpen.val = open;
   }
-
   get isOpen() {
     return this._isOpen.val;
   }
