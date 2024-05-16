@@ -56,3 +56,8 @@ export class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
     this.onAlertChange();
   }
 }
+
+export const defaultSpinnerDialogVM: SpinnerDialogVM = {
+  message: 'Default spinner message',
+  title: 'Spinner',
+};

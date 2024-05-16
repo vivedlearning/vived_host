@@ -68,8 +68,8 @@ export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
 }
 
 export const defaultConfirmDialogVM: ConfirmDialogVM = {
-  message: '',
-  title: '',
+  message: 'Generic confirm message',
+  title: 'Confirm',
   cancel: () => {
     console.warn('[ConfirmDialogVM.cancel] default VM');
   },

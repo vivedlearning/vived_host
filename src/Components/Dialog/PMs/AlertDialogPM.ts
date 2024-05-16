@@ -61,3 +61,12 @@ export class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
     this.onAlertChange();
   }
 }
+
+export const defaultAlertDialogVM: AlertDialogVM = {
+  message: "Generic alert message",
+  title: "Alert",
+  buttonLabel: "Close",
+  close: () => {
+    console.warn('[AlertDialogVM.close] default VM');
+  }
+}
