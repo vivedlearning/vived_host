@@ -1,13 +1,13 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
 import { Handler, Request } from '../../../Types';
-import { HostDispatchEntity, makeAppDispatcher } from './HostDispatchEntity';
+import { HostDispatchEntity, makeHostDispatchEntity } from './HostDispatchEntity';
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const dispatcherAO = appObjects.getOrCreate('appDispatcher');
   const mockHandler = jest.fn();
 
-  const dispatcher = makeAppDispatcher(dispatcherAO);
+  const dispatcher = makeHostDispatchEntity(dispatcherAO);
 
   return { dispatcher, appObjects, mockHandler, dispatcherAO };
 }

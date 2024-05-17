@@ -22,11 +22,11 @@ export abstract class HostDispatchEntity extends HostAppObjectEntity {
   }
 }
 
-export function makeAppDispatcher(appObject: HostAppObject): HostDispatchEntity {
-  return new AppDispatcherImp(appObject);
+export function makeHostDispatchEntity(appObject: HostAppObject): HostDispatchEntity {
+  return new HostDispatchEntityImp(appObject);
 }
 
-class AppDispatcherImp extends HostDispatchEntity {
+class HostDispatchEntityImp extends HostDispatchEntity {
   private appHandler?: Handler;
 
   private _appHandlerVersion = 0;

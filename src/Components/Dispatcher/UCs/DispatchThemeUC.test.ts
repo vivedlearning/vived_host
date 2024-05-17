@@ -1,12 +1,15 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
-import { makeDispatchThemeUC, DispatchThemeUC } from "./DispatchThemeUC";
+import {
+  MockHostDispatchEntity
+} from "../Mocks/MockHostDispatcher";
+import { DispatchThemeUC, makeDispatchThemeUC } from "./DispatchThemeUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const mockDispatcher = makeMockHostDispatchEntity(appObjects);
+  const ao = appObjects.getOrCreate("AO");
+  const mockDispatcher = new MockHostDispatchEntity(ao);
 
-  const uc = makeDispatchThemeUC(mockDispatcher.appObject);
+  const uc = makeDispatchThemeUC(ao);
 
   return { uc, appObjects, mockDispatcher };
 }

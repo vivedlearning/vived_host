@@ -1,5 +1,4 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { Handler } from "../../../Types";
+import { HostAppObject } from "../../../HostAppObject";
 import { HostDispatchEntity } from "../Entities";
 
 export class MockHostDispatchEntity extends HostDispatchEntity {
@@ -12,10 +11,4 @@ export class MockHostDispatchEntity extends HostDispatchEntity {
   constructor(appObject: HostAppObject) {
     super(appObject, HostDispatchEntity.type);
   }
-}
-
-export function makeMockHostDispatchEntity(appObjects: HostAppObjectRepo) {
-  return new MockHostDispatchEntity(
-    appObjects.getOrCreate("MockHostDispatchEntity")
-  );
 }

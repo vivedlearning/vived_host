@@ -1,15 +1,17 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 import {
-  makeDispatchStopZSpaceUC,
-  DispatchStopZSpaceUC
+  MockHostDispatchEntity
+} from "../Mocks/MockHostDispatcher";
+import {
+  DispatchStopZSpaceUC, makeDispatchStopZSpaceUC
 } from "./DispatchStopZSpaceUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const mockDispatcher = makeMockHostDispatchEntity(appObjects);
+  const ao = appObjects.getOrCreate("AO");
+  const mockDispatcher = new MockHostDispatchEntity(ao);
 
-  const uc = makeDispatchStopZSpaceUC(mockDispatcher.appObject);
+  const uc = makeDispatchStopZSpaceUC(ao);
 
   return { uc, appObjects, mockDispatcher };
 }
