@@ -1,4 +1,5 @@
-import { Handler, Request } from './HostBoundary';
+import { Handler, Request } from "../Types";
+
 
 export abstract class HostDispatcher {
   abstract registerAppHandler: (appHandler: Handler) => void;

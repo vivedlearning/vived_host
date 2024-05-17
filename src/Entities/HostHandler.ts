@@ -1,4 +1,4 @@
-import { Handler, Request } from "./HostBoundary";
+import { Handler, Request } from "../Types";
 
 export abstract class RequestHandler {
   abstract readonly requestType: string;
