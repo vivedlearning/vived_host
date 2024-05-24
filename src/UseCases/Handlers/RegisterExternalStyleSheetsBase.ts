@@ -1,14 +1,14 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type RegisterStylesheetsAction = (stylesheets: string[]) => void;
 
-export class RegisterExternalStyleSheetsBase extends RequestHandler {
+export class RegisterExternalStyleSheetsBase implements RequestHandler {
   readonly requestType = 'REGISTER_EXTERNAL_STYLESHEETS';
 
   action: RegisterStylesheetsAction = () => {
@@ -33,8 +33,7 @@ export class RegisterExternalStyleSheetsBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

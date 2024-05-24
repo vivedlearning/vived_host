@@ -1,9 +1,14 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnsupportedRequestVerion } from '../../Entities';
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
-export class OnStateCompleteBase extends RequestHandler {
-  readonly requestType = 'ON_STATE_COMPLETED';
+export class OnStateCompleteBase implements RequestHandler {
+  readonly requestType = "ON_STATE_COMPLETED";
 
-  action: ()=>void = () => {
+  action: () => void = () => {
     throw new ActionNotImplemented(this.requestType);
   };
 
@@ -15,8 +20,7 @@ export class OnStateCompleteBase extends RequestHandler {
     }
   };
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

@@ -1,6 +1,11 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnsupportedRequestVerion } from '../../Entities';
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
-export class GoToPreviousStateBase extends RequestHandler {
+export class GoToPreviousStateBase implements RequestHandler {
   readonly requestType = "GO_TO_PREVIOUS_STATE";
   readonly payloadVersion = 1;
 
@@ -16,8 +21,7 @@ export class GoToPreviousStateBase extends RequestHandler {
     }
   };
 
-  constructor(handler: HostHandler) {
-    super();
+  constructor(handler: HostHandlerX) {
     handler.registerRequestHandler(this);
   }
 }

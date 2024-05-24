@@ -1,48 +1,59 @@
-import { Handler, Request } from "../Types";
+import { HostAppObject, HostAppObjectEntity } from "../../../HostAppObject";
+import { Handler, Request } from "../../../Types";
 
-export abstract class RequestHandler {
-  abstract readonly requestType: string;
-  abstract handleRequest: (version: number, payload?: unknown) => void;
+export interface RequestHandler {
+  readonly requestType: string;
+  handleRequest: (version: number, payload?: unknown) => void;
 }
 
-export abstract class HostHandler {
+export abstract class HostHandlerEntity extends HostAppObjectEntity {
+  static type = "HostHandlerEntity";
+
+  static get(appObject: HostAppObject) {
+    return appObject.getComponent<HostHandlerEntity>(HostHandlerEntity.type);
+  }
+
   abstract handler: Handler;
   abstract registerRequestHandler: (requestHandler: RequestHandler) => void;
 }
 
-export function makeHostHandler(): HostHandler {
-  return new RequestHandlerImp();
+export function makeHostHandlerEntity(
+  appObject: HostAppObject
+): HostHandlerEntity {
+  return new RequestHandlerImp(appObject);
 }
 
-class RequestHandlerImp extends HostHandler {
+class RequestHandlerImp extends HostHandlerEntity {
   private handlers = new Map<string, RequestHandler>();
 
   handler: Handler = (request: Request): void => {
     const handler = this.handlers.get(request.type);
 
     if (!handler) {
-      console.warn(
-        `[HostHandler] Unsupported request type recieved: ${request.type}`
-      );
+      this.warn(`Unsupported request type received: ${request.type}`);
       return;
     }
 
     try {
       handler.handleRequest(request.version, request.payload);
     } catch (e) {
-      console.warn(`[HostHandler] ${e}`);
+      this.warn(`${e}`);
     }
   };
 
   registerRequestHandler = (handler: RequestHandler): void => {
     if (this.handlers.has(handler.requestType)) {
-      console.warn(
-        `[HostHandler] More than one handler is being registered for ${handler.requestType}. Previous handler is being overwritten`
+      this.warn(
+        `More than one handler is being registered for ${handler.requestType}. Previous handler is being overwritten`
       );
     }
 
     this.handlers.set(handler.requestType, handler);
   };
+
+  constructor(appObj: HostAppObject) {
+    super(appObj, HostHandlerEntity.type);
+  }
 }
 
 export class UnsupportedRequestVerion extends Error {

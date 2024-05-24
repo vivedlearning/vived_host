@@ -1,12 +1,10 @@
 import { HostAppObject } from "../../../HostAppObject";
-import { DispatchAppDispatcherUC } from "../UCs";
+import { DispatchDisposeAppUC } from "../UCs";
 
-
-export class MockDispatchAppDispatcherUC extends DispatchAppDispatcherUC {
+export class MockDispatchDisposeAppUC extends DispatchDisposeAppUC {
   doDispatch = jest.fn();
 
   constructor(appObject: HostAppObject) {
-    super(appObject, DispatchAppDispatcherUC.type);
+    super(appObject, DispatchDisposeAppUC.type);
   }
 }
-

@@ -1,14 +1,14 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type SubmitActivityAssetAction = (assetFile: File, callback: (assetID: string | undefined) => void) => void;
 
-export class SubmitActivityAssetBase extends RequestHandler {
+export class SubmitActivityAssetBase implements RequestHandler {
   readonly requestType = 'SUBMIT_ACTIVITY_ASSET';
 
   action: SubmitActivityAssetAction = () => {
@@ -33,8 +33,7 @@ export class SubmitActivityAssetBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

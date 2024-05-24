@@ -1,10 +1,10 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export interface ShowSpinnerActionDTO {
   message: string;
@@ -14,7 +14,7 @@ export interface ShowSpinnerActionDTO {
 
 export type ShowSpinnerAction = (confirmData: ShowSpinnerActionDTO) => void;
 
-export class ShowSpinnerBase extends RequestHandler {
+export class ShowSpinnerBase implements RequestHandler {
   readonly requestType = 'SHOW_SPINNER';
 
   action: ShowSpinnerAction = () => {
@@ -39,8 +39,7 @@ export class ShowSpinnerBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

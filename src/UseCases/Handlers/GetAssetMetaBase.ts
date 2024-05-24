@@ -1,4 +1,10 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnableToParsePayload, UnsupportedRequestVerion } from "../../Entities";
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 import { CallbackAssetMeta } from "./CallbackAssetDTO";
 
 export type GetAssetMetaAction = (
@@ -6,7 +12,7 @@ export type GetAssetMetaAction = (
   callback: (assetMeta: CallbackAssetMeta | undefined) => void
 ) => void;
 
-export class GetAssetMetaBase extends RequestHandler {
+export class GetAssetMetaBase implements RequestHandler {
   readonly requestType = "GET_ASSET_META";
 
   action: GetAssetMetaAction = () => {
@@ -35,8 +41,7 @@ export class GetAssetMetaBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

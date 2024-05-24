@@ -1,10 +1,16 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnableToParsePayload, UnsupportedRequestVerion } from '../../Entities';
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type HasNextStateAction = (
   callback: (hasNextState: boolean) => void
 ) => void;
 
-export class HasNextStateBase extends RequestHandler {
+export class HasNextStateBase implements RequestHandler {
   readonly requestType = "HAS_NEXT_STATE";
 
   action: HasNextStateAction = () => {
@@ -33,8 +39,7 @@ export class HasNextStateBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

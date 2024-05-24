@@ -3,6 +3,7 @@ export * from "./MockDispatchIsAuthoringUC";
 export * from "./MockDispatchSetStateUC";
 export * from "./MockDispatchShowBabylonInspectorUC";
 export * from "./MockDispatchStartAppUC";
+export * from "./MockDispatchStartBrowseChannelsUC";
 export * from "./MockDispatchStartZSpaceUC";
 export * from "./MockDispatchStopAppUC";
 export * from "./MockDispatchThemeUC";

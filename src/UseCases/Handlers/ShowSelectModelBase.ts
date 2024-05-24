@@ -1,14 +1,14 @@
 import {
     ActionNotImplemented,
-    HostHandler,
     RequestHandler,
     UnableToParsePayload,
-    UnsupportedRequestVerion,
-} from '../../Entities';
+    UnsupportedRequestVerion
+  } from "../../Components";
+  import { HostHandlerX } from "../../Entities";
 
 export type ShowSelectModelAction = (callback: (modelId: string) => void) => void;
 
-export class ShowSelectModelBase extends RequestHandler {
+export class ShowSelectModelBase implements RequestHandler {
     readonly requestType = 'SHOW_SELECT_MODEL';
 
     action: ShowSelectModelAction = () => {
@@ -33,8 +33,7 @@ export class ShowSelectModelBase extends RequestHandler {
         return castPayload.callback;
     }
 
-    constructor(hostHandler: HostHandler) {
-        super();
+    constructor(hostHandler: HostHandlerX) {
         hostHandler.registerRequestHandler(this);
     }
 }

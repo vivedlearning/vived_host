@@ -1,14 +1,14 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type IsZSpaceAvailableAction = (callback: (isZSpaceAvailable: boolean) => void) => void;
 
-export class IsZSpaceAvailableBase extends RequestHandler {
+export class IsZSpaceAvailableBase implements RequestHandler {
   readonly requestType = 'IS_ZSPACE_AVAILABLE';
 
   action: IsZSpaceAvailableAction = () => {
@@ -33,8 +33,7 @@ export class IsZSpaceAvailableBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

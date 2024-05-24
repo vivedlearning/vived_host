@@ -3,6 +3,7 @@ export * from "./DispatchIsAuthoringUC";
 export * from "./DispatchSetStateUC";
 export * from "./DispatchShowBabylonInspectorUC";
 export * from "./DispatchStartAppUC";
+export * from "./DispatchStartBrowseChannelsUC";
 export * from "./DispatchStartZSpaceUC";
 export * from "./DispatchStopAppUC";
 export * from "./DispatchStopZSpaceUC";

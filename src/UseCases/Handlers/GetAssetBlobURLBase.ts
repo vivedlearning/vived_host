@@ -1,11 +1,17 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnableToParsePayload, UnsupportedRequestVerion } from "../../Entities";
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type GetAssetBlobURLAction = (
   assetID: string,
   callback: (blobURL: string | undefined) => void
 ) => void;
 
-export class GetAssetBlobURLBase extends RequestHandler {
+export class GetAssetBlobURLBase implements RequestHandler {
   readonly requestType = "GET_ASSET_BLOB";
 
   action: GetAssetBlobURLAction = () => {
@@ -34,8 +40,7 @@ export class GetAssetBlobURLBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

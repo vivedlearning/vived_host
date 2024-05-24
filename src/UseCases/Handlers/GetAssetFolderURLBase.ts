@@ -1,14 +1,14 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type GetAssetFolderURLAction = (callback: (assetFolderURL: string) => void) => void;
 
-export class GetAssetFolderURLBase extends RequestHandler {
+export class GetAssetFolderURLBase implements RequestHandler {
   readonly requestType = 'GET_APP_ASSET_URL';
 
   action: GetAssetFolderURLAction = () => {
@@ -33,8 +33,7 @@ export class GetAssetFolderURLBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

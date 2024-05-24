@@ -1,6 +1,6 @@
 export * from './Auth';
 export * from './ChallengeResults';
-export * from './HostHandler';
+export * from './HostHandlerX';
 export * from './Logger';
 export * from './MemoizedBoolean';
 export * from './MemoizedNumber';

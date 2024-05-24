@@ -1,6 +1,12 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnsupportedRequestVerion } from '../../Entities';
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
-export class OnAppIsReadyBase extends RequestHandler {
+export class OnAppIsReadyBase implements RequestHandler {
   readonly requestType = 'APP_IS_READY';
 
   action: ()=>void = () => {
@@ -15,8 +21,7 @@ export class OnAppIsReadyBase extends RequestHandler {
     }
   };
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

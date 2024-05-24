@@ -1,10 +1,10 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export interface ShowConfirmActionDTO {
   title: string;
@@ -17,7 +17,7 @@ export interface ShowConfirmActionDTO {
 
 export type ShowConfirmAction = (confirmData: ShowConfirmActionDTO) => void;
 
-export class ShowConfirmBase extends RequestHandler {
+export class ShowConfirmBase implements RequestHandler {
   readonly requestType = 'SHOW_CONFIRM';
 
   action: ShowConfirmAction = () => {
@@ -49,8 +49,7 @@ export class ShowConfirmBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

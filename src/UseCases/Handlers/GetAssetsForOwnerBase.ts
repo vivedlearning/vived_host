@@ -1,15 +1,15 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 import { CallbackAssetMeta } from './CallbackAssetDTO';
 
 export type GetOwnerAssetsMetaAction = (ownerID: string, callback: (assetMetas: CallbackAssetMeta[]) => void) => void;
 
-export class GetAssetsForOwnerBase extends RequestHandler {
+export class GetAssetsForOwnerBase implements RequestHandler {
   readonly requestType = 'GET_ASSET_FOR_OWNER';
 
   action: GetOwnerAssetsMetaAction = () => {
@@ -34,8 +34,7 @@ export class GetAssetsForOwnerBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

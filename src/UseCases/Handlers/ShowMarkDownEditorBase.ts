@@ -1,10 +1,10 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export interface ShowMarkDownEditorActionDTO {
   initialText: string;
@@ -14,7 +14,7 @@ export interface ShowMarkDownEditorActionDTO {
 
 export type ShowMarkDownEditorAction = (confirmData: ShowMarkDownEditorActionDTO) => void;
 
-export class ShowMarkDownEditorBase extends RequestHandler {
+export class ShowMarkDownEditorBase implements RequestHandler {
   readonly requestType = 'SHOW_MARKDOWN_EDITOR';
 
   action: ShowMarkDownEditorAction = () => {
@@ -39,8 +39,7 @@ export class ShowMarkDownEditorBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

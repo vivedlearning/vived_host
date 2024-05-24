@@ -1,14 +1,14 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export type OnStateChangeAction = (state: object, assets: string[], validationErrorMessage?: string) => void;
 
-export class OnStateChangeBase extends RequestHandler {
+export class OnStateChangeBase implements RequestHandler {
   readonly requestType = 'ON_STATE_CHANGE';
 
   action: OnStateChangeAction = () => {
@@ -57,8 +57,7 @@ export class OnStateChangeBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

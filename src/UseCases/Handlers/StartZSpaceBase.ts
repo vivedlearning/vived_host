@@ -1,7 +1,12 @@
-import { ActionNotImplemented, HostHandler, RequestHandler, UnsupportedRequestVerion } from '../../Entities';
+import {
+  ActionNotImplemented,
+  RequestHandler,
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
-export class StartZSpaceBase extends RequestHandler {
-  readonly requestType = 'START_ZSPACE';
+export class StartZSpaceBase implements RequestHandler {
+  readonly requestType = "START_ZSPACE";
   readonly payloadVersion = 1;
 
   action: () => void = () => {
@@ -16,8 +21,7 @@ export class StartZSpaceBase extends RequestHandler {
     }
   };
 
-  constructor(handler: HostHandler) {
-    super();
+  constructor(handler: HostHandlerX) {
     handler.registerRequestHandler(this);
   }
 }

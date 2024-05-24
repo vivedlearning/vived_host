@@ -1,10 +1,10 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export interface IsAssetFetchedActionDTO {
   assetId: string;
@@ -13,7 +13,7 @@ export interface IsAssetFetchedActionDTO {
 
 export type IsAssetFetchedAction = (confirmData: IsAssetFetchedActionDTO) => void;
 
-export class IsAssetFetchedBase extends RequestHandler {
+export class IsAssetFetchedBase implements RequestHandler {
   readonly requestType = 'IS_ASSET_FILE_FETCHED';
 
   action: IsAssetFetchedAction = () => {
@@ -38,8 +38,7 @@ export class IsAssetFetchedBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

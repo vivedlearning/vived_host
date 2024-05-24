@@ -1,17 +1,21 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
-export type Severity = 'LOG' | 'WARNING' | 'ERROR' | 'FATAL';
+export type Severity = "LOG" | "WARNING" | "ERROR" | "FATAL";
 
-export type SubmitLogAction = (sender: string, severity: Severity, message: string) => void;
+export type SubmitLogAction = (
+  sender: string,
+  severity: Severity,
+  message: string
+) => void;
 
-export class SubmitLogBase extends RequestHandler {
-  readonly requestType = 'SUBMIT_LOG';
+export class SubmitLogBase implements RequestHandler {
+  readonly requestType = "SUBMIT_LOG";
 
   action: SubmitLogAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -28,15 +32,22 @@ export class SubmitLogBase extends RequestHandler {
 
   private castPayloadV1(payload: unknown): Payload_V1 {
     const castPayload = payload as Payload_V1;
-    if (castPayload.sender === undefined || castPayload.severity === undefined || castPayload.message === undefined) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+    if (
+      castPayload.sender === undefined ||
+      castPayload.severity === undefined ||
+      castPayload.message === undefined
+    ) {
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }

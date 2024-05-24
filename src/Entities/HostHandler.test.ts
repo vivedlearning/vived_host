@@ -1,7 +1,8 @@
-import { RequestHandler, makeHostHandler, UnsupportedRequestVerion } from './HostHandler';
-import { Request } from './HostBoundary';
+import { RequestHandler, UnsupportedRequestVerion } from '../Components';
+import { Request } from '../Types/PluginBoundary';
+import { makeHostHandler } from './HostHandlerX';
 
-class MockHandler extends RequestHandler {
+class MockHandler implements RequestHandler {
   readonly requestType: string = 'A_REQUEST';
   handleRequest = jest.fn();
 }

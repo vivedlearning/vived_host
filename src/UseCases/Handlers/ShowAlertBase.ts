@@ -1,10 +1,10 @@
 import {
   ActionNotImplemented,
-  HostHandler,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion,
-} from '../../Entities';
+  UnsupportedRequestVerion
+} from "../../Components";
+import { HostHandlerX } from "../../Entities";
 
 export interface ShowAlertActionDTO {
   title: string;
@@ -15,7 +15,7 @@ export interface ShowAlertActionDTO {
 
 export type ShowAlertAction = (confirmData: ShowAlertActionDTO) => void;
 
-export class ShowAlertBase extends RequestHandler {
+export class ShowAlertBase implements RequestHandler {
   readonly requestType = 'SHOW_ALERT';
 
   action: ShowAlertAction = () => {
@@ -45,8 +45,7 @@ export class ShowAlertBase extends RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandler) {
-    super();
+  constructor(hostHandler: HostHandlerX) {
     hostHandler.registerRequestHandler(this);
   }
 }
