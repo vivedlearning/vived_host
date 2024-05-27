@@ -1,7 +1,8 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { MockHostDispatchEntity } from "../Mocks";
 import {
-  DispatchShowBabylonInspectorUC, makeDispatchShowBabylonInspectorUC
+  DispatchShowBabylonInspectorUC,
+  makeDispatchShowBabylonInspectorUC
 } from "./DispatchShowBabylonInspectorUC";
 
 function makeTestRig() {
@@ -60,5 +61,30 @@ describe("Dispatch show babylon inspector", () => {
     const payload = mockDispatcher.formRequestAndDispatch.mock.calls[0][2];
 
     expect(payload).toEqual({ showBabylonInspector: false });
+  });
+
+  it("Warns if it cannot find the app object when getting by ID", () => {
+    const { appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
+
+    DispatchShowBabylonInspectorUC.getByID("someID", appObjects);
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+
+  it("Warns if that App Object does not have the UC", () => {
+    const { appObjects } = makeTestRig();
+
+    appObjects.getOrCreate("someID");
+    appObjects.submitWarning = jest.fn();
+
+    DispatchShowBabylonInspectorUC.getByID("someID", appObjects);
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+
+  it("Gets by ID", () => {
+    const { appObjects, uc } = makeTestRig();
+
+    expect(DispatchShowBabylonInspectorUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
   });
 });

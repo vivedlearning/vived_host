@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from '../../../HostAppObject';
+import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
 import { HostDispatchEntity } from '../Entities';
 
 export abstract class DispatchStopAppUC extends HostAppObjectUC {
@@ -16,6 +16,20 @@ export abstract class DispatchStopAppUC extends HostAppObjectUC {
       );
     }
     return asset;
+  }
+
+  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchStopAppUC | undefined {
+    const appObject =  appObjects.get(id);
+    
+    if(!appObject) {
+      appObjects.submitWarning(
+        "DispatchStopAppUC.getByID",
+        "Unable to find App Object by id " + id
+      );
+      return undefined;
+    }
+
+    return DispatchStopAppUC.get(appObject);
   }
 }
 

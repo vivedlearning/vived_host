@@ -66,4 +66,29 @@ describe("Dispatch Start Browse Channel Models", () => {
       callback: dto.callback
     });
   });
+
+  it("Warns if it cannot find the app object when getting by ID", () => {
+    const { appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
+
+    DispatchStartBrowseChannelsUC.getByID("someID", appObjects);
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+
+  it("Warns if that App Object does not have the UC", () => {
+    const { appObjects } = makeTestRig();
+
+    appObjects.getOrCreate("someID");
+    appObjects.submitWarning = jest.fn();
+
+    DispatchStartBrowseChannelsUC.getByID("someID", appObjects);
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+
+  it("Gets by ID", () => {
+    const { appObjects, uc } = makeTestRig();
+
+    expect(DispatchStartBrowseChannelsUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+  });
 });

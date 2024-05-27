@@ -42,4 +42,29 @@ describe("Dispatch Start App", () => {
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
     expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][1]).toEqual(2);
   });
+
+  it("Warns if it cannot find the app object when getting by ID", () => {
+    const { appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
+
+    DispatchStartAppUC.getByID("someID", appObjects);
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+
+  it("Warns if that App Object does not have the UC", () => {
+    const { appObjects } = makeTestRig();
+
+    appObjects.getOrCreate("someID");
+    appObjects.submitWarning = jest.fn();
+
+    DispatchStartAppUC.getByID("someID", appObjects);
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+
+  it("Gets by ID", () => {
+    const { appObjects, uc } = makeTestRig();
+
+    expect(DispatchStartAppUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+  });
 });
