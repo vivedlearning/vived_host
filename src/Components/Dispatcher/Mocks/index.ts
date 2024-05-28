@@ -6,5 +6,6 @@ export * from "./MockDispatchStartAppUC";
 export * from "./MockDispatchStartBrowseChannelsUC";
 export * from "./MockDispatchStartZSpaceUC";
 export * from "./MockDispatchStopAppUC";
+export * from "./MockDispatchStopZSpaceUC";
 export * from "./MockDispatchThemeUC";
 export * from "./MockHostDispatcher";
