@@ -1,7 +1,11 @@
-
-import { HostHandlerX } from "../../../Entities";
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
+import {
+  ActionNotImplemented,
+  HostHandlerEntity,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVersion
+} from "../Entities";
 
 export interface ShowMarkDownEditorActionDTO {
   initialText: string;
@@ -30,8 +34,7 @@ export function makeShowMarkDownEditorHandler(
   return new ShowMarkDownEditorHandlerImp(appObject);
 }
 
-export class ShowMarkDownEditorHandlerImp extends ShowMarkDownEditorHandler{
-
+export class ShowMarkDownEditorHandlerImp extends ShowMarkDownEditorHandler {
   action: ShowMarkDownEditorAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };

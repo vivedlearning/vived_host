@@ -1,10 +1,11 @@
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+} from "../Entities";
 
 export interface ShowSpinnerActionDTO {
   message: string;
@@ -14,9 +15,24 @@ export interface ShowSpinnerActionDTO {
 
 export type ShowSpinnerAction = (confirmData: ShowSpinnerActionDTO) => void;
 
-export class ShowSpinnerBase implements RequestHandler {
+export abstract class ShowSpinnerHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "ShowSpinnerHandler";
+
   readonly requestType = "SHOW_SPINNER";
 
+  abstract action: ShowSpinnerAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeShowSpinnerHandler(
+  appObject: HostAppObject
+): ShowSpinnerHandler {
+  return new ShowSpinnerBase(appObject);
+}
+
+class ShowSpinnerBase extends ShowSpinnerHandler {
   action: ShowSpinnerAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -47,7 +63,15 @@ export class ShowSpinnerBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, ShowSpinnerHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

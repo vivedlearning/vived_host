@@ -1,10 +1,11 @@
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+} from "../Entities";
 
 export type ResultType =
   | "HIT_V1"
@@ -49,9 +50,24 @@ export type SubmitResultAction = (
   description: string
 ) => void;
 
-export class SubmitResultBase implements RequestHandler {
+export abstract class SubmitResultHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "SubmitResultHandler";
+
   readonly requestType = "SUBMIT_RESULTS";
 
+  abstract action: SubmitResultAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeSubmitResultHandler(
+  appObject: HostAppObject
+): SubmitResultHandler {
+  return new SubmitResultHandlerImp(appObject);
+}
+
+class SubmitResultHandlerImp extends SubmitResultHandler {
   action: SubmitResultAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -100,7 +116,15 @@ export class SubmitResultBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, SubmitResultHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }
