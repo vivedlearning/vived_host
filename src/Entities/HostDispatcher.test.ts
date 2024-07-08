@@ -1,5 +1,5 @@
+import { Handler, Request } from '../Types';
 import { makeHostDispatcher } from './HostDispatcher';
-import { Handler, Request } from './HostBoundary';
 
 function makeTestRig() {
   const hostDispatcher = makeHostDispatcher();
