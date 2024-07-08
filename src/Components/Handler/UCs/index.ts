@@ -1,1 +1,2 @@
-export * from "./GetAssetBlobURLHandler"
+export * from "./GetAssetBlobURLHandler";
+export * from "./GetAssetFolderURLHandler";

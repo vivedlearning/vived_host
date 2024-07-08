@@ -18,7 +18,6 @@ export abstract class GetAssetBlobURLHandler
   static readonly type = "GetAssetBlobURLHandler";
 
   readonly requestType = "GET_ASSET_BLOB";
-  readonly payloadVersion = 1;
 
   abstract action: GetAssetBlobURLHandlerAction;
   abstract handleRequest: (version: number, payload?: unknown) => void;

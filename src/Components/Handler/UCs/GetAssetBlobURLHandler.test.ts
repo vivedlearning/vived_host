@@ -16,7 +16,7 @@ function makeTestRig() {
   return { handler, uc, registerSpy, appObjects, mockGetBlob };
 }
 
-describe("Get Asset Blob Base Handler", () => {
+describe("Get Asset Blob URL Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
