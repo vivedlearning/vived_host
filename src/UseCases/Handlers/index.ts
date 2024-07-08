@@ -1,4 +1,3 @@
-export * from "./GetAssetsForOwnerBase";
 export * from "./NewActivityAssetBase";
 export * from "./OnAppIsReadyBase";
 export * from "./OnStateChangeBase";
@@ -12,8 +11,7 @@ export * from "./SubmitLogBase";
 export * from "./SubmitResultBase";
 export * from "./ShowMarkDownEditorBase";
 export * from "./ShowSelectModelBase";
-export * from "./IsAssetFetchedBase";
+export * from "../../Components/Handler/UCs/IsAssetFetchedHandler";
 export * from "./ShowSpinnerBase";
-export * from "./IsZSpaceAvailableBase";
 export * from "./RestoreCurrentStateBase";
 export * from "./SubmitActivityAssetBase";

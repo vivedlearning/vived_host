@@ -1,18 +1,34 @@
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+} from "../Entities";
 
 export type IsZSpaceAvailableAction = (
   callback: (isZSpaceAvailable: boolean) => void
 ) => void;
 
-export class IsZSpaceAvailableBase implements RequestHandler {
+export abstract class IsZSpaceAvailableHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "IsZSpaceAvailableHandler";
+
   readonly requestType = "IS_ZSPACE_AVAILABLE";
 
+  abstract action: IsZSpaceAvailableAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeIsZSpaceAvailableHandler(
+  appObject: HostAppObject
+): IsZSpaceAvailableHandler {
+  return new IsZSpaceAvailableHandlerImp(appObject);
+}
+
+class IsZSpaceAvailableHandlerImp extends IsZSpaceAvailableHandler {
   action: IsZSpaceAvailableAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -39,7 +55,15 @@ export class IsZSpaceAvailableBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, IsZSpaceAvailableHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

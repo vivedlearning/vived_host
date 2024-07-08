@@ -1,10 +1,5 @@
-import {
-  ActionNotImplemented,
-  RequestHandler,
-  UnableToParsePayload,
-  UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
 
 export interface IsAssetFetchedActionDTO {
   assetId: string;
@@ -15,9 +10,24 @@ export type IsAssetFetchedAction = (
   confirmData: IsAssetFetchedActionDTO
 ) => void;
 
-export class IsAssetFetchedBase implements RequestHandler {
+export abstract class IsAssetFetchedHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "IsAssetFetchedHandler";
+
   readonly requestType = "IS_ASSET_FILE_FETCHED";
 
+  abstract action: IsAssetFetchedAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeIsAssetFetchedHandler(
+  appObject: HostAppObject
+): IsAssetFetchedHandler {
+  return new IsAssetFetchedHandlerImp(appObject);
+}
+
+class IsAssetFetchedHandlerImp extends IsAssetFetchedHandler {
   action: IsAssetFetchedAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -47,7 +57,15 @@ export class IsAssetFetchedBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, IsAssetFetchedHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

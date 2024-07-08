@@ -1,20 +1,36 @@
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
-import { CallbackAssetMeta } from "../../Components/Handler/UCs/CallbackAssetDTO";
+} from "../Entities";
+import { CallbackAssetMeta } from "./CallbackAssetDTO";
 
 export type GetOwnerAssetsMetaAction = (
   ownerID: string,
   callback: (assetMetas: CallbackAssetMeta[]) => void
 ) => void;
 
-export class GetAssetsForOwnerBase implements RequestHandler {
+export abstract class GetAssetsForOwnerHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "GetAssetsForOwnerHandler";
+
   readonly requestType = "GET_ASSET_FOR_OWNER";
 
+  abstract action: GetOwnerAssetsMetaAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeGetAssetsForOwnerHandler(
+  appObject: HostAppObject
+): GetAssetsForOwnerHandler {
+  return new GetAssetsForOwnerHandlerImp(appObject);
+}
+
+class GetAssetsForOwnerHandlerImp extends GetAssetsForOwnerHandler {
   action: GetOwnerAssetsMetaAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -41,7 +57,15 @@ export class GetAssetsForOwnerBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, GetAssetsForOwnerHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }
