@@ -1,10 +1,11 @@
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+} from "../Entities";
 
 export type OnStateChangeAction = (
   state: object,
@@ -12,9 +13,24 @@ export type OnStateChangeAction = (
   validationErrorMessage?: string
 ) => void;
 
-export class OnStateChangeBase implements RequestHandler {
+export abstract class OnStateChangeHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "OnStateChangeHandler";
+
   readonly requestType = "ON_STATE_CHANGE";
 
+  abstract action: OnStateChangeAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeOnStateChangeHandler(
+  appObject: HostAppObject
+): OnStateChangeHandler {
+  return new OnStateChangeHandlerImp(appObject);
+}
+
+export class OnStateChangeHandlerImp extends OnStateChangeHandler {
   action: OnStateChangeAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -79,7 +95,15 @@ export class OnStateChangeBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, OnStateChangeHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }
