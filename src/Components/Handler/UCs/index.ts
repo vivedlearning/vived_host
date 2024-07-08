@@ -10,3 +10,4 @@ export * from "./HasNextStateHandler";
 export * from "./HasPreviousStateHandler";
 export * from "./IsAssetFetchedHandler";
 export * from "./IsZSpaceAvailableHandler";
+export * from "./NewActivityAssetHandler"

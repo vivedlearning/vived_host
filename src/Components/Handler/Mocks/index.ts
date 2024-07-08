@@ -9,3 +9,4 @@ export * from "./MockHasNextStateHandler";
 export * from "./MockHasPreviousStateHandler";
 export * from "./MockIsAssetFetchedHandler";
 export * from "./MockIsZSpaceAvailableHandler";
+export * from "./MockNewActivityAssetHandler";

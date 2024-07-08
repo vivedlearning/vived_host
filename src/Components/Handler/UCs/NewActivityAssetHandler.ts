@@ -1,19 +1,35 @@
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+} from "../Entities";
 
 export type NewActivityAssetAction = (
   file: File,
   callback: (blobURL: string | undefined) => void
 ) => void;
 
-export class NewActivityAssetBase implements RequestHandler {
+export abstract class NewActivityAssetHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "NewActivityAssetHandler";
+
   readonly requestType = "NEW_ACTIVITY_ASSET";
 
+  abstract action: NewActivityAssetAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeNewActivityAssetAction(
+  appObject: HostAppObject
+): NewActivityAssetHandler {
+  return new NewActivityAssetHandlerImp(appObject);
+}
+
+class NewActivityAssetHandlerImp extends NewActivityAssetHandler {
   action: NewActivityAssetAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -40,7 +56,15 @@ export class NewActivityAssetBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, NewActivityAssetHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

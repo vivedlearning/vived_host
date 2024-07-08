@@ -1,4 +1,4 @@
-export * from "./NewActivityAssetBase";
+export * from "../../Components/Handler/UCs/NewActivityAssetHandler";
 export * from "./OnAppIsReadyBase";
 export * from "./OnStateChangeBase";
 export * from "./OnStateCompleteBase";
