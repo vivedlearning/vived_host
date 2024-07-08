@@ -3,7 +3,7 @@ import {
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../Entities";
 
 export type GetAssetFolderURLAction = (
@@ -28,9 +28,8 @@ export function makeGetAssetFolderURLHandler(
 }
 
 class GetAssetFolderURLHandlerImp extends GetAssetFolderURLHandler {
-
   action: GetAssetFolderURLAction = () => {
-    this.warn("Action has not been setup")
+    this.warn("Action has not been setup");
   };
 
   handleRequest = (version: number, payload: unknown) => {
@@ -38,7 +37,7 @@ class GetAssetFolderURLHandlerImp extends GetAssetFolderURLHandler {
       const { callback } = this.castPayloadV1(payload);
       this.action(callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

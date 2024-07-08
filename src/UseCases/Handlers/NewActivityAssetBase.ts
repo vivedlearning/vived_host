@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -23,7 +23,7 @@ export class NewActivityAssetBase implements RequestHandler {
       const { file, callback } = this.castPayloadV1(payload);
       this.action(file, callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 import { CallbackAssetMeta } from "../../Components/Handler/UCs/CallbackAssetDTO";
@@ -24,7 +24,7 @@ export class GetAssetsForOwnerBase implements RequestHandler {
       const { ownerID, callback } = this.castPayloadV1(payload);
       this.action(ownerID, callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

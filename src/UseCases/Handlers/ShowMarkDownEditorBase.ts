@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -12,10 +12,12 @@ export interface ShowMarkDownEditorActionDTO {
   validateString?: (text: string) => string | null;
 }
 
-export type ShowMarkDownEditorAction = (confirmData: ShowMarkDownEditorActionDTO) => void;
+export type ShowMarkDownEditorAction = (
+  confirmData: ShowMarkDownEditorActionDTO
+) => void;
 
 export class ShowMarkDownEditorBase implements RequestHandler {
-  readonly requestType = 'SHOW_MARKDOWN_EDITOR';
+  readonly requestType = "SHOW_MARKDOWN_EDITOR";
 
   action: ShowMarkDownEditorAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -26,14 +28,21 @@ export class ShowMarkDownEditorBase implements RequestHandler {
       const castPayload = this.castPayloadV1(payload);
       this.action(castPayload);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 
   private castPayloadV1(payload: unknown): ShowMarkDownEditorActionDTO {
     const castPayload = payload as Payload_V1;
-    if (castPayload.initialText === undefined || castPayload.submitCallback === undefined) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+    if (
+      castPayload.initialText === undefined ||
+      castPayload.submitCallback === undefined
+    ) {
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;

@@ -2,12 +2,12 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
 export class RestoreCurrentStateBase implements RequestHandler {
-  readonly requestType = 'RESTORE_CURRENT_STATE';
+  readonly requestType = "RESTORE_CURRENT_STATE";
   readonly payloadVersion = 1;
 
   action: () => void = () => {
@@ -18,7 +18,7 @@ export class RestoreCurrentStateBase implements RequestHandler {
     if (version === this.payloadVersion) {
       this.action();
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

@@ -1,6 +1,11 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import { GetAssetUC } from "../../Assets";
-import { HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVerion } from "../Entities";
+import {
+  HostHandlerEntity,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVersion
+} from "../Entities";
 import { CallbackAssetMeta } from "./CallbackAssetDTO";
 
 export type GetAssetMetaAction = (
@@ -62,7 +67,7 @@ class GetAssetMetaHandlerImp extends GetAssetMetaHandler {
       const { assetID, callback } = this.castPayloadV1(payload);
       this.action(assetID, callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

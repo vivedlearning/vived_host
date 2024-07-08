@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -15,7 +15,7 @@ export interface ShowSpinnerActionDTO {
 export type ShowSpinnerAction = (confirmData: ShowSpinnerActionDTO) => void;
 
 export class ShowSpinnerBase implements RequestHandler {
-  readonly requestType = 'SHOW_SPINNER';
+  readonly requestType = "SHOW_SPINNER";
 
   action: ShowSpinnerAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -26,14 +26,22 @@ export class ShowSpinnerBase implements RequestHandler {
       const castPayload = this.castPayloadV1(payload);
       this.action(castPayload);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 
   private castPayloadV1(payload: unknown): ShowSpinnerActionDTO {
     const castPayload = payload as Payload_V1;
-    if (castPayload.message === undefined || castPayload.title === undefined || castPayload.closeCallback === undefined) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+    if (
+      castPayload.message === undefined ||
+      castPayload.title === undefined ||
+      castPayload.closeCallback === undefined
+    ) {
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;

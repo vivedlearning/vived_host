@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -26,7 +26,7 @@ export class SubmitLogBase implements RequestHandler {
       const { sender, message, severity } = this.castPayloadV1(payload);
       this.action(sender, severity, message);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

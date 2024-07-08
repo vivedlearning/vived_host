@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -18,7 +18,7 @@ export interface ShowConfirmActionDTO {
 export type ShowConfirmAction = (confirmData: ShowConfirmActionDTO) => void;
 
 export class ShowConfirmBase implements RequestHandler {
-  readonly requestType = 'SHOW_CONFIRM';
+  readonly requestType = "SHOW_CONFIRM";
 
   action: ShowConfirmAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -29,7 +29,7 @@ export class ShowConfirmBase implements RequestHandler {
       const castPayload = this.castPayloadV1(payload);
       this.action(castPayload);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 
@@ -43,7 +43,11 @@ export class ShowConfirmBase implements RequestHandler {
       castPayload.confirmCallback === undefined ||
       castPayload.cancelCallback === undefined
     ) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;

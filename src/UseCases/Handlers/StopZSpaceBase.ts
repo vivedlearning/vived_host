@@ -1,7 +1,7 @@
 import {
   ActionNotImplemented,
   RequestHandler,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -17,7 +17,7 @@ export class StopZSpaceBase implements RequestHandler {
     if (version === this.payloadVersion) {
       this.action();
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

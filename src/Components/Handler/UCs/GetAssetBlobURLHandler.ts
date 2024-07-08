@@ -4,7 +4,7 @@ import {
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../Entities";
 
 export type GetAssetBlobURLHandlerAction = (
@@ -60,7 +60,7 @@ class GetAssetBlobURLHandlerImp extends GetAssetBlobURLHandler {
       const { assetID, callback } = this.castPayloadV1(payload);
       this.action(assetID, callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

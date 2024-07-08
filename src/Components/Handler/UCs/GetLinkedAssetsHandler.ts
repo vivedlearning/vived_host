@@ -4,7 +4,7 @@ import {
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../Entities";
 import { CallbackAssetMeta } from "./CallbackAssetDTO";
 
@@ -86,7 +86,7 @@ class GetLinkedAssetsHandlerImp extends GetLinkedAssetsHandler {
       const { assetID, callback, type } = this.castPayloadV1(payload);
       this.action(assetID, type, callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

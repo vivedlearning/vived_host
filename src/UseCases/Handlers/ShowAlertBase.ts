@@ -2,7 +2,7 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -16,7 +16,7 @@ export interface ShowAlertActionDTO {
 export type ShowAlertAction = (confirmData: ShowAlertActionDTO) => void;
 
 export class ShowAlertBase implements RequestHandler {
-  readonly requestType = 'SHOW_ALERT';
+  readonly requestType = "SHOW_ALERT";
 
   action: ShowAlertAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -27,7 +27,7 @@ export class ShowAlertBase implements RequestHandler {
       const castPayload = this.castPayloadV1(payload);
       this.action(castPayload);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 
@@ -39,7 +39,11 @@ export class ShowAlertBase implements RequestHandler {
       castPayload.closeButtonLabel === undefined ||
       castPayload.closeCallback === undefined
     ) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;

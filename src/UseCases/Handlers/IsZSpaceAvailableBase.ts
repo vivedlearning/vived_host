@@ -2,14 +2,16 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
-export type IsZSpaceAvailableAction = (callback: (isZSpaceAvailable: boolean) => void) => void;
+export type IsZSpaceAvailableAction = (
+  callback: (isZSpaceAvailable: boolean) => void
+) => void;
 
 export class IsZSpaceAvailableBase implements RequestHandler {
-  readonly requestType = 'IS_ZSPACE_AVAILABLE';
+  readonly requestType = "IS_ZSPACE_AVAILABLE";
 
   action: IsZSpaceAvailableAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -20,14 +22,18 @@ export class IsZSpaceAvailableBase implements RequestHandler {
       const { callback } = this.castPayloadV1(payload);
       this.action(callback);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 
   private castPayloadV1(payload: unknown): Payload_V1 {
     const castPayload = payload as Payload_V1;
     if (!castPayload.callback) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;

@@ -2,14 +2,14 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
 export class OnAppIsReadyBase implements RequestHandler {
-  readonly requestType = 'APP_IS_READY';
+  readonly requestType = "APP_IS_READY";
 
-  action: ()=>void = () => {
+  action: () => void = () => {
     throw new ActionNotImplemented(this.requestType);
   };
 
@@ -17,7 +17,7 @@ export class OnAppIsReadyBase implements RequestHandler {
     if (version === 1) {
       this.action();
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

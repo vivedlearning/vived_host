@@ -1,7 +1,7 @@
 import {
   ActionNotImplemented,
   RequestHandler,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
@@ -16,7 +16,7 @@ export class OnStateCompleteBase implements RequestHandler {
     if (version === 1) {
       this.action();
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 

@@ -56,7 +56,7 @@ class RequestHandlerImp extends HostHandlerEntity {
   }
 }
 
-export class UnsupportedRequestVerion extends Error {
+export class UnsupportedRequestVersion extends Error {
   constructor(requestType: string, version: number) {
     const msg = `Version ${version} of request type ${requestType} is not supported`;
     super(msg);

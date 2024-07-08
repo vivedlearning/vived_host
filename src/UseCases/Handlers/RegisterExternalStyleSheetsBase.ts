@@ -2,14 +2,14 @@ import {
   ActionNotImplemented,
   RequestHandler,
   UnableToParsePayload,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
 
 export type RegisterStylesheetsAction = (stylesheets: string[]) => void;
 
 export class RegisterExternalStyleSheetsBase implements RequestHandler {
-  readonly requestType = 'REGISTER_EXTERNAL_STYLESHEETS';
+  readonly requestType = "REGISTER_EXTERNAL_STYLESHEETS";
 
   action: RegisterStylesheetsAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -20,14 +20,18 @@ export class RegisterExternalStyleSheetsBase implements RequestHandler {
       const { stylesheets } = this.castPayloadV1(payload);
       this.action(stylesheets);
     } else {
-      throw new UnsupportedRequestVerion(this.requestType, version);
+      throw new UnsupportedRequestVersion(this.requestType, version);
     }
   };
 
   private castPayloadV1(payload: unknown): Payload_V1 {
     const castPayload = payload as Payload_V1;
     if (castPayload.stylesheets === undefined) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;
