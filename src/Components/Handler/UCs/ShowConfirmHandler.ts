@@ -1,10 +1,7 @@
-import {
-  ActionNotImplemented,
-  RequestHandler,
-  UnableToParsePayload,
-  UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+
+import { HostHandlerX } from "../../../Entities";
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
 
 export interface ShowConfirmActionDTO {
   title: string;
@@ -17,9 +14,24 @@ export interface ShowConfirmActionDTO {
 
 export type ShowConfirmAction = (confirmData: ShowConfirmActionDTO) => void;
 
-export class ShowConfirmBase implements RequestHandler {
+export abstract class ShowConfirmHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "ShowConfirmHandler";
+
   readonly requestType = "SHOW_CONFIRM";
 
+  abstract action: ShowConfirmAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeShowConfirmHandler(
+  appObject: HostAppObject
+): ShowConfirmHandler {
+  return new ShowConfirmHandlerImp(appObject);
+}
+
+class ShowConfirmHandlerImp extends ShowConfirmHandler {
   action: ShowConfirmAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -53,7 +65,15 @@ export class ShowConfirmBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, ShowConfirmHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

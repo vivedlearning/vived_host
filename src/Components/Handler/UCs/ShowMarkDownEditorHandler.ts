@@ -1,10 +1,7 @@
-import {
-  ActionNotImplemented,
-  RequestHandler,
-  UnableToParsePayload,
-  UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+
+import { HostHandlerX } from "../../../Entities";
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
 
 export interface ShowMarkDownEditorActionDTO {
   initialText: string;
@@ -16,8 +13,24 @@ export type ShowMarkDownEditorAction = (
   confirmData: ShowMarkDownEditorActionDTO
 ) => void;
 
-export class ShowMarkDownEditorBase implements RequestHandler {
+export abstract class ShowMarkDownEditorHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "ShowMarkDownEditorHandler";
+
   readonly requestType = "SHOW_MARKDOWN_EDITOR";
+
+  abstract action: ShowMarkDownEditorAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeShowMarkDownEditorHandler(
+  appObject: HostAppObject
+): ShowMarkDownEditorHandler {
+  return new ShowMarkDownEditorHandlerImp(appObject);
+}
+
+export class ShowMarkDownEditorHandlerImp extends ShowMarkDownEditorHandler{
 
   action: ShowMarkDownEditorAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -48,7 +61,15 @@ export class ShowMarkDownEditorBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, ShowMarkDownEditorHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

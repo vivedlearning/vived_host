@@ -1,10 +1,5 @@
-import {
-  ActionNotImplemented,
-  RequestHandler,
-  UnableToParsePayload,
-  UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
 
 export interface ShowAlertActionDTO {
   title: string;
@@ -15,8 +10,24 @@ export interface ShowAlertActionDTO {
 
 export type ShowAlertAction = (confirmData: ShowAlertActionDTO) => void;
 
-export class ShowAlertBase implements RequestHandler {
+export abstract class ShowAlertHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "ShowAlertHandler";
+
   readonly requestType = "SHOW_ALERT";
+
+  abstract action: ShowAlertAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeShowAlertHandler(
+  appObject: HostAppObject
+): ShowAlertHandler {
+  return new ShowAlertHandlerImp(appObject);
+}
+
+class ShowAlertHandlerImp extends ShowAlertHandler {
 
   action: ShowAlertAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -49,7 +60,15 @@ export class ShowAlertBase implements RequestHandler {
     return castPayload;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, ShowAlertHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }

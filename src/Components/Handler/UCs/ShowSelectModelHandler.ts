@@ -1,18 +1,35 @@
+import { HostHandlerX } from "../../../Entities";
+import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
   ActionNotImplemented,
+  HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
   UnsupportedRequestVersion
-} from "../../Components";
-import { HostHandlerX } from "../../Entities";
+} from "../Entities";
 
 export type ShowSelectModelAction = (
   callback: (modelId: string) => void
 ) => void;
 
-export class ShowSelectModelBase implements RequestHandler {
+export abstract class ShowSelectModelHandler
+  extends HostAppObjectUC
+  implements RequestHandler {
+  static readonly type = "ShowSelectModelHandler";
+
   readonly requestType = "SHOW_SELECT_MODEL";
 
+  abstract action: ShowSelectModelAction;
+  abstract handleRequest: (version: number, payload?: unknown) => void;
+}
+
+export function makeShowSelectModelHandler(
+  appObject: HostAppObject
+): ShowSelectModelHandler {
+  return new ShowSelectModelHandlerImp(appObject);
+}
+
+class ShowSelectModelHandlerImp extends ShowSelectModelHandler {
   action: ShowSelectModelAction = () => {
     throw new ActionNotImplemented(this.requestType);
   };
@@ -39,7 +56,15 @@ export class ShowSelectModelBase implements RequestHandler {
     return castPayload.callback;
   }
 
-  constructor(hostHandler: HostHandlerX) {
+  constructor(appObject: HostAppObject) {
+    super(appObject, ShowSelectModelHandler.type);
+
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
+      this.error("UC added to an entity that does not have HostHandlerEntity");
+      return;
+    }
+
     hostHandler.registerRequestHandler(this);
   }
 }
