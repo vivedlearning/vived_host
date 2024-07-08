@@ -1,7 +1,7 @@
 import {
   RequestHandler,
   makeHostHandlerEntity,
-  UnsupportedRequestVerion
+  UnsupportedRequestVersion
 } from "./HostHandler";
 import { Request } from "../../../Types/PluginBoundary";
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
@@ -67,7 +67,7 @@ describe("Host Handler", () => {
     };
 
     mockRequestHandler.handleRequest.mockImplementation(() => {
-      throw new UnsupportedRequestVerion("A_REQUEST", 2);
+      throw new UnsupportedRequestVersion("A_REQUEST", 2);
     });
 
     hostHandler.handler(request);
