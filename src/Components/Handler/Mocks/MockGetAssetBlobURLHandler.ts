@@ -1,5 +1,5 @@
 import { HostAppObject } from "../../../HostAppObject";
-import { GetAssetBlobURLHandler, GetAssetBlobURLHandlerAction } from "../UCs";
+import { GetAssetBlobURLHandler } from "../UCs";
 
 export class MockGetAssetBlobURLHandler extends GetAssetBlobURLHandler {
   action = jest.fn();

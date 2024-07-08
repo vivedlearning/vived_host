@@ -1,5 +1,5 @@
 import { HostAppObject } from "../../../HostAppObject";
-import { GetAssetFolderURLAction, GetAssetFolderURLHandler } from "../UCs";
+import { GetAssetFolderURLHandler } from "../UCs";
 
 export class MockGetAssetFolderURLHandler extends GetAssetFolderURLHandler {
   action = jest.fn();

@@ -5,17 +5,16 @@ import {
   UnsupportedRequestVerion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
-import { CallbackAssetMeta } from './CallbackAssetDTO';
-
+import { CallbackAssetMeta } from "../../Components/Handler/UCs/CallbackAssetDTO";
 
 export type GetLinkedAssetsAction = (
   assetID: string,
   type: string,
-  callback: (linkedAssets: CallbackAssetMeta[] | undefined) => void,
+  callback: (linkedAssets: CallbackAssetMeta[] | undefined) => void
 ) => void;
 
 export class GetLinkedAssetsBase implements RequestHandler {
-  readonly requestType = 'GET_LINKED_ASSETS';
+  readonly requestType = "GET_LINKED_ASSETS";
 
   action: GetLinkedAssetsAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -33,7 +32,11 @@ export class GetLinkedAssetsBase implements RequestHandler {
   private castPayloadV1(payload: unknown): Payload_V1 {
     const castPayload = payload as Payload_V1;
     if (!castPayload.assetID || !castPayload.callback || !castPayload.type) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;

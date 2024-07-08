@@ -5,12 +5,15 @@ import {
   UnsupportedRequestVerion
 } from "../../Components";
 import { HostHandlerX } from "../../Entities";
-import { CallbackAssetMeta } from './CallbackAssetDTO';
+import { CallbackAssetMeta } from "../../Components/Handler/UCs/CallbackAssetDTO";
 
-export type GetOwnerAssetsMetaAction = (ownerID: string, callback: (assetMetas: CallbackAssetMeta[]) => void) => void;
+export type GetOwnerAssetsMetaAction = (
+  ownerID: string,
+  callback: (assetMetas: CallbackAssetMeta[]) => void
+) => void;
 
 export class GetAssetsForOwnerBase implements RequestHandler {
-  readonly requestType = 'GET_ASSET_FOR_OWNER';
+  readonly requestType = "GET_ASSET_FOR_OWNER";
 
   action: GetOwnerAssetsMetaAction = () => {
     throw new ActionNotImplemented(this.requestType);
@@ -28,7 +31,11 @@ export class GetAssetsForOwnerBase implements RequestHandler {
   private castPayloadV1(payload: unknown): Payload_V1 {
     const castPayload = payload as Payload_V1;
     if (!castPayload.ownerID || !castPayload.callback) {
-      throw new UnableToParsePayload(this.requestType, 1, JSON.stringify(payload));
+      throw new UnableToParsePayload(
+        this.requestType,
+        1,
+        JSON.stringify(payload)
+      );
     }
 
     return castPayload;
