@@ -1,5 +1,4 @@
 export * from './CallbackAssetDTO';
-export * from './GetAssetBlobURLBase';
 export * from './GetAssetFolderURLBase';
 export * from './GetAssetMetaBase';
 export * from './GoToNextStateBase';
