@@ -80,13 +80,13 @@ class GetAssetBlobURLHandlerImp extends GetAssetBlobURLHandler {
   constructor(appObject: HostAppObject) {
     super(appObject, GetAssetBlobURLHandler.type);
 
-    const hostHander = HostHandlerEntity.get(appObject);
-    if (!hostHander) {
+    const hostHandler = HostHandlerEntity.get(appObject);
+    if (!hostHandler) {
       this.error("UC added to an entity that does not have HostHandlerEntity");
       return;
     }
 
-    hostHander.registerRequestHandler(this);
+    hostHandler.registerRequestHandler(this);
   }
 }
 

@@ -5,7 +5,7 @@ export * from "./GoToPreviousStateBase";
 export * from "./HasNextStateBase";
 export * from "./HasPreviousStateBase";
 export * from "./GetAssetsForOwnerBase";
-export * from "./GetLinkedAssetsBase";
+export * from "../../Components/Handler/UCs/GetLinkedAssetsHandler";
 export * from "./NewActivityAssetBase";
 export * from "./OnAppIsReadyBase";
 export * from "./OnStateChangeBase";
