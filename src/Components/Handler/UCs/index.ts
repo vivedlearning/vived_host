@@ -14,3 +14,5 @@ export * from "./NewActivityAssetHandler";
 export * from "./OnAppIsReadyHandler";
 export * from "./OnStateChangeHandler";
 export * from "./OnStateCompleteHandler";
+export * from "./RegisterExternalStyleSheetsHandler";
+export * from "./RestoreCurrentStateHandler";

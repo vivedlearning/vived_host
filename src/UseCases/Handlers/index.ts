@@ -1,7 +1,7 @@
 export * from "../../Components/Handler/UCs/OnAppIsReadyHandler";
 export * from "../../Components/Handler/UCs/OnStateChangeHandler";
 export * from "../../Components/Handler/UCs/OnStateCompleteHandler";
-export * from "./RegisterExternalStyleSheetsBase";
+export * from "../../Components/Handler/UCs/RegisterExternalStyleSheetsHandler";
 export * from "./ShowAlertBase";
 export * from "./ShowConfirmBase";
 export * from "./StartZSpaceBase";
@@ -11,5 +11,5 @@ export * from "./SubmitResultBase";
 export * from "./ShowMarkDownEditorBase";
 export * from "./ShowSelectModelBase";
 export * from "./ShowSpinnerBase";
-export * from "./RestoreCurrentStateBase";
+export * from "../../Components/Handler/UCs/RestoreCurrentStateHandler";
 export * from "./SubmitActivityAssetBase";
