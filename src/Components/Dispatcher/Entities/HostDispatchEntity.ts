@@ -1,28 +1,55 @@
-import { HostAppObject, HostAppObjectEntity } from '../../../HostAppObject';
-import { Handler, Request } from '../../../Types';
+import {
+  HostAppObject,
+  HostAppObjectEntity,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { Handler, Request } from "../../../Types";
 
 export abstract class HostDispatchEntity extends HostAppObjectEntity {
-  static readonly type = 'HostDispatchEntity';
+  static readonly type = "HostDispatchEntity";
 
   abstract appHandlerVersion: number;
   abstract getRequestPayloadVersion(requestType: string): number | undefined;
   abstract registerAppHandler: (appHandler: Handler) => void;
   abstract dispatch: (request: Request) => void;
-  abstract formRequestAndDispatch: (type: string, version: number, payload?: object | undefined) => void;
+  abstract formRequestAndDispatch: (
+    type: string,
+    version: number,
+    payload?: object | undefined
+  ) => void;
 
   static get(appObject: HostAppObject): HostDispatchEntity | undefined {
-    const asset = appObject.getComponent<HostDispatchEntity>(HostDispatchEntity.type);
-    if (!asset) {
+    const component = appObject.getComponent<HostDispatchEntity>(
+      HostDispatchEntity.type
+    );
+    if (!component) {
       appObject.appObjectRepo.submitWarning(
-        'AssetEntity.get',
-        'Unable to find HostDispatchEntity on app object ' + appObject.id,
+        "AssetEntity.get",
+        "Unable to find HostDispatchEntity on app object " + appObject.id
       );
     }
-    return asset;
+    return component;
+  }
+
+  static getByID(
+    id: string,
+    appObjects: HostAppObjectRepo
+  ): HostDispatchEntity | undefined {
+    const appObject = appObjects.get(id);
+    if (!appObject) {
+      appObjects.submitWarning(
+        "AssetEntity.getByID",
+        "Unable to find app object " + id
+      );
+      return;
+    }
+    return HostDispatchEntity.get(appObject);
   }
 }
 
-export function makeHostDispatchEntity(appObject: HostAppObject): HostDispatchEntity {
+export function makeHostDispatchEntity(
+  appObject: HostAppObject
+): HostDispatchEntity {
   return new HostDispatchEntityImp(appObject);
 }
 
@@ -42,7 +69,7 @@ class HostDispatchEntityImp extends HostDispatchEntity {
   };
 
   private getAppHandlerVersion() {
-    const type = 'GET_APP_HANDLER_VERSION';
+    const type = "GET_APP_HANDLER_VERSION";
     const payload = { callback: this.setupVersion };
 
     try {
@@ -63,7 +90,7 @@ class HostDispatchEntityImp extends HostDispatchEntity {
   };
 
   private getPayloadVersions = () => {
-    const type = 'GET_APP_PAYLOAD_VERSION';
+    const type = "GET_APP_PAYLOAD_VERSION";
     const payload = { callback: this.setupPayloadVersions };
     this.formRequestAndDispatch(type, 2, payload);
   };
@@ -74,23 +101,27 @@ class HostDispatchEntityImp extends HostDispatchEntity {
 
   dispatch = (request: Request) => {
     if (!this.appHandler) {
-      this.error('No app handler has been registered');
+      this.error("No app handler has been registered");
       return;
     }
 
     this.appHandler(request);
   };
 
-  formRequestAndDispatch = (type: string, version: number, payload?: object | undefined) => {
+  formRequestAndDispatch = (
+    type: string,
+    version: number,
+    payload?: object | undefined
+  ) => {
     if (!this.appHandler) {
-      this.error('No app handler has been registered');
+      this.error("No app handler has been registered");
       return;
     }
 
     const request: Request = {
       type,
       version,
-      payload,
+      payload
     };
 
     this.appHandler(request);
