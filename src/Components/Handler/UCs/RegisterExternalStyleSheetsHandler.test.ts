@@ -9,20 +9,17 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const logger = jest.fn();
+  appObjects.submitLog = logger;
+
   const uc = makeRegisterExternalStyleSheetsHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, logger };
 }
 
 describe("Register Style Sheets Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action(["a stylesheet"])).toThrowError();
   });
 
   it("Triggers the action for v1", () => {
@@ -56,5 +53,13 @@ describe("Register Style Sheets Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Defaults to logging the sheets", () => {
+    const { uc, logger } = makeTestRig();
+
+    uc.action(["sheet 1"]);
+
+    expect(logger).toBeCalled();
   });
 });

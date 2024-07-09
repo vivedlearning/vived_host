@@ -1,5 +1,12 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
+import { DialogAlertDTO, DialogQueue } from "../../Dialog";
+import {
+  ActionNotImplemented,
+  HostHandlerEntity,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVersion
+} from "../Entities";
 
 export interface ShowAlertActionDTO {
   title: string;
@@ -8,7 +15,7 @@ export interface ShowAlertActionDTO {
   closeCallback: () => void;
 }
 
-export type ShowAlertAction = (confirmData: ShowAlertActionDTO) => void;
+export type ShowAlertAction = (actionDTO: ShowAlertActionDTO) => void;
 
 export abstract class ShowAlertHandler
   extends HostAppObjectUC
@@ -28,9 +35,21 @@ export function makeShowAlertHandler(
 }
 
 class ShowAlertHandlerImp extends ShowAlertHandler {
+  private get dialogQueue() {
+    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
+  }
 
-  action: ShowAlertAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  action: ShowAlertAction = (actionDTO: ShowAlertActionDTO) => {
+    const { closeButtonLabel, closeCallback, message, title } = actionDTO;
+
+    const dialogDTO: DialogAlertDTO = {
+      buttonLabel: closeButtonLabel,
+      message,
+      title,
+      onClose: closeCallback
+    };
+    const alertDialog = this.dialogQueue?.alertDialogFactory(dialogDTO);
+    if (alertDialog) this.dialogQueue?.submitDialog(alertDialog);
   };
 
   handleRequest = (version: number, payload: unknown) => {

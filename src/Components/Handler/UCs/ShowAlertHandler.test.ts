@@ -1,5 +1,6 @@
 import { makeHostHandler } from "../../../Entities";
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { AlertDialogEntity, makeDialogQueue } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import { ShowAlertActionDTO, makeShowAlertHandler } from "./ShowAlertHandler";
 
@@ -9,8 +10,25 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
+  const mockSubmitDialog = jest.fn();
+  dialogQueue.submitDialog = mockSubmitDialog;
+
+  const alertDialog = new AlertDialogEntity(
+    {
+      title: "a title",
+      message: "a message",
+      buttonLabel: "confirm button",
+      onClose: jest.fn()
+    },
+    appObjects.getOrCreate("Alert")
+  );
+
+  const mockAlertFactory = jest.fn().mockReturnValue(alertDialog);
+  dialogQueue.alertDialogFactory = mockAlertFactory;
+
   const uc = makeShowAlertHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockSubmitDialog, mockAlertFactory, alertDialog };
 }
 
 function makeBasicDTO(): ShowAlertActionDTO {
@@ -26,12 +44,6 @@ describe("Show Alert Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action(makeBasicDTO())).toThrowError();
   });
 
   it("Converts the payload into the DTO for the action", () => {
@@ -71,5 +83,28 @@ describe("Show Alert Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Submits a Confirm dialog to the repo", () => {
+    const { mockSubmitDialog, uc, alertDialog } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockSubmitDialog).toBeCalledWith(alertDialog);
+  });
+
+  it("Sets up the Dialog properties", () => {
+    const { mockAlertFactory, uc } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockAlertFactory).toBeCalledWith({
+      title: dto.title,
+      message: dto.message,
+      buttonLabel: dto.closeButtonLabel,
+      onClose: dto.closeCallback
+    });
   });
 });

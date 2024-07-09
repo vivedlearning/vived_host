@@ -1,5 +1,6 @@
 import { makeHostHandler } from "../../../Entities";
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeDialogQueue, MarkDownEditorDialogEntity } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
   ShowMarkDownEditorActionDTO,
@@ -12,8 +13,22 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
+  const editor = new MarkDownEditorDialogEntity(
+    {
+      initialText: "",
+      onConfirm: jest.fn()
+    },
+    appObjects.getOrCreate("editor")
+  );
+
+  const mockEditorFactory = jest.fn().mockReturnValue(editor);
+  dialogQueue.markDownDialogFactory = mockEditorFactory;
+  const mockSubmitDialog = jest.fn();
+  dialogQueue.submitDialog = mockSubmitDialog;
+
   const uc = makeShowMarkDownEditorHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockEditorFactory, editor, mockSubmitDialog };
 }
 
 function makeBasicDTO(
@@ -37,12 +52,6 @@ describe("Show MarkDown Editor Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action(makeBasicDTO())).toThrowError();
   });
 
   it("Converts the payload into the DTO for the action", () => {
@@ -90,5 +99,26 @@ describe("Show MarkDown Editor Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Submits a MarkDown Editor dialog to the repo", () => {
+    const { mockSubmitDialog, uc, editor } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockSubmitDialog).toBeCalledWith(editor);
+  });
+
+  it("Sets up the Dialog properties", () => {
+    const { mockEditorFactory, uc } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockEditorFactory).toBeCalledWith({
+      initialText: dto.initialText,
+      onConfirm: dto.submitCallback
+    });
   });
 });

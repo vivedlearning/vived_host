@@ -23,8 +23,8 @@ export function makeRegisterExternalStyleSheetsHandler(
 class RegisterExternalStyleSheetsHandlerImp extends RegisterExternalStyleSheetsHandler {
   readonly requestType = "REGISTER_EXTERNAL_STYLESHEETS";
 
-  action: RegisterStylesheetsAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  action: RegisterStylesheetsAction = (stylesheets: string[]) => {
+    this.log(`Style sheets: ${stylesheets}`)
   };
 
   handleRequest = (version: number, payload: unknown) => {

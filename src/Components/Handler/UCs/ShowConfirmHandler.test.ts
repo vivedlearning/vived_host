@@ -1,9 +1,9 @@
-import { makeHostHandler } from "../../../Entities";
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { ConfirmDialogEntity, makeDialogQueue } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
-  ShowConfirmActionDTO,
-  makeShowConfirmHandler
+  makeShowConfirmHandler,
+  ShowConfirmActionDTO
 } from "./ShowConfirmHandler";
 
 function makeTestRig() {
@@ -12,8 +12,24 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
+  const confirm = new ConfirmDialogEntity(
+    {
+      message: "msg",
+      title: "title",
+      cancelButtonLabel: "",
+      confirmButtonLabel: ""
+    },
+    appObjects.getOrCreate("Confirm")
+  );
+
+  const mockConfirmFactory = jest.fn().mockReturnValue(confirm);
+  dialogQueue.confirmDialogFactory = mockConfirmFactory;
+  const mockSubmitDialog = jest.fn();
+  dialogQueue.submitDialog = mockSubmitDialog;
+
   const uc = makeShowConfirmHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockConfirmFactory, confirm, mockSubmitDialog };
 }
 
 function makeBasicDTO(): ShowConfirmActionDTO {
@@ -31,12 +47,6 @@ describe("Show Confirm Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action(makeBasicDTO())).toThrowError();
   });
 
   it("Converts the payload into the DTO for the action", () => {
@@ -78,5 +88,30 @@ describe("Show Confirm Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Submits a Confirm dialog to the repo", () => {
+    const { mockSubmitDialog, uc, confirm } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockSubmitDialog).toBeCalledWith(confirm);
+  });
+
+  it("Sets up the Dialog properties", () => {
+    const { mockConfirmFactory, uc } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockConfirmFactory).toBeCalledWith({
+      title: dto.title,
+      message: dto.message,
+      cancelButtonLabel: dto.cancelButtonLabel,
+      confirmButtonLabel: dto.confirmButtonLabel,
+      onCancel: dto.cancelCallback,
+      onConfirm: dto.confirmCallback
+    });
   });
 });

@@ -1,7 +1,9 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeDialogQueue, SpinnerDialogEntity } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
-  makeShowSpinnerHandler, ShowSpinnerActionDTO
+  makeShowSpinnerHandler,
+  ShowSpinnerActionDTO
 } from "./ShowSpinnerHandler";
 
 function makeTestRig() {
@@ -10,8 +12,22 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
+  const spinner = new SpinnerDialogEntity(
+    {
+      message: "msg",
+      title: "title"
+    },
+    appObjects.getOrCreate("Spinner")
+  );
+
+  const mockSpinnerFactory = jest.fn().mockReturnValue(spinner);
+  dialogQueue.spinnerDialogFactory = mockSpinnerFactory;
+  const mockSubmitDialog = jest.fn();
+  dialogQueue.submitDialog = mockSubmitDialog;
+
   const uc = makeShowSpinnerHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockSpinnerFactory, spinner, mockSubmitDialog };
 }
 
 function makeBasicDTO(): ShowSpinnerActionDTO {
@@ -26,12 +42,6 @@ describe("Show Spinner Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action(makeBasicDTO())).toThrowError();
   });
 
   it("Converts the payload into the DTO for the action", () => {
@@ -70,5 +80,35 @@ describe("Show Spinner Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Submits a Spinner dialog to the repo", () => {
+    const { mockSubmitDialog, uc, spinner } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockSubmitDialog).toBeCalledWith(spinner);
+  });
+
+  it("Sets up the Dialog properties", () => {
+    const { mockSpinnerFactory, uc } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(mockSpinnerFactory).toBeCalledWith({
+      title: dto.title,
+      message: dto.message
+    });
+  });
+
+  it("Call callback always", () => {
+    const { uc } = makeTestRig();
+
+    const dto = makeBasicDTO();
+    uc.action(dto);
+
+    expect(dto.closeCallback).toBeCalled();
   });
 });
