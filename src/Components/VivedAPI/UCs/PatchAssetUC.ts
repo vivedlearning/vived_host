@@ -81,7 +81,7 @@ class PatchAssetUCImp extends PatchAssetUC {
         })
         .then((token) => {
           const url = vivedAPI.getEndpointURL(`assets/${id}`);
-          let body: PatchParam = {
+          const body: PatchParam = {
             archived: archived,
             description: description,
             filename: filename,
