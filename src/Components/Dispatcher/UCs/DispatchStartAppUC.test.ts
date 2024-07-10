@@ -10,10 +10,11 @@ function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
+  const element = document.createElement('div');
 
   const uc = makeDispatchStartAppUC(ao);
 
-  return { uc, appObjects, mockDispatcher };
+  return { uc, appObjects, mockDispatcher, element };
 }
 
 describe("Dispatch Start App", () => {
@@ -24,9 +25,9 @@ describe("Dispatch Start App", () => {
   });
 
   it("Dispatches the correct type", () => {
-    const { uc, mockDispatcher } = makeTestRig();
+    const { uc, mockDispatcher, element } = makeTestRig();
 
-    uc.doDispatch();
+    uc.doDispatch(element);
 
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
     expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][0]).toEqual(
@@ -35,12 +36,23 @@ describe("Dispatch Start App", () => {
   });
 
   it("Dispatches the correct version", () => {
-    const { uc, mockDispatcher } = makeTestRig();
+    const { uc, mockDispatcher, element } = makeTestRig();
 
-    uc.doDispatch();
+    uc.doDispatch(element);
 
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
     expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][1]).toEqual(2);
+  });
+
+  it("Dispatches the html element", () => {
+    const { uc, mockDispatcher, element } = makeTestRig();
+
+    uc.doDispatch(element);
+
+    expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
+    const payload = mockDispatcher.formRequestAndDispatch.mock.calls[0][2];
+
+    expect(payload).toEqual({ container: element});
   });
 
   it("Warns if it cannot find the app object when getting by ID", () => {

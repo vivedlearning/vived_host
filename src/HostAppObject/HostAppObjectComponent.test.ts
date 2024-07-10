@@ -1,6 +1,6 @@
 import { HostAppObject, makeAppObject } from "./HostAppObject";
 import { HostAppObjectComponent } from "./HostAppObjectComponent";
-import { makeHostAppObjectRepo } from './HostAppObjectRepo';
+import { makeHostAppObjectRepo } from "./HostAppObjectRepo";
 
 function makeTestRig() {
   const appObjectRepo = makeHostAppObjectRepo();
@@ -170,6 +170,43 @@ describe("App Object Component", () => {
     appObjectComponent.getCachedSingleton<MockComponent>(MockComponent.type);
 
     expect(appObjectComponent.warn).toBeCalled();
+  });
+
+  it("Gets a local component", () => {
+    const { appObjectComponent, appObjectRepo, appObj } = makeTestRig();
+
+    const b1 = new MockComponent(appObj);
+
+    new MockComponent(appObjectRepo.getOrCreate("otherAO"));
+
+    expect(
+      appObjectComponent.getCachedLocalComponent<MockComponent>(
+        MockComponent.type
+      )
+    ).toEqual(b1);
+  });
+
+  it("Caches the local component", () => {
+    const { appObjectComponent, appObj } = makeTestRig();
+
+    const spy = jest.spyOn(appObj, "getComponent");
+
+    new MockComponent(appObj);
+
+    appObjectComponent.getCachedLocalComponent<MockComponent>(
+      MockComponent.type
+    );
+    appObjectComponent.getCachedLocalComponent<MockComponent>(
+      MockComponent.type
+    );
+    appObjectComponent.getCachedLocalComponent<MockComponent>(
+      MockComponent.type
+    );
+    appObjectComponent.getCachedLocalComponent<MockComponent>(
+      MockComponent.type
+    );
+
+    expect(spy).toBeCalledTimes(1);
   });
 });
 

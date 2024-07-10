@@ -8,19 +8,35 @@ export class HostAppObjectComponent {
     return this.appObject.appObjectRepo;
   }
 
-  private cachedSingletons = new Map<string, HostAppObjectComponent>();
+  private cachedComponents = new Map<string, HostAppObjectComponent>();
+
   getCachedSingleton<T extends HostAppObjectComponent>(type: string): T | undefined {
-    if (!this.cachedSingletons.has(type)) {
+    if (!this.cachedComponents.has(type)) {
       const component = this.appObjects.getSingleton(type);
       if (!component) {
         this.warn('Unable to get cached singleton type ' + type);
       } else {
-        this.cachedSingletons.set(type, component);
+        this.cachedComponents.set(type, component);
       }
     }
 
-    return this.cachedSingletons.get(type) as T;
+    return this.cachedComponents.get(type) as T;
   }
+
+  getCachedLocalComponent<T extends HostAppObjectComponent>(type: string): T | undefined {
+    if (!this.cachedComponents.has(type)) {
+      const component = this.appObject.getComponent(type);
+      
+      if (!component) {
+        this.warn('Unable to get local component of type ' + type);
+      } else {
+        this.cachedComponents.set(type, component);
+      }
+    }
+
+    return this.cachedComponents.get(type) as T;
+  }
+
 
   getSingleton<T extends HostAppObjectComponent>(
     type: string,
