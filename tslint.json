@@ -1,8 +1,11 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
-    "max-classes-per-file": false,
-    "no-console": false
+    "no-console": false,
+    "no-unused-expression": [true, "allow-new"],
+    "max-classes-per-file": ["error", 10],
+    "variable-name": [false],
+    "forin": false,
+    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"]
   }
-    
 }

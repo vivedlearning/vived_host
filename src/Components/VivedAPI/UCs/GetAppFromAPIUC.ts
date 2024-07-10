@@ -60,7 +60,7 @@ class GetAppUCImp extends GetAppFromAPIUC {
 
           return jsonRequester(endpointURL, options);
         })
-        .then((resp: GetApp_Response) => {
+        .then((resp: GetAppResponse) => {
           const app = resp.app;
 
           const appDTO: GetAppResponseDTO = {
@@ -84,7 +84,7 @@ class GetAppUCImp extends GetAppFromAPIUC {
   }
 }
 
-export interface GetApp_Response {
+export interface GetAppResponse {
   app: App;
 }
 

@@ -82,10 +82,10 @@ class PatchAssetUCImp extends PatchAssetUC {
         .then((token) => {
           const url = vivedAPI.getEndpointURL(`assets/${id}`);
           const body: PatchParam = {
-            archived: archived,
-            description: description,
-            filename: filename,
-            name: name
+            archived,
+            description,
+            filename,
+            name
           };
 
           const options: RequestJSONOptions = {

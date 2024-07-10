@@ -102,7 +102,6 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
             buttonLabel: "OK",
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,
             title: "Archive Asset Error",
-            onClose: () => {}
           };
           const confirmDialog = dialogQueue.alertDialogFactory(dialogDTO);
           if (confirmDialog) dialogQueue.submitDialog(confirmDialog);

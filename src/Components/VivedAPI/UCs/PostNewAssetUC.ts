@@ -60,8 +60,6 @@ class PostNewAssetUCImp extends PostNewAssetUC {
 
     return new Promise((resolve, reject) => {
       const { description, file, name, ownerID } = data;
-
-      let token: string;
       let assetId: string;
 
       const nameSplits = file.name.split('.');
@@ -74,10 +72,6 @@ class PostNewAssetUCImp extends PostNewAssetUC {
       fileUploader(assetFile)
         .then((_) => {
           return getPlayerAuthToken();
-        })
-        .then((result) => {
-          token = result;
-          return token;
         })
         .then((token) => {
           const postURL = vivedAPI.getEndpointURL('assets');

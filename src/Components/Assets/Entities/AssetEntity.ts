@@ -97,12 +97,12 @@ class AssetImp extends AssetEntity {
     this._memoizedArchived.val = archived;
   }
 
+  private _memoizedFileURL: MemoizedString = new MemoizedString('', this.notifyOnChange);
   private _memoizedFilename: MemoizedString = new MemoizedString('', this.notifyOnChange);
+  
   get filename(): string {
     return this._memoizedFilename.val;
   }
-
-  private _memoizedFileURL: MemoizedString = new MemoizedString('', this.notifyOnChange);
   set filename(name: string) {
     this._memoizedFilename.val = name;
   }

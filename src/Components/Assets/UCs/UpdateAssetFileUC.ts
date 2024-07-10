@@ -95,7 +95,6 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
             buttonLabel: "OK",
             message: `Something went wrong when updating the asset's file. Check the console. ${e.message}`,
             title: "Update Asset File Error",
-            onClose: () => {}
           };
           const confirmDialog = dialogQueue.alertDialogFactory(dialogDTO);
           if (confirmDialog) dialogQueue.submitDialog(confirmDialog);

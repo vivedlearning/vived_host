@@ -4,7 +4,7 @@ import { AlertDialogEntity, DialogAlertDTO } from "../Entities";
 import { AlertDialogPM } from "../PMs";
 
 export function makeAlertFactory(appObjects: HostAppObjectRepo) {
-  return function (data: DialogAlertDTO): AlertDialogEntity {
+  return function alertFactory(data: DialogAlertDTO): AlertDialogEntity {
     const ao = appObjects.getOrCreate(generateUniqueID());
 
     const entity = new AlertDialogEntity(data, ao);
