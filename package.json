@@ -1,5 +1,5 @@
 {
-  "name": "@vived/vivedlearning_host",
+  "name": "@vived/host",
   "version": "3.0.0",
   "description": "Public Host package for the VIVED Learning App system",
   "main": "lib/index.js",
