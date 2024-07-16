@@ -1,8 +1,11 @@
-import { MemoizedBoolean, MemoizedString, ObservableEntity } from '../../../Entities';
-import { HostAppObject, HostAppObjectEntity } from '../../../HostAppObject';
+import {
+  MemoizedBoolean,
+  MemoizedString
+} from "../../../Entities";
+import { HostAppObject, HostAppObjectEntity } from "../../../HostAppObject";
 
 export abstract class AssetEntity extends HostAppObjectEntity {
-  static type = 'AssetEntity';
+  static type = "AssetEntity";
 
   abstract readonly id: string;
 
@@ -44,8 +47,8 @@ export abstract class AssetEntity extends HostAppObjectEntity {
     const asset = appObject.getComponent<AssetEntity>(AssetEntity.type);
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
-        'AssetEntity.get',
-        'Unable to find AssetEntity on app object ' + appObject.id,
+        "AssetEntity.get",
+        "Unable to find AssetEntity on app object " + appObject.id
       );
     }
     return asset;
@@ -61,7 +64,10 @@ class AssetImp extends AssetEntity {
     return this.appObject.id;
   }
 
-  private _memoizedName: MemoizedString = new MemoizedString('', this.notifyOnChange);
+  private _memoizedName: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
   get name(): string {
     return this._memoizedName.val;
   }
@@ -70,7 +76,10 @@ class AssetImp extends AssetEntity {
     this._memoizedName.val = name;
   }
 
-  private _memoizedOwner: MemoizedString = new MemoizedString('', this.notifyOnChange);
+  private _memoizedOwner: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
   get owner(): string {
     return this._memoizedOwner.val;
   }
@@ -79,7 +88,10 @@ class AssetImp extends AssetEntity {
     this._memoizedOwner.val = val;
   }
 
-  private _memoizedDescription: MemoizedString = new MemoizedString('', this.notifyOnChange);
+  private _memoizedDescription: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
   get description(): string {
     return this._memoizedDescription.val;
   }
@@ -88,7 +100,10 @@ class AssetImp extends AssetEntity {
     this._memoizedDescription.val = description;
   }
 
-  private _memoizedArchived: MemoizedBoolean = new MemoizedBoolean(false, this.notifyOnChange);
+  private _memoizedArchived: MemoizedBoolean = new MemoizedBoolean(
+    false,
+    this.notifyOnChange
+  );
   get archived(): boolean {
     return this._memoizedArchived.val;
   }
@@ -97,9 +112,15 @@ class AssetImp extends AssetEntity {
     this._memoizedArchived.val = archived;
   }
 
-  private _memoizedFileURL: MemoizedString = new MemoizedString('', this.notifyOnChange);
-  private _memoizedFilename: MemoizedString = new MemoizedString('', this.notifyOnChange);
-  
+  private _memoizedFileURL: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
+  private _memoizedFilename: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
+
   get filename(): string {
     return this._memoizedFilename.val;
   }
@@ -148,7 +169,7 @@ class AssetImp extends AssetEntity {
     if (existingAsset === undefined) {
       this._linkedAssets.push({
         id,
-        type,
+        type
       });
       this.notifyOnChange();
     }
@@ -163,7 +184,9 @@ class AssetImp extends AssetEntity {
     });
 
     if (foundAsset) {
-      this._linkedAssets = this._linkedAssets.filter((asset) => asset.id !== id);
+      this._linkedAssets = this._linkedAssets.filter(
+        (asset) => asset.id !== id
+      );
       this.notifyOnChange();
     }
   };
@@ -180,7 +203,10 @@ class AssetImp extends AssetEntity {
     return rVal;
   };
 
-  private _memoizedIsFetchingFile: MemoizedBoolean = new MemoizedBoolean(false, this.notifyOnChange);
+  private _memoizedIsFetchingFile: MemoizedBoolean = new MemoizedBoolean(
+    false,
+    this.notifyOnChange
+  );
   get isFetchingFile(): boolean {
     return this._memoizedIsFetchingFile.val;
   }
@@ -195,7 +221,11 @@ class AssetImp extends AssetEntity {
   set fetchError(fetchError: Error | undefined) {
     if (fetchError === undefined && this.fetchError === undefined) return;
 
-    if (fetchError !== undefined && this.fetchError !== undefined && fetchError.message === this.fetchError.message)
+    if (
+      fetchError !== undefined &&
+      this.fetchError !== undefined &&
+      fetchError.message === this.fetchError.message
+    )
       return;
 
     this._fetchError = fetchError;
