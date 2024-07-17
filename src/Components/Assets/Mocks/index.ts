@@ -5,4 +5,5 @@ export * from './MockGetAppAssetsUC';
 export * from './MockGetAssetBlobURLUC';
 export * from './MockGetAssetFileUC';
 export * from './MockGetAssetUC';
+export * from "./MockPrefetchAssets"
 export * from './MockUpdateAssetFileUC';
