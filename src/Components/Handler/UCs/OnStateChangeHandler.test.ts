@@ -1,4 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostStateMachine } from "../../StateMachine";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeOnStateChangeHandler } from "./OnStateChangeHandler";
 
@@ -8,8 +9,12 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const stateMachine = makeHostStateMachine(
+    appObjects.getOrCreate("StateMachine")
+  );
+
   const uc = makeOnStateChangeHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, stateMachine };
 }
 
 describe("On State Change Handler", () => {
@@ -18,12 +23,15 @@ describe("On State Change Handler", () => {
     expect(registerSpy).toBeCalledWith(uc);
   });
 
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
+  it("Sends the state to the state machine", () => {
+    const { uc, stateMachine } = makeTestRig();
 
-    expect(() => uc.action({ foo: "bar" }, [])).toThrowError();
+    uc.action({ foo: "bar" }, ["id1", "id2"], "validation error!");
+
+    expect(stateMachine.lastEditingState).toEqual({ foo: "bar" });
+    expect(stateMachine.lastAssets).toEqual(["id1", "id2"]);
+    expect(stateMachine.validationErrorMessage).toEqual("validation error!");
   });
-
   it("Triggers the action for v1", () => {
     const { uc } = makeTestRig();
     uc.action = jest.fn();
@@ -46,11 +54,7 @@ describe("On State Change Handler", () => {
     };
     uc.handleRequest(2, payload);
 
-    expect(uc.action).toBeCalledWith(
-      { foo: "bar" },
-      [],
-      "Something is wrong"
-    );
+    expect(uc.action).toBeCalledWith({ foo: "bar" }, [], "Something is wrong");
   });
 
   it("Triggers the action for v2 without a validation message", () => {

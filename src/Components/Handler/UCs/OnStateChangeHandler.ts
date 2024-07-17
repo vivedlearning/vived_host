@@ -1,4 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { HostStateMachine } from "../../StateMachine";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -31,8 +32,20 @@ export function makeOnStateChangeHandler(
 }
 
 export class OnStateChangeHandlerImp extends OnStateChangeHandler {
-  action: OnStateChangeAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get stateMachine() {
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
+  }
+
+  action: OnStateChangeAction = (
+    state: object,
+    assets: string[],
+    validationErrorMessage?: string
+  ) => {
+    if (!this.stateMachine) return;
+
+    this.stateMachine.lastEditingState = state;
+    this.stateMachine.lastAssets = assets;
+    this.stateMachine.validationErrorMessage = validationErrorMessage;
   };
 
   handleRequest = (version: number, payload: unknown) => {
