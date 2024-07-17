@@ -1,4 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { HostStateMachine } from "../../StateMachine";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -29,8 +30,21 @@ export function makeHasNextStateHandler(
 }
 
 class HasNextStateHandlerImp extends HasNextStateHandler {
-  action: HasNextStateAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get stateMachine() {
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
+  }
+
+  action: HasNextStateAction = (cb: (hasNextState: boolean) => void) => {
+    if (!this.stateMachine) {
+      cb(false);
+      return;
+    }
+
+    if (this.stateMachine.nextState) {
+      cb(true);
+    } else {
+      cb(false);
+    }
   };
 
   handleRequest = (version: number, payload: unknown) => {
