@@ -1,1 +1,2 @@
-export * from "./HostStateMachine"
+export * from "./HostStateEntity";
+export * from "./HostStateMachine";
