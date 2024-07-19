@@ -1,11 +1,11 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockDuplicateStateUC } from "../Mocks/MockHostStateMachinePM";
+import { makeMockHostStateMachinePM } from "../Mocks/MockHostStateMachinePM";
 import { defaultHostStateMachineVM } from "../PMs";
 import { hostStateMachinePMAdapter } from "./hostStateMachinePMAdater";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const mockPM = makeMockDuplicateStateUC(appObjects);
+  const mockPM = makeMockHostStateMachinePM(appObjects);
   return { appObjects, mockPM };
 }
 

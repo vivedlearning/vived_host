@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeHostStateMachine } from "../Entities";
+import { makeHostStateEntity, makeHostStateMachine } from "../Entities";
 import { DeleteStateUC, makeDeleteStateUC } from "./DeleteStateUC";
 
 function makeTestRig() {
@@ -9,14 +9,8 @@ function makeTestRig() {
   const ao = appObjects.getOrCreate("StateMachine");
   const stateMachine = makeHostStateMachine(ao);
 
-  stateMachine.setStates([
-    {
-      id: "state1",
-      data: { state: "state 1 data" },
-      name: "State 1",
-      assets: []
-    }
-  ]);
+  const state = makeHostStateEntity(appObjects.getOrCreate("state1"));
+  stateMachine.setStates([state]);
   stateMachine.setActiveStateByID("state1");
 
   const uc = makeDeleteStateUC(ao);

@@ -9,14 +9,16 @@ function makeTestRig() {
   const mockGetAssetFile = makeMockGetAssetFileUC(appObjects);
   mockGetAssetFile.getAssetFile.mockResolvedValue(undefined);
 
-
   const uc = makePrefetchAssets(appObjects.getOrCreate("ao"));
 
   const stateMachine = makeHostStateMachine(
     appObjects.getOrCreate("StateMachine")
   );
-  stateMachine.createState("state1", {}, ["id1", "id2"]);
-  stateMachine.createState("state2", {}, ["id3", "id2"]);
+  const state1 = stateMachine.createNewState();
+  state1.assets = ["id1", "id2"];
+
+  const state2 = stateMachine.createNewState();
+  state2.assets = ["id3", "id2"];
 
   return {
     mockGetAssetFile,

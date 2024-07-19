@@ -1,5 +1,10 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { HostStateMachine, StateMachineState } from "../../StateMachine";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import { HostStateMachine } from "../../StateMachine";
 import { GetAssetFileUC } from "./GetAssetFileUC";
 
 export abstract class PrefetchAssetsUC extends HostAppObjectUC {
@@ -33,8 +38,13 @@ class HostAppObjectRepoImp extends PrefetchAssetsUC {
     }
 
     const totalAssetIds = this.stateMachine.states.reduce(
-      (assetIds: string[], state: StateMachineState) => {
-        return assetIds.concat(state.assets);
+      (assetIds: string[], stateID: string) => {
+        const state = this.stateMachine?.getStateByID(stateID);
+        if (state) {
+          return assetIds.concat(state.assets);
+        } else {
+          return [];
+        }
       },
       []
     );

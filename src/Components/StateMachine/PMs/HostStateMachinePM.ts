@@ -47,19 +47,16 @@ class HostStateMachinePMImp extends HostStateMachinePM {
   private onEntityChange = () => {
     if (!this.stateMachine) return;
 
+    const states = this.stateMachine.states.map((stateID) => {
+      const name = this.stateMachine?.getStateByID(stateID)?.name ?? "";
+      return { id: stateID, name };
+    });
+
     const vm: HostStateMachineVM = {
-      activeSlideID: this.stateMachine.activeState
-        ? this.stateMachine.activeState.id
-        : undefined,
-      nextSlideID: this.stateMachine.nextState
-        ? this.stateMachine.nextState.id
-        : undefined,
-      previousSlideID: this.stateMachine.previousState
-        ? this.stateMachine.previousState.id
-        : undefined,
-      states: this.stateMachine.states.map((state) => {
-        return { id: state.id, name: state.name };
-      })
+      activeSlideID: this.stateMachine.activeState,
+      nextSlideID: this.stateMachine.nextState,
+      previousSlideID: this.stateMachine.previousState,
+      states
     };
 
     this.doUpdateView(vm);

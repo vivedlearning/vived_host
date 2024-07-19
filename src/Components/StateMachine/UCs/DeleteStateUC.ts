@@ -30,7 +30,7 @@ class DeleteStateUCImp extends DeleteStateUC {
   deleteState = (id: string): void => {
     if (!this.stateMachine) return;
 
-    const state = this.stateMachine.retrieveState(id);
+    const state = this.stateMachine.getStateByID(id);
     if (this.stateMachine.hasState(id)) {
       this.stateMachine.deleteState(id);
     } else {
@@ -41,7 +41,6 @@ class DeleteStateUCImp extends DeleteStateUC {
 
   constructor(appObject: HostAppObject) {
     super(appObject, DeleteStateUC.type);
-
     this.appObjects.registerSingleton(this);
   }
 }

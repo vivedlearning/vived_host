@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { HostStateMachinePM, HostStateMachineVM } from "../PMs";
+import { HostStateMachinePM } from "../PMs";
 
 export class MockHostStateMachinePM extends HostStateMachinePM {
   vmsAreEqual = jest.fn();
@@ -9,7 +9,7 @@ export class MockHostStateMachinePM extends HostStateMachinePM {
   }
 }
 
-export function makeMockDuplicateStateUC(appObjects: HostAppObjectRepo) {
+export function makeMockHostStateMachinePM(appObjects: HostAppObjectRepo) {
   return new MockHostStateMachinePM(
     appObjects.getOrCreate("MockHostStateMachinePM")
   );

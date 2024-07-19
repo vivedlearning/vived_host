@@ -1,5 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { HostStateMachine, makeHostStateMachine, StateMachineState } from "./HostStateMachine";
+import { makeHostStateEntity } from "./HostStateEntity";
+import { HostStateMachine, makeHostStateMachine } from "./HostStateMachine";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -12,8 +13,8 @@ function makeTestRig() {
   stateMachine.addChangeObserver(observer);
 
   stateMachine.setStates([
-    { id: "state1", name: "State 1", data: { some: "State" }, assets: [] },
-    { id: "state2", name: "State 2", data: { some: "Other State" }, assets: [] }
+    makeHostStateEntity(appObjects.getOrCreate("state1")),
+    makeHostStateEntity(appObjects.getOrCreate("state2"))
   ]);
 
   return { stateMachine, observer, appObjects, registerSingletonSpy };
@@ -43,28 +44,19 @@ describe("State Machine", () => {
     const { stateMachine, observer } = makeTestRig();
     observer.mockClear();
 
-    const newState = stateMachine.createState(
-      "New Slide",
-      { some: "State" },
-      []
-    );
+    const newState = stateMachine.createNewState();
 
     expect(newState.id).not.toBeFalsy();
-    expect(newState.name).toEqual("New Slide");
-    expect(newState.data).toEqual({ some: "State" });
+
     expect(stateMachine.states).toHaveLength(3);
-    expect(stateMachine.states[2]).toEqual(newState);
+    expect(stateMachine.states[2]).toEqual(newState.id);
     expect(observer).toBeCalled();
   });
 
   it("Retrieves a state", () => {
     const { stateMachine } = makeTestRig();
-    const newState = stateMachine.createState(
-      "New Slide",
-      { some: "State" },
-      []
-    );
-    const retrievedStateResult = stateMachine.retrieveState(newState.id);
+    const newState = stateMachine.createNewState();
+    const retrievedStateResult = stateMachine.getStateByID(newState.id);
 
     expect(retrievedStateResult).toEqual(newState);
   });
@@ -72,41 +64,8 @@ describe("State Machine", () => {
   it("Returns undefined if an unknowns state is requested", () => {
     const { stateMachine } = makeTestRig();
 
-    const retrievedStateResult = stateMachine.retrieveState("unknownID");
+    const retrievedStateResult = stateMachine.getStateByID("unknownID");
     expect(retrievedStateResult).toBeUndefined();
-  });
-
-  it("Updates a state", () => {
-    const { stateMachine, observer } = makeTestRig();
-    observer.mockClear();
-
-    const updatedState: StateMachineState = {
-      id: "state1",
-      name: "Renamed State 1",
-      data: { some: "New Data" },
-      assets: []
-    };
-    stateMachine.updateState(updatedState);
-
-    const retrievedStateResult = stateMachine.retrieveState("state1");
-
-    expect(retrievedStateResult).toEqual(updatedState);
-    expect(observer).toBeCalled();
-  });
-
-  it("Does not notify if an unknown state is updated", () => {
-    const { stateMachine, observer } = makeTestRig();
-    observer.mockClear();
-
-    const updatedState: StateMachineState = {
-      id: "some state",
-      name: "Renamed State 1",
-      data: { some: "New Data" },
-      assets: []
-    };
-    stateMachine.updateState(updatedState);
-
-    expect(observer).not.toBeCalled();
   });
 
   it("Deletes a state", () => {
@@ -117,6 +76,19 @@ describe("State Machine", () => {
 
     expect(stateMachine.states).toHaveLength(1);
     expect(observer).toBeCalled();
+  });
+
+  it("Disposes the State's AO on delete", () => {
+    const { stateMachine } = makeTestRig();
+
+    const stateAO = stateMachine.getStateByID("state1")?.appObject;
+    expect(stateAO).not.toBeUndefined();
+
+    stateAO!.dispose = jest.fn();
+
+    stateMachine.deleteState("state1");
+
+    expect(stateAO!.dispose).toBeCalled();
   });
 
   it("Does not notify is a unknown state is deleted", () => {
@@ -142,7 +114,7 @@ describe("State Machine", () => {
 
     stateMachine.setActiveStateByID("state1");
 
-    expect(stateMachine.activeState?.id).toEqual("state1");
+    expect(stateMachine.activeState).toEqual("state1");
     expect(observer).toBeCalled();
   });
 
@@ -190,7 +162,7 @@ describe("State Machine", () => {
 
     stateMachine.setActiveStateByID("state2");
 
-    expect(stateMachine.previousState?.id).toEqual("state1");
+    expect(stateMachine.previousState).toEqual("state1");
 
     stateMachine.clearActiveState();
 
@@ -204,7 +176,7 @@ describe("State Machine", () => {
 
     stateMachine.setActiveStateByID("state1");
 
-    expect(stateMachine.nextState?.id).toEqual("state2");
+    expect(stateMachine.nextState).toEqual("state2");
 
     stateMachine.setActiveStateByID("state2");
 

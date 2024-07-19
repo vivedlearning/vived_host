@@ -2,7 +2,8 @@ import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import {
   makeHostStateEntity,
   ChallengeResponse,
-  StateDTO
+  StateDTO,
+  HostStateEntity
 } from "./HostStateEntity";
 
 function makeTestRig() {
@@ -243,5 +244,10 @@ describe("Host State Entity", () => {
     entity.appID = "App1";
 
     expect(observer).toBeCalledTimes(1);
+  });
+
+  it("Gets by ID", () => {
+    const { appObjects, entity } = makeTestRig();
+    expect(HostStateEntity.get("State1", appObjects)).toEqual(entity);
   });
 });

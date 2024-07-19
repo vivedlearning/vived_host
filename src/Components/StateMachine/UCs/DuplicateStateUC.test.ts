@@ -1,5 +1,10 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeHostStateMachine } from "../Entities";
+import {
+  ChallengeResponse,
+  HostStateEntity,
+  makeHostStateEntity,
+  makeHostStateMachine
+} from "../Entities";
 import { DuplicateStateUC, makeDuplicateStateUC } from "./DuplicateStateUC";
 
 function makeTestRig() {
@@ -9,14 +14,14 @@ function makeTestRig() {
   const ao = appObjects.getOrCreate("StateMachine");
   const stateMachine = makeHostStateMachine(ao);
 
-  stateMachine.setStates([
-    {
-      id: "state1",
-      data: { state: "state 1 data" },
-      name: "State 1",
-      assets: []
-    }
-  ]);
+  const state = makeHostStateEntity(appObjects.getOrCreate("state1"));
+  state.appID = "anApp";
+  state.assets = ["asset1"];
+  state.name = "State 1";
+  state.expectedResponse = ChallengeResponse.PROGRESS;
+  state.setStateData({ foo: "bar" });
+
+  stateMachine.setStates([state]);
   stateMachine.setActiveStateByID("state1");
 
   const uc = makeDuplicateStateUC(ao);
@@ -57,10 +62,16 @@ describe("Duplicate State UC", () => {
 
     uc.duplicateState("state1");
 
-    const copiedState = stateMachine.states[1];
-    expect(copiedState.data).toEqual({ state: "state 1 data" });
-    expect(copiedState.name).toEqual("State 1 Copy");
-    expect(copiedState.id).not.toEqual("state1");
+    const duplicatedID = stateMachine.states[1];
+    const copiedState = stateMachine.getStateByID(duplicatedID);
+    expect(copiedState).not.toBeUndefined();
+
+    expect(copiedState?.id).not.toEqual("state1");
+    expect(copiedState?.stateData).toEqual({ foo: "bar" });
+    expect(copiedState?.name).toEqual("State 1 Copy");
+    expect(copiedState?.appID).toEqual("anApp");
+    expect(copiedState?.assets).toEqual(["asset1"]);
+    expect(copiedState?.expectedResponse).toEqual(ChallengeResponse.PROGRESS);
   });
 
   it("Logs an warning if a bad state is passed in", () => {

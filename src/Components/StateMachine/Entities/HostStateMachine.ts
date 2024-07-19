@@ -3,33 +3,20 @@ import {
   getSingletonComponent,
   HostAppObject,
   HostAppObjectEntity,
+  HostAppObjectEntityRepo,
   HostAppObjectRepo
 } from "../../../HostAppObject";
 import { generateUniqueID } from "../../../Utilities";
-
-export type OnStateMachineChange = () => void;
-
-export interface StateMachineState {
-  id: string;
-  name: string;
-  data: object;
-  assets: string[];
-}
-
-export interface StateMachineStringState {
-  id: string;
-  name: string;
-  data: string;
-}
+import { HostStateEntity, makeHostStateEntity } from "./HostStateEntity";
 
 export abstract class HostStateMachine extends HostAppObjectEntity {
   static type = "HostStateMachine";
 
-  abstract states: StateMachineState[];
+  abstract states: string[];
 
-  abstract activeState: StateMachineState | undefined;
-  abstract previousState: StateMachineState | undefined;
-  abstract nextState: StateMachineState | undefined;
+  abstract activeState: string | undefined;
+  abstract previousState: string | undefined;
+  abstract nextState: string | undefined;
 
   abstract isAuthoring: boolean;
 
@@ -39,18 +26,15 @@ export abstract class HostStateMachine extends HostAppObjectEntity {
 
   abstract setActiveStateByID: (id: string) => void;
   abstract clearActiveState: () => void;
-  abstract setStates: (states: StateMachineState[]) => void;
-  abstract setStatesFromString: (states: StateMachineStringState[]) => void;
-  abstract createState: (
-    name: string,
-    data: object,
-    assets: string[]
-  ) => StateMachineState;
-  abstract retrieveState: (id: string) => StateMachineState | undefined;
-  abstract updateState: (state: StateMachineState) => void;
+  abstract setStates: (states: HostStateEntity[]) => void;
+  // abstract setStatesFromString: (states: HostStateEntity[]) => void;
+  abstract createNewState: () => HostStateEntity;
+  abstract getStateByID: (id: string) => HostStateEntity | undefined;
+  // abstract updateState: (state: HostStateEntity) => void;
   abstract deleteState: (id: string) => void;
   abstract getStateIndex: (id: string) => number | undefined;
   abstract hasState: (id: string) => boolean;
+  abstract stateFactory: (id: string) => HostStateEntity;
 
   static get(appObjects: HostAppObjectRepo) {
     return getSingletonComponent<HostStateMachine>(
@@ -67,22 +51,23 @@ export function makeHostStateMachine(
 }
 
 class HostStateMachineImp extends HostStateMachine {
-  private _states: StateMachineState[] = [];
+  private _states: HostStateEntity[] = [];
+
   get states() {
-    return this._states.map((state) => ({ ...state }));
+    return this._states.map((state) => state.id);
   }
 
-  private _activeState: StateMachineState | undefined;
+  private _activeState: string | undefined;
   get activeState() {
     return this._activeState;
   }
 
-  private _previousState: StateMachineState | undefined;
+  private _previousState: string | undefined;
   get previousState() {
     return this._previousState;
   }
 
-  private _nextState: StateMachineState | undefined;
+  private _nextState: string | undefined;
   get nextState() {
     return this._nextState;
   }
@@ -141,8 +126,8 @@ class HostStateMachineImp extends HostStateMachine {
 
     if (!state) return;
 
-    if (state.id === this._activeState?.id) return;
-    this._activeState = state;
+    if (state.id === this._activeState) return;
+    this._activeState = state.id;
 
     const index = this.getStateIndex(id);
 
@@ -156,13 +141,13 @@ class HostStateMachineImp extends HostStateMachine {
     const nextIndex = index + 1;
 
     if (prevIndex >= 0) {
-      this._previousState = this._states[prevIndex];
+      this._previousState = this._states[prevIndex].id;
     } else {
       this._previousState = undefined;
     }
 
     if (nextIndex < this._states.length) {
-      this._nextState = this._states[nextIndex];
+      this._nextState = this._states[nextIndex].id;
     } else {
       this._nextState = undefined;
     }
@@ -179,63 +164,26 @@ class HostStateMachineImp extends HostStateMachine {
     this.notifyOnChange();
   };
 
-  setStates = (states: StateMachineState[]): void => {
-    this._states = states.map((state) => ({ ...state }));
+  setStates = (states: HostStateEntity[]): void => {
+    this._states = states;
     this.notifyOnChange();
   };
 
-  setStatesFromString = (states: StateMachineStringState[]): void => {
-    this._states = states.map((state) => {
-      const { data, id, name } = state;
-
-      const dataObject = JSON.parse(data);
-
-      const rVal: StateMachineState = {
-        id,
-        name,
-        data: dataObject,
-        assets: []
-      };
-
-      return rVal;
-    });
-    this.notifyOnChange();
+  stateFactory = (id: string): HostStateEntity => {
+    const ao = this.appObjects.getOrCreate(id);
+    return makeHostStateEntity(ao);
   };
 
-  createState = (
-    name: string,
-    data: object,
-    assets: string[]
-  ): StateMachineState => {
-    const newState: StateMachineState = {
-      id: generateUniqueID(),
-      name,
-      data,
-      assets
-    };
+  createNewState = (): HostStateEntity => {
+    const newState = this.stateFactory(generateUniqueID());
 
     this._states.push(newState);
     this.notifyOnChange();
-    return { ...newState };
+    return newState;
   };
 
-  retrieveState = (id: string): StateMachineState | undefined => {
+  getStateByID = (id: string): HostStateEntity | undefined => {
     return this.findStateByID(id);
-  };
-
-  updateState = (updatedState: StateMachineState): void => {
-    let found = false;
-
-    this._states.forEach((state, i) => {
-      if (state.id === updatedState.id) {
-        this._states[i] = { ...updatedState };
-        found = true;
-      }
-    });
-
-    if (found) {
-      this.notifyOnChange();
-    }
   };
 
   deleteState = (id: string): void => {
@@ -244,6 +192,9 @@ class HostStateMachineImp extends HostStateMachine {
     if (index === undefined) {
       return;
     }
+
+    const state = this.getStateByID(id);
+    state?.appObject.dispose();
 
     this._states.splice(index, 1);
     this.notifyOnChange();
@@ -265,7 +216,7 @@ class HostStateMachineImp extends HostStateMachine {
     }
   };
 
-  private findStateByID(id: string): StateMachineState | undefined {
+  private findStateByID(id: string): HostStateEntity | undefined {
     for (const state of this._states) {
       if (state.id === id) {
         return state;

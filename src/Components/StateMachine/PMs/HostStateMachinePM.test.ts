@@ -1,4 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostStateEntity } from "../Entities";
 import { makeHostStateMachine } from "../Entities/HostStateMachine";
 import {
   HostStateMachinePM,
@@ -13,11 +14,16 @@ function makeTestRig() {
   const ao = appObjects.getOrCreate("AO");
   const stateMachine = makeHostStateMachine(ao);
 
-  stateMachine.setStates([
-    { id: "state1", data: { state: "Data1" }, name: "State 1", assets: [] },
-    { id: "state2", data: { state: "Data2" }, name: "State 2", assets: [] },
-    { id: "state3", data: { state: "Data3" }, name: "State 3", assets: [] }
-  ]);
+  const state1 = makeHostStateEntity(appObjects.getOrCreate("state1"));
+  state1.name = "State 1";
+
+  const state2 = makeHostStateEntity(appObjects.getOrCreate("state2"));
+  state2.name = "State 2";
+
+  const state3 = makeHostStateEntity(appObjects.getOrCreate("state3"));
+  state3.name = "State 3";
+
+  stateMachine.setStates([state1, state2, state3]);
   stateMachine.setActiveStateByID("state2");
 
   const pm = makeHostStateMachinePM(ao);

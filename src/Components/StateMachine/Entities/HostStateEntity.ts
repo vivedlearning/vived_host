@@ -1,5 +1,9 @@
 import { MemoizedString } from "../../../Entities";
-import { HostAppObject, HostAppObjectEntity } from "../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectEntity,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
 
 export enum ChallengeResponse {
   NONE = "NONE",
@@ -29,10 +33,15 @@ export abstract class HostStateEntity extends HostAppObjectEntity {
   abstract expectedResponse: ChallengeResponse | undefined;
   abstract appID: string;
   abstract getDTO(): StateDTO;
-  abstract setDTO(dto: StateDTO):void;
+  abstract setDTO(dto: StateDTO): void;
 
   abstract get stateData(): object;
   abstract setStateData(val: object, checkForChange?: boolean): void;
+
+  static get(id: string, appObjects: HostAppObjectRepo) {
+    const ao = appObjects.get(id);
+    return ao?.getComponent<HostStateEntity>(HostStateEntity.type);
+  }
 }
 
 export function makeHostStateEntity(appObject: HostAppObject): HostStateEntity {
@@ -40,7 +49,6 @@ export function makeHostStateEntity(appObject: HostAppObject): HostStateEntity {
 }
 
 class HostStateEntityImp extends HostStateEntity {
-	
   get id(): string {
     return this.appObject.id;
   }
@@ -113,8 +121,8 @@ class HostStateEntityImp extends HostStateEntity {
     this.notifyOnChange();
   }
 
-	getDTO(): StateDTO {
-		return {
+  getDTO(): StateDTO {
+    return {
       id: this.id,
       assets: [...this._assets],
       data: this._data,
@@ -122,10 +130,10 @@ class HostStateEntityImp extends HostStateEntity {
       response: this._expectedResponse,
       appID: this.appID
     };
-	}
+  }
 
-	setDTO(dto: StateDTO): void {
-		if (dto.id !== this.id) {
+  setDTO(dto: StateDTO): void {
+    if (dto.id !== this.id) {
       this.warn("DTO id does not match my ID. Skipping");
       return;
     }
@@ -140,7 +148,7 @@ class HostStateEntityImp extends HostStateEntity {
     } else {
       this.expectedResponse = undefined;
     }
-	}
+  }
 
   private memoisedAppID = new MemoizedString("", this.notifyOnChange);
   get appID(): string {

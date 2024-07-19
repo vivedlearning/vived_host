@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { HostStateMachine } from "../Entities";
 
 export abstract class DuplicateStateUC extends HostAppObjectUC {
@@ -30,17 +35,17 @@ class DuplicateStateUCImp extends DuplicateStateUC {
   duplicateState = (id: string): void => {
     if (!this.stateMachine) return;
 
-    const state = this.stateMachine.retrieveState(id);
+    const state = this.stateMachine.getStateByID(id);
     if (!state) {
       this.warn("Unable to find state to duplicate");
       return;
     }
 
-    this.stateMachine.createState(
-      state.name + " Copy",
-      state.data,
-      state.assets
-    );
+    const newState = this.stateMachine.createNewState();
+    const dto = state.getDTO();
+    dto.id = newState.id;
+    dto.name = dto.name + " Copy";
+    newState.setDTO(dto);
   };
 
   constructor(appObject: HostAppObject) {
