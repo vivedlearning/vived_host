@@ -1,5 +1,8 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeHostStateMachine } from "../../StateMachine";
+import {
+  makeHostStateMachine,
+  makeMockHostStateEntity
+} from "../../StateMachine";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeHasNextStateHandler } from "./HasNextStateHandler";
 
@@ -13,8 +16,8 @@ function makeTestRig() {
     appObjects.getOrCreate("StateMachine")
   );
   stateMachine.setStates([
-    { id: "state1", name: "State 1", data: { some: "State" }, assets: [] },
-    { id: "state2", name: "State 2", data: { some: "Other State" }, assets: [] }
+    makeMockHostStateEntity("state1", appObjects),
+    makeMockHostStateEntity("state2", appObjects)
   ]);
 
   const uc = makeHasNextStateHandler(ao);

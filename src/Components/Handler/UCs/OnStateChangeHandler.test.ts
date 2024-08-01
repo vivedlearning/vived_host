@@ -32,6 +32,7 @@ describe("On State Change Handler", () => {
     expect(stateMachine.lastAssets).toEqual(["id1", "id2"]);
     expect(stateMachine.validationErrorMessage).toEqual("validation error!");
   });
+
   it("Triggers the action for v1", () => {
     const { uc } = makeTestRig();
     uc.action = jest.fn();
@@ -44,7 +45,7 @@ describe("On State Change Handler", () => {
     expect(uc.action).toBeCalledWith({ foo: "bar" }, []);
   });
 
-  it("Triggers the action for v2 with  a validation messag", () => {
+  it("Triggers the action for v2 with  a validation message", () => {
     const { uc } = makeTestRig();
     uc.action = jest.fn();
 

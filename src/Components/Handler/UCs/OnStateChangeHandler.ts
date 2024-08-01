@@ -1,7 +1,6 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import { HostStateMachine } from "../../StateMachine";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
@@ -11,7 +10,8 @@ import {
 export type OnStateChangeAction = (
   state: object,
   assets: string[],
-  validationErrorMessage?: string
+  validationErrorMessage?: string,
+  responseType?: string
 ) => void;
 
 export abstract class OnStateChangeHandler
@@ -39,7 +39,8 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
   action: OnStateChangeAction = (
     state: object,
     assets: string[],
-    validationErrorMessage?: string
+    validationErrorMessage?: string,
+    responseType?: string
   ) => {
     if (!this.stateMachine) return;
 
@@ -134,4 +135,11 @@ type Payload_V3 = {
   stateObject: object;
   assets: string[];
   validationErrorMessage?: string;
+};
+
+type Payload_V4 = {
+  stateObject: object;
+  assets: string[];
+  validationErrorMessage?: string;
+  responseType: string;
 };

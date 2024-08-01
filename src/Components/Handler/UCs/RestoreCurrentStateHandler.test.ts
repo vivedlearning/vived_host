@@ -1,4 +1,3 @@
-import { makeHostHandler } from "../../../Entities";
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeRestoreCurrentStateHandler } from "./RestoreCurrentStateHandler";
