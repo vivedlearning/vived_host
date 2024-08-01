@@ -1,1 +1,2 @@
-export * from "./hostStateMachinePMAdater";
+export * from "./hostStateMachinePMAdapter";
+export * from "./isEditingPMAdapter";

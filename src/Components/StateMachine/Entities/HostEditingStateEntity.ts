@@ -1,31 +1,21 @@
-import { MemoizedString } from "../../../Entities";
+import { MemoizedBoolean, MemoizedString } from "../../../Entities";
 import {
   getSingletonComponent,
   HostAppObject,
   HostAppObjectEntity,
   HostAppObjectRepo
 } from "../../../HostAppObject";
-import { HostStateEntity } from "./HostStateEntity";
-
-export enum ChallengeResponse {
-  NONE = "NONE",
-  SCORE = "SCORE",
-  HIT = "HIT",
-  MULTIHIT = "MULTIHIT",
-  PROGRESS = "PROGRESS",
-  QUALITY = "QUALITY"
-}
+import { HostStateEntity, StateDTO } from "./HostStateEntity";
+import { HostStateMachine } from "./HostStateMachine";
 
 export abstract class HostEditingStateEntity extends HostAppObjectEntity {
   static type = "HostEditingStateEntity";
 
-  abstract isEditing: boolean;
-  abstract id: string;
-  abstract name: string;
-  abstract assets: string[];
-  abstract expectedResponse: ChallengeResponse | undefined;
-  abstract appID: string;
-  abstract stateData: object;
+  abstract get isEditing(): boolean;
+  abstract get isNewState(): boolean;
+  abstract get editingState(): HostStateEntity | undefined;
+  abstract get somethingHasChanged(): boolean;
+  abstract stateValidationMessage?: string;
 
   abstract startNewState(): void;
   abstract startEditing(state: HostStateEntity): void;
@@ -47,94 +37,128 @@ export function makeHostEditingStateEntity(
 }
 
 class HostEditingStateEntityImp extends HostEditingStateEntity {
-  isEditing: boolean = false;
-
-  id = "";
-  appID = "";
-
-  private memoizedName = new MemoizedString("", this.notifyOnChange);
-  get name(): string {
-    return this.memoizedName.val;
+  private _isNewState = false;
+  get isNewState(): boolean {
+    return this._isNewState;
   }
-  set name(val: string) {
-    this.memoizedName.val = val;
+  private _stateValidationMessage?: string | undefined;
+
+  get stateValidationMessage(): string | undefined {
+    return this._stateValidationMessage;
   }
 
-  private _data = {};
-  get stateData(): object {
-    return this._data;
-  }
-  set stateData(val: object) {
-    const currentData = JSON.stringify(this._data);
-    const newData = JSON.stringify(val);
+  set stateValidationMessage(val: string | undefined) {
+    if (this._stateValidationMessage === val) return;
 
-    if (currentData === newData) {
-      return;
-    }
-
-    this._data = val;
+    this._stateValidationMessage = val;
     this.notifyOnChange();
   }
 
-  private _assets: string[] = [];
-  get assets() {
-    return [...this._assets];
+  private get hostStateMachine() {
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
   }
-  set assets(val: string[]) {
-    if (val.length !== this._assets.length) {
-      this._assets = val;
-      this.notifyOnChange();
-      return;
-    }
 
-    let somethingHasChanged = false;
-    val.forEach((newAsset, i) => {
-      const existingAsset = this._assets[i];
-      if (existingAsset !== newAsset) {
-        somethingHasChanged = true;
+  private memoizedSomethingHasChanged = new MemoizedBoolean(
+    false,
+    this.notifyOnChange
+  );
+  get somethingHasChanged(): boolean {
+    return this.memoizedSomethingHasChanged.val;
+  }
+
+  private checkForChange = () => {
+    if (!this._editingState) return false;
+    if (!this.originalStateData) return true;
+
+    if (this._editingState.name !== this.originalStateData.name) return true;
+
+    if (this._editingState.expectedResponse !== this.originalStateData.response)
+      return true;
+
+    if (
+      this._editingState.assets.length !== this.originalStateData.assets.length
+    )
+      return true;
+    let assetsHaveChanged = false;
+    this._editingState.assets.forEach((currentAssetID, i) => {
+      const originalAssetId = this.originalStateData!.assets[i];
+      if (originalAssetId !== currentAssetID) {
+        assetsHaveChanged = true;
       }
     });
 
-    if (!somethingHasChanged) {
-      return;
+    if (assetsHaveChanged) {
+      return true;
     }
 
-    this._assets = val;
+    const currentDataString = JSON.stringify(this._editingState.stateData);
+    const originalData = JSON.stringify(this.originalStateData?.data ?? "");
+    if (currentDataString !== originalData) return true;
+
+    return false;
+  };
+
+  private onStateEntityChange = (): void => {
+    this.memoizedSomethingHasChanged.val = this.checkForChange();
+  };
+
+  get isEditing(): boolean {
+    return this._editingState !== undefined;
+  }
+
+  private _editingState?: HostStateEntity;
+
+  get editingState() {
+    return this._editingState;
+  }
+
+  private originalStateData?: StateDTO;
+
+  startNewState = (): void => {
+    if (!this.hostStateMachine) return;
+
+    this.originalStateData = undefined;
+    this._isNewState = true;
+    this._editingState = this.hostStateMachine.createNewState();
+    this._editingState.addChangeObserver(this.onStateEntityChange);
+    this.memoizedSomethingHasChanged.val = true;
+  };
+
+  startEditing = (state: HostStateEntity): void => {
+    this._editingState = state;
+
+    this.originalStateData = state.getDTO();
+    this._editingState.addChangeObserver(this.onStateEntityChange);
+
     this.notifyOnChange();
-  }
+  };
 
-  private _expectedResponse: ChallengeResponse | undefined;
-  get expectedResponse() {
-    return this._expectedResponse;
-  }
-  set expectedResponse(val: ChallengeResponse | undefined) {
-    if (val === this._expectedResponse) return;
+  cancelEditState = (): void => {
+    if (!this._editingState) return;
 
-    this._expectedResponse = val;
+    if (this.originalStateData) {
+      this._editingState.setDTO(this.originalStateData);
+    } else {
+      this.hostStateMachine?.deleteState(this._editingState.id);
+    }
+
+    this.resetInternalState();
+  };
+
+  finishEditing = (): void => {
+    this.resetInternalState();
+  };
+
+  private resetInternalState = () => {
+    if (!this._editingState) return;
+
+    this._isNewState = false;
+    this._editingState.removeChangeObserver(this.onStateEntityChange);
+    this._stateValidationMessage = undefined;
+    this._editingState = undefined;
+    this.memoizedSomethingHasChanged.val = false;
     this.notifyOnChange();
-  }
-  
-  startNewState(): void {
-    throw new Error("Method not implemented.");
-  }
-
-  startEditing(state: HostStateEntity): void {
-    this.id = state.id;
-    this.name = state.name;
-    this.expectedResponse = state.expectedResponse;
-    this.appID = state.appID;
-    this.assets = [...state.assets];
-    this.stateData = {...state.stateData}
-    this.isEditing = true;
-  }
-
-  cancelEditState(): void {
-    throw new Error("Method not implemented.");
-  }
-
-  finishEditing(): void {
-    throw new Error("Method not implemented.");
-  }
+  };
 
   constructor(appObject: HostAppObject) {
     super(appObject, HostEditingStateEntity.type);

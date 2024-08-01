@@ -188,37 +188,4 @@ describe("State Machine", () => {
     expect(stateMachine.hasState("state1")).toEqual(true);
     expect(stateMachine.hasState("somethingElse")).toEqual(false);
   });
-
-  it("Notifies if isAuthoring changes", () => {
-    const { stateMachine, observer } = makeTestRig();
-    observer.mockClear();
-
-    stateMachine.isAuthoring = true;
-    expect(observer).toBeCalled();
-
-    observer.mockClear();
-    stateMachine.isAuthoring = true;
-    stateMachine.isAuthoring = true;
-    stateMachine.isAuthoring = true;
-
-    expect(observer).not.toBeCalled();
-  });
-
-  it("Notifies when the last edited state changes", () => {
-    const { stateMachine, observer } = makeTestRig();
-    observer.mockClear();
-
-    stateMachine.lastEditingState = { some: "state" };
-    expect(observer).toBeCalled();
-
-    observer.mockClear();
-    stateMachine.lastEditingState = { some: "state" };
-    stateMachine.lastEditingState = { some: "state" };
-    stateMachine.lastEditingState = { some: "state" };
-
-    expect(observer).not.toBeCalled();
-
-    stateMachine.lastEditingState = undefined;
-    expect(observer).toBeCalled();
-  });
 });

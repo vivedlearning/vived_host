@@ -1,21 +1,17 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
 import { ReactHookPmAdapter } from "../../../Types/ReactHookPmAdapter";
-import {
-  HostStateMachineVM,
-  defaultHostStateMachineVM,
-  HostStateMachinePM
-} from "../PMs";
+import { defaultIsEditingStateVM, IsEditingStatePM, IsEditingStateVM } from "../PMs";
 
-export const hostStateMachinePMAdapter: ReactHookPmAdapter<HostStateMachineVM> = {
-  defaultVM: defaultHostStateMachineVM,
+export const isEditingPMAdapter: ReactHookPmAdapter<IsEditingStateVM> = {
+  defaultVM: defaultIsEditingStateVM,
   subscribe: (
     appObjects: HostAppObjectRepo,
-    setVM: (vm: HostStateMachineVM) => void
+    setVM: (vm: IsEditingStateVM) => void
   ) => {
-    const pm = HostStateMachinePM.get(appObjects);
+    const pm = IsEditingStatePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
-        "hostStateMachinePMAdater",
+        "isEditingPMAdapter",
         "Unable to find HostStateMachinePM"
       );
       return;
@@ -24,12 +20,12 @@ export const hostStateMachinePMAdapter: ReactHookPmAdapter<HostStateMachineVM> =
   },
   unsubscribe: (
     appObjects: HostAppObjectRepo,
-    setVM: (vm: HostStateMachineVM) => void
+    setVM: (vm: IsEditingStateVM) => void
   ) => {
-    const pm = HostStateMachinePM.get(appObjects);
+    const pm = IsEditingStatePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
-        "hostStateMachinePMAdater",
+        "isEditingPMAdapter",
         "Unable to find HostStateMachinePM"
       );
       return;

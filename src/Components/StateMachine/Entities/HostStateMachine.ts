@@ -18,19 +18,11 @@ export abstract class HostStateMachine extends HostAppObjectEntity {
   abstract previousState: string | undefined;
   abstract nextState: string | undefined;
 
-  abstract isAuthoring: boolean;
-
-  abstract lastAssets: string[];
-  abstract lastEditingState: object | undefined;
-  abstract validationErrorMessage?: string;
-
   abstract setActiveStateByID: (id: string) => void;
   abstract clearActiveState: () => void;
   abstract setStates: (states: HostStateEntity[]) => void;
-  // abstract setStatesFromString: (states: HostStateEntity[]) => void;
   abstract createNewState: () => HostStateEntity;
   abstract getStateByID: (id: string) => HostStateEntity | undefined;
-  // abstract updateState: (state: HostStateEntity) => void;
   abstract deleteState: (id: string) => void;
   abstract getStateIndex: (id: string) => number | undefined;
   abstract hasState: (id: string) => boolean;
