@@ -143,7 +143,7 @@ class HostStateEntityImp extends HostStateEntity {
     this.memoizedName.val = dto.name;
     this.memoisedAppID.val = dto.appID;
 
-    if ((<any>Object).values(ChallengeResponse).includes(dto.response)) {
+    if ((Object as any).values(ChallengeResponse).includes(dto.response)) {
       this.expectedResponse = dto.response as ChallengeResponse;
     } else {
       this.expectedResponse = undefined;
