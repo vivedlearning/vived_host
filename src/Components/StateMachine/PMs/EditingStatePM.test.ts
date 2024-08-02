@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeMockHostEditingStateEntity } from "../Mocks";
-import { IsEditingStateVM, makeIsEditingStatePM } from "./EditingStatePM";
+import { EditingStateVM, makeEditingStatePM } from "./EditingStatePM";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -21,7 +21,7 @@ function makeTestRig() {
     .spyOn(mockEditEntity, "somethingHasChanged", "get")
     .mockReturnValue(true);
 
-  const pm = makeIsEditingStatePM(ao);
+  const pm = makeEditingStatePM(ao);
 
   return {
     pm,
@@ -96,7 +96,7 @@ describe("Host State Machine Presentation Manager", () => {
   it("Checks for equal vms", () => {
     const { pm } = makeTestRig();
 
-    const vm1: IsEditingStateVM = {
+    const vm1: EditingStateVM = {
       hasChanges: false,
       isEditing: false,
       isNewState: false
@@ -110,7 +110,7 @@ describe("Host State Machine Presentation Manager", () => {
   it("Checks for a change in the has changes flag", () => {
     const { pm } = makeTestRig();
 
-    const vm1: IsEditingStateVM = {
+    const vm1: EditingStateVM = {
       hasChanges: false,
       isEditing: false,
       isNewState: false
@@ -124,7 +124,7 @@ describe("Host State Machine Presentation Manager", () => {
   it("Checks for a change in the is editing flag", () => {
     const { pm } = makeTestRig();
 
-    const vm1: IsEditingStateVM = {
+    const vm1: EditingStateVM = {
       hasChanges: false,
       isEditing: false,
       isNewState: false
@@ -138,7 +138,7 @@ describe("Host State Machine Presentation Manager", () => {
   it("Checks for a change in the is new state flag", () => {
     const { pm } = makeTestRig();
 
-    const vm1: IsEditingStateVM = {
+    const vm1: EditingStateVM = {
       hasChanges: false,
       isEditing: false,
       isNewState: false

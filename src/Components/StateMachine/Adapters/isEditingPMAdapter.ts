@@ -1,14 +1,18 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
 import { ReactHookPmAdapter } from "../../../Types/ReactHookPmAdapter";
-import { defaultIsEditingStateVM, IsEditingStatePM, IsEditingStateVM } from "../PMs";
+import {
+  defaultIsEditingStateVM,
+  EditingStatePM,
+  EditingStateVM
+} from "../PMs";
 
-export const isEditingPMAdapter: ReactHookPmAdapter<IsEditingStateVM> = {
+export const isEditingPMAdapter: ReactHookPmAdapter<EditingStateVM> = {
   defaultVM: defaultIsEditingStateVM,
   subscribe: (
     appObjects: HostAppObjectRepo,
-    setVM: (vm: IsEditingStateVM) => void
+    setVM: (vm: EditingStateVM) => void
   ) => {
-    const pm = IsEditingStatePM.get(appObjects);
+    const pm = EditingStatePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
         "isEditingPMAdapter",
@@ -20,9 +24,9 @@ export const isEditingPMAdapter: ReactHookPmAdapter<IsEditingStateVM> = {
   },
   unsubscribe: (
     appObjects: HostAppObjectRepo,
-    setVM: (vm: IsEditingStateVM) => void
+    setVM: (vm: EditingStateVM) => void
   ) => {
-    const pm = IsEditingStatePM.get(appObjects);
+    const pm = EditingStatePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
         "isEditingPMAdapter",

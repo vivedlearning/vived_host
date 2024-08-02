@@ -1,5 +1,10 @@
+import { stringify } from "uuid";
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { HostStateMachine } from "../../StateMachine";
+import {
+  ChallengeResponse,
+  HostEditingStateEntity,
+  HostStateMachine
+} from "../../StateMachine";
 import {
   HostHandlerEntity,
   RequestHandler,
@@ -32,8 +37,10 @@ export function makeOnStateChangeHandler(
 }
 
 export class OnStateChangeHandlerImp extends OnStateChangeHandler {
-  private get stateMachine() {
-    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
+  private get editStateEntity() {
+    return this.getCachedSingleton<HostEditingStateEntity>(
+      HostEditingStateEntity.type
+    );
   }
 
   action: OnStateChangeAction = (
@@ -42,11 +49,23 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
     validationErrorMessage?: string,
     responseType?: string
   ) => {
-    if (!this.stateMachine) return;
+    if (!this.editStateEntity) return;
 
-    this.stateMachine.lastEditingState = state;
-    this.stateMachine.lastAssets = assets;
-    this.stateMachine.validationErrorMessage = validationErrorMessage;
+    const editingState = this.editStateEntity.editingState;
+    if (!editingState) return;
+
+    editingState.setStateData(state);
+    editingState.assets = assets;
+
+    this.editStateEntity.stateValidationMessage = validationErrorMessage;
+
+    if (!responseType) return;
+
+    const response = responseLookupMap.get(responseType.toUpperCase());
+    if (!response) {
+      this.warn(`Unable to parse ${responseType} into an expected response`);
+    }
+    editingState.expectedResponse = response;
   };
 
   handleRequest = (version: number, payload: unknown) => {
@@ -65,6 +84,14 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
         validationErrorMessage
       } = this.castPayloadV3(payload);
       this.action(stateObject, assets, validationErrorMessage);
+    } else if (version === 4) {
+      const {
+        stateObject,
+        assets,
+        validationErrorMessage,
+        responseType
+      } = this.castPayloadV4(payload);
+      this.action(stateObject, assets, validationErrorMessage, responseType);
     } else {
       throw new UnsupportedRequestVersion(this.requestType, version);
     }
@@ -109,6 +136,19 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
     return castPayload;
   }
 
+  private castPayloadV4(payload: unknown): Payload_V4 {
+    const castPayload = payload as Payload_V4;
+    if (castPayload.stateObject === undefined) {
+      throw new UnableToParsePayload(
+        this.requestType,
+        3,
+        JSON.stringify(payload)
+      );
+    }
+
+    return castPayload;
+  }
+
   constructor(appObject: HostAppObject) {
     super(appObject, OnStateChangeHandler.type);
 
@@ -121,6 +161,15 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
     hostHandler.registerRequestHandler(this);
   }
 }
+
+const responseLookupMap = new Map<string, ChallengeResponse>([
+  ["HIT", ChallengeResponse.HIT],
+  ["MULTIHIT", ChallengeResponse.MULTIHIT],
+  ["NONE", ChallengeResponse.NONE],
+  ["PROGRESS", ChallengeResponse.PROGRESS],
+  ["QUALITY", ChallengeResponse.QUALITY],
+  ["SCORE", ChallengeResponse.SCORE]
+]);
 
 type Payload_V1 = {
   stateObject: object;

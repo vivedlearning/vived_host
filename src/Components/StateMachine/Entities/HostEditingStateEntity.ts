@@ -17,7 +17,7 @@ export abstract class HostEditingStateEntity extends HostAppObjectEntity {
   abstract get somethingHasChanged(): boolean;
   abstract stateValidationMessage?: string;
 
-  abstract startNewState(): void;
+  abstract startNewState(): HostStateEntity | undefined;
   abstract startEditing(state: HostStateEntity): void;
   abstract cancelEditState(): void;
   abstract finishEditing(): void;
@@ -114,7 +114,7 @@ class HostEditingStateEntityImp extends HostEditingStateEntity {
 
   private originalStateData?: StateDTO;
 
-  startNewState = (): void => {
+  startNewState = (): HostStateEntity | undefined => {
     if (!this.hostStateMachine) return;
 
     this.originalStateData = undefined;
@@ -122,6 +122,8 @@ class HostEditingStateEntityImp extends HostEditingStateEntity {
     this._editingState = this.hostStateMachine.createNewState();
     this._editingState.addChangeObserver(this.onStateEntityChange);
     this.memoizedSomethingHasChanged.val = true;
+
+    return this._editingState;
   };
 
   startEditing = (state: HostStateEntity): void => {

@@ -1,11 +1,11 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { IsEditingStatePM } from "../PMs";
+import { EditingStatePM } from "../PMs";
 
-export class MockIsEditingStatePM extends IsEditingStatePM {
+export class MockIsEditingStatePM extends EditingStatePM {
   vmsAreEqual = jest.fn();
 
   constructor(appObject: HostAppObject) {
-    super(appObject, IsEditingStatePM.type);
+    super(appObject, EditingStatePM.type);
   }
 }
 

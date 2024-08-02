@@ -1,5 +1,10 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeHostStateMachine } from "../../StateMachine";
+import {
+  ChallengeResponse,
+  makeHostEditingStateEntity,
+  makeHostStateEntity,
+  makeHostStateMachine
+} from "../../StateMachine";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeOnStateChangeHandler } from "./OnStateChangeHandler";
 
@@ -9,12 +14,14 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
-  const stateMachine = makeHostStateMachine(
-    appObjects.getOrCreate("StateMachine")
+  const stateEntity = makeHostStateEntity(appObjects.getOrCreate("state1"));
+  const editingEntity = makeHostEditingStateEntity(
+    appObjects.getOrCreate("EditingState")
   );
+  editingEntity.startEditing(stateEntity);
 
   const uc = makeOnStateChangeHandler(ao);
-  return { registerSpy, uc, stateMachine };
+  return { registerSpy, uc, editingEntity, stateEntity };
 }
 
 describe("On State Change Handler", () => {
@@ -23,14 +30,30 @@ describe("On State Change Handler", () => {
     expect(registerSpy).toBeCalledWith(uc);
   });
 
-  it("Sends the state to the state machine", () => {
-    const { uc, stateMachine } = makeTestRig();
+  it("Updates the state being edited", () => {
+    const { uc, stateEntity } = makeTestRig();
 
     uc.action({ foo: "bar" }, ["id1", "id2"], "validation error!");
 
-    expect(stateMachine.lastEditingState).toEqual({ foo: "bar" });
-    expect(stateMachine.lastAssets).toEqual(["id1", "id2"]);
-    expect(stateMachine.validationErrorMessage).toEqual("validation error!");
+    expect(stateEntity.stateData).toEqual({ foo: "bar" });
+    expect(stateEntity.assets).toEqual(["id1", "id2"]);
+  });
+
+  it("Updates the state being edited", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({ foo: "bar" }, ["id1", "id2"], "validation error!");
+
+    expect(stateEntity.stateData).toEqual({ foo: "bar" });
+    expect(stateEntity.assets).toEqual(["id1", "id2"]);
+  });
+
+  it("Updates the validation error", () => {
+    const { uc, editingEntity } = makeTestRig();
+
+    uc.action({ foo: "bar" }, ["id1", "id2"], "validation error!");
+
+    expect(editingEntity.stateValidationMessage).toEqual("validation error!");
   });
 
   it("Triggers the action for v1", () => {
@@ -104,21 +127,23 @@ describe("On State Change Handler", () => {
     expect(() => uc.handleRequest(2, payload)).toThrowError();
   });
 
-  it("Triggers the action for v3 with  a validation message", () => {
+  it("Triggers the action for v4", () => {
     const { uc } = makeTestRig();
     uc.action = jest.fn();
 
-    const payload = {
+    const payload  = {
       stateObject: { foo: "bar" },
       assets: ["id1", "id2"],
-      validationErrorMessage: "Something is wrong"
+      validationErrorMessage: "Something is wrong",
+      responseType: "HIT"
     };
-    uc.handleRequest(3, payload);
+    uc.handleRequest(4, payload);
 
     expect(uc.action).toBeCalledWith(
       { foo: "bar" },
       ["id1", "id2"],
-      "Something is wrong"
+      "Something is wrong",
+      "HIT"
     );
   });
 
@@ -131,5 +156,57 @@ describe("On State Change Handler", () => {
     };
 
     expect(() => uc.handleRequest(3, payload)).toThrowError();
+  });
+
+  it("Sets the expected results to NONE", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({}, [], undefined, "NONE");
+    expect(stateEntity.expectedResponse).toEqual(ChallengeResponse.NONE);
+  });
+
+  it("Sets the expected results to MULTIHIT", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({}, [], undefined, "MULTIHIT");
+    expect(stateEntity.expectedResponse).toEqual(ChallengeResponse.MULTIHIT);
+  });
+
+  it("Sets the expected results to HIT", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({}, [], undefined, "HIT");
+    expect(stateEntity.expectedResponse).toEqual(ChallengeResponse.HIT);
+  });
+
+  it("Sets the expected results to PROGRESS", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({}, [], undefined, "PROGRESS");
+    expect(stateEntity.expectedResponse).toEqual(ChallengeResponse.PROGRESS);
+  });
+
+  it("Sets the expected results to QUALITY", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({}, [], undefined, "QUALITY");
+    expect(stateEntity.expectedResponse).toEqual(ChallengeResponse.QUALITY);
+  });
+
+  it("Sets the expected results to SCORE", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.action({}, [], undefined, "SCORE");
+    expect(stateEntity.expectedResponse).toEqual(ChallengeResponse.SCORE);
+  });
+
+  it("Warns if it encounters an unknown response", () => {
+    const { uc, stateEntity } = makeTestRig();
+
+    uc.warn = jest.fn();
+
+    uc.action({}, [], undefined, "YourMom");
+    expect(uc.warn).toBeCalled();
+    expect(stateEntity.expectedResponse).toBeUndefined();
   });
 });
