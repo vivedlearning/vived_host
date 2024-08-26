@@ -1,5 +1,8 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 
 export abstract class UpdateAppUC extends HostAppObjectUC {
   static type = "UpdateAppUC";
