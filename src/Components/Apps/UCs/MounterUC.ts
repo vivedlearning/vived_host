@@ -10,8 +10,8 @@ export abstract class MounterUC extends HostAppObjectUC {
   abstract loadScriptIntoDocument(
     scriptURL: string,
     appIDWithVersion: string
-  ): Promise<void>; //Exposed for testing purposes
-  abstract getAppInterface(version: Version): VIVEDApp_3 | undefined; //Exposed for test purposes
+  ): Promise<void>; // Exposed for testing purposes
+  abstract getAppInterface(version: Version): VIVEDApp_3 | undefined; // Exposed for test purposes
 
   static get(appObject: HostAppObject) {
     return appObject.getComponent<MounterUC>(MounterUC.type);
