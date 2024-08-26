@@ -1,2 +1,3 @@
-export * from './PluginBoundary';
-export * from "./ReactHookPmAdapter"
+export * from "./PluginBoundary";
+export * from "./SingletonPmAdapter";
+export * from "./PmAdapter";

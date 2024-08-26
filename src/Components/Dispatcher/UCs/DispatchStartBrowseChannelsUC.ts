@@ -1,4 +1,8 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { HostDispatchEntity } from "../Entities";
 
 export interface BrowseChannelDTO {
@@ -30,10 +34,13 @@ export abstract class DispatchStartBrowseChannelsUC extends HostAppObjectUC {
     return asset;
   }
 
-  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchStartBrowseChannelsUC | undefined {
-    const appObject =  appObjects.get(id);
-    
-    if(!appObject) {
+  static getByID(
+    id: string,
+    appObjects: HostAppObjectRepo
+  ): DispatchStartBrowseChannelsUC | undefined {
+    const appObject = appObjects.get(id);
+
+    if (!appObject) {
       appObjects.submitWarning(
         "DispatchStartBrowseChannelsUC.getByID",
         "Unable to find App Object by id " + id

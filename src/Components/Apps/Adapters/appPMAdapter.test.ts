@@ -1,17 +1,19 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockIsEditingStatePM } from "../Mocks/MockIsEditingStatePM";
-import { defaultIsEditingStateVM } from "../PMs";
-import { isEditingPMAdapter } from "./isEditingPMAdapter";
+import { MockAppPM } from "../Mocks/MockAppPM";
+import { defaultAppVM } from "../PMs/AppPM";
+import { appPMAdapter } from "./appPMAdapter";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const mockPM = makeMockIsEditingStatePM(appObjects);
+  const ao = appObjects.getOrCreate("app1");
+
+  const mockPM = new MockAppPM(ao);
   return { appObjects, mockPM };
 }
 
 describe("Selected Challenge Hook Adapter", () => {
   it("Sets the Default VM", () => {
-    expect(isEditingPMAdapter.defaultVM).toEqual(defaultIsEditingStateVM);
+    expect(appPMAdapter.defaultVM).toEqual(defaultAppVM);
   });
 
   it("Add a view on subscribe", () => {
@@ -20,7 +22,7 @@ describe("Selected Challenge Hook Adapter", () => {
     mockPM.addView = jest.fn();
     const setVM = jest.fn();
 
-    isEditingPMAdapter.subscribe(appObjects, setVM);
+    appPMAdapter.subscribe("app1", appObjects, setVM);
 
     expect(mockPM.addView).toBeCalledWith(setVM);
   });
@@ -31,7 +33,7 @@ describe("Selected Challenge Hook Adapter", () => {
     mockPM.removeView = jest.fn();
     const setVM = jest.fn();
 
-    isEditingPMAdapter.unsubscribe(appObjects, setVM);
+    appPMAdapter.unsubscribe("app1", appObjects, setVM);
 
     expect(mockPM.removeView).toBeCalledWith(setVM);
   });

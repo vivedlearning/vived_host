@@ -1,0 +1,143 @@
+import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { Version, VersionStage } from "../../../ValueObjects";
+import { AppEntity, makeAppEntity, AppState } from "./AppEntity";
+
+
+function makeTestRig() {
+  const appObjects = makeHostAppObjectRepo();
+  const app = makeAppEntity(appObjects.getOrCreate("appID"));
+  const observer = jest.fn();
+  app.addChangeObserver(observer);
+
+  return { app, observer, appObjects };
+}
+
+describe("App Entity", () => {
+  it("Gets by ID", () => {
+    const { app, appObjects } = makeTestRig();
+
+    expect(AppEntity.get("appID", appObjects)).toEqual(app);
+  });
+
+  it("Initializes as expected", () => {
+    const { app } = makeTestRig();
+
+    expect(app.id).toEqual("appID");
+    expect(app.name).toEqual("");
+    expect(app.description).toEqual("");
+    expect(app.image_url).toEqual("");
+    expect(app.isMounted).toEqual(false);
+    expect(app.versions).toHaveLength(0);
+    expect(app.mountedVersion).toBeUndefined();
+    expect(app.styles).toHaveLength(0);
+    expect(app.appAssetFolderURL).toBeUndefined();
+    expect(app.assignedToOwner).toEqual(false);
+  });
+
+  it("Sets the loaded version", () => {
+    const { app, observer } = makeTestRig();
+
+    const version = new Version(1, 2, 3, VersionStage.RELEASED);
+    app.mountedVersion = version;
+
+    expect(app.isMounted).toEqual(true);
+    expect(app.mountedVersion).toEqual(version);
+    expect(observer).toBeCalled();
+  });
+
+  it("Sets the same loaded version should not notify", () => {
+    const { app, observer } = makeTestRig();
+
+    const version = new Version(1, 2, 3, VersionStage.RELEASED);
+    app.mountedVersion = version;
+
+    observer.mockClear();
+
+    app.mountedVersion = version;
+    app.mountedVersion = version;
+    app.mountedVersion = version;
+
+    expect(observer).not.toBeCalled();
+  });
+
+  it("Clears the loaded version", () => {
+    const { app, observer } = makeTestRig();
+
+    const version = new Version(1, 2, 3, VersionStage.RELEASED);
+    app.mountedVersion = version;
+
+    observer.mockClear();
+
+    app.mountedVersion = undefined;
+
+    expect(app.isMounted).toEqual(false);
+    expect(app.mountedVersion).toBeUndefined();
+    expect(observer).toBeCalled();
+
+    observer.mockClear();
+
+    app.mountedVersion = undefined;
+    app.mountedVersion = undefined;
+    app.mountedVersion = undefined;
+
+    expect(observer).not.toBeCalled();
+  });
+
+  it("Reports if an update is available", () => {
+    const { app } = makeTestRig();
+    app.versions = [
+      new Version(1, 2, 3, VersionStage.RELEASED),
+      new Version(1, 0, 3, VersionStage.RELEASED),
+      new Version(2, 5, 6, VersionStage.RELEASED)
+    ];
+
+    const version = new Version(1, 2, 3, VersionStage.RELEASED);
+    app.mountedVersion = version;
+
+    expect(app.updateIsAvailable).toEqual(true);
+  });
+
+  it("Sets an error message", () => {
+    const { app, observer } = makeTestRig();
+    expect(app.errorMessage).toBeUndefined();
+    expect(app.hasError).toEqual(false);
+
+    app.errorMessage = "uh oh!";
+
+    expect(app.errorMessage).toEqual("uh oh!");
+    expect(observer).toBeCalled();
+    expect(app.hasError).toEqual(true);
+
+    observer.mockClear();
+
+    app.errorMessage = "uh oh!";
+    app.errorMessage = "uh oh!";
+    app.errorMessage = "uh oh!";
+
+    expect(observer).not.toBeCalled();
+  });
+
+  it("Gets and sets the state", () => {
+    const { app, observer } = makeTestRig();
+
+    expect(app.state).toBe(AppState.INIT);
+
+    app.state = AppState.ERROR;
+
+    expect(app.state).toBe(AppState.ERROR);
+
+    expect(observer).toBeCalled();
+  });
+
+  it("Gets and sets assignedToOwner", () => {
+    const { app, observer } = makeTestRig();
+
+    expect(app.assignedToOwner).toEqual(false);
+
+    app.assignedToOwner = true;
+
+    expect(app.assignedToOwner).toEqual(true);
+
+    expect(observer).toBeCalled();
+  });
+});

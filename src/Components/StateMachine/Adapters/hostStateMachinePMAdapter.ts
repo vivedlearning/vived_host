@@ -1,12 +1,12 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { ReactHookPmAdapter } from "../../../Types/ReactHookPmAdapter";
+import { SingletonPmAdapter } from "../../../Types/SingletonPmAdapter";
 import {
   HostStateMachineVM,
   defaultHostStateMachineVM,
   HostStateMachinePM
 } from "../PMs";
 
-export const hostStateMachinePMAdapter: ReactHookPmAdapter<HostStateMachineVM> = {
+export const hostStateMachinePMAdapter: SingletonPmAdapter<HostStateMachineVM> = {
   defaultVM: defaultHostStateMachineVM,
   subscribe: (
     appObjects: HostAppObjectRepo,
