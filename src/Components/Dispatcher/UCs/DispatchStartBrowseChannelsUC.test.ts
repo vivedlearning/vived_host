@@ -39,7 +39,7 @@ describe("Dispatch Start Browse Channel Models", () => {
 
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
     expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][0]).toEqual(
-      "START_BROWSE_CHANNEL_MODELS"
+      "START_SELECT_CHANNEL_MODEL"
     );
   });
 

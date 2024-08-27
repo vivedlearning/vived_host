@@ -14,7 +14,7 @@ export interface BrowseChannelDTO {
 
 export abstract class DispatchStartBrowseChannelsUC extends HostAppObjectUC {
   static readonly type = "DispatchStartBrowseChannelsUC";
-  readonly requestType = "START_BROWSE_CHANNEL_MODELS";
+  readonly requestType = "START_SELECT_CHANNEL_MODEL";
 
   abstract doDispatch(dto: BrowseChannelDTO): void;
 
