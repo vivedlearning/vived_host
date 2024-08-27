@@ -1,13 +1,12 @@
 import { MemoizedBoolean } from "../../../Entities";
-import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectEntity,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
 import { Version, VersionStage } from "../../../ValueObjects";
 import { AppEntity, makeAppEntity } from "../../Apps";
-
-export type InitializeApp = (
-  id: string,
-  majorVersion: number,
-  minorVersion: number
-) => Promise<void>;
 
 export abstract class AssetPluginEntity extends HostAppObjectEntity {
   static type = "AssetPluginEntity";
