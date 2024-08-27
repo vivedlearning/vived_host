@@ -105,7 +105,12 @@ class HostDispatchEntityImp extends HostDispatchEntity {
       return;
     }
 
-    this.appHandler(request);
+    try {
+      this.appHandler(request);
+    } catch (e) {
+      this.warn((e as Error).message)
+    }
+    
   };
 
   formRequestAndDispatch = (
@@ -124,7 +129,7 @@ class HostDispatchEntityImp extends HostDispatchEntity {
       payload
     };
 
-    this.appHandler(request);
+    this.dispatch(request);
   };
 
   constructor(appObject: HostAppObject) {
