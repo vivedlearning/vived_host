@@ -1,5 +1,12 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
+import { AppEntity } from "../../Apps";
+import {
+  ActionNotImplemented,
+  HostHandlerEntity,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVersion
+} from "../Entities";
 
 export type RegisterStylesheetsAction = (stylesheets: string[]) => void;
 
@@ -23,10 +30,20 @@ export function makeRegisterExternalStyleSheetsHandler(
 class RegisterExternalStyleSheetsHandlerImp extends RegisterExternalStyleSheetsHandler {
   readonly requestType = "REGISTER_EXTERNAL_STYLESHEETS";
 
-  action: RegisterStylesheetsAction = (stylesheets: string[]) => {
-    this.log(`Style sheets: ${stylesheets}`)
-  };
+  private get app() {
+    return this.getCachedLocalComponent<AppEntity>(AppEntity.type);
+  }
 
+  action: RegisterStylesheetsAction = (stylesheets: string[]) => {
+    if (!this.app) return;
+
+    stylesheets.forEach((sheet) => {
+      this.app?.styles.push(sheet);
+    });
+
+    this.app.notifyOnChange();
+  };
+  
   handleRequest = (version: number, payload: unknown) => {
     if (version === 1) {
       const { stylesheets } = this.castPayloadV1(payload);

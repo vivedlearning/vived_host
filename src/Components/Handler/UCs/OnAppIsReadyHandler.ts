@@ -1,4 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppEntity, AppState } from "../../Apps";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -24,8 +25,17 @@ export function makeOnAppIsReadyHandler(
 }
 
 class OnAppIsReadyHandlerImp extends OnAppIsReadyHandler {
+  private get app() {
+    return this.getCachedLocalComponent<AppEntity>(AppEntity.type);
+  }
+
   action: () => void = () => {
-    throw new ActionNotImplemented(this.requestType);
+    if (!this.app) {
+      this.error("No App");
+      return;
+    }
+
+    this.app.state = AppState.READY;
   };
 
   handleRequest = (version: number) => {

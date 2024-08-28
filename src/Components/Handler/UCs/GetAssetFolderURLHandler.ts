@@ -1,4 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppEntity } from "../../Apps";
 import {
   HostHandlerEntity,
   RequestHandler,
@@ -28,8 +29,20 @@ export function makeGetAssetFolderURLHandler(
 }
 
 class GetAssetFolderURLHandlerImp extends GetAssetFolderURLHandler {
-  action: GetAssetFolderURLAction = () => {
-    this.warn("Action has not been setup");
+  private get app() {
+    return this.getCachedLocalComponent<AppEntity>(AppEntity.type);
+  }
+
+  action: GetAssetFolderURLAction = (
+    callback: (assetFolderURL: string) => void
+  ) => {
+    if (!this.app) {
+      this.error("No AppEntity");
+      callback("");
+      return;
+    }
+
+    callback(this.app.appAssetFolderURL ?? "");
   };
 
   handleRequest = (version: number, payload: unknown) => {
