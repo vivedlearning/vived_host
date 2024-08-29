@@ -1,5 +1,5 @@
 import { HostAppObject } from "../../../HostAppObject";
-import { AlertDialogPM, AlertDialogVM } from "../PMs";
+import { AlertDialogPM } from "../PMs";
 
 export class MockAlertDialogPM extends AlertDialogPM {
   vmsAreEqual = jest.fn();

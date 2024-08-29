@@ -72,6 +72,6 @@ class DialogQueuePMImp extends DialogQueuePM {
   }
 }
 
-export const defualtDialogVM: DialogVM = {
+export const defaultDialogVM: DialogVM = {
   open: false
 };

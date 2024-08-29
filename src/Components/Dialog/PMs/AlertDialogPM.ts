@@ -12,6 +12,13 @@ export interface AlertDialogVM {
   close: () => void;
 }
 
+export const defaultAlertDialogVM: AlertDialogVM = {
+  message: "",
+  buttonLabel:  "",
+  close: ()=>{},
+  title: ""
+}
+
 export abstract class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
   static type = "AlertDialogPM";
 
@@ -84,12 +91,3 @@ class AlertDialogPMImp extends AlertDialogPM {
     this.onAlertChange();
   }
 }
-
-export const defaultAlertDialogVM: AlertDialogVM = {
-  message: "Generic alert message",
-  title: "Alert",
-  buttonLabel: "Close",
-  close: () => {
-    console.warn("[AlertDialogVM.close] default VM");
-  }
-};
