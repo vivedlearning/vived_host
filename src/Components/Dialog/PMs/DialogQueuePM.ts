@@ -1,5 +1,10 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { DialogQueue } from '../Entities';
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { DialogQueue } from "../Entities";
 
 export interface DialogVM {
   open: boolean;
@@ -8,13 +13,19 @@ export interface DialogVM {
   preventOutsideDismiss?: boolean;
 }
 
-export class DialogQueuePM extends HostAppObjectPM<DialogVM> {
-  static type = 'DialogQueuePM';
+export abstract class DialogQueuePM extends HostAppObjectPM<DialogVM> {
+  static type = "DialogQueuePM";
 
   static get(appObjects: HostAppObjectRepo) {
     return getSingletonComponent<DialogQueuePM>(DialogQueuePM.type, appObjects);
   }
+}
 
+export function makeDialogQueuePM(appObject: HostAppObject): DialogQueuePM {
+  return new DialogQueuePMImp(appObject);
+}
+
+class DialogQueuePMImp extends DialogQueuePM {
   private queue?: DialogQueue;
 
   vmsAreEqual(a: DialogVM, b: DialogVM): boolean {
@@ -38,7 +49,7 @@ export class DialogQueuePM extends HostAppObjectPM<DialogVM> {
         open: currentDialog.isOpen,
         dialogType: currentDialog.dialogType,
         preventOutsideDismiss: currentDialog.preventOutsideDismiss,
-        id: currentDialog.appObject.id,
+        id: currentDialog.appObject.id
       };
     }
 
@@ -50,7 +61,7 @@ export class DialogQueuePM extends HostAppObjectPM<DialogVM> {
 
     this.queue = appObject.getComponent<DialogQueue>(DialogQueue.type);
     if (!this.queue) {
-      this.error('PM added to an app object that does not have a DialogQueue');
+      this.error("PM added to an app object that does not have a DialogQueue");
       return;
     }
 
@@ -62,5 +73,5 @@ export class DialogQueuePM extends HostAppObjectPM<DialogVM> {
 }
 
 export const defualtDialogVM: DialogVM = {
-  open: false,
+  open: false
 };

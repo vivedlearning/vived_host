@@ -1,5 +1,9 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { AlertDialogEntity } from '../Entities';
+import {
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { AlertDialogEntity } from "../Entities";
 
 export interface AlertDialogVM {
   message: string;
@@ -8,25 +12,40 @@ export interface AlertDialogVM {
   close: () => void;
 }
 
-export class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
-  static type = 'AlertDialogPM';
+export abstract class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
+  static type = "AlertDialogPM";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): AlertDialogPM | undefined {
-    const appObject = appObjects.get(assetID);
+  static get(
+    id: string,
+    appObjects: HostAppObjectRepo
+  ): AlertDialogPM | undefined {
+    const appObject = appObjects.get(id);
     if (!appObject) {
-      appObjects.submitWarning('AlertDialogPM.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "AlertDialogPM.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
     const pm = appObject.getComponent<AlertDialogPM>(AlertDialogPM.type);
     if (!pm) {
-      appObjects.submitWarning('AlertDialogPM.get', 'App Object does not have AlertDialogPM');
+      appObjects.submitWarning(
+        "AlertDialogPM.get",
+        "App Object does not have AlertDialogPM"
+      );
       return undefined;
     }
 
     return pm;
   }
+}
 
+export function makeAlertDialogPM(appObject: HostAppObject): AlertDialogPM {
+  return new AlertDialogPMImp(appObject);
+}
+
+class AlertDialogPMImp extends AlertDialogPM {
   private alert?: AlertDialogEntity;
 
   vmsAreEqual(a: AlertDialogVM, b: AlertDialogVM): boolean {
@@ -44,16 +63,20 @@ export class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
       buttonLabel: this.alert.buttonLabel,
       close: this.alert.close,
       message: this.alert.message,
-      title: this.alert.title,
+      title: this.alert.title
     });
   };
 
   constructor(appObject: HostAppObject) {
     super(appObject, AlertDialogPM.type);
 
-    this.alert = appObject.getComponent<AlertDialogEntity>(AlertDialogEntity.type);
+    this.alert = appObject.getComponent<AlertDialogEntity>(
+      AlertDialogEntity.type
+    );
     if (!this.alert) {
-      this.error('PM added to an app object that does not have a DialogAlertEntity');
+      this.error(
+        "PM added to an app object that does not have a DialogAlertEntity"
+      );
       return;
     }
 
@@ -67,6 +90,6 @@ export const defaultAlertDialogVM: AlertDialogVM = {
   title: "Alert",
   buttonLabel: "Close",
   close: () => {
-    console.warn('[AlertDialogVM.close] default VM');
+    console.warn("[AlertDialogVM.close] default VM");
   }
-}
+};

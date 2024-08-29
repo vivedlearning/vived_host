@@ -1,30 +1,49 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { SpinnerDialogEntity } from '../Entities';
+import {
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { SpinnerDialogEntity } from "../Entities";
 
 export interface SpinnerDialogVM {
   message: string;
   title: string;
 }
 
-export class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
-  static type = 'SpinnerDialogPM';
+export abstract class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
+  static type = "SpinnerDialogPM";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): SpinnerDialogPM | undefined {
+  static get(
+    assetID: string,
+    appObjects: HostAppObjectRepo
+  ): SpinnerDialogPM | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('SpinnerDialogPM.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "SpinnerDialogPM.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
     const pm = appObject.getComponent<SpinnerDialogPM>(SpinnerDialogPM.type);
     if (!pm) {
-      appObjects.submitWarning('SpinnerDialogPM.get', 'App Object does not have SpinnerDialogPM');
+      appObjects.submitWarning(
+        "SpinnerDialogPM.get",
+        "App Object does not have SpinnerDialogPM"
+      );
       return undefined;
     }
 
     return pm;
   }
+}
 
+export function makeSpinnerDialogPM(appObject: HostAppObject): SpinnerDialogPM {
+  return new SpinnerDialogPMImp(appObject);
+}
+
+class SpinnerDialogPMImp extends SpinnerDialogPM {
   private dialog?: SpinnerDialogEntity;
 
   vmsAreEqual(a: SpinnerDialogVM, b: SpinnerDialogVM): boolean {
@@ -39,16 +58,20 @@ export class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
 
     this.doUpdateView({
       message: this.dialog.message,
-      title: this.dialog.title,
+      title: this.dialog.title
     });
   };
 
   constructor(appObject: HostAppObject) {
     super(appObject, SpinnerDialogPM.type);
 
-    this.dialog = appObject.getComponent<SpinnerDialogEntity>(SpinnerDialogEntity.type);
+    this.dialog = appObject.getComponent<SpinnerDialogEntity>(
+      SpinnerDialogEntity.type
+    );
     if (!this.dialog) {
-      this.error('PM added to an app object that does not have a DialogSpinnerEntity');
+      this.error(
+        "PM added to an app object that does not have a DialogSpinnerEntity"
+      );
       return;
     }
 
@@ -58,6 +81,6 @@ export class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
 }
 
 export const defaultSpinnerDialogVM: SpinnerDialogVM = {
-  message: 'Default spinner message',
-  title: 'Spinner',
+  message: "Default spinner message",
+  title: "Spinner"
 };

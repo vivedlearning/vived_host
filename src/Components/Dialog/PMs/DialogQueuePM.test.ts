@@ -1,45 +1,45 @@
-import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { AlertDialogEntity } from '../Entities';
-import { makeDialogQueue } from '../Entities/DialogQueue';
-import { DialogQueuePM, DialogVM } from './DialogQueuePM';
+import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { AlertDialogEntity } from "../Entities";
+import { makeDialogQueue } from "../Entities/DialogQueue";
+import { DialogQueuePM, DialogVM, makeDialogQueuePM } from "./DialogQueuePM";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const ao = appObjects.getOrCreate('AO');
+  const ao = appObjects.getOrCreate("AO");
   const queue = makeDialogQueue(ao);
 
-  const registerSingletonSpy = jest.spyOn(appObjects, 'registerSingleton');
+  const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
-  const pm = new DialogQueuePM(ao);
+  const pm = makeDialogQueuePM(ao);
 
   return { queue, pm, appObjects, registerSingletonSpy };
 }
 
-describe('Dialog PM', () => {
-  it('Initializes the last vm', () => {
+describe("Dialog PM", () => {
+  it("Initializes the last vm", () => {
     const { pm } = makeTestRig();
     expect(pm.lastVM).not.toBeUndefined();
   });
 
-  it('Registers as the singleton', () => {
+  it("Registers as the singleton", () => {
     const { registerSingletonSpy, pm } = makeTestRig();
     expect(registerSingletonSpy).toBeCalledWith(pm);
   });
 
-  it('Gets the singleton', () => {
+  it("Gets the singleton", () => {
     const { appObjects, pm } = makeTestRig();
 
     expect(DialogQueuePM.get(appObjects)).toEqual(pm);
   });
 
-  it('Checks for equal VMs', () => {
+  it("Checks for equal VMs", () => {
     const { pm } = makeTestRig();
 
     const vm1: DialogVM = {
       open: true,
-      id: 'anID',
+      id: "anID",
       preventOutsideDismiss: true,
-      dialogType: 'aType',
+      dialogType: "aType"
     };
 
     const vm2 = { ...vm1 };
@@ -47,14 +47,14 @@ describe('Dialog PM', () => {
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(true);
   });
 
-  it('Checks for a change in is open', () => {
+  it("Checks for a change in is open", () => {
     const { pm } = makeTestRig();
 
     const vm1: DialogVM = {
       open: true,
-      id: 'anID',
+      id: "anID",
       preventOutsideDismiss: true,
-      dialogType: 'aType',
+      dialogType: "aType"
     };
 
     const vm2 = { ...vm1, open: false };
@@ -62,29 +62,29 @@ describe('Dialog PM', () => {
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
   });
 
-  it('Checks for a change in the id', () => {
+  it("Checks for a change in the id", () => {
     const { pm } = makeTestRig();
 
     const vm1: DialogVM = {
       open: true,
-      id: 'anID',
+      id: "anID",
       preventOutsideDismiss: true,
-      dialogType: 'aType',
+      dialogType: "aType"
     };
 
-    const vm2 = { ...vm1, id: 'a different id' };
+    const vm2 = { ...vm1, id: "a different id" };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
   });
 
-  it('Checks for a change in the prevent dismiss', () => {
+  it("Checks for a change in the prevent dismiss", () => {
     const { pm } = makeTestRig();
 
     const vm1: DialogVM = {
       open: true,
-      id: 'anID',
+      id: "anID",
       preventOutsideDismiss: true,
-      dialogType: 'aType',
+      dialogType: "aType"
     };
 
     const vm2 = { ...vm1, preventOutsideDismiss: false };
@@ -92,31 +92,31 @@ describe('Dialog PM', () => {
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
   });
 
-  it('Checks for a change in the dialog type', () => {
+  it("Checks for a change in the dialog type", () => {
     const { pm } = makeTestRig();
 
     const vm1: DialogVM = {
       open: true,
-      id: 'anID',
+      id: "anID",
       preventOutsideDismiss: true,
-      dialogType: 'aType',
+      dialogType: "aType"
     };
 
-    const vm2 = { ...vm1, dialogType: 'something else' };
+    const vm2 = { ...vm1, dialogType: "something else" };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
   });
 
-  it('Update the VM when a dialog become active', () => {
+  it("Update the VM when a dialog become active", () => {
     const { queue, pm, appObjects } = makeTestRig();
 
     const alert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     queue.submitDialog(alert);
 
@@ -125,16 +125,16 @@ describe('Dialog PM', () => {
     expect(pm.lastVM?.id).toEqual(alert.appObject.id);
   });
 
-  it('Update the VM when a dialog changes', () => {
+  it("Update the VM when a dialog changes", () => {
     const { queue, pm, appObjects } = makeTestRig();
 
     const alert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     queue.submitDialog(alert);
 
@@ -145,16 +145,16 @@ describe('Dialog PM', () => {
     expect(pm.lastVM?.open).toEqual(false);
   });
 
-  it('Update the VM when the dialog closes and the next dialog is null', () => {
+  it("Update the VM when the dialog closes and the next dialog is null", () => {
     const { queue, pm, appObjects } = makeTestRig();
 
     const alert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     queue.submitDialog(alert);
 

@@ -1,5 +1,9 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { ConfirmDialogEntity } from '../Entities';
+import {
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { ConfirmDialogEntity } from "../Entities";
 
 export interface ConfirmDialogVM {
   message: string;
@@ -10,25 +14,40 @@ export interface ConfirmDialogVM {
   confirm: () => void;
 }
 
-export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
-  static type = 'ConfirmDialogPM';
+export abstract class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
+  static type = "ConfirmDialogPM";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): ConfirmDialogPM | undefined {
-    const appObject = appObjects.get(assetID);
+  static get(
+    id: string,
+    appObjects: HostAppObjectRepo
+  ): ConfirmDialogPM | undefined {
+    const appObject = appObjects.get(id);
     if (!appObject) {
-      appObjects.submitWarning('ConfirmDialogPM.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "ConfirmDialogPM.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
     const pm = appObject.getComponent<ConfirmDialogPM>(ConfirmDialogPM.type);
     if (!pm) {
-      appObjects.submitWarning('ConfirmDialogPM.get', 'App Object does not have ConfirmDialogPM');
+      appObjects.submitWarning(
+        "ConfirmDialogPM.get",
+        "App Object does not have ConfirmDialogPM"
+      );
       return undefined;
     }
 
     return pm;
   }
+}
 
+export function makeConfirmDialogPM(appObject: HostAppObject): ConfirmDialogPM {
+  return new ConfirmDialogPMImp(appObject);
+}
+
+class ConfirmDialogPMImp extends ConfirmDialogPM {
   private dialog?: ConfirmDialogEntity;
 
   vmsAreEqual(a: ConfirmDialogVM, b: ConfirmDialogVM): boolean {
@@ -49,16 +68,20 @@ export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
       cancel: this.dialog.cancel,
       message: this.dialog.message,
       title: this.dialog.title,
-      confirm: this.dialog.confirm,
+      confirm: this.dialog.confirm
     });
   };
 
   constructor(appObject: HostAppObject) {
     super(appObject, ConfirmDialogPM.type);
 
-    this.dialog = appObject.getComponent<ConfirmDialogEntity>(ConfirmDialogEntity.type);
+    this.dialog = appObject.getComponent<ConfirmDialogEntity>(
+      ConfirmDialogEntity.type
+    );
     if (!this.dialog) {
-      this.error('PM added to an app object that does not have a DialogConfirmEntity');
+      this.error(
+        "PM added to an app object that does not have a DialogConfirmEntity"
+      );
       return;
     }
 
@@ -68,14 +91,14 @@ export class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
 }
 
 export const defaultConfirmDialogVM: ConfirmDialogVM = {
-  message: 'Generic confirm message',
-  title: 'Confirm',
+  message: "Generic confirm message",
+  title: "Confirm",
   cancel: () => {
-    console.warn('[ConfirmDialogVM.cancel] default VM');
+    console.warn("[ConfirmDialogVM.cancel] default VM");
   },
-  cancelButtonLabel: '',
+  cancelButtonLabel: "",
   confirm: () => {
-    console.warn('[ConfirmDialogVM.confirm] default VM');
+    console.warn("[ConfirmDialogVM.confirm] default VM");
   },
-  confirmButtonLabel: '',
+  confirmButtonLabel: ""
 };

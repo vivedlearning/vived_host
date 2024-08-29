@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from '../../../HostAppObject';
 import { DialogConfirmDTO, ConfirmDialogEntity } from '../Entities';
-import { ConfirmDialogPM, ConfirmDialogVM } from './ConfirmDialogPM';
+import { ConfirmDialogPM, ConfirmDialogVM, makeConfirmDialogPM } from './ConfirmDialogPM';
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -18,7 +18,7 @@ function makeTestRig() {
     title: 'a title',
   };
   const dialog = new ConfirmDialogEntity(data, ao);
-  const pm = new ConfirmDialogPM(ao);
+  const pm = makeConfirmDialogPM(ao);
 
   return { pm, dialog, appObjects, mockConfirm, mockCancel };
 }
