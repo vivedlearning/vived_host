@@ -1,6 +1,9 @@
-
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { AlertDialogEntity, makeDialogQueue, SpinnerDialogEntity } from "../../Dialog";
+import {
+  makeDialogQueue,
+  makeMockMakeAlertDialogUC,
+  SpinnerDialogEntity
+} from "../../Dialog";
 import { makeMockPatchAssetIsArchivedUC } from "../../VivedAPI";
 import { makeAppAssets } from "../Entities/AppAssetsEntity";
 import { makeAssetEntity } from "../Entities/AssetEntity";
@@ -30,15 +33,7 @@ function makeTestRig() {
   );
   dialogQueue.spinnerDialogFactory = jest.fn().mockReturnValue(spinner);
 
-  const alert = new AlertDialogEntity(
-    {
-      message: "msg",
-      title: "title",
-      buttonLabel: "btm"
-    },
-    appObjects.getOrCreate("Alert")
-  );
-  dialogQueue.alertDialogFactory = jest.fn().mockReturnValue(alert);
+  const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
   const uc = makeArchiveAssetUC(assetAO);
 
@@ -49,8 +44,8 @@ function makeTestRig() {
     mockPatch,
     appObjects,
     spinner,
-    alert,
-    dialogQueue
+    dialogQueue,
+    mockMakeAlert
   };
 }
 
@@ -109,14 +104,14 @@ describe("Archive Asset", () => {
   });
 
   it("Shows an alert if rejected", async () => {
-    const { uc, dialogQueue, mockPatch, alert } = makeTestRig();
+    const { uc, dialogQueue, mockPatch, mockMakeAlert } = makeTestRig();
     uc.error = jest.fn();
     mockPatch.doPatch.mockRejectedValue(new Error("Some Post Error"));
     dialogQueue.submitDialog = jest.fn();
 
     await uc.setArchived(true);
 
-    expect(dialogQueue.submitDialog).toBeCalledWith(alert);
+    expect(mockMakeAlert.make).toBeCalled();
   });
 
   it("Hides the spinner when rejected", async () => {

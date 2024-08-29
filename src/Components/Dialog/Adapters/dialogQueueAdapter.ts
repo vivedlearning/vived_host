@@ -1,10 +1,13 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
 import { SingletonPmAdapter } from "../../../Types";
-import { defaultDialogVM, DialogQueuePM, DialogVM } from "../PMs";
+import { defaultDialogVM, DialogQueuePM, DialogQueueVM } from "../PMs";
 
-export const dialogQueueAdapter: SingletonPmAdapter<DialogVM> = {
+export const dialogQueueAdapter: SingletonPmAdapter<DialogQueueVM> = {
   defaultVM: defaultDialogVM,
-  subscribe: (appObjects: HostAppObjectRepo, setVM: (vm: DialogVM) => void) => {
+  subscribe: (
+    appObjects: HostAppObjectRepo,
+    setVM: (vm: DialogQueueVM) => void
+  ) => {
     const pm = DialogQueuePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
@@ -17,7 +20,7 @@ export const dialogQueueAdapter: SingletonPmAdapter<DialogVM> = {
   },
   unsubscribe: (
     appObjects: HostAppObjectRepo,
-    setVM: (vm: DialogVM) => void
+    setVM: (vm: DialogQueueVM) => void
   ) => {
     const pm = DialogQueuePM.get(appObjects);
     if (!pm) {

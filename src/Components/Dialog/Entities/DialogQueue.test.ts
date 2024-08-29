@@ -1,11 +1,11 @@
-import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { AlertDialogEntity } from './Alert';
-import { DialogQueue, makeDialogQueue } from './DialogQueue';
+import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { AlertDialogEntity } from "./Alert";
+import { DialogQueue, makeDialogQueue } from "./DialogQueue";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const ao = appObjects.getOrCreate('Queue');
-  const registerSingletonSpy = jest.spyOn(appObjects, 'registerSingleton');
+  const ao = appObjects.getOrCreate("Queue");
+  const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const dialogRepo = makeDialogQueue(ao);
   const observer = jest.fn();
@@ -14,29 +14,29 @@ function makeTestRig() {
   return { dialogRepo, observer, appObjects, registerSingletonSpy };
 }
 
-describe('Dialog Repo Entity', () => {
-  it('Gets the singleton', () => {
+describe("Dialog Repo Entity", () => {
+  it("Gets the singleton", () => {
     const { dialogRepo, appObjects } = makeTestRig();
 
     expect(DialogQueue.get(appObjects)).toEqual(dialogRepo);
   });
 
-  it('Registers as the singleton', () => {
+  it("Registers as the singleton", () => {
     const { dialogRepo, registerSingletonSpy } = makeTestRig();
 
     expect(registerSingletonSpy).toBeCalledWith(dialogRepo);
   });
 
-  it('Allows a dialog to be submitted', () => {
+  it("Allows a dialog to be submitted", () => {
     const { dialogRepo, appObjects } = makeTestRig();
 
     const alert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert'),
+      appObjects.getOrCreate("alert")
     );
     dialogRepo.submitDialog(alert);
 
@@ -44,15 +44,15 @@ describe('Dialog Repo Entity', () => {
     expect(alert.isOpen).toEqual(true);
   });
 
-  it('Calls the show when a dialog is added and it is the active one', () => {
+  it("Calls the show when a dialog is added and it is the active one", () => {
     const { dialogRepo, observer, appObjects } = makeTestRig();
     const alert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert'),
+      appObjects.getOrCreate("alert")
     );
     dialogRepo.submitDialog(alert);
 
@@ -60,15 +60,15 @@ describe('Dialog Repo Entity', () => {
     expect(observer).toBeCalled();
   });
 
-  it('Dismisses the active dialog', () => {
+  it("Dismisses the active dialog", () => {
     const { dialogRepo, observer, appObjects } = makeTestRig();
     const alert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert'),
+      appObjects.getOrCreate("alert")
     );
     dialogRepo.submitDialog(alert);
 
@@ -81,7 +81,7 @@ describe('Dialog Repo Entity', () => {
     expect(dialogRepo.activeDialog).toBeNull();
   });
 
-  it('Does not notify if there is no dialog to dismiss', () => {
+  it("Does not notify if there is no dialog to dismiss", () => {
     const { dialogRepo, observer } = makeTestRig();
     expect(dialogRepo.activeDialog).toBeNull();
 
@@ -90,25 +90,25 @@ describe('Dialog Repo Entity', () => {
     expect(observer).not.toBeCalled();
   });
 
-  it('Sets the next dialog in the queue as active', () => {
+  it("Sets the next dialog in the queue as active", () => {
     const { dialogRepo, observer, appObjects } = makeTestRig();
     const firstAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     dialogRepo.submitDialog(firstAlert);
 
     const secondAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert2'),
+      appObjects.getOrCreate("alert2")
     );
     dialogRepo.submitDialog(secondAlert);
 
@@ -122,25 +122,25 @@ describe('Dialog Repo Entity', () => {
     expect(observer).toBeCalled();
   });
 
-  it('Sets the open when it is time to show the second dialog', () => {
+  it("Sets the open when it is time to show the second dialog", () => {
     const { dialogRepo, appObjects } = makeTestRig();
     const firstAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     dialogRepo.submitDialog(firstAlert);
 
     const secondAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert2'),
+      appObjects.getOrCreate("alert2")
     );
     dialogRepo.submitDialog(secondAlert);
 
@@ -151,25 +151,25 @@ describe('Dialog Repo Entity', () => {
     expect(secondAlert.isOpen).toEqual(true);
   });
 
-  it('Forwards notifications from the dialogs in the queue', () => {
+  it("Forwards notifications from the dialogs in the queue", () => {
     const { dialogRepo, appObjects, observer } = makeTestRig();
     const firstAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     dialogRepo.submitDialog(firstAlert);
 
     const secondAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert2'),
+      appObjects.getOrCreate("alert2")
     );
     dialogRepo.submitDialog(secondAlert);
 
@@ -182,15 +182,15 @@ describe('Dialog Repo Entity', () => {
     expect(observer).toBeCalledTimes(2);
   });
 
-  it('Stops forwarding when the dialog is dismissed', () => {
+  it("Stops forwarding when the dialog is dismissed", () => {
     const { dialogRepo, appObjects, observer } = makeTestRig();
     const firstAlert = new AlertDialogEntity(
       {
-        buttonLabel: 'button',
-        message: 'message',
-        title: 'title',
+        buttonLabel: "button",
+        message: "message",
+        title: "title"
       },
-      appObjects.getOrCreate('alert1'),
+      appObjects.getOrCreate("alert1")
     );
     dialogRepo.submitDialog(firstAlert);
 

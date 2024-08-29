@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue } from "../../Dialog";
+import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
 import { PatchAssetFileUC } from "../../VivedAPI";
 import { AssetEntity } from "../Entities/AssetEntity";
 
@@ -96,8 +96,7 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
             message: `Something went wrong when updating the asset's file. Check the console. ${e.message}`,
             title: "Update Asset File Error",
           };
-          const confirmDialog = dialogQueue.alertDialogFactory(dialogDTO);
-          if (confirmDialog) dialogQueue.submitDialog(confirmDialog);
+          MakeAlertDialogUC.make(dialogDTO, this.appObjects);
           resolve();
         });
     });

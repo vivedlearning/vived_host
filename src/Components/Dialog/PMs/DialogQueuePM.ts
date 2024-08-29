@@ -6,14 +6,14 @@ import {
 } from "../../../HostAppObject";
 import { DialogQueue } from "../Entities";
 
-export interface DialogVM {
+export interface DialogQueueVM {
   open: boolean;
   id?: string;
   dialogType?: string;
   preventOutsideDismiss?: boolean;
 }
 
-export abstract class DialogQueuePM extends HostAppObjectPM<DialogVM> {
+export abstract class DialogQueuePM extends HostAppObjectPM<DialogQueueVM> {
   static type = "DialogQueuePM";
 
   static get(appObjects: HostAppObjectRepo) {
@@ -28,7 +28,7 @@ export function makeDialogQueuePM(appObject: HostAppObject): DialogQueuePM {
 class DialogQueuePMImp extends DialogQueuePM {
   private queue?: DialogQueue;
 
-  vmsAreEqual(a: DialogVM, b: DialogVM): boolean {
+  vmsAreEqual(a: DialogQueueVM, b: DialogQueueVM): boolean {
     if (a.open !== b.open) return false;
     if (a.id !== b.id) return false;
     if (a.dialogType !== b.dialogType) return false;
@@ -40,7 +40,7 @@ class DialogQueuePMImp extends DialogQueuePM {
   onQueueChange = () => {
     if (!this.queue) return;
 
-    let vm: DialogVM = { open: false };
+    let vm: DialogQueueVM = { open: false };
 
     const currentDialog = this.queue.activeDialog;
 
@@ -72,6 +72,6 @@ class DialogQueuePMImp extends DialogQueuePM {
   }
 }
 
-export const defaultDialogVM: DialogVM = {
+export const defaultDialogVM: DialogQueueVM = {
   open: false
 };

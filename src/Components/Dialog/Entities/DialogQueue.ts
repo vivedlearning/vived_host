@@ -1,9 +1,17 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
-import { DialogAlertDTO, AlertDialogEntity } from './Alert';
-import { DialogConfirmDTO, ConfirmDialogEntity } from './Confirm';
-import { DialogMarkDownEditorDTO, MarkDownEditorDialogEntity } from './MarkDownEditor';
-import { SelectModelDialogEntity } from './SelectModel';
-import { DialogSpinnerDTO, SpinnerDialogEntity } from './Spinner';
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectEntity,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { DialogAlertDTO, AlertDialogEntity } from "./Alert";
+import { DialogConfirmDTO, ConfirmDialogEntity } from "./Confirm";
+import {
+  DialogMarkDownEditorDTO,
+  MarkDownEditorDialogEntity
+} from "./MarkDownEditor";
+import { SelectModelDialogEntity } from "./SelectModel";
+import { DialogSpinnerDTO, SpinnerDialogEntity } from "./Spinner";
 
 export abstract class Dialog extends HostAppObjectEntity {
   abstract dialogType: string;
@@ -12,17 +20,22 @@ export abstract class Dialog extends HostAppObjectEntity {
 }
 
 export abstract class DialogQueue extends HostAppObjectEntity {
-  static type = 'DialogQueue';
+  static type = "DialogQueue";
 
   abstract get activeDialog(): Dialog | null;
   abstract submitDialog(dialog: Dialog): void;
   abstract activeDialogHasClosed(): void;
 
-  abstract alertDialogFactory(dto: DialogAlertDTO): AlertDialogEntity | undefined;
-  abstract confirmDialogFactory(dto: DialogConfirmDTO): ConfirmDialogEntity | undefined;
-  abstract markDownDialogFactory(dto: DialogMarkDownEditorDTO): MarkDownEditorDialogEntity | undefined;
+  abstract confirmDialogFactory(
+    dto: DialogConfirmDTO
+  ): ConfirmDialogEntity | undefined;
+  abstract markDownDialogFactory(
+    dto: DialogMarkDownEditorDTO
+  ): MarkDownEditorDialogEntity | undefined;
   abstract selectModelDialogFactory(): SelectModelDialogEntity | undefined;
-  abstract spinnerDialogFactory(dto: DialogSpinnerDTO): SpinnerDialogEntity | undefined;
+  abstract spinnerDialogFactory(
+    dto: DialogSpinnerDTO
+  ): SpinnerDialogEntity | undefined;
 
   static get(appObjects: HostAppObjectRepo) {
     return getSingletonComponent<DialogQueue>(DialogQueue.type, appObjects);
@@ -69,27 +82,33 @@ class DialogRepoImp extends DialogQueue {
   };
 
   alertDialogFactory = (dto: DialogAlertDTO): AlertDialogEntity | undefined => {
-    this.error('Alert factory has not been injected');
+    this.error("Alert factory has not been injected");
     return;
   };
 
-  confirmDialogFactory = (dto: DialogConfirmDTO): ConfirmDialogEntity | undefined => {
-    this.error('Confirm factory has not been injected');
+  confirmDialogFactory = (
+    dto: DialogConfirmDTO
+  ): ConfirmDialogEntity | undefined => {
+    this.error("Confirm factory has not been injected");
     return;
   };
 
-  markDownDialogFactory = (dto: DialogMarkDownEditorDTO): MarkDownEditorDialogEntity | undefined => {
-    this.error('Mark Down factory has not been injected');
+  markDownDialogFactory = (
+    dto: DialogMarkDownEditorDTO
+  ): MarkDownEditorDialogEntity | undefined => {
+    this.error("Mark Down factory has not been injected");
     return;
   };
 
   selectModelDialogFactory(): SelectModelDialogEntity | undefined {
-    this.error('Select Model factory has not been injected');
+    this.error("Select Model factory has not been injected");
     return;
   }
 
-  spinnerDialogFactory = (dto: DialogSpinnerDTO): SpinnerDialogEntity | undefined => {
-    this.error('Spinner factory has not been injected');
+  spinnerDialogFactory = (
+    dto: DialogSpinnerDTO
+  ): SpinnerDialogEntity | undefined => {
+    this.error("Spinner factory has not been injected");
     return;
   };
 

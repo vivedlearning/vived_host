@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue } from "../../Dialog";
+import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
 import { AssetEntity } from "../Entities/AssetEntity";
 import { GetAssetFileUC } from "./GetAssetFileUC";
 
@@ -95,8 +95,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,
             title: "Archive Asset Error",
           };
-          const confirmDialog = dialogQueue.alertDialogFactory(dialogDTO);
-          if (confirmDialog) dialogQueue.submitDialog(confirmDialog);
+          MakeAlertDialogUC.make(dialogDTO, this.appObjects);
           resolve();
         });
     });

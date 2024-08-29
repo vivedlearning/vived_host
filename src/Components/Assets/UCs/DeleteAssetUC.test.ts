@@ -1,5 +1,11 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { AlertDialogEntity, ConfirmDialogEntity, makeDialogQueue, SpinnerDialogEntity } from "../../Dialog";
+import {
+  AlertDialogEntity,
+  ConfirmDialogEntity,
+  makeDialogQueue,
+  makeMockMakeAlertDialogUC,
+  SpinnerDialogEntity
+} from "../../Dialog";
 import { makeMockDeleteAssetOnAPIUC } from "../../VivedAPI";
 import { makeAppAssets } from "../Entities/AppAssetsEntity";
 import { makeAssetEntity } from "../Entities/AssetEntity";
@@ -32,15 +38,7 @@ function makeTestRig() {
   );
   dialogQueue.spinnerDialogFactory = jest.fn().mockReturnValue(spinner);
 
-  const alert = new AlertDialogEntity(
-    {
-      message: "msg",
-      title: "title",
-      buttonLabel: "btm"
-    },
-    appObjects.getOrCreate("Alert")
-  );
-  dialogQueue.alertDialogFactory = jest.fn().mockReturnValue(alert);
+  const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
   const confirm = new ConfirmDialogEntity(
     {
@@ -63,7 +61,7 @@ function makeTestRig() {
     appObjects,
     assetRepo,
     spinner,
-    alert,
+    mockMakeAlert,
     dialogQueue,
     confirm
   };
@@ -98,14 +96,14 @@ describe("Delete Asset", () => {
   });
 
   it("Shows an alert if rejected", async () => {
-    const { uc, dialogQueue, mockDelete, alert } = makeTestRig();
+    const { uc, dialogQueue, mockDelete, mockMakeAlert } = makeTestRig();
     uc.error = jest.fn();
     mockDelete.doDelete.mockRejectedValue(new Error("Some Post Error"));
     dialogQueue.submitDialog = jest.fn();
 
     await uc.delete();
 
-    expect(dialogQueue.submitDialog).toBeCalledWith(alert);
+    expect(mockMakeAlert.make).toBeCalled();
   });
 
   it("Hides the spinner when rejected", async () => {

@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue } from "../../Dialog";
+import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
 import { DeleteAssetOnAPIUC } from "../../VivedAPI";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetEntity } from "../Entities/AssetEntity";
@@ -118,8 +118,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,
             title: "Archive Asset Error",
           };
-          const confirmDialog = dialogQueue.alertDialogFactory(dialogDTO);
-          if (confirmDialog) dialogQueue.submitDialog(confirmDialog);
+          MakeAlertDialogUC.make(dialogDTO, this.appObjects);
           resolve();
         });
     });
