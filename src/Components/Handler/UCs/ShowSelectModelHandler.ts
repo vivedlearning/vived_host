@@ -1,6 +1,7 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AssetPluginEntity } from "../../AssetPlugin";
+import { DialogQueue } from "../../Dialog";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
@@ -29,8 +30,22 @@ export function makeShowSelectModelHandler(
 }
 
 class ShowSelectModelHandlerImp extends ShowSelectModelHandler {
-  action: ShowSelectModelAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get assetPlugin() {
+    return this.getCachedSingleton<AssetPluginEntity>(AssetPluginEntity.type);
+  }
+
+  private get dialogQueue() {
+    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
+  }
+
+  action = (callback: (modelId: string) => void) => {
+    if (!this.assetPlugin || !this.dialogQueue) return;
+
+    this.assetPlugin.callback = callback;
+    this.assetPlugin.show = true;
+
+    const dialog = this.dialogQueue.selectModelDialogFactory();
+    if (dialog) this.dialogQueue.submitDialog(dialog);
   };
 
   handleRequest = (version: number, payload: unknown) => {

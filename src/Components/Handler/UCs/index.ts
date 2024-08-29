@@ -1,4 +1,5 @@
 export * from "./CallbackAssetDTO";
+export * from "./CloseAssetSystemPlugin";
 export * from "./GetAssetBlobURLHandler";
 export * from "./GetAssetFolderURLHandler";
 export * from "./GetAssetMetaHandler";
