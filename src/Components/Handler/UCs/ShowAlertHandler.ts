@@ -1,7 +1,6 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue } from "../../Dialog";
+import { MakeAlertDialogUC } from "../../Dialog";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
@@ -35,21 +34,18 @@ export function makeShowAlertHandler(
 }
 
 class ShowAlertHandlerImp extends ShowAlertHandler {
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   action: ShowAlertAction = (actionDTO: ShowAlertActionDTO) => {
     const { closeButtonLabel, closeCallback, message, title } = actionDTO;
 
-    const dialogDTO: DialogAlertDTO = {
-      buttonLabel: closeButtonLabel,
-      message,
-      title,
-      onClose: closeCallback
-    };
-    const alertDialog = this.dialogQueue?.alertDialogFactory(dialogDTO);
-    if (alertDialog) this.dialogQueue?.submitDialog(alertDialog);
+    MakeAlertDialogUC.make(
+      {
+        buttonLabel: closeButtonLabel,
+        message,
+        title,
+        onClose: closeCallback
+      },
+      this.appObjects
+    );
   };
 
   handleRequest = (version: number, payload: unknown) => {

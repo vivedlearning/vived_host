@@ -14,10 +14,12 @@ export interface AlertDialogVM {
 
 export const defaultAlertDialogVM: AlertDialogVM = {
   message: "",
-  buttonLabel:  "",
-  close: ()=>{},
+  buttonLabel: "",
+  close: () => {
+    // empty
+  },
   title: ""
-}
+};
 
 export abstract class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
   static type = "AlertDialogPM";

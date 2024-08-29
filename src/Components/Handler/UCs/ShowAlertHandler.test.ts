@@ -1,7 +1,9 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { AlertDialogEntity, makeDialogQueue } from "../../Dialog";
+import {
+  makeMockMakeAlertDialogUC
+} from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
-import { ShowAlertActionDTO, makeShowAlertHandler } from "./ShowAlertHandler";
+import { makeShowAlertHandler, ShowAlertActionDTO } from "./ShowAlertHandler";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -9,25 +11,10 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
-  const mockSubmitDialog = jest.fn();
-  dialogQueue.submitDialog = mockSubmitDialog;
-
-  const alertDialog = new AlertDialogEntity(
-    {
-      title: "a title",
-      message: "a message",
-      buttonLabel: "confirm button",
-      onClose: jest.fn()
-    },
-    appObjects.getOrCreate("Alert")
-  );
-
-  const mockAlertFactory = jest.fn().mockReturnValue(alertDialog);
-  dialogQueue.alertDialogFactory = mockAlertFactory;
+  const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
   const uc = makeShowAlertHandler(ao);
-  return { registerSpy, uc, mockSubmitDialog, mockAlertFactory, alertDialog };
+  return { registerSpy, uc, mockMakeAlert };
 }
 
 function makeBasicDTO(): ShowAlertActionDTO {
@@ -84,22 +71,13 @@ describe("Show Alert Handler", () => {
     expect(() => uc.handleRequest(1, payload)).toThrowError();
   });
 
-  it("Submits a Confirm dialog to the repo", () => {
-    const { mockSubmitDialog, uc, alertDialog } = makeTestRig();
-
-    const dto = makeBasicDTO();
-    uc.action(dto);
-
-    expect(mockSubmitDialog).toBeCalledWith(alertDialog);
-  });
-
   it("Sets up the Dialog properties", () => {
-    const { mockAlertFactory, uc } = makeTestRig();
+    const { mockMakeAlert, uc } = makeTestRig();
 
     const dto = makeBasicDTO();
     uc.action(dto);
 
-    expect(mockAlertFactory).toBeCalledWith({
+    expect(mockMakeAlert.make).toBeCalledWith({
       title: dto.title,
       message: dto.message,
       buttonLabel: dto.closeButtonLabel,
