@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
+import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC, MakeSpinnerDialogUC } from "../../Dialog";
 import { PatchAssetIsArchivedUC } from "../../VivedAPI";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetEntity } from "../Entities/AssetEntity";
@@ -52,10 +52,6 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
     return this.getCachedSingleton<AppAssetsEntity>(AppAssetsEntity.type);
   }
 
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   setArchived = (archived: boolean): Promise<void> => {
     const asset = this.asset;
 
@@ -68,21 +64,15 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
     }
 
     const patchAssetIsArchived = this.patchAssetIsArchived;
-    const dialogQueue = this.dialogQueue;
-    if (!patchAssetIsArchived || !dialogQueue) {
+    if (!patchAssetIsArchived) {
       return Promise.reject();
     }
 
-    const title = archived ? "Archiving Asset" : "Unarchiving Asset";
-    const spinner = dialogQueue.spinnerDialogFactory({
+    const title = archived ? "Archiving Asset" : "Unarchive Asset";
+    const spinner = MakeSpinnerDialogUC.make({
       title,
       message: "Updating asset's archived flag..."
-    });
-    if (!spinner) {
-      return Promise.reject();
-    }
-
-    dialogQueue.submitDialog(spinner);
+    }, this.appObjects);
 
     return new Promise((resolve, reject) => {
       patchAssetIsArchived(asset.id, archived)
@@ -97,7 +87,7 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
         })
         .catch((e) => {
           this.error("Archive asset error: " + e.message);
-          spinner.close();
+          spinner?.close();
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,

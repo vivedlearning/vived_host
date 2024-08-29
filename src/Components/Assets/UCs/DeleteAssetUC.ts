@@ -1,5 +1,14 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import {
+  DialogAlertDTO,
+  MakeAlertDialogUC,
+  MakeConfirmDialogUC,
+  MakeSpinnerDialogUC
+} from "../../Dialog";
 import { DeleteAssetOnAPIUC } from "../../VivedAPI";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetEntity } from "../Entities/AssetEntity";
@@ -57,23 +66,18 @@ class DeleteAssetUCImp extends DeleteAssetUC {
     return this.getCachedSingleton<AssetRepo>(AssetRepo.type);
   }
 
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   deleteWithConfirm = () => {
-    if (!this.dialogQueue) return;
-
-    const confirmDialog = this.dialogQueue.confirmDialogFactory({
-      cancelButtonLabel: "Cancel",
-      confirmButtonLabel: "Delete Asset",
-      message:
-        "Are you sure you want to delete this asset. This cannot be undone and could affect users. Consider archiving it instead",
-      title: "Delete Asset",
-      onConfirm: this.delete
-    });
-
-    if (confirmDialog) this.dialogQueue.submitDialog(confirmDialog);
+    MakeConfirmDialogUC.make(
+      {
+        cancelButtonLabel: "Cancel",
+        confirmButtonLabel: "Delete Asset",
+        message:
+          "Are you sure you want to delete this asset. This cannot be undone and could affect users. Consider archiving it instead",
+        title: "Delete Asset",
+        onConfirm: this.delete
+      },
+      this.appObjects
+    );
   };
 
   delete = (): Promise<void> => {
@@ -84,17 +88,18 @@ class DeleteAssetUCImp extends DeleteAssetUC {
     }
 
     const doDelete = this.doDelete;
-    const dialogQueue = this.dialogQueue;
-    if (!doDelete || !dialogQueue) {
+    if (!doDelete) {
       return Promise.reject();
     }
 
     const title = "Delete Asset";
-    const spinnerDialog = dialogQueue.spinnerDialogFactory({
-      title,
-      message: "Deleting asset..."
-    });
-    if (spinnerDialog) dialogQueue.submitDialog(spinnerDialog);
+    const spinnerDialog = MakeSpinnerDialogUC.make(
+      {
+        title,
+        message: "Deleting asset..."
+      },
+      this.appObjects
+    );
 
     return new Promise((resolve) => {
       doDelete(asset.id)
@@ -116,7 +121,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,
-            title: "Archive Asset Error",
+            title: "Archive Asset Error"
           };
           MakeAlertDialogUC.make(dialogDTO, this.appObjects);
           resolve();

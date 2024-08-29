@@ -1,5 +1,9 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeDialogQueue, SpinnerDialogEntity } from "../../Dialog";
+import {
+  makeDialogQueue,
+  makeMockMakeSpinnerDialogUC,
+  SpinnerDialogEntity
+} from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
   makeShowSpinnerHandler,
@@ -12,22 +16,10 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
-  const spinner = new SpinnerDialogEntity(
-    {
-      message: "msg",
-      title: "title"
-    },
-    appObjects.getOrCreate("Spinner")
-  );
-
-  const mockSpinnerFactory = jest.fn().mockReturnValue(spinner);
-  dialogQueue.spinnerDialogFactory = mockSpinnerFactory;
-  const mockSubmitDialog = jest.fn();
-  dialogQueue.submitDialog = mockSubmitDialog;
+  const mockMakeSpinner = makeMockMakeSpinnerDialogUC(appObjects);
 
   const uc = makeShowSpinnerHandler(ao);
-  return { registerSpy, uc, mockSpinnerFactory, spinner, mockSubmitDialog };
+  return { registerSpy, uc, mockMakeSpinner };
 }
 
 function makeBasicDTO(): ShowSpinnerActionDTO {
@@ -82,22 +74,13 @@ describe("Show Spinner Handler", () => {
     expect(() => uc.handleRequest(1, payload)).toThrowError();
   });
 
-  it("Submits a Spinner dialog to the repo", () => {
-    const { mockSubmitDialog, uc, spinner } = makeTestRig();
-
-    const dto = makeBasicDTO();
-    uc.action(dto);
-
-    expect(mockSubmitDialog).toBeCalledWith(spinner);
-  });
-
   it("Sets up the Dialog properties", () => {
-    const { mockSpinnerFactory, uc } = makeTestRig();
+    const { mockMakeSpinner, uc } = makeTestRig();
 
     const dto = makeBasicDTO();
     uc.action(dto);
 
-    expect(mockSpinnerFactory).toBeCalledWith({
+    expect(mockMakeSpinner.make).toBeCalledWith({
       title: dto.title,
       message: dto.message
     });

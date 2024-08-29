@@ -1,5 +1,14 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import {
+  DialogAlertDTO,
+  DialogQueue,
+  MakeAlertDialogUC,
+  MakeSpinnerDialogUC
+} from "../../Dialog";
 import { PatchAssetFileUC } from "../../VivedAPI";
 import { AssetEntity } from "../Entities/AssetEntity";
 
@@ -56,10 +65,6 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
       ?.doPatch;
   }
 
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   updateFile = (file: File): Promise<void> => {
     const asset = this.asset;
 
@@ -68,16 +73,17 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
     }
 
     const patchAssetFile = this.patchAssetFile;
-    const dialogQueue = this.dialogQueue;
-    if (!patchAssetFile || !dialogQueue) {
+    if (!patchAssetFile) {
       return Promise.reject();
     }
 
-    const spinnerDialog = dialogQueue.spinnerDialogFactory({
-      title: "Asset File",
-      message: "Updating asset's file..."
-    });
-    if (spinnerDialog) dialogQueue.submitDialog(spinnerDialog);
+    const spinnerDialog = MakeSpinnerDialogUC.make(
+      {
+        title: "Asset File",
+        message: "Updating asset's file..."
+      },
+      this.appObjects
+    );
 
     return new Promise((resolve, reject) => {
       patchAssetFile(asset.id, file)
@@ -94,7 +100,7 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when updating the asset's file. Check the console. ${e.message}`,
-            title: "Update Asset File Error",
+            title: "Update Asset File Error"
           };
           MakeAlertDialogUC.make(dialogDTO, this.appObjects);
           resolve();

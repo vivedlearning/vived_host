@@ -1,5 +1,9 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogConfirmDTO, DialogQueue } from "../../Dialog";
+import {
+  DialogConfirmDTO,
+  DialogQueue,
+  MakeConfirmDialogUC
+} from "../../Dialog";
 import {
   HostHandlerEntity,
   RequestHandler,
@@ -36,10 +40,6 @@ export function makeShowConfirmHandler(
 }
 
 class ShowConfirmHandlerImp extends ShowConfirmHandler {
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   action: ShowConfirmAction = (actionDTO: ShowConfirmActionDTO) => {
     const {
       cancelButtonLabel,
@@ -50,16 +50,17 @@ class ShowConfirmHandlerImp extends ShowConfirmHandler {
       title
     } = actionDTO;
 
-    const dialogDTO: DialogConfirmDTO = {
-      cancelButtonLabel,
-      confirmButtonLabel,
-      message,
-      title,
-      onCancel: cancelCallback,
-      onConfirm: confirmCallback
-    };
-    const confirmDialog = this.dialogQueue?.confirmDialogFactory(dialogDTO);
-    if (confirmDialog) this.dialogQueue?.submitDialog(confirmDialog);
+    MakeConfirmDialogUC.make(
+      {
+        cancelButtonLabel,
+        confirmButtonLabel,
+        message,
+        title,
+        onCancel: cancelCallback,
+        onConfirm: confirmCallback
+      },
+      this.appObjects
+    );
   };
 
   handleRequest = (version: number, payload: unknown) => {

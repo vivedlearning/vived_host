@@ -1,5 +1,14 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC } from "../../Dialog";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import {
+  DialogAlertDTO,
+  DialogQueue,
+  MakeAlertDialogUC,
+  MakeSpinnerDialogUC
+} from "../../Dialog";
 import { AssetEntity } from "../Entities/AssetEntity";
 import { GetAssetFileUC } from "./GetAssetFileUC";
 
@@ -51,10 +60,6 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
       ?.getAssetFile;
   }
 
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   download = (): Promise<void> => {
     const asset = this.asset;
 
@@ -68,17 +73,18 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
     }
 
     const getAssetFile = this.getAssetFile;
-    const dialogQueue = this.dialogQueue;
-    if (!getAssetFile || !dialogQueue) {
+    if (!getAssetFile) {
       return Promise.reject();
     }
 
     const title = "Download Asset";
-    const spinnerDialog = dialogQueue.spinnerDialogFactory({
-      title,
-      message: "Downloading asset..."
-    });
-    if (spinnerDialog) dialogQueue.submitDialog(spinnerDialog);
+    const spinnerDialog = MakeSpinnerDialogUC.make(
+      {
+        title,
+        message: "Downloading asset..."
+      },
+      this.appObjects
+    );
 
     return new Promise((resolve) => {
       getAssetFile(asset.id)
@@ -93,7 +99,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,
-            title: "Archive Asset Error",
+            title: "Archive Asset Error"
           };
           MakeAlertDialogUC.make(dialogDTO, this.appObjects);
           resolve();

@@ -26,17 +26,6 @@ export abstract class DialogQueue extends HostAppObjectEntity {
   abstract submitDialog(dialog: Dialog): void;
   abstract activeDialogHasClosed(): void;
 
-  abstract confirmDialogFactory(
-    dto: DialogConfirmDTO
-  ): ConfirmDialogEntity | undefined;
-  abstract markDownDialogFactory(
-    dto: DialogMarkDownEditorDTO
-  ): MarkDownEditorDialogEntity | undefined;
-  abstract selectModelDialogFactory(): SelectModelDialogEntity | undefined;
-  abstract spinnerDialogFactory(
-    dto: DialogSpinnerDTO
-  ): SpinnerDialogEntity | undefined;
-
   static get(appObjects: HostAppObjectRepo) {
     return getSingletonComponent<DialogQueue>(DialogQueue.type, appObjects);
   }
@@ -79,37 +68,6 @@ class DialogRepoImp extends DialogQueue {
 
       this.notifyOnChange();
     }
-  };
-
-  alertDialogFactory = (dto: DialogAlertDTO): AlertDialogEntity | undefined => {
-    this.error("Alert factory has not been injected");
-    return;
-  };
-
-  confirmDialogFactory = (
-    dto: DialogConfirmDTO
-  ): ConfirmDialogEntity | undefined => {
-    this.error("Confirm factory has not been injected");
-    return;
-  };
-
-  markDownDialogFactory = (
-    dto: DialogMarkDownEditorDTO
-  ): MarkDownEditorDialogEntity | undefined => {
-    this.error("Mark Down factory has not been injected");
-    return;
-  };
-
-  selectModelDialogFactory(): SelectModelDialogEntity | undefined {
-    this.error("Select Model factory has not been injected");
-    return;
-  }
-
-  spinnerDialogFactory = (
-    dto: DialogSpinnerDTO
-  ): SpinnerDialogEntity | undefined => {
-    this.error("Spinner factory has not been injected");
-    return;
   };
 
   constructor(appObject: HostAppObject) {

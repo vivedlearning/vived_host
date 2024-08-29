@@ -2,6 +2,7 @@ import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import {
   makeDialogQueue,
   makeMockMakeAlertDialogUC,
+  makeMockMakeSpinnerDialogUC,
   SpinnerDialogEntity
 } from "../../Dialog";
 import { makeMockPatchAssetIsArchivedUC } from "../../VivedAPI";
@@ -22,17 +23,12 @@ function makeTestRig() {
 
   const mockPatch = makeMockPatchAssetIsArchivedUC(appObjects);
 
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
-
-  const spinner = new SpinnerDialogEntity(
-    {
-      message: "msg",
-      title: "title"
-    },
+  const mockSpinner = new SpinnerDialogEntity(
+    { message: "", title: "" },
     appObjects.getOrCreate("Spinner")
   );
-  dialogQueue.spinnerDialogFactory = jest.fn().mockReturnValue(spinner);
-
+  const mockMakeSpinner = makeMockMakeSpinnerDialogUC(appObjects);
+  mockMakeSpinner.make.mockReturnValue(mockSpinner);
   const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
   const uc = makeArchiveAssetUC(assetAO);
@@ -43,8 +39,8 @@ function makeTestRig() {
     uc,
     mockPatch,
     appObjects,
-    spinner,
-    dialogQueue,
+    mockSpinner,
+    mockMakeSpinner,
     mockMakeAlert
   };
 }
@@ -85,29 +81,26 @@ describe("Archive Asset", () => {
   });
 
   it("Shows a spinner", () => {
-    const { uc, dialogQueue, spinner } = makeTestRig();
-
-    dialogQueue.submitDialog = jest.fn();
+    const { uc, mockMakeSpinner } = makeTestRig();
 
     uc.setArchived(true);
 
-    expect(dialogQueue.submitDialog).toBeCalledWith(spinner);
+    expect(mockMakeSpinner.make).toBeCalled();
   });
 
   it("Hides the spinner when completed", async () => {
-    const { uc, spinner } = makeTestRig();
-    spinner.close = jest.fn();
+    const { uc, mockSpinner } = makeTestRig();
+    mockSpinner.close = jest.fn();
 
     await uc.setArchived(true);
 
-    expect(spinner.close).toBeCalled();
+    expect(mockSpinner.close).toBeCalled();
   });
 
   it("Shows an alert if rejected", async () => {
-    const { uc, dialogQueue, mockPatch, mockMakeAlert } = makeTestRig();
+    const { uc, mockPatch, mockMakeAlert } = makeTestRig();
     uc.error = jest.fn();
     mockPatch.doPatch.mockRejectedValue(new Error("Some Post Error"));
-    dialogQueue.submitDialog = jest.fn();
 
     await uc.setArchived(true);
 
@@ -115,14 +108,14 @@ describe("Archive Asset", () => {
   });
 
   it("Hides the spinner when rejected", async () => {
-    const { uc, mockPatch, spinner } = makeTestRig();
+    const { uc, mockPatch, mockSpinner } = makeTestRig();
     uc.error = jest.fn();
     mockPatch.doPatch.mockRejectedValue(new Error("Some Post Error"));
-    spinner.close = jest.fn();
+    mockSpinner.close = jest.fn();
 
     await uc.setArchived(true);
 
-    expect(spinner.close).toBeCalled();
+    expect(mockSpinner.close).toBeCalled();
   });
 
   it("Warns if it cannot find the app object by ID when getting", () => {

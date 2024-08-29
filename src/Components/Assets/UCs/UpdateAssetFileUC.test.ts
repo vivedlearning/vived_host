@@ -3,6 +3,7 @@ import {
   AlertDialogEntity,
   makeDialogQueue,
   makeMockMakeAlertDialogUC,
+  makeMockMakeSpinnerDialogUC,
   SpinnerDialogEntity
 } from "../../Dialog";
 import { mockMockPatchAssetFileUC } from "../../VivedAPI";
@@ -20,8 +21,6 @@ function makeTestRig() {
   const mockPatch = mockMockPatchAssetFileUC(appObjects);
   mockPatch.doPatch.mockResolvedValue("new.filename");
 
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
-
   const spinner = new SpinnerDialogEntity(
     {
       message: "msg",
@@ -29,7 +28,8 @@ function makeTestRig() {
     },
     appObjects.getOrCreate("Spinner")
   );
-  dialogQueue.spinnerDialogFactory = jest.fn().mockReturnValue(spinner);
+  const mockMakeSpinner = makeMockMakeSpinnerDialogUC(appObjects);
+  mockMakeSpinner.make.mockReturnValue(spinner);
 
   const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
@@ -43,7 +43,7 @@ function makeTestRig() {
     mockSetAssetFile,
     spinner,
     mockMakeAlert,
-    dialogQueue
+    mockMakeSpinner
   };
 }
 
@@ -78,14 +78,12 @@ describe("Archive Asset", () => {
   });
 
   it("Shows a spinner", () => {
-    const { uc, dialogQueue, spinner } = makeTestRig();
-
-    dialogQueue.submitDialog = jest.fn();
+    const { uc, mockMakeSpinner, spinner } = makeTestRig();
 
     const mockFile = new File([], "file.name");
     uc.updateFile(mockFile);
 
-    expect(dialogQueue.submitDialog).toBeCalledWith(spinner);
+    expect(mockMakeSpinner.make).toBeCalled();
   });
 
   it("Hides the spinner when completed", async () => {
@@ -99,10 +97,9 @@ describe("Archive Asset", () => {
   });
 
   it("Shows an alert if rejected", async () => {
-    const { uc, dialogQueue, mockPatch, mockMakeAlert } = makeTestRig();
+    const { uc, mockPatch, mockMakeAlert } = makeTestRig();
     uc.error = jest.fn();
     mockPatch.doPatch.mockRejectedValue(new Error("Some Post Error"));
-    dialogQueue.submitDialog = jest.fn();
 
     const mockFile = new File([], "file.name");
     await uc.updateFile(mockFile);

@@ -1,5 +1,9 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogMarkDownEditorDTO, DialogQueue } from "../../Dialog";
+import {
+  DialogMarkDownEditorDTO,
+  DialogQueue,
+  MakeMarkdownDialogUC
+} from "../../Dialog";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -36,21 +40,18 @@ export function makeShowMarkDownEditorHandler(
 }
 
 export class ShowMarkDownEditorHandlerImp extends ShowMarkDownEditorHandler {
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   action: ShowMarkDownEditorAction = (
     actionDTO: ShowMarkDownEditorActionDTO
   ) => {
     const { initialText, submitCallback } = actionDTO;
 
-    const dialogDTO: DialogMarkDownEditorDTO = {
-      initialText,
-      onConfirm: submitCallback
-    };
-    const dialog = this.dialogQueue?.markDownDialogFactory(dialogDTO);
-    if (dialog) this.dialogQueue?.submitDialog(dialog);
+    MakeMarkdownDialogUC.make(
+      {
+        initialText,
+        onConfirm: submitCallback
+      },
+      this.appObjects
+    );
   };
 
   handleRequest = (version: number, payload: unknown) => {

@@ -3,6 +3,7 @@ import {
   AlertDialogEntity,
   makeDialogQueue,
   makeMockMakeAlertDialogUC,
+  makeMockMakeSpinnerDialogUC,
   SpinnerDialogEntity
 } from "../../Dialog";
 import { makeAssetEntity } from "../Entities/AssetEntity";
@@ -22,16 +23,12 @@ function makeTestRig() {
   const mockFile = new File([], "file.name");
   mockGetFile.getAssetFile.mockResolvedValue(mockFile);
 
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
-
   const spinner = new SpinnerDialogEntity(
-    {
-      message: "msg",
-      title: "title"
-    },
+    { message: "", title: "" },
     appObjects.getOrCreate("Spinner")
   );
-  dialogQueue.spinnerDialogFactory = jest.fn().mockReturnValue(spinner);
+  const mockMakeSpinner = makeMockMakeSpinnerDialogUC(appObjects);
+  mockMakeSpinner.make.mockReturnValue(spinner);
 
   const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
@@ -49,7 +46,7 @@ function makeTestRig() {
     mockSaveLocally,
     spinner,
     mockMakeAlert,
-    dialogQueue
+    mockMakeSpinner
   };
 }
 
@@ -71,13 +68,11 @@ describe("Download Asset File", () => {
   });
 
   it("Shows a spinner if it needs to download the file", () => {
-    const { uc, dialogQueue, spinner } = makeTestRig();
-
-    dialogQueue.submitDialog = jest.fn();
+    const { uc, mockMakeSpinner, spinner } = makeTestRig();
 
     uc.download();
 
-    expect(dialogQueue.submitDialog).toBeCalledWith(spinner);
+    expect(mockMakeSpinner.make).toBeCalled();
   });
 
   it("Hides the spinner when completed", async () => {
@@ -90,10 +85,9 @@ describe("Download Asset File", () => {
   });
 
   it("Shows an alert if rejected", async () => {
-    const { uc, mockGetFile, dialogQueue, mockMakeAlert } = makeTestRig();
+    const { uc, mockGetFile, mockMakeAlert } = makeTestRig();
     uc.error = jest.fn();
     mockGetFile.getAssetFile.mockRejectedValue(new Error("Some Post Error"));
-    dialogQueue.submitDialog = jest.fn();
 
     await uc.download();
 
@@ -153,14 +147,13 @@ describe("Download Asset File", () => {
   });
 
   it("Doesn't show a spinner the file exists", async () => {
-    const { uc, dialogQueue, mockFile, asset } = makeTestRig();
+    const { uc, mockMakeSpinner, mockFile, asset } = makeTestRig();
 
-    dialogQueue.submitDialog = jest.fn();
     URL.createObjectURL = jest.fn().mockResolvedValue("www.someurl.com");
     asset.setFile(mockFile);
 
     await uc.download();
 
-    expect(dialogQueue.submitDialog).toBeCalledTimes(0);
+    expect(mockMakeSpinner.make).toBeCalledTimes(0);
   });
 });

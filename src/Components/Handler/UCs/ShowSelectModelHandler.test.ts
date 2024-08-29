@@ -2,6 +2,7 @@ import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeAssetPluginEntity } from "../../AssetPlugin";
 import {
   makeDialogQueue,
+  makeMockMakeSelectModelDialogUC,
   makeSelectModelFactory,
   SelectModelDialogEntity
 } from "../../Dialog";
@@ -13,13 +14,7 @@ function makeTestRig() {
   const ao = appObjects.getOrCreate("AO");
 
   const assetPlugin = makeAssetPluginEntity(appObjects.getOrCreate("Assets"));
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("dialogQueue"));
-
-  const selectModelEntity = new SelectModelDialogEntity(
-    appObjects.getOrCreate("SelectModel")
-  );
-  const mockFactory = jest.fn().mockReturnValue(selectModelEntity);
-  dialogQueue.selectModelDialogFactory = mockFactory;
+  const mockMakeSelectModel = makeMockMakeSelectModelDialogUC(appObjects);
 
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
@@ -30,10 +25,8 @@ function makeTestRig() {
     registerSpy,
     uc,
     callback,
-    dialogQueue,
-    assetPlugin,
-    selectModelEntity,
-    mockFactory
+    mockMakeSelectModel,
+    assetPlugin
   };
 }
 
@@ -96,13 +89,11 @@ describe("Show Select Model Handler", () => {
     expect(assetPlugin.show).toEqual(true);
   });
 
-  it("Submits a dialog", () => {
-    const { uc, callback, dialogQueue, selectModelEntity } = makeTestRig();
-
-    dialogQueue.submitDialog = jest.fn();
+  it("Makes a dialog", () => {
+    const { uc, callback, mockMakeSelectModel } = makeTestRig();
 
     uc.action(callback);
 
-    expect(dialogQueue.submitDialog).toBeCalledWith(selectModelEntity);
+    expect(mockMakeSelectModel.make).toBeCalled();
   });
 });

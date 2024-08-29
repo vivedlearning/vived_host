@@ -1,9 +1,10 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeDialogQueue, MarkDownEditorDialogEntity } from "../../Dialog";
+import {
+  makeMockMakeMarkdownDialogUC
+} from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
-  ShowMarkDownEditorActionDTO,
-  makeShowMarkDownEditorHandler
+  makeShowMarkDownEditorHandler, ShowMarkDownEditorActionDTO
 } from "./ShowMarkDownEditorHandler";
 
 function makeTestRig() {
@@ -12,22 +13,10 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
-  const dialogQueue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
-  const editor = new MarkDownEditorDialogEntity(
-    {
-      initialText: "",
-      onConfirm: jest.fn()
-    },
-    appObjects.getOrCreate("editor")
-  );
-
-  const mockEditorFactory = jest.fn().mockReturnValue(editor);
-  dialogQueue.markDownDialogFactory = mockEditorFactory;
-  const mockSubmitDialog = jest.fn();
-  dialogQueue.submitDialog = mockSubmitDialog;
+  const mockMakeMarkdown = makeMockMakeMarkdownDialogUC(appObjects);
 
   const uc = makeShowMarkDownEditorHandler(ao);
-  return { registerSpy, uc, mockEditorFactory, editor, mockSubmitDialog };
+  return { registerSpy, uc, mockMakeMarkdown };
 }
 
 function makeBasicDTO(
@@ -100,22 +89,13 @@ describe("Show MarkDown Editor Handler", () => {
     expect(() => uc.handleRequest(1, payload)).toThrowError();
   });
 
-  it("Submits a MarkDown Editor dialog to the repo", () => {
-    const { mockSubmitDialog, uc, editor } = makeTestRig();
-
-    const dto = makeBasicDTO();
-    uc.action(dto);
-
-    expect(mockSubmitDialog).toBeCalledWith(editor);
-  });
-
   it("Sets up the Dialog properties", () => {
-    const { mockEditorFactory, uc } = makeTestRig();
+    const { mockMakeMarkdown, uc } = makeTestRig();
 
     const dto = makeBasicDTO();
     uc.action(dto);
 
-    expect(mockEditorFactory).toBeCalledWith({
+    expect(mockMakeMarkdown.make).toBeCalledWith({
       initialText: dto.initialText,
       onConfirm: dto.submitCallback
     });

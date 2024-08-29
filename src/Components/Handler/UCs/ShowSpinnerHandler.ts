@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogQueue } from "../../Dialog";
+import { DialogQueue, MakeSpinnerDialogUC } from "../../Dialog";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -34,28 +34,17 @@ export function makeShowSpinnerHandler(
 }
 
 class ShowSpinnerBase extends ShowSpinnerHandler {
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   action: ShowSpinnerAction = (actionDTO: ShowSpinnerActionDTO) => {
-    if (!this.dialogQueue) {
-      return;
-    }
-
     const { title, message, closeCallback } = actionDTO;
 
-    const spinnerDialog = this.dialogQueue.spinnerDialogFactory({
-      title,
-      message
-    });
-
-    if (!spinnerDialog) {
-      return;
-    }
-
-    this.dialogQueue.submitDialog(spinnerDialog);
-    closeCallback(spinnerDialog.close);
+    const spinnerDialog = MakeSpinnerDialogUC.make(
+      {
+        title,
+        message
+      },
+      this.appObjects
+    );
+    closeCallback(() => spinnerDialog?.close());
   };
 
   handleRequest = (version: number, payload: unknown) => {

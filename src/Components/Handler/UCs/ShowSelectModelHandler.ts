@@ -1,6 +1,6 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import { AssetPluginEntity } from "../../AssetPlugin";
-import { DialogQueue } from "../../Dialog";
+import { DialogQueue, MakeSelectModelDialogUC } from "../../Dialog";
 import {
   HostHandlerEntity,
   RequestHandler,
@@ -34,18 +34,13 @@ class ShowSelectModelHandlerImp extends ShowSelectModelHandler {
     return this.getCachedSingleton<AssetPluginEntity>(AssetPluginEntity.type);
   }
 
-  private get dialogQueue() {
-    return this.getCachedSingleton<DialogQueue>(DialogQueue.type);
-  }
-
   action = (callback: (modelId: string) => void) => {
-    if (!this.assetPlugin || !this.dialogQueue) return;
+    if (!this.assetPlugin) return;
 
     this.assetPlugin.callback = callback;
     this.assetPlugin.show = true;
 
-    const dialog = this.dialogQueue.selectModelDialogFactory();
-    if (dialog) this.dialogQueue.submitDialog(dialog);
+    MakeSelectModelDialogUC.make(this.appObjects);
   };
 
   handleRequest = (version: number, payload: unknown) => {
