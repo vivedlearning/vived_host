@@ -128,7 +128,9 @@ describe("Host Dispatch Entity", () => {
   });
 
   it("Does not requests the payload versions if getting the app version throws an error", () => {
-    const { dispatcher } = makeTestRig();
+    const { dispatcher, appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
 
     const handleGetVersion = jest
       .fn()

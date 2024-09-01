@@ -1,4 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppEntity } from "../../Apps";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -33,8 +34,36 @@ export function makeSubmitLogHandler(
 }
 
 class SubmitLogHandlerImp extends SubmitLogHandler {
-  action: SubmitLogAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get app() {
+    return this.getCachedLocalComponent<AppEntity>(AppEntity.type);
+  }
+
+  action: SubmitLogAction = (
+    sender: string,
+    severity: Severity,
+    message: string
+  ) => {
+    if (!this.app) {
+      return;
+    }
+
+    const prependedSender = `[${this.app.name}] ${sender}`;
+
+    if (severity === "LOG") {
+      this.appObjects.submitLog(prependedSender, message);
+    } else if (severity === "WARNING") {
+      this.appObjects.submitWarning(prependedSender, message);
+    } else if (severity === "ERROR") {
+      this.appObjects.submitError(prependedSender, message);
+    } else if (severity === "FATAL") {
+      this.appObjects.submitFatal(prependedSender, message);
+    } else {
+      this.appObjects.submitLog(prependedSender, message);
+      this.appObjects.submitWarning(
+        "Host Handler - Submit Log",
+        `Received an unsupported log severity type of ${severity}`
+      );
+    }
   };
 
   handleRequest = (version: number, payload: unknown) => {

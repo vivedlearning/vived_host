@@ -1,15 +1,19 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppEntity } from "../../Apps";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeSubmitLogHandler } from "./SubmitLogHandler";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const ao = appObjects.getOrCreate("AO");
+  const ao = appObjects.getOrCreate("App1");
+
+  const app = makeAppEntity(ao);
+  app.name = "App 1"
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
   const uc = makeSubmitLogHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, appObjects };
 }
 
 describe("Submit Result Base Handler", () => {
@@ -18,13 +22,7 @@ describe("Submit Result Base Handler", () => {
     expect(registerSpy).toBeCalledWith(uc);
   });
 
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action("sender", "ERROR", "a message")).toThrowError();
-  });
-
-  it("Throws an unsupported error for version 1", () => {
+  it("Throws for an unsupported version", () => {
     const { uc } = makeTestRig();
 
     const payload = {
@@ -33,7 +31,7 @@ describe("Submit Result Base Handler", () => {
       severity: "ERROR"
     };
 
-    expect(() => uc.handleRequest(1, payload)).toThrowError();
+    expect(() => uc.handleRequest(-1, payload)).toThrowError();
   });
 
   it("Triggers the action for v1", () => {
@@ -71,5 +69,41 @@ describe("Submit Result Base Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Submits a log", () => {
+    const { appObjects, uc } = makeTestRig();
+    const mockLog = jest.fn();
+    appObjects.submitLog = mockLog;
+
+    uc.action("Sender", "LOG", "A message");
+    expect(mockLog).toBeCalledWith("[App 1] Sender", "A message");
+  });
+
+  it("Submits a warning", () => {
+    const { appObjects, uc } = makeTestRig();
+    const mockWarning = jest.fn();
+    appObjects.submitWarning = mockWarning;
+
+    uc.action("Sender", "WARNING", "A message");
+    expect(mockWarning).toBeCalledWith("[App 1] Sender", "A message");
+  });
+
+  it("Submits an error", () => {
+    const { appObjects, uc } = makeTestRig();
+    const mockError = jest.fn();
+    appObjects.submitError = mockError;
+
+    uc.action("Sender", "ERROR", "A message");
+    expect(mockError).toBeCalledWith("[App 1] Sender", "A message");
+  });
+
+  it("Submits an fatal error", () => {
+    const { appObjects, uc } = makeTestRig();
+    const mockFatal = jest.fn();
+    appObjects.submitFatal = mockFatal;
+
+    uc.action("Sender", "FATAL", "A message");
+    expect(mockFatal).toBeCalledWith("[App 1] Sender", "A message");
   });
 });
