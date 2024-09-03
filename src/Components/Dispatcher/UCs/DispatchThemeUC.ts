@@ -3,13 +3,14 @@ import {
   HostAppObjectRepo,
   HostAppObjectUC
 } from "../../../HostAppObject";
+import { HostThemeEntity } from "../../ThemeColors";
 import { HostDispatchEntity } from "../Entities";
 
 export abstract class DispatchThemeUC extends HostAppObjectUC {
   static readonly type = "DispatchThemeUC";
   readonly requestType = "SET_THEME_COLORS";
 
-  abstract doDispatch(colors: object): void;
+  abstract doDispatch(): void;
 
   static get(appObject: HostAppObject): DispatchThemeUC | undefined {
     const asset = appObject.getComponent<DispatchThemeUC>(DispatchThemeUC.type);
@@ -48,8 +49,14 @@ class DispatchThemeUCImp extends DispatchThemeUC {
   readonly requestVersion = 1;
   private dispatcher?: HostDispatchEntity;
 
-  doDispatch(colors: object): void {
-    if (!this.dispatcher) return;
+  private get theme() {
+    return this.getCachedSingleton<HostThemeEntity>(HostThemeEntity.type);
+  }
+
+  doDispatch(): void {
+    if (!this.dispatcher || !this.theme) return;
+
+    const colors: ColorSchemeV1 = { ...this.theme.activeScheme };
 
     const payload = {
       colors
