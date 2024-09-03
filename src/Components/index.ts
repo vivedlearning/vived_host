@@ -6,5 +6,6 @@ export * from "./Dispatcher";
 export * from "./Handler";
 export * from "./Logger";
 export * from "./StateMachine";
+export * from "./ThemeColors";
 export * from "./VivedAPI";
 export * from "./ZSpaceHost";

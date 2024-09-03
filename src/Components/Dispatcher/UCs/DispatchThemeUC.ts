@@ -1,4 +1,8 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { HostDispatchEntity } from "../Entities";
 
 export abstract class DispatchThemeUC extends HostAppObjectUC {
@@ -18,10 +22,13 @@ export abstract class DispatchThemeUC extends HostAppObjectUC {
     return asset;
   }
 
-  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchThemeUC | undefined {
-    const appObject =  appObjects.get(id);
-    
-    if(!appObject) {
+  static getByID(
+    id: string,
+    appObjects: HostAppObjectRepo
+  ): DispatchThemeUC | undefined {
+    const appObject = appObjects.get(id);
+
+    if (!appObject) {
       appObjects.submitWarning(
         "DispatchThemeUC.getByID",
         "Unable to find App Object by id " + id
@@ -68,4 +75,56 @@ class DispatchThemeUCImp extends DispatchThemeUC {
       this.dispose();
     }
   }
+}
+
+export interface ColorSchemeV1 {
+  primary: string;
+  onPrimary: string;
+  primaryContainer: string;
+  onPrimaryContainer: string;
+  primaryFixed: string;
+  onPrimaryFixed: string;
+  primaryFixedDim: string;
+  onPrimaryFixedVariant: string;
+  secondary: string;
+  onSecondary: string;
+  secondaryContainer: string;
+  onSecondaryContainer: string;
+  secondaryFixed: string;
+  onSecondaryFixed: string;
+  secondaryFixedDim: string;
+  onSecondaryFixedVariant: string;
+  tertiary: string;
+  onTertiary: string;
+  tertiaryContainer: string;
+  onTertiaryContainer: string;
+  tertiaryFixed: string;
+  onTertiaryFixed: string;
+  tertiaryFixedDim: string;
+  onTertiaryFixedVariant: string;
+  error: string;
+  onError: string;
+  errorContainer: string;
+  onErrorContainer: string;
+  outline: string;
+  background: string;
+  onBackground: string;
+  surface: string;
+  onSurface: string;
+  surfaceVariant: string;
+  onSurfaceVariant: string;
+  inverseSurface: string;
+  inverseOnSurface: string;
+  inversePrimary: string;
+  shadow: string;
+  surfaceTint: string;
+  outlineVariant: string;
+  scrim: string;
+  surfaceContainerHighest: string;
+  surfaceContainerHigh: string;
+  surfaceContainer: string;
+  surfaceContainerLow: string;
+  surfaceContainerLowest: string;
+  surfaceBright: string;
+  surfaceDim: string;
 }

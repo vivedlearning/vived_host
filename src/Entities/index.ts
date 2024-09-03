@@ -1,6 +1,7 @@
 export * from "./Auth";
 export * from "./ChallengeResults";
 export * from "./MemoizedBoolean";
+export * from "./MemoizedColor";
 export * from "./MemoizedNumber";
 export * from "./MemoizedString";
 export * from "./ObservableEntity";

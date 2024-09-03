@@ -1,7 +1,7 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { AlertDialogEntity } from "../Entities";
 import { makeDialogQueue } from "../Entities/DialogQueue";
-import { DialogQueuePM, DialogVM, makeDialogQueuePM } from "./DialogQueuePM";
+import { DialogQueuePM, DialogQueueVM, makeDialogQueuePM } from "./DialogQueuePM";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -35,7 +35,7 @@ describe("Dialog PM", () => {
   it("Checks for equal VMs", () => {
     const { pm } = makeTestRig();
 
-    const vm1: DialogVM = {
+    const vm1: DialogQueueVM = {
       open: true,
       id: "anID",
       preventOutsideDismiss: true,
@@ -50,7 +50,7 @@ describe("Dialog PM", () => {
   it("Checks for a change in is open", () => {
     const { pm } = makeTestRig();
 
-    const vm1: DialogVM = {
+    const vm1: DialogQueueVM = {
       open: true,
       id: "anID",
       preventOutsideDismiss: true,
@@ -65,7 +65,7 @@ describe("Dialog PM", () => {
   it("Checks for a change in the id", () => {
     const { pm } = makeTestRig();
 
-    const vm1: DialogVM = {
+    const vm1: DialogQueueVM = {
       open: true,
       id: "anID",
       preventOutsideDismiss: true,
@@ -80,7 +80,7 @@ describe("Dialog PM", () => {
   it("Checks for a change in the prevent dismiss", () => {
     const { pm } = makeTestRig();
 
-    const vm1: DialogVM = {
+    const vm1: DialogQueueVM = {
       open: true,
       id: "anID",
       preventOutsideDismiss: true,
@@ -95,7 +95,7 @@ describe("Dialog PM", () => {
   it("Checks for a change in the dialog type", () => {
     const { pm } = makeTestRig();
 
-    const vm1: DialogVM = {
+    const vm1: DialogQueueVM = {
       open: true,
       id: "anID",
       preventOutsideDismiss: true,

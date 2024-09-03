@@ -1,2 +1,3 @@
-export * from "./Result"
-export * from './Version';
+export * from "./Color";
+export * from "./Result";
+export * from "./Version";
