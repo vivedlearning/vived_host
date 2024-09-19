@@ -3,6 +3,7 @@ export * from "./AssetPlugin";
 export * from "./Assets";
 export * from "./Dialog";
 export * from "./Dispatcher";
+export * from "./Events";
 export * from "./Handler";
 export * from "./Logger";
 export * from "./StateMachine";
