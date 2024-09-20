@@ -1,36 +1,42 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { VivedAPIEntity } from '../Entities';
 
-export class UserTokenPM extends HostAppObjectPM<string> {
-  static type = 'UserTokenPM';
+import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import { VivedAPIEntity } from "../Entities";
 
-  static get(appObjects: HostAppObjectRepo): UserTokenPM | undefined {
-    return getSingletonComponent(UserTokenPM.type, appObjects);
+
+export abstract class UserTokenPM extends HostAppObjectPM<string> {
+  static type = "UserTokenPM";
+
+  static get(appObjects: HostAppObjectRepo) {
+    return getSingletonComponent<UserTokenPM>(UserTokenPM.type, appObjects);
   }
+}
 
-  private vivedAPI?: VivedAPIEntity;
+export function makeUserTokenPM(appObject: HostAppObject): UserTokenPM {
+  return new UserTokenPMImp(appObject);
+}
+
+class UserTokenPMImp extends UserTokenPM {
+  private get sandbox() {
+    return this.getCachedSingleton<VivedAPIEntity>(VivedAPIEntity.type);
+  }
 
   vmsAreEqual(a: string, b: string): boolean {
     return a === b;
   }
 
-  private onEntityChange = () => {
-    if (!this.vivedAPI) return;
+  onEntityChange = () => {
+    if (!this.sandbox) return;
 
-    this.doUpdateView(this.vivedAPI.userToken);
+    this.doUpdateView(this.sandbox.userToken);
   };
 
   constructor(appObject: HostAppObject) {
     super(appObject, UserTokenPM.type);
-
-    this.vivedAPI = appObject.getComponent<VivedAPIEntity>(VivedAPIEntity.type);
-    if (!this.vivedAPI) {
-      this.error('PM has been added to an App Object that does not have a VivedAPIEntity');
-      return;
-    }
-
-    this.vivedAPI.addChangeObserver(this.onEntityChange);
-    this.onEntityChange();
     this.appObjects.registerSingleton(this);
+
+    this.sandbox?.addChangeObserver(this.onEntityChange);
+    this.onEntityChange();
   }
 }
+
+

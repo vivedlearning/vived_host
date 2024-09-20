@@ -1,28 +1,28 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { VivedAPIEntity } from "../Entities";
-import { UserTokenPM, makeUserTokenPM } from "./UserTokenPM";
+import { APIStage, VivedAPIEntity } from "../Entities";
+import { ApiStagePM, makeApiStagePM } from "./ApiStagePM";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const ao = appObjects.getOrCreate("Sandbox");
-  const apiEntity = new VivedAPIEntity(ao);
-  const pm = makeUserTokenPM(ao);
+  const sandbox = new VivedAPIEntity(ao);
+  const pm = makeApiStagePM(ao);
 
   return {
     registerSingletonSpy,
     pm,
-    apiEntity,
+    sandbox,
     appObjects
   };
 }
 
-describe("User Token PM", () => {
+describe("Api Stage PM", () => {
   it("Gets the singleton", () => {
     const { pm, appObjects } = makeTestRig();
 
-    expect(UserTokenPM.get(appObjects)).toEqual(pm);
+    expect(ApiStagePM.get(appObjects)).toEqual(pm);
   });
 
   it("Registers as the singleton", () => {
@@ -38,16 +38,19 @@ describe("User Token PM", () => {
   });
 
   it("Updates when the entity changes", () => {
-    const { pm, apiEntity } = makeTestRig();
-    apiEntity.userToken = "aNewToken";
+    const { pm, sandbox } = makeTestRig();
+    sandbox.apiStage = APIStage.DEVELOPMENT;
+    sandbox.apiStage = APIStage.PRODUCTION;
 
-    expect(pm.lastVM).toEqual("aNewToken");
+    expect(pm.lastVM).toEqual(APIStage.PRODUCTION);
   });
 
   it("Checks for equal VMs", () => {
     const { pm } = makeTestRig();
 
-    expect(pm.vmsAreEqual("aToken", "aToken")).toEqual(true);
-    expect(pm.vmsAreEqual("aToken", "ChangedToken")).toEqual(false);
+    expect(pm.vmsAreEqual(APIStage.DEVELOPMENT, APIStage.DEVELOPMENT)).toEqual(
+      true
+    );
+    expect(pm.vmsAreEqual(APIStage.DEVELOPMENT, APIStage.LOCAL)).toEqual(false);
   });
 });
