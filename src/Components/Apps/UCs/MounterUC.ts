@@ -1,4 +1,8 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { VIVEDApp_3 } from "../../../Types";
 import { Version } from "../../../ValueObjects";
 
@@ -6,6 +10,7 @@ export abstract class MounterUC extends HostAppObjectUC {
   static type = "MounterUC";
 
   abstract mount(majorVersion: number, minorVersion: number): Promise<void>;
+  abstract mountLatestVersion(): Promise<void>;
   abstract unmount(): void;
   abstract loadScriptIntoDocument(
     scriptURL: string,

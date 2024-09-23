@@ -2,6 +2,7 @@ import { HostAppObject } from "../../../HostAppObject";
 import { MounterUC } from "../UCs/MounterUC";
 
 export class MockAppMounterUC extends MounterUC {
+  mountLatestVersion = jest.fn();
   unmount = jest.fn();
   loadScriptIntoDocument = jest.fn();
   getAppInterface = jest.fn();
