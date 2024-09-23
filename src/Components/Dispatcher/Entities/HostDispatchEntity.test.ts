@@ -84,6 +84,24 @@ describe("Host Dispatch Entity", () => {
     expect(dispatcher.error).toBeCalledTimes(1);
   });
 
+  it("Allows the handler to be cleared", () => {
+    const { dispatcher, mockHandler } = makeTestRig();
+
+    dispatcher.registerAppHandler(mockHandler);
+    dispatcher.clearAppHandler();
+
+    dispatcher.error = jest.fn();
+
+    const request: Request = {
+      type: "a type",
+      version: 1,
+      payload: { foo: "bar" }
+    };
+
+    dispatcher.dispatch(request);
+    expect(dispatcher.error).toBeCalledTimes(1);
+  });
+
   it("Requests the App Handler version when the handler is registered", () => {
     const { dispatcher, mockHandler } = makeTestRig();
 

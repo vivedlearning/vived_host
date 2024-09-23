@@ -2,6 +2,7 @@ import { HostAppObject } from "../../../HostAppObject";
 import { HostDispatchEntity } from "../Entities";
 
 export class MockHostDispatchEntity extends HostDispatchEntity {
+  clearAppHandler = jest.fn();
   appHandlerVersion = 1;
   getRequestPayloadVersion = jest.fn();
   registerAppHandler = jest.fn();

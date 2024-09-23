@@ -11,6 +11,7 @@ export abstract class HostDispatchEntity extends HostAppObjectEntity {
   abstract appHandlerVersion: number;
   abstract getRequestPayloadVersion(requestType: string): number | undefined;
   abstract registerAppHandler: (appHandler: Handler) => void;
+  abstract clearAppHandler: () => void;
   abstract dispatch: (request: Request) => void;
   abstract formRequestAndDispatch: (
     type: string,
@@ -54,6 +55,7 @@ export function makeHostDispatchEntity(
 }
 
 class HostDispatchEntityImp extends HostDispatchEntity {
+  
   private appHandler?: Handler;
 
   private _appHandlerVersion = 0;
@@ -66,6 +68,10 @@ class HostDispatchEntityImp extends HostDispatchEntity {
   registerAppHandler = (appHandler: Handler) => {
     this.appHandler = appHandler;
     this.getAppHandlerVersion();
+  };
+
+  clearAppHandler = () => {
+    this.appHandler = undefined;
   };
 
   private getAppHandlerVersion() {
@@ -108,9 +114,8 @@ class HostDispatchEntityImp extends HostDispatchEntity {
     try {
       this.appHandler(request);
     } catch (e) {
-      this.warn((e as Error).message)
+      this.warn((e as Error).message);
     }
-    
   };
 
   formRequestAndDispatch = (
