@@ -1,11 +1,13 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { PatchAssetMetaUC } from "../UCs/PatchAssetMetaUC";
+import { PatchAssetMetaUC } from "../UCs";
+import { PatchAssetUC } from "../UCs/PatchAssetUC";
+
 
 export class MockPatchAssetMetaUC extends PatchAssetMetaUC {
   doPatch = jest.fn().mockResolvedValue(undefined);
 
   constructor(appObject: HostAppObject) {
-    super(appObject, PatchAssetMetaUC.type);
+    super(appObject, PatchAssetUC.type);
   }
 }
 

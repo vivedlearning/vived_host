@@ -1,4 +1,5 @@
 export * from "./DispatchDisposeAppUC";
+export * from "./DispatchEnableFeatureUC";
 export * from "./DispatchIsAuthoringUC";
 export * from "./DispatchSetStateUC";
 export * from "./DispatchShowBabylonInspectorUC";

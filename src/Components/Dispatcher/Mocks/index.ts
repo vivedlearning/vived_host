@@ -1,3 +1,4 @@
+export * from "./DispatchEnableFeatureUCMock";
 export * from "./MockDispatchAppDispatcherUC";
 export * from "./MockDispatchIsAuthoringUC";
 export * from "./MockDispatchSetStateUC";
