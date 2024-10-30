@@ -95,7 +95,7 @@ class ChallengeResultsPMImp extends ChallengeResultsListPM {
 
   constructor(appObject: HostAppObject) {
     super(appObject, ChallengeResultsListPM.type);
-    this.onEntityChange();
+    this.doUpdateView([]);
     this.results?.addChangeObserver(this.onEntityChange);
 
     this.appObjects.registerSingleton(this);
