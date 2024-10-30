@@ -18,6 +18,8 @@ export abstract class HostStateMachine extends HostAppObjectEntity {
   abstract previousState: string | undefined;
   abstract nextState: string | undefined;
 
+  abstract transitionDuration: number;
+
   abstract setActiveStateByID: (id: string) => void;
   abstract clearActiveState: () => void;
   abstract setStates: (states: HostStateEntity[]) => void;
@@ -44,6 +46,8 @@ export function makeHostStateMachine(
 
 class HostStateMachineImp extends HostStateMachine {
   private _states: HostStateEntity[] = [];
+
+  transitionDuration = 1;
 
   get states() {
     return this._states.map((state) => state.id);
