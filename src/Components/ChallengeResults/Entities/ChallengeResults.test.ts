@@ -1,16 +1,29 @@
-import { makeChallengeResults, ChallengeResultHitData, ChallengeResultMultiHitData, ChallengeResultQualityData, ChallengeResultScoreData, ChallengeResultProgressData } from "./ChallengeResults";
+import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import {
+  makeChallengeResults,
+  ChallengeResultHitData,
+  ChallengeResultMultiHitData,
+  ChallengeResultQualityData,
+  ChallengeResultScoreData,
+  ChallengeResultProgressData,
+  ChallengeResultsEntity
+} from "./ChallengeResults";
 
 function makeTestRig() {
-  const results = makeChallengeResults();
+  const appObjects = makeHostAppObjectRepo();
+  const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
+  const results = makeChallengeResults(
+    appObjects.getOrCreate("ChallengeResults")
+  );
   const observer = jest.fn();
-  results.addObserver(observer);
+  results.addChangeObserver(observer);
 
-  return {results, observer}
+  return { results, observer, appObjects, registerSingletonSpy };
 }
 
-describe("Results Entity", ()=>{
-  it("Adds a hit results", ()=>{
-    const {results, observer} = makeTestRig();
+describe("Results Entity", () => {
+  it("Adds a hit results", () => {
+    const { results, observer } = makeTestRig();
 
     expect(results.results).toHaveLength(0);
     results.submitHitResult("slide1", true, 2, "A challenge!");
@@ -28,8 +41,8 @@ describe("Results Entity", ()=>{
     expect(observer).toBeCalled();
   });
 
-  it("Updates a hit result if that slide result already exists", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Updates a hit result if that slide result already exists", () => {
+    const { results, observer } = makeTestRig();
 
     results.submitHitResult("slide1", false, 1, "A challenge!");
     expect(results.results).toHaveLength(1);
@@ -48,10 +61,10 @@ describe("Results Entity", ()=>{
     expect(data.success).toEqual(true);
 
     expect(observer).toBeCalled();
-  })
+  });
 
-  it("Adds a multi hit results", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Adds a multi hit results", () => {
+    const { results, observer } = makeTestRig();
 
     expect(results.results).toHaveLength(0);
     results.submitMultiHitResult("slide1", 10, 20, 30, 2, "A challenge!");
@@ -71,15 +84,15 @@ describe("Results Entity", ()=>{
     expect(observer).toBeCalled();
   });
 
-  it("Updates a multi hit result if that slide result already exists", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Updates a multi hit result if that slide result already exists", () => {
+    const { results, observer } = makeTestRig();
 
     results.submitMultiHitResult("slide1", 1, 2, 3, 1, "A challenge!");
     expect(results.results).toHaveLength(1);
 
     results.submitMultiHitResult("slide1", 10, 20, 30, 2, "A challenge!");
     expect(results.results).toHaveLength(1);
-    
+
     const result = results.results[0];
 
     expect(result.slideID).toEqual("slide1");
@@ -93,10 +106,10 @@ describe("Results Entity", ()=>{
     expect(data.unanswered).toEqual(30);
 
     expect(observer).toBeCalled();
-  })
+  });
 
-  it("Adds a quality results", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Adds a quality results", () => {
+    const { results, observer } = makeTestRig();
 
     expect(results.results).toHaveLength(0);
     results.submitQualityResult("slide1", 10, 20, 2, "A challenge!");
@@ -115,15 +128,15 @@ describe("Results Entity", ()=>{
     expect(observer).toBeCalled();
   });
 
-  it("Updates a quality result if that slide result already exists", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Updates a quality result if that slide result already exists", () => {
+    const { results, observer } = makeTestRig();
 
     results.submitQualityResult("slide1", 1, 2, 2, "A challenge!");
     expect(results.results).toHaveLength(1);
 
     results.submitQualityResult("slide1", 10, 20, 2, "A challenge!");
     expect(results.results).toHaveLength(1);
-    
+
     const result = results.results[0];
 
     expect(result.slideID).toEqual("slide1");
@@ -136,11 +149,10 @@ describe("Results Entity", ()=>{
     expect(data.maxStars).toEqual(20);
 
     expect(observer).toBeCalled();
-  })
+  });
 
-  
-  it("Adds a score results", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Adds a score results", () => {
+    const { results, observer } = makeTestRig();
 
     expect(results.results).toHaveLength(0);
     results.submitScoreResult("slide1", 10, 20, 2, "A challenge!");
@@ -159,15 +171,15 @@ describe("Results Entity", ()=>{
     expect(observer).toBeCalled();
   });
 
-  it("Updates a score result if that slide result already exists", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Updates a score result if that slide result already exists", () => {
+    const { results, observer } = makeTestRig();
 
     results.submitScoreResult("slide1", 1, 2, 2, "A challenge!");
     expect(results.results).toHaveLength(1);
 
     results.submitScoreResult("slide1", 10, 20, 2, "A challenge!");
     expect(results.results).toHaveLength(1);
-    
+
     const result = results.results[0];
 
     expect(result.slideID).toEqual("slide1");
@@ -180,16 +192,16 @@ describe("Results Entity", ()=>{
     expect(data.maxScore).toEqual(20);
 
     expect(observer).toBeCalled();
-  })
+  });
 
-  it("Gets the result for a slide", ()=>{
-    const {results} = makeTestRig();
+  it("Gets the result for a slide", () => {
+    const { results } = makeTestRig();
 
     results.submitScoreResult("slide1", 10, 20, 2, "A challenge!");
     results.submitQualityResult("slide2", 1, 2, 2, "A challenge!");
     results.submitMultiHitResult("slide3", 10, 20, 30, 2, "A challenge!");
     results.submitHitResult("slide4", false, 1, "A challenge!");
-    
+
     const result = results.getResultForSlide("slide1");
 
     expect(result?.slideID).toEqual("slide1");
@@ -200,29 +212,17 @@ describe("Results Entity", ()=>{
     const data = result?.resultData as ChallengeResultScoreData;
     expect(data.score).toEqual(10);
     expect(data.maxScore).toEqual(20);
-  })
+  });
 
-  it("Returns undefined for if there is no result for a slide", ()=>{
-    const {results} = makeTestRig();
+  it("Returns undefined for if there is no result for a slide", () => {
+    const { results } = makeTestRig();
     const result = results.getResultForSlide("slide1");
 
     expect(result).toBeUndefined();
-  })
+  });
 
-  it("Allows an observer to be removed", ()=>{
-    const {results, observer} = makeTestRig();
-    results.removeObserver(observer);
-
-    results.submitScoreResult("slide1", 10, 20, 2, "A challenge!");
-    results.submitQualityResult("slide2", 1, 2, 2, "A challenge!");
-    results.submitMultiHitResult("slide3", 10, 20, 30, 2, "A challenge!");
-    results.submitHitResult("slide4", false, 1, "A challenge!");
-
-    expect(observer).not.toBeCalled();
-  })
-
-  it("Adds a progress results", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Adds a progress results", () => {
+    const { results, observer } = makeTestRig();
 
     expect(results.results).toHaveLength(0);
     results.submitProgressResult("slide1", 0.5, "A challenge!");
@@ -240,8 +240,8 @@ describe("Results Entity", ()=>{
     expect(observer).toBeCalled();
   });
 
-  it("Updates a progress result if that slide result already exists", ()=>{
-    const {results, observer} = makeTestRig();
+  it("Updates a progress result if that slide result already exists", () => {
+    const { results, observer } = makeTestRig();
 
     results.submitProgressResult("slide1", 0.5, "A challenge!");
     expect(results.results).toHaveLength(1);
@@ -260,10 +260,10 @@ describe("Results Entity", ()=>{
     expect(data.maxProgress).toEqual(0.75);
 
     expect(observer).toBeCalled();
-  })
+  });
 
-  it("It does not update if the new progress is less than the previous", ()=>{
-    const {results, observer} = makeTestRig();
+  it("It does not update if the new progress is less than the previous", () => {
+    const { results, observer } = makeTestRig();
 
     results.submitProgressResult("slide1", 0.75, "A challenge!");
     expect(results.results).toHaveLength(1);
@@ -283,5 +283,17 @@ describe("Results Entity", ()=>{
     expect(data.maxProgress).toEqual(0.75);
 
     expect(observer).not.toBeCalled();
-  })
-})
+  });
+
+  it("Gets the singleton", () => {
+    const { appObjects, results } = makeTestRig();
+
+    expect(ChallengeResultsEntity.get(appObjects)).toEqual(results);
+  });
+
+  it("Registers as the singleton", () => {
+    const { appObjects, results, registerSingletonSpy } = makeTestRig();
+
+    expect(registerSingletonSpy).toBeCalledWith(results);
+  });
+});

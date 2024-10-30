@@ -1,6 +1,7 @@
 export * from "./Apps";
 export * from "./AssetPlugin";
 export * from "./Assets";
+export * from "./ChallengeResults";
 export * from "./Dialog";
 export * from "./Dispatcher";
 export * from "./Events";
