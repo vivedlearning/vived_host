@@ -1,9 +1,13 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
 import { SingletonPmAdapter } from "../../../Types";
-import { LogSummaryPM, LogSummaryVM, defaultVM } from "../PMs/LogSummaryPM";
+import {
+  LogSummaryPM,
+  LogSummaryVM,
+  defaultLogSummaryVM
+} from "../PMs/LogSummaryPM";
 
 export const logSummaryAdapter: SingletonPmAdapter<LogSummaryVM> = {
-  defaultVM: defaultVM,
+  defaultVM: defaultLogSummaryVM,
   subscribe: (
     appObjects: HostAppObjectRepo,
     setVM: (vm: LogSummaryVM) => void

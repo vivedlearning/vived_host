@@ -236,4 +236,24 @@ describe("Logger Entity", () => {
 
     expect(loggerEntity.lastLog).toBeUndefined();
   });
+  
+  it("Notifies when the forward logs to console flag changes", ()=>{
+    const {loggerEntity, observer} = makeTestRig();
+
+    expect(loggerEntity.forwardLogsToConsole).toEqual(false);
+
+    loggerEntity.forwardLogsToConsole = true;
+    loggerEntity.forwardLogsToConsole = true;
+    loggerEntity.forwardLogsToConsole = true;
+
+    expect(loggerEntity.forwardLogsToConsole).toEqual(true);
+    expect(observer).toBeCalledTimes(1);
+
+    loggerEntity.forwardLogsToConsole = false;
+    loggerEntity.forwardLogsToConsole = false;
+    loggerEntity.forwardLogsToConsole = false;
+
+    expect(loggerEntity.forwardLogsToConsole).toEqual(false);
+    expect(observer).toBeCalledTimes(2);
+  })
 });

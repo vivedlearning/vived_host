@@ -1,6 +1,10 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
 import { LoggerEntity } from "../Entities";
-
 
 export interface LogSummaryVM {
   logsLabel: string;
@@ -80,7 +84,7 @@ class LogSummaryPMImp extends LogSummaryPM {
   }
 }
 
-export const defaultVM: LogSummaryVM = {
+export const defaultLogSummaryVM: LogSummaryVM = {
   logsLabel: "",
   warningsLabel: "",
   errorsLabel: ""

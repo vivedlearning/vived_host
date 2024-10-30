@@ -1,3 +1,4 @@
+import { MemoizedBoolean } from "../../../Entities";
 import {
   getSingletonComponent,
   HostAppObject,
@@ -21,7 +22,9 @@ export abstract class LoggerEntity extends HostAppObjectEntity {
   }
 
   abstract logs: LogEntry[];
-  abstract forwardLogsToConsole: boolean;
+  abstract get forwardLogsToConsole(): boolean;
+  abstract set forwardLogsToConsole(val: boolean);
+
   abstract get lastLog(): LogEntry | undefined;
 
   abstract submitLog: (sender: string, message: string) => void;
@@ -36,7 +39,6 @@ export function makeLoggerEntity(appObject: HostAppObject): LoggerEntity {
 }
 
 class LoggerEntityImp extends LoggerEntity {
-  forwardLogsToConsole = false;
   logs: LogEntry[] = [];
 
   submitLog = (sender: string, message: string): void => {
@@ -83,6 +85,14 @@ class LoggerEntityImp extends LoggerEntity {
 
     this._lastLog = log;
     return log;
+  }
+
+  private memoisedForwardLogs = new MemoizedBoolean(false, this.notifyOnChange);
+  get forwardLogsToConsole() {
+    return this.memoisedForwardLogs.val;
+  }
+  set forwardLogsToConsole(val: boolean) {
+    this.memoisedForwardLogs.val = val;
   }
 
   private _lastLog?: LogEntry;

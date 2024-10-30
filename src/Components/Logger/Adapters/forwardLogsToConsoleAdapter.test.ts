@@ -1,17 +1,16 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { logSummaryAdapter } from "./logSummaryAdapter";
-import { makeLogSummaryPMMock } from "../Mocks/LogSummaryPMMock";
-import { defaultLogSummaryVM } from "../PMs/LogSummaryPM";
+import { forwardLogsToConsoleAdapter } from "./forwardLogsToConsoleAdapter";
+import { makeForwardLogsToConsolePMMock } from "../Mocks/ForwardLogsToConsolePMMock";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const mockPM = makeLogSummaryPMMock(appObjects);
+  const mockPM = makeForwardLogsToConsolePMMock(appObjects);
   return { appObjects, mockPM };
 }
 
-describe("Log Summary PM Adapter", () => {
+describe("forward Logs PM Adapter", () => {
   it("Sets the Default VM", () => {
-    expect(logSummaryAdapter.defaultVM).toEqual(defaultLogSummaryVM);
+    expect(forwardLogsToConsoleAdapter.defaultVM).toEqual(false);
   });
 
   it("Add a view on subscribe", () => {
@@ -20,7 +19,7 @@ describe("Log Summary PM Adapter", () => {
     mockPM.addView = jest.fn();
     const setVM = jest.fn();
 
-    logSummaryAdapter.subscribe(appObjects, setVM);
+    forwardLogsToConsoleAdapter.subscribe(appObjects, setVM);
 
     expect(mockPM.addView).toBeCalledWith(setVM);
   });
@@ -31,7 +30,7 @@ describe("Log Summary PM Adapter", () => {
     mockPM.removeView = jest.fn();
     const setVM = jest.fn();
 
-    logSummaryAdapter.unsubscribe(appObjects, setVM);
+    forwardLogsToConsoleAdapter.unsubscribe(appObjects, setVM);
 
     expect(mockPM.removeView).toBeCalledWith(setVM);
   });
