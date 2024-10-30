@@ -1,22 +1,17 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { BasicFetchUC, makeBasicFetchUC } from "./BasicFetchUC";
+import { BasicFetchUC } from "./BasicFetchUC";
+import { makeMockBasicFetchUC } from "../Mocks/MockBasicFetchUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
-  const uc = makeBasicFetchUC(appObjects.getOrCreate("ao"));
+  const uc = makeMockBasicFetchUC(appObjects);
 
   return { uc, appObjects, singletonSpy };
 }
 
 describe("JSON Requester", () => {
-  it("Registers itself as the Singleton", () => {
-    const { uc, singletonSpy } = makeTestRig();
-
-    expect(singletonSpy).toBeCalledWith(uc);
-  });
-
   it("Gets the singleton", () => {
     const { uc, appObjects } = makeTestRig();
 

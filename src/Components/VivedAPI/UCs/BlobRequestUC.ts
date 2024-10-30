@@ -17,31 +17,3 @@ export abstract class BlobRequestUC extends HostAppObjectUC {
   }
 }
 
-export function makeBlobRequestUC(appObject: HostAppObject): BlobRequestUC {
-  return new BlobRequestUCImp(appObject);
-}
-
-class BlobRequestUCImp extends BlobRequestUC {
-  doRequest = (url: URL, options?: RequestBlobOptions): Promise<Blob> => {
-    return new Promise<Blob>((resolve, reject) => {
-      fetch(url.href, options)
-        .then((resp) => {
-          if (!resp.ok) {
-            reject(new Error(`Response is not OK: ${JSON.stringify(resp)}`));
-          }
-          return resp.blob();
-        })
-        .then((blob) => {
-          resolve(blob);
-        })
-        .catch((e) => {
-          reject(e);
-        });
-    });
-  };
-
-  constructor(appObject: HostAppObject) {
-    super(appObject, BlobRequestUC.type);
-    this.appObjects.registerSingleton(this);
-  }
-}
