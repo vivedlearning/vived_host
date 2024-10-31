@@ -10,4 +10,5 @@ export * from "./MockIsEditingStatePM";
 export * from "./MockSaveAuthoringUC";
 export * from "./MockStateEntity";
 export * from "./MockTransitionToStateUC";
+export * from "./NewStateUCMock";
 export * from "./SavePersistentStatesMock";

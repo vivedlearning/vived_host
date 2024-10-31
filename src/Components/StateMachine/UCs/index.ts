@@ -4,6 +4,7 @@ export * from "./DuplicateStateUC";
 export * from "./EditActiveStateUC";
 export * from "./EditStateUC";
 export * from "./EndActivityUC";
+export * from "./NewStateUC";
 export * from "./SaveAuthoringUC";
 export * from "./SavePersistentStates";
 export * from "./TransitionToStateUC";
