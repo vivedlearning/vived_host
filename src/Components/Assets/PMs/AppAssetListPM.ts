@@ -1,14 +1,25 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { AppAssetsEntity } from '../Entities/AppAssetsEntity';
-import { AssetRepo } from '../Entities/AssetRepo';
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
+import { AssetRepo } from "../Entities/AssetRepo";
 
-export class AppAssetListPM extends HostAppObjectPM<string[]> {
-  static type = 'AppAssetListPM';
+export abstract class AppAssetListPM extends HostAppObjectPM<string[]> {
+  static type = "AppAssetListPM";
 
   static get(appObjects: HostAppObjectRepo): AppAssetListPM | undefined {
     return getSingletonComponent(AppAssetListPM.type, appObjects);
   }
+}
 
+export function makeAppAssetListPM(appObject: HostAppObject): AppAssetListPM {
+  return new AppAssetListPMImp(appObject);
+}
+
+class AppAssetListPMImp extends AppAssetListPM {
   private appAssets?: AppAssetsEntity;
 
   private get assetRepo() {
@@ -53,9 +64,13 @@ export class AppAssetListPM extends HostAppObjectPM<string[]> {
   constructor(appObject: HostAppObject) {
     super(appObject, AppAssetListPM.type);
 
-    this.appAssets = appObject.getComponent<AppAssetsEntity>(AppAssetsEntity.type);
+    this.appAssets = appObject.getComponent<AppAssetsEntity>(
+      AppAssetsEntity.type
+    );
     if (!this.appAssets) {
-      this.error('PM has been added to an app object without an AppAssetsEntity');
+      this.error(
+        "PM has been added to an app object without an AppAssetsEntity"
+      );
       return;
     }
 

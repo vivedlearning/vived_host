@@ -8,7 +8,7 @@ export interface AssetVM {
   archived: boolean;
 }
 
-export class AssetPM extends HostAppObjectPM<AssetVM> {
+export abstract class AssetPM extends HostAppObjectPM<AssetVM> {
   static type = 'AssetPM';
 
   static getByID(assetID: string, appObjects: HostAppObjectRepo): AssetPM | undefined {
@@ -25,6 +25,13 @@ export class AssetPM extends HostAppObjectPM<AssetVM> {
     }
     return pm;
   }
+}
+
+export function makeAppAssetListPM(appObject: HostAppObject): AssetPM {
+  return new AssetPMImp(appObject);
+}
+
+class AssetPMImp extends AssetPM {
 
   private asset?: AssetEntity;
 

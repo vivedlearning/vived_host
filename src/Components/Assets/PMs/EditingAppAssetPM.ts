@@ -1,5 +1,10 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { AppAssetsEntity } from '../Entities/AppAssetsEntity';
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 
 export interface EditingAppAssetVM {
   id: string;
@@ -9,16 +14,29 @@ export interface EditingAppAssetVM {
   filename: string;
 }
 
-export class EditingAppAssetPM extends HostAppObjectPM<EditingAppAssetVM | undefined> {
-  static type = 'EditingAppAssetPM';
+export abstract class EditingAppAssetPM extends HostAppObjectPM<
+  EditingAppAssetVM | undefined
+> {
+  static type = "EditingAppAssetPM";
 
   static get(appObjects: HostAppObjectRepo): EditingAppAssetPM | undefined {
     return getSingletonComponent(EditingAppAssetPM.type, appObjects);
   }
+}
 
+export function makeEditingAppAssetPM(
+  appObject: HostAppObject
+): EditingAppAssetPM {
+  return new EditingAppAssetPMImp(appObject);
+}
+
+class EditingAppAssetPMImp extends EditingAppAssetPM {
   private appAssets?: AppAssetsEntity;
 
-  vmsAreEqual(a: EditingAppAssetVM | undefined, b: EditingAppAssetVM | undefined): boolean {
+  vmsAreEqual(
+    a: EditingAppAssetVM | undefined,
+    b: EditingAppAssetVM | undefined
+  ): boolean {
     if (a === undefined && b === undefined) return true;
 
     if (a?.archived !== b?.archived) return false;
@@ -34,13 +52,19 @@ export class EditingAppAssetPM extends HostAppObjectPM<EditingAppAssetVM | undef
     if (!this.appAssets) return;
 
     if (this.appAssets.editingAsset) {
-      const { id, name, description, archived, filename } = this.appAssets.editingAsset;
+      const {
+        id,
+        name,
+        description,
+        archived,
+        filename
+      } = this.appAssets.editingAsset;
       const vm: EditingAppAssetVM = {
         id,
         name,
         description,
         archived,
-        filename,
+        filename
       };
       this.doUpdateView(vm);
     } else {
@@ -51,9 +75,13 @@ export class EditingAppAssetPM extends HostAppObjectPM<EditingAppAssetVM | undef
   constructor(appObject: HostAppObject) {
     super(appObject, EditingAppAssetPM.type);
 
-    this.appAssets = appObject.getComponent<AppAssetsEntity>(AppAssetsEntity.type);
+    this.appAssets = appObject.getComponent<AppAssetsEntity>(
+      AppAssetsEntity.type
+    );
     if (!this.appAssets) {
-      this.warn('PM has been added to an App Object without an AppAssetsEntity');
+      this.warn(
+        "PM has been added to an App Object without an AppAssetsEntity"
+      );
       return;
     }
 
