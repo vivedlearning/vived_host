@@ -1,3 +1,4 @@
+export * from "./ConsumeStateUC";
 export * from "./DeleteStateUC";
 export * from "./DuplicateStateUC";
 export * from "./EditActiveStateUC";

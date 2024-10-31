@@ -1,3 +1,4 @@
+export * from "./consumeState";
 export * from "./deleteState";
 export * from "./duplicateState";
 export * from "./editActiveState";
