@@ -3,11 +3,14 @@ import { SingletonPmAdapter } from "../../../Types";
 import {
   AssetPluginPM,
   AssetPluginVM,
-  defaultAssetPluginVM
 } from "../PM/AssetPluginPM";
 
 export const assetPluginPMAdapter: SingletonPmAdapter<AssetPluginVM> = {
-  defaultVM: defaultAssetPluginVM,
+  defaultVM: {
+    show: false,
+    loading: false,
+    styleSheets: []
+  },
   subscribe: (
     appObjects: HostAppObjectRepo,
     setVM: (vm: AssetPluginVM) => void
