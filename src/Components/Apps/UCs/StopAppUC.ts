@@ -3,6 +3,7 @@ import {
   HostAppObjectRepo,
   HostAppObjectUC
 } from "../../../HostAppObject";
+import { DispatchStopAppUC } from "../../Dispatcher";
 
 export abstract class StopAppUC extends HostAppObjectUC {
   static type = "StopAppUC";
@@ -39,5 +40,25 @@ export abstract class StopAppUC extends HostAppObjectUC {
 
   static stopByID(id: string, appObjects: HostAppObjectRepo) {
     StopAppUC.getByID(id, appObjects)?.stop();
+  }
+}
+
+export function makeStopAppUC(appObject: HostAppObject): StopAppUC {
+  return new StartAppUCImp(appObject);
+}
+
+class StartAppUCImp extends StopAppUC {
+  private get dispatchStop() {
+    return this.getCachedLocalComponent<DispatchStopAppUC>(
+      DispatchStopAppUC.type
+    );
+  }
+
+  stop(): void {
+    this.dispatchStop?.doDispatch();
+  }
+
+  constructor(appObject: HostAppObject) {
+    super(appObject, StopAppUC.type);
   }
 }

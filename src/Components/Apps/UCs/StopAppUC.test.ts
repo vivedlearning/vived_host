@@ -1,17 +1,19 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { StopAppUC } from "./StopAppUC";
-import { MockStopAppUC } from "../Mocks/MockStopAppUC";
+import { makeStopAppUC, StopAppUC } from "./StopAppUC";
+import { MockDispatchStopAppUC } from "../../Dispatcher";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
 
   const ao = appObjects.getOrCreate("App1");
-  const uc = new MockStopAppUC(ao);
+  const uc = makeStopAppUC(ao);
+  const mockStopApp = new MockDispatchStopAppUC(ao);
 
   return {
     uc,
     ao,
-    appObjects
+    appObjects,
+    mockStopApp
   };
 }
 
@@ -35,5 +37,13 @@ describe("Stop App UC", () => {
 
     StopAppUC.stopByID("App1", appObjects);
     expect(uc.stop).toBeCalledWith();
+  });
+
+  it("Stops the app", () => {
+    const { uc, mockStopApp } = makeTestRig();
+
+    uc.stop();
+
+    expect(mockStopApp.doDispatch).toBeCalled();
   });
 });
