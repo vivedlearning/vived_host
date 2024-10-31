@@ -1,5 +1,6 @@
 export * from "./ConsumeStateUCMock";
-export * from "./EndActivityUCMock"
+export * from "./EditStateUCMock";
+export * from "./EndActivityUCMock";
 export * from "./MockDeleteStateUC";
 export * from "./MockDuplicateStateUC";
 export * from "./MockEditActiveStateUC";

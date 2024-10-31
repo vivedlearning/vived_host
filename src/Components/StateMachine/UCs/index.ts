@@ -2,6 +2,7 @@ export * from "./ConsumeStateUC";
 export * from "./DeleteStateUC";
 export * from "./DuplicateStateUC";
 export * from "./EditActiveStateUC";
+export * from "./EditStateUC";
 export * from "./EndActivityUC";
 export * from "./SaveAuthoringUC";
 export * from "./SavePersistentStates";
