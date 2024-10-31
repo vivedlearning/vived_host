@@ -1,5 +1,9 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from '../../../HostAppObject';
-import { AssetEntity } from '../Entities/AssetEntity';
+import {
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { AssetEntity } from "../Entities/AssetEntity";
 
 export interface AssetVM {
   id: string;
@@ -9,30 +13,38 @@ export interface AssetVM {
 }
 
 export abstract class AssetPM extends HostAppObjectPM<AssetVM> {
-  static type = 'AssetPM';
+  static type = "AssetPM";
 
-  static getByID(assetID: string, appObjects: HostAppObjectRepo): AssetPM | undefined {
+  static getByID(
+    assetID: string,
+    appObjects: HostAppObjectRepo
+  ): AssetPM | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('AssetPM.getByID', 'Unable to find app object by ID ' + assetID);
+      appObjects.submitWarning(
+        "AssetPM.getByID",
+        "Unable to find app object by ID " + assetID
+      );
       return;
     }
 
     const pm = appObject.getComponent<AssetPM>(AssetPM.type);
     if (!pm) {
-      appObjects.submitWarning('AssetPM.getByID', 'App Object does not have a AssetPM');
+      appObjects.submitWarning(
+        "AssetPM.getByID",
+        "App Object does not have a AssetPM"
+      );
       return;
     }
     return pm;
   }
 }
 
-export function makeAppAssetListPM(appObject: HostAppObject): AssetPM {
+export function makeAssetPM(appObject: HostAppObject): AssetPM {
   return new AssetPMImp(appObject);
 }
 
 class AssetPMImp extends AssetPM {
-
   private asset?: AssetEntity;
 
   vmsAreEqual(a: AssetVM, b: AssetVM): boolean {
@@ -51,7 +63,7 @@ class AssetPMImp extends AssetPM {
       archived: this.asset.archived,
       description: this.asset.description,
       id: this.asset.id,
-      name: this.asset.name,
+      name: this.asset.name
     };
 
     this.doUpdateView(vm);
@@ -62,7 +74,7 @@ class AssetPMImp extends AssetPM {
 
     this.asset = appObject.getComponent<AssetEntity>(AssetEntity.type);
     if (!this.asset) {
-      this.warn('PM has been added to an App Object without an AssetEntity');
+      this.warn("PM has been added to an App Object without an AssetEntity");
       return;
     }
 
@@ -73,7 +85,7 @@ class AssetPMImp extends AssetPM {
 
 export const defaultAssetVM: AssetVM = {
   archived: false,
-  description: '',
-  id: '',
-  name: '',
+  description: "",
+  id: "",
+  name: ""
 };

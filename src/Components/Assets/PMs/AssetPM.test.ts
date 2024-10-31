@@ -1,13 +1,13 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeAssetEntity } from "../Entities/AssetEntity";
-import { AssetPM, AssetVM, makeAppAssetListPM } from "./AssetPM";
+import { AssetPM, AssetVM, makeAssetPM } from "./AssetPM";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const ao = appObjects.getOrCreate("asset1");
   const asset = makeAssetEntity(ao);
 
-  const pm = makeAppAssetListPM(ao);
+  const pm = makeAssetPM(ao);
 
   const doUpdateSpy = jest.spyOn(pm, "doUpdateView");
 
@@ -48,7 +48,7 @@ describe("Asset PM", () => {
     const ao = appObjects.getOrCreate("someAppObject");
     appObjects.submitWarning = jest.fn();
 
-    makeAppAssetListPM(ao);
+    makeAssetPM(ao);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
