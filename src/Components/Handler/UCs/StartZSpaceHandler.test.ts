@@ -1,4 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeMockStartZSpaceUC } from "../../ZSpaceHost/Mocks/MockStartZSpaceUC";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeStartZSpaceHandler } from "./StartZSpaceHandler";
 
@@ -8,20 +9,16 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const mockUC = makeMockStartZSpaceUC(appObjects);
+
   const uc = makeStartZSpaceHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockUC };
 }
 
 describe("Start ZSpace handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action()).toThrowError();
   });
 
   it("Triggers the action for v1", () => {
@@ -37,5 +34,12 @@ describe("Start ZSpace handler", () => {
     const { uc } = makeTestRig();
 
     expect(() => uc.handleRequest(-1)).toThrowError();
+  });
+
+  it("Calls the UC", () => {
+    const { uc, mockUC } = makeTestRig();
+
+    uc.action();
+    expect(mockUC.startZSpace).toBeCalled();
   });
 });

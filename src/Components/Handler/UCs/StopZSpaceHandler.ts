@@ -1,6 +1,6 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { StopZSpaceUC } from "../../ZSpaceHost/UCs/StopZSpaceUC";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnsupportedRequestVersion
@@ -26,8 +26,12 @@ export function makeStopZSpaceHandler(
 class StopZSpaceHandlerImp extends StopZSpaceHandler {
   readonly payloadVersion = 1;
 
+  private get stopUC() {
+    return this.getCachedSingleton<StopZSpaceUC>(StopZSpaceUC.type);
+  }
+
   action: () => void = () => {
-    throw new ActionNotImplemented(this.requestType);
+    this.stopUC?.stopZSpace()
   };
 
   handleRequest = (version: number) => {
