@@ -1,4 +1,10 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import {
+  makeEndActivityUCMock,
+  makeHostStateMachine,
+  makeMockHostStateEntity,
+  makeMockTransitionToStateUC
+} from "../../StateMachine";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeGoToNextStateHandler } from "./GoToNextStateHandler";
 
@@ -8,20 +14,26 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const stateMachine = makeHostStateMachine(
+    appObjects.getOrCreate("StateMachine")
+  );
+  stateMachine.setStates([
+    makeMockHostStateEntity("state1", appObjects),
+    makeMockHostStateEntity("state2", appObjects)
+  ]);
+  stateMachine.setActiveStateByID("state1");
+
+  const mockTransitionToState = makeMockTransitionToStateUC(appObjects);
+  const mockEnd = makeEndActivityUCMock(appObjects);
+
   const uc = makeGoToNextStateHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockEnd, mockTransitionToState, stateMachine };
 }
 
 describe("Go to next state Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action()).toThrowError();
   });
 
   it("Triggers the action for v1", () => {
@@ -37,5 +49,23 @@ describe("Go to next state Handler", () => {
     const { uc } = makeTestRig();
 
     expect(() => uc.handleRequest(-1)).toThrowError();
+  });
+
+  it("Advances to the next state if there is one", () => {
+    const { uc, mockTransitionToState } = makeTestRig();
+
+    uc.action();
+
+    expect(mockTransitionToState.transitionToState).toBeCalledWith("state2");
+  });
+
+  it("Stops the activity if there are no more states", () => {
+    const { uc, mockEnd, stateMachine } = makeTestRig();
+
+    stateMachine.setActiveStateByID("state2");
+
+    uc.action();
+
+    expect(mockEnd.end).toBeCalled();
   });
 });

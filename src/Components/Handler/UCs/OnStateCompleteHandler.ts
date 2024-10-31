@@ -1,6 +1,10 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
-  ActionNotImplemented,
+  EndActivityUC,
+  HostStateMachine,
+  TransitionToStateUC
+} from "../../StateMachine";
+import {
   HostHandlerEntity,
   RequestHandler,
   UnsupportedRequestVersion
@@ -24,8 +28,28 @@ export function makeOnStateCompleteHandler(
 }
 
 class OnStateCompleteHandlerImp extends OnStateCompleteHandler {
-  action: () => void = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get stateMachine() {
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
+  }
+
+  private get transitionToStateUC() {
+    return this.getCachedSingleton<TransitionToStateUC>(
+      TransitionToStateUC.type
+    );
+  }
+
+  private get endActivityUC() {
+    return this.getCachedSingleton<EndActivityUC>(EndActivityUC.type);
+  }
+
+  action = () => {
+    const nextState = this.stateMachine?.nextState;
+
+    if (nextState) {
+      this.transitionToStateUC?.transitionToState(nextState);
+    } else {
+      this.endActivityUC?.end();
+    }
   };
 
   handleRequest = (version: number) => {

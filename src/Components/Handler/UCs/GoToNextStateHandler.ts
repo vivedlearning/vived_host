@@ -1,6 +1,10 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import {
-  ActionNotImplemented,
+  EndActivityUC,
+  HostStateMachine,
+  TransitionToStateUC
+} from "../../StateMachine";
+import {
   HostHandlerEntity,
   RequestHandler,
   UnsupportedRequestVersion
@@ -26,8 +30,28 @@ export function makeGoToNextStateHandler(
 class GoToNextStateHandlerImp extends GoToNextStateHandler {
   readonly payloadVersion = 1;
 
-  action: () => void = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get stateMachine() {
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
+  }
+
+  private get transitionToStateUC() {
+    return this.getCachedSingleton<TransitionToStateUC>(
+      TransitionToStateUC.type
+    );
+  }
+
+  private get endActivityUC() {
+    return this.getCachedSingleton<EndActivityUC>(EndActivityUC.type);
+  }
+
+  action = () => {
+    const nextState = this.stateMachine?.nextState;
+
+    if (nextState) {
+      this.transitionToStateUC?.transitionToState(nextState);
+    } else {
+      this.endActivityUC?.end();
+    }
   };
 
   handleRequest = (version: number) => {

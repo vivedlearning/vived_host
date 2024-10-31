@@ -1,4 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { HostStateMachine, TransitionToStateUC } from "../../StateMachine";
 import {
   ActionNotImplemented,
   HostHandlerEntity,
@@ -26,8 +27,23 @@ export function makeGoToPreviousStateHandler(
 class GoToPreviousStateHandlerImp extends GoToPreviousStateHandler {
   readonly payloadVersion = 1;
 
-  action: () => void = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get stateMachine() {
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
+  }
+
+  private get transitionToStateUC() {
+    return this.getCachedSingleton<TransitionToStateUC>(
+      TransitionToStateUC.type
+    );
+  }
+
+
+  action = () => {
+    const prevState = this.stateMachine?.previousState;
+
+    if (prevState) {
+      this.transitionToStateUC?.transitionToState(prevState);
+    } 
   };
 
   handleRequest = (version: number) => {

@@ -1,4 +1,9 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import {
+  makeHostStateMachine,
+  makeMockHostStateEntity,
+  makeMockTransitionToStateUC
+} from "../../StateMachine";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeGoToPreviousStateHandler } from "./GoToPreviousStateHandler";
 
@@ -8,20 +13,26 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const stateMachine = makeHostStateMachine(
+    appObjects.getOrCreate("StateMachine")
+  );
+  stateMachine.setStates([
+    makeMockHostStateEntity("state1", appObjects),
+    makeMockHostStateEntity("state2", appObjects)
+  ]);
+  stateMachine.setActiveStateByID("state2");
+
+  const mockTransitionToState = makeMockTransitionToStateUC(appObjects)
+    .transitionToState;
+
   const uc = makeGoToPreviousStateHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, mockTransitionToState, stateMachine };
 }
 
 describe("Go to previous state handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action()).toThrowError();
   });
 
   it("Triggers the action for v1", () => {
@@ -37,5 +48,14 @@ describe("Go to previous state handler", () => {
     const { uc } = makeTestRig();
 
     expect(() => uc.handleRequest(-1)).toThrowError();
+  });
+
+  it("Transitions to the next state", () => {
+    const { stateMachine, uc, mockTransitionToState } = makeTestRig();
+
+    expect(stateMachine.activeState).toEqual("state2");
+    uc.action();
+
+    expect(mockTransitionToState).toBeCalledWith("state1");
   });
 });
