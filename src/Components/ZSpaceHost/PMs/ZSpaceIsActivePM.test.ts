@@ -1,13 +1,13 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeZSpaceHostEntity } from "../Entities/ZSpaceHost";
-import { ZSpaceIsActivePM } from "./ZSpaceIsActivePM";
+import { makeZSpaceIsActivePM, ZSpaceIsActivePM } from "./ZSpaceIsActivePM";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("zSpace"));
 
-  const pm = new ZSpaceIsActivePM(appObjects.getOrCreate("zSpace"));
+  const pm = makeZSpaceIsActivePM(appObjects.getOrCreate("zSpace"));
 
   return { pm, zSpace, registerSingletonSpy, appObjects };
 }

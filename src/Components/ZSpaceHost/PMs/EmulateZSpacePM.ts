@@ -1,7 +1,12 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectPM,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
 import { ZSpaceHostEntity } from "../Entities";
 
-export class EmulateZSpacePM extends HostAppObjectPM<boolean> {
+export abstract class EmulateZSpacePM extends HostAppObjectPM<boolean> {
   static type = "EmulateZSpacePM";
 
   static get(appObjects: HostAppObjectRepo) {
@@ -10,7 +15,13 @@ export class EmulateZSpacePM extends HostAppObjectPM<boolean> {
       appObjects
     );
   }
+}
 
+export function makeEmulateZSpacePM(appObject: HostAppObject): EmulateZSpacePM {
+  return new EmulateZSpacePMImp(appObject);
+}
+
+class EmulateZSpacePMImp extends EmulateZSpacePM {
   private zSpace?: ZSpaceHostEntity;
 
   vmsAreEqual(a: boolean, b: boolean): boolean {
@@ -41,4 +52,3 @@ export class EmulateZSpacePM extends HostAppObjectPM<boolean> {
     this.appObjects.registerSingleton(this);
   }
 }
-

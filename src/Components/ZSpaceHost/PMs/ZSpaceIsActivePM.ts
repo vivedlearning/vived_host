@@ -6,7 +6,7 @@ import {
 } from "../../../HostAppObject";
 import { ZSpaceHostEntity } from "../Entities/ZSpaceHost";
 
-export class ZSpaceIsActivePM extends HostAppObjectPM<boolean> {
+export abstract class ZSpaceIsActivePM extends HostAppObjectPM<boolean> {
   static type = "ZSpaceIsActivePM";
 
   static get(appObjects: HostAppObjectRepo) {
@@ -15,7 +15,15 @@ export class ZSpaceIsActivePM extends HostAppObjectPM<boolean> {
       appObjects
     );
   }
+}
 
+export function makeZSpaceIsActivePM(
+  appObject: HostAppObject
+): ZSpaceIsActivePM {
+  return new ZSpaceIsActivePMImp(appObject);
+}
+
+class ZSpaceIsActivePMImp extends ZSpaceIsActivePM {
   private zSpace?: ZSpaceHostEntity;
 
   vmsAreEqual(a: boolean, b: boolean): boolean {
