@@ -38,6 +38,8 @@ export abstract class AppSandboxEntity extends HostAppObjectEntity {
   abstract get enableDevFeatures(): boolean;
   abstract set enableDevFeatures(enable: boolean);
 
+  abstract mockActivityID: string;
+
   abstract devFeatures: string[];
 
   abstract readonly app: AppEntity;
