@@ -5,4 +5,6 @@ export * from "./setSandboxAppState";
 export * from "./startSandboxApp";
 export * from "./stopSandboxApp";
 export * from "./toggleAllowDevFeatures";
+export * from "./toggleShowInspector";
+export * from "./toggleStartInZSpace";
 export * from "./unmountSandboxApp";

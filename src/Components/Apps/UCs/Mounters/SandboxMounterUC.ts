@@ -7,7 +7,7 @@ import {
 } from "../../../AppSandbox/Entities/AppSandboxEntity";
 import { HostDispatchEntity } from "../../../Dispatcher/Entities/HostDispatchEntity";
 import { HostHandlerEntity } from "../../../Handler/Entities/HostHandler";
-import { AppEntity } from "../../Entities/AppEntity";
+import { AppEntity, AppState } from "../../Entities/AppEntity";
 import { MounterUC } from "./MounterUC";
 
 export function makeSandboxMounter(appObject: HostAppObject): MounterUC {
@@ -51,7 +51,12 @@ class SandboxMounterUC extends MounterUC {
   };
 
   mount = (majorVersion: number, minorVersion: number): Promise<void> => {
-    if (!this.appEntity || !this.hostDispatcher || !this.hostHandler) {
+    if (
+      !this.appEntity ||
+      !this.hostDispatcher ||
+      !this.hostHandler ||
+      !this.sandbox
+    ) {
       this.error("Missing Components");
       return Promise.reject();
     }
@@ -71,7 +76,20 @@ class SandboxMounterUC extends MounterUC {
     const appHandler = appInterface.mount(this.hostHandler.handler);
     this.hostDispatcher.registerAppHandler(appHandler);
 
-    return Promise.resolve();
+    const app = this.appEntity;
+    const sandbox = this.sandbox;
+
+    return new Promise((resolve) => {
+      const waitForReady = () => {
+        if (app.state === AppState.READY) {
+          sandbox.state = SandboxState.MOUNTED;
+          app.removeChangeObserver(waitForReady);
+          resolve();
+        }
+      };
+
+      app.addChangeObserver(waitForReady);
+    });
   };
 
   private getAppVersion(major: number, minor: number): Version | undefined {

@@ -1,5 +1,5 @@
 import { HostAppObject } from "../../../HostAppObject";
-import { MounterUC } from "../UCs/MounterUC";
+import { MounterUC } from "../UCs/Mounters";
 
 export class MockAppMounterUC extends MounterUC {
   mountLatestVersion = jest.fn();
