@@ -1,4 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeZSpaceHostEntity } from "../../ZSpaceHost";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeIsZSpaceAvailableHandler } from "./IsZSpaceAvailableHandler";
 
@@ -8,20 +9,16 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
+  const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("zSpace"));
+
   const uc = makeIsZSpaceAvailableHandler(ao);
-  return { registerSpy, uc };
+  return { registerSpy, uc, zSpace };
 }
 
 describe("Is zSpace Available Base Handler", () => {
   it("Registers as a handler when constructed", () => {
     const { registerSpy, uc } = makeTestRig();
     expect(registerSpy).toBeCalledWith(uc);
-  });
-
-  it("Throws an error if the action is not overwritten", () => {
-    const { uc } = makeTestRig();
-
-    expect(() => uc.action(jest.fn())).toThrowError();
   });
 
   it("Triggers the action for v1", () => {
@@ -57,5 +54,18 @@ describe("Is zSpace Available Base Handler", () => {
     };
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
+  });
+
+  it("Calls back with the zSpace Entity is supported flag", (done) => {
+    const { uc, zSpace } = makeTestRig();
+
+    const cb = (isSupported: boolean) => {
+      expect(isSupported).toEqual(true);
+      done();
+    };
+
+    zSpace.isSupported = true;
+
+    uc.action(cb);
   });
 });

@@ -1,13 +1,20 @@
-import { HostAppObject } from "../../../HostAppObject";
-import { VIVEDApp_3 } from "../../../Types";
-import { Version } from "../../../ValueObjects";
-import { AppEntity, MounterUC } from "../../Apps";
-import { HostDispatchEntity } from "../../Dispatcher";
-import { HostHandlerEntity } from "../../Handler";
-import { AppSandboxEntity, SandboxState } from "../Entities/AppSandboxEntity";
+import { HostAppObject } from "../../../../HostAppObject/HostAppObject";
+import { VIVEDApp_3 } from "../../../../Types/PluginBoundary";
+import { Version } from "../../../../ValueObjects/Version";
+import {
+  AppSandboxEntity,
+  SandboxState
+} from "../../../AppSandbox/Entities/AppSandboxEntity";
+import { HostDispatchEntity } from "../../../Dispatcher/Entities/HostDispatchEntity";
+import { HostHandlerEntity } from "../../../Handler/Entities/HostHandler";
+import { AppEntity } from "../../Entities/AppEntity";
+import { MounterUC } from "./MounterUC";
 
+export function makeSandboxMounter(appObject: HostAppObject): MounterUC {
+  return new SandboxMounterUC(appObject);
+}
 
-export class SandboxMounterUC extends MounterUC {
+class SandboxMounterUC extends MounterUC {
   private get appEntity() {
     return this.getCachedLocalComponent<AppEntity>(AppEntity.type);
   }

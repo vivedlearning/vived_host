@@ -1,4 +1,5 @@
 export * from "./Apps";
+export * from "./AppSandbox";
 export * from "./AssetPlugin";
 export * from "./Assets";
 export * from "./ChallengeResults";

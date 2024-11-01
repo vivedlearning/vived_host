@@ -1,15 +1,11 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
-import { VIVEDApp_3 } from "../../../Types";
-import { Version } from "../../../ValueObjects";
-import { HostDispatchEntity } from "../../Dispatcher";
-import { HostHandlerEntity } from "../../Handler";
-import { GetAppFromAPIUC } from "../../VivedAPI";
-import { AppEntity, AppState } from "../Entities";
-import { appIDWithVersion } from "./appIDWithVersion";
+import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../../HostAppObject";
+import { VIVEDApp_3 } from "../../../../Types";
+import { Version } from "../../../../ValueObjects";
+import { HostDispatchEntity } from "../../../Dispatcher";
+import { HostHandlerEntity } from "../../../Handler";
+import { GetAppFromAPIUC } from "../../../VivedAPI";
+import { AppEntity, AppState } from "../../Entities";
+import { appIDWithVersion } from "../appIDWithVersion";
 
 export abstract class MounterUC extends HostAppObjectUC {
   static type = "MounterUC";

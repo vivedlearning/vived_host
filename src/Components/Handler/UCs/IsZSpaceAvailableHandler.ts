@@ -1,6 +1,6 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { ZSpaceHostEntity } from "../../ZSpaceHost";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,
@@ -29,8 +29,18 @@ export function makeIsZSpaceAvailableHandler(
 }
 
 class IsZSpaceAvailableHandlerImp extends IsZSpaceAvailableHandler {
-  action: IsZSpaceAvailableAction = () => {
-    throw new ActionNotImplemented(this.requestType);
+  private get zSpace() {
+    return this.getCachedSingleton<ZSpaceHostEntity>(ZSpaceHostEntity.type);
+  }
+
+  action: IsZSpaceAvailableAction = (
+    callback: (isZSpaceAvailable: boolean) => void
+  ) => {
+    if (this.zSpace) {
+      callback(this.zSpace.isSupported);
+    } else {
+      callback(false);
+    }
   };
 
   handleRequest = (version: number, payload: unknown) => {

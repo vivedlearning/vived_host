@@ -1,11 +1,11 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { Handler, VIVEDApp_3 } from "../../../Types";
-import { Version, VersionStage } from "../../../ValueObjects";
-import { makeHostDispatchEntity } from "../../Dispatcher";
-import { makeHostHandlerEntity } from "../../Handler";
-import { AppState, makeAppEntity } from "../Entities";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { Handler, VIVEDApp_3 } from "../../../../Types";
+import { Version, VersionStage } from "../../../../ValueObjects";
+import { makeHostDispatchEntity } from "../../../Dispatcher";
+import { makeHostHandlerEntity } from "../../../Handler";
+import { AppState, makeAppEntity } from "../../Entities";
 import { makeMounterUC } from "./MounterUC";
-import { makeMockGetAppFromAPIUC } from "../../VivedAPI/Mocks/MockGetAppFromAPIUC";
+import { makeMockGetAppFromAPIUC } from "../../../VivedAPI/Mocks/MockGetAppFromAPIUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
