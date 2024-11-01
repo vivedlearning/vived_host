@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { StartZSpaceUC } from "../UCs/StartZSpaceUC";
+import { StartZSpaceUC } from "../UCs/StartZSpace/StartZSpaceUC";
 
 export function startZSpace(appObjects: HostAppObjectRepo) {
   const uc = StartZSpaceUC.get(appObjects);

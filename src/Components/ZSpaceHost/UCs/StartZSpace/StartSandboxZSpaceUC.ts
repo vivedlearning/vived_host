@@ -1,10 +1,9 @@
-import { HostAppObject } from "../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../AppSandbox";
-import { DispatchStartZSpaceUC } from "../../Dispatcher";
-import { ZSpaceHostEntity } from "../Entities";
+import { HostAppObject } from "../../../../HostAppObject";
+import { AppSandboxEntity, SandboxState } from "../../../AppSandbox";
+import { DispatchStartZSpaceUC } from "../../../Dispatcher";
+import { ZSpaceHostEntity } from "../../Entities";
 import { StartZSpaceUC } from "./StartZSpaceUC";
-import { StopZSpaceUC } from "./StopZSpaceUC";
-
+import { StopZSpaceUC } from "../StopZSpaceUC";
 
 export function makeStartSandboxZSpaceUC(
   appObject: HostAppObject

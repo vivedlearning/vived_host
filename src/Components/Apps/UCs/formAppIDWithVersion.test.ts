@@ -1,7 +1,7 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { Version, VersionStage } from "../../../ValueObjects";
 import { makeAppEntity } from "../Entities";
-import { appIDWithVersion } from "./appIDWithVersion";
+import { formAppIDWithVersion } from "./formAppIDWithVersion";
 
 it("Forms the id with version string as expedected", () => {
   const appObjects = makeHostAppObjectRepo();
@@ -9,5 +9,5 @@ it("Forms the id with version string as expedected", () => {
 
   const version = new Version(1, 2, 3, VersionStage.BETA, "A Label");
 
-  expect(appIDWithVersion(app, version)).toEqual("app0-1_2_3");
+  expect(formAppIDWithVersion(app, version)).toEqual("app0-1_2_3");
 });

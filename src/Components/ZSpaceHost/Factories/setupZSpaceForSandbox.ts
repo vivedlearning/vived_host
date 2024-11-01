@@ -8,14 +8,14 @@ export function setupZSpaceForSandbox(
 ): ZSpaceHostEntity {
   const ao = appObjects.getOrCreate("zSpace");
 
-  //Entity
+  // Entity
   const entity = makeZSpaceHostEntity(ao);
 
-  //UC
+  // UC
   makeStopSandboxZSpaceUC(ao);
   makeStartSandboxZSpaceUC(ao);
 
-  //PMs
+  // PMs
   makeEmulateZSpacePM(ao);
   makeZSpaceIsActivePM(ao);
 

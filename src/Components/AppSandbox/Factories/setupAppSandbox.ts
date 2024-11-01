@@ -23,12 +23,12 @@ export function setupAppSandbox(
 ): AppSandboxEntity {
   const ao = appObjects.getOrCreate(appID);
 
-  //Entities
+  // Entities
   const entity = makeAppSandboxEntity(ao);
   makeHostDispatchEntity(ao);
   makeHostHandlerEntity(ao);
 
-  //UC
+  // UC
   setupStandardHostDispatchers(ao);
   setupStandardHostHandlers(ao);
   makeStartAppUC(ao);
@@ -36,7 +36,7 @@ export function setupAppSandbox(
   makeShowBabylonInspectorUC(ao);
   makeSandboxMounter(ao);
 
-  //PMs
+  // PMs
   makeDevFeaturesEnabledPM(ao);
   makeSandboxStatePM(ao);
   makeShowInspectorPM(ao);

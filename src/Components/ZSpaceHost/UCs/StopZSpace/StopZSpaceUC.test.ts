@@ -1,7 +1,7 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockStopZSpaceUC } from "../Mocks/MockStopZSpaceUC";
-import { StopZSpaceUC } from "./StopZSpaceUC";
 
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeMockStopZSpaceUC } from "../../Mocks";
+import { StopZSpaceUC } from "./StopZSpaceUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();

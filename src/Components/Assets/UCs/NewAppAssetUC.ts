@@ -98,7 +98,6 @@ class NewAppAssetUCImp extends NewAppAssetUC {
             buttonLabel: "OK",
             message: `Something went wrong when creating a new app asset. Check the console. ${e.message}`,
             title: "New App Asset Error",
-            onClose: () => {}
           };
           this.alertFactory?.make(dialogDTO);
 

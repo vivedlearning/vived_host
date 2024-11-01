@@ -21,7 +21,7 @@ export function setupVivedAPIForSandbox(appObjects: HostAppObjectRepo) {
   // Entities
   new VivedAPIEntity(ao);
 
-  //UCs
+  // UCs
   makeDeleteAssetOnAPIUC(ao);
   makeFetchAssetFileFromAPIUC(ao);
   makeFetchAssetMetaFromAPIUC(ao);
@@ -34,6 +34,6 @@ export function setupVivedAPIForSandbox(appObjects: HostAppObjectRepo) {
   makePatchAssetUC(ao);
   makePostNewAssetUC(ao);
 
-  //PMs
+  // PMs
   makeUserTokenPM(ao);
 }

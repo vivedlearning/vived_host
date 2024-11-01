@@ -1,8 +1,5 @@
-import {
-  getSingletonComponent,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { getSingletonComponent, HostAppObjectRepo, HostAppObjectUC } from "../../../../HostAppObject";
+
 
 export abstract class StopZSpaceUC extends HostAppObjectUC {
   static type = "StopZSpaceUC";

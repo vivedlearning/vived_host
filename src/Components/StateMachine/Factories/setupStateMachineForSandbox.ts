@@ -26,7 +26,7 @@ export function setupStateMachineForSandbox(
   const entity = makeHostStateMachine(ao);
   makeHostEditingStateEntity(ao);
 
-  //UCs
+  // UCs
   makeCancelSandboxEditingUC(ao);
   makeConsumeSandboxStateUC(ao);
   makeEditActiveSandboxStateUC(ao);
@@ -38,7 +38,7 @@ export function setupStateMachineForSandbox(
   makeDeleteStateUC(ao);
   makeDuplicateStateUC(ao);
 
-  //PMs
+  // PMs
   makeEditingStatePM(ao);
   makeHostStateMachinePM(ao);
 

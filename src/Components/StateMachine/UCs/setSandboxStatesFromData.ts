@@ -10,7 +10,7 @@ export interface SandboxStateData {
 }
 
 export function setSandboxStatesFromData(
-  data: SandboxStateData[],
+  datas: SandboxStateData[],
   appObjects: HostAppObjectRepo
 ) {
   const stateMachine = HostStateMachine.get(appObjects);
@@ -29,7 +29,7 @@ export function setSandboxStatesFromData(
   }
 
   const states: HostStateEntity[] = [];
-  data.forEach((stateData) => {
+  datas.forEach((stateData) => {
     const { data, id, name } = stateData;
 
     const state = stateMachine.stateFactory(id);

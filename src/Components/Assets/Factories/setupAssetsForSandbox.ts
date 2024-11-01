@@ -30,12 +30,12 @@ export function setupAssetsForSandbox(appObjects: HostAppObjectRepo) {
   const assetRepoAO = appObjects.getOrCreate("Asset Repository");
   const appAssetsAO = appObjects.getOrCreate("App Assets");
 
-  //Entities
+  // Entities
   const assetRepo = makeAssetRepo(assetRepoAO);
   assetRepo.assetFactory = makeAssetFactory(appObjects);
   makeAppAssets(appAssetsAO);
 
-  //UCs
+  // UCs
   makeEditAppAsset(assetRepoAO);
   makeGetAssetBlobURLUC(assetRepoAO);
   makeGetAssetFileUC(assetRepoAO);
@@ -45,27 +45,27 @@ export function setupAssetsForSandbox(appObjects: HostAppObjectRepo) {
   makeNewAppAssetUC(appAssetsAO);
   makeGetAppAssetUC(appAssetsAO);
 
-  //PMs
+  // PMs
   makeAppAssetListPM(appAssetsAO);
   makeShowArchivedAppAssetPM(appAssetsAO);
   makeEditingAppAssetPM(appAssetsAO);
 }
 
 function makeAssetFactory(appObjects: HostAppObjectRepo) {
-  return function (id: string): AssetEntity {
+  return function assetFactory(id: string): AssetEntity {
     const ao = appObjects.getOrCreate(id);
 
-    //Entities
+    // Entities
     const entity = makeAssetEntity(ao);
 
-    //UCs
+    // UCs
     makeArchiveAssetUC(ao);
     makeDeleteAssetUC(ao);
     makeDownloadAssetFileUC(ao);
     makeUpdateAssetFileUC(ao);
     makeUpdateAppAssetMetaUC(ao);
 
-    //PMs
+    // PMs
     makeAssetPM(ao);
     return entity;
   };

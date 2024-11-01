@@ -7,6 +7,6 @@ export function setupChallengeResultsForSandbox(appObjects: HostAppObjectRepo) {
 
   makeChallengeResults(ao);
 
-  //PM
+  // PM
   makeChallengeResultsPM(ao);
 }

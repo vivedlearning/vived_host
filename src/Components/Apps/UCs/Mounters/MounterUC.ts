@@ -1,11 +1,15 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../../HostAppObject";
 import { VIVEDApp_3 } from "../../../../Types/PluginBoundary";
 import { Version } from "../../../../ValueObjects/Version";
 import { HostDispatchEntity } from "../../../Dispatcher/Entities/HostDispatchEntity";
 import { HostHandlerEntity } from "../../../Handler/Entities/HostHandler";
 import { GetAppFromAPIUC } from "../../../VivedAPI/UCs/GetAppFromAPIUC";
 import { AppEntity, AppState } from "../../Entities/AppEntity";
-import { appIDWithVersion } from "../appIDWithVersion";
+import { formAppIDWithVersion } from "../formAppIDWithVersion";
 
 export abstract class MounterUC extends HostAppObjectUC {
   static type = "MounterUC";
@@ -28,7 +32,6 @@ export abstract class MounterUC extends HostAppObjectUC {
     return ao?.getComponent<MounterUC>(MounterUC.type);
   }
 }
-
 
 export function makeMounterUC(appObject: HostAppObject): MounterUC {
   return new MounterUCImp(appObject);
@@ -100,7 +103,7 @@ class MounterUCImp extends MounterUC {
     if (!this.app) return;
     if (!this.app.mountedVersion) return;
 
-    const versionID = appIDWithVersion(this.app, this.app.mountedVersion);
+    const versionID = formAppIDWithVersion(this.app, this.app.mountedVersion);
     (window as any)[versionID] = undefined;
     delete (window as any)[versionID];
 
@@ -199,7 +202,7 @@ class MounterUCImp extends MounterUC {
     }
 
     let appInterface = this.getAppInterface(version);
-    const versionID = appIDWithVersion(app, version);
+    const versionID = formAppIDWithVersion(app, version);
 
     if (appInterface) {
       return Promise.resolve(appInterface);
@@ -211,7 +214,7 @@ class MounterUCImp extends MounterUC {
       });
       Promise.all(loaders)
         .then(() => {
-          let appInterface = this.getAppInterface(version);
+          appInterface = this.getAppInterface(version);
 
           if (!appInterface) {
             reject(
@@ -236,11 +239,11 @@ class MounterUCImp extends MounterUC {
     return new Promise<void>((resolve, reject) => {
       const aScript = document.createElement("script");
 
-      aScript.onload = function () {
+      aScript.onload = function onLoad() {
         resolve();
       };
 
-      aScript.onerror = function (e) {
+      aScript.onerror = function onError(e) {
         reject(new Error(`Failed to add script to document`));
       };
 
@@ -256,18 +259,20 @@ class MounterUCImp extends MounterUC {
   getAppInterface = (version: Version): VIVEDApp_3 | undefined => {
     if (!this.app) return;
 
-    const versionID = appIDWithVersion(this.app, version);
+    const versionID = formAppIDWithVersion(this.app, version);
 
     let appInterface = (window as any)[versionID] as VIVEDApp_3;
 
     if (!appInterface) {
-      appInterface = (window as any)[this.app.id] as VIVEDApp_3; //Old way of identifying apps
+      appInterface = (window as any)[this.app.id] as VIVEDApp_3; // Old way of identifying apps
     }
 
     return appInterface;
   };
 
-  private parseEndpoints(endpoints: string[]): {
+  private parseEndpoints(
+    endpoints: string[]
+  ): {
     scripts: string[];
     styles: string[];
   } {
@@ -291,13 +296,13 @@ class MounterUCImp extends MounterUC {
   }
 
   waitForAppIsReady(app: AppEntity, appVersion: Version): Promise<void> {
-    //Edge cases here
+    // Edge cases here
     if (
       app.id === "app4e48fbaa815a4857821bf7569b003751" &&
       appVersion.major === 1 &&
       appVersion.minor === 0
     ) {
-      //Mark board app has a problem with version 1.0
+      // Mark board app has a problem with version 1.0
       app.state = AppState.READY;
       return Promise.resolve();
     }
@@ -307,7 +312,7 @@ class MounterUCImp extends MounterUC {
       appVersion.major === 1 &&
       appVersion.minor <= 2
     ) {
-      //Older versions of the text app do not report when ready
+      // Older versions of the text app do not report when ready
       app.state = AppState.READY;
       return Promise.resolve();
     }
@@ -317,20 +322,20 @@ class MounterUCImp extends MounterUC {
       appVersion.major === 1 &&
       appVersion.minor <= 1
     ) {
-      //Older versions of the YouTube app do not report when ready
+      // Older versions of the YouTube app do not report when ready
       app.state = AppState.READY;
       return Promise.resolve();
     }
 
     if (app.id === "app448f8f293fbb493a9e233f113ce8b56a") {
-      //Asset Plugin
+      // Asset Plugin
       app.state = AppState.READY;
       return Promise.resolve();
     }
 
-    //Allows testing to not get hung up waiting for this
+    // Allows testing to not get hung up waiting for this
     if (app.id === "APP_FOR_JEST_TEST") {
-      //Older versions of the YouTube app do not report when ready
+      // Older versions of the YouTube app do not report when ready
       app.state = AppState.READY;
       return Promise.resolve();
     }

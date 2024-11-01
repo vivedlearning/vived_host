@@ -123,7 +123,6 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
             buttonLabel: "OK",
             message: `Something went wrong when updating the assets meta. Check the console. ${e.message}`,
             title: "Update Asset Error",
-            onClose: () => {}
           };
           this.alertFactory?.make(dialogDTO);
           resolve();

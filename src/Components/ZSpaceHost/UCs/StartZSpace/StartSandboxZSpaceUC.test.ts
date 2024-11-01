@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../AppSandbox";
-import { MockDispatchStartZSpaceUC } from "../../Dispatcher";
-import { makeZSpaceHostEntity } from "../Entities";
-import { makeMockStopZSpaceUC } from "../Mocks";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox";
+import { MockDispatchStartZSpaceUC } from "../../../Dispatcher";
+import { makeZSpaceHostEntity } from "../../Entities";
+import { makeMockStopZSpaceUC } from "../../Mocks";
 import { makeStartSandboxZSpaceUC } from "./StartSandboxZSpaceUC";
-import {MockXRSession} from "../Mocks/MockXRSession"
+import {MockXRSession} from "../../Mocks/MockXRSession"
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();

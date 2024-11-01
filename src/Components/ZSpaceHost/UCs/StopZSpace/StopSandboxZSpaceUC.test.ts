@@ -1,8 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeAppSandboxEntity } from "../../AppSandbox";
-import { MockDispatchStopZSpaceUC } from "../../Dispatcher";
-import { makeZSpaceHostEntity } from "../Entities";
-import { MockXRSession } from "../Mocks/MockXRSession";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppSandboxEntity } from "../../../AppSandbox";
+import { MockDispatchStopZSpaceUC } from "../../../Dispatcher";
+import { makeZSpaceHostEntity } from "../../Entities";
+import { MockXRSession } from "../../Mocks";
 import { makeStopSandboxZSpaceUC } from "./StopSandboxZSpaceUC";
 
 function makeTestRig() {

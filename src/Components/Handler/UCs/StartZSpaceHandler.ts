@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { StartZSpaceUC } from "../../ZSpaceHost/UCs/StartZSpaceUC";
+import { StartZSpaceUC } from "../../ZSpaceHost/UCs/StartZSpace/StartZSpaceUC";
 import {
   HostHandlerEntity,
   RequestHandler,

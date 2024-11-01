@@ -1,5 +1,5 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockStartZSpaceUC } from "../Mocks/MockStartZSpaceUC";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeMockStartZSpaceUC } from "../../Mocks/MockStartZSpaceUC";
 import { StartZSpaceUC } from "./StartZSpaceUC";
 
 function makeTestRig() {

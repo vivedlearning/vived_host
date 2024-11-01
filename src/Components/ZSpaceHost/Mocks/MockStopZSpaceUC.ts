@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { StopZSpaceUC } from "../UCs/StopZSpaceUC";
+import { StopZSpaceUC } from "../UCs/StopZSpace/StopZSpaceUC";
 
 export class MockStopZSpaceUC extends StopZSpaceUC {
   stopZSpace = jest.fn();
@@ -10,5 +10,5 @@ export class MockStopZSpaceUC extends StopZSpaceUC {
 }
 
 export function makeMockStopZSpaceUC(appObjects: HostAppObjectRepo) {
-  return new MockStopZSpaceUC(appObjects.getOrCreate("MockStopZSpaceUC"))
+  return new MockStopZSpaceUC(appObjects.getOrCreate("MockStopZSpaceUC"));
 }

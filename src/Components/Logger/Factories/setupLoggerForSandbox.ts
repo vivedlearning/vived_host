@@ -6,13 +6,13 @@ import { makeDownloadLogUC } from "../UCs";
 export function setupLoggerForSandbox(appObjects: HostAppObjectRepo) {
   const ao = appObjects.getOrCreate("Logger");
 
-  //Entities
+  // Entities
   makeLoggerEntity(ao);
 
-  //UCs
+  // UCs
   makeDownloadLogUC(ao);
 
-  //PMs
+  // PMs
   makeLogSummaryPM(ao);
   makeForwardLogsToConsolePM(ao);
 }

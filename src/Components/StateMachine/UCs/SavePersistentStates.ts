@@ -37,8 +37,8 @@ class SavePersistentStatesUCImp extends SavePersistentStatesUC {
 
     const states = this.stateMachine.states;
     const statesData = JSON.stringify(states);
-    var a = document.createElement("a");
-    var file = new Blob([statesData], { type: "text/plain" });
+    const a = document.createElement("a");
+    const file = new Blob([statesData], { type: "text/plain" });
     a.href = URL.createObjectURL(file);
     a.download = "persistentStates.json";
     a.click();

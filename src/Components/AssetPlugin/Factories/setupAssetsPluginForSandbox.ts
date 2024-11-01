@@ -22,19 +22,19 @@ export function setupAssetsPluginForSandbox(
 ): AssetPluginEntity {
   const ao = appObjects.getOrCreate(id);
 
-  //Entities
+  // Entities
   const entity = makeAssetPluginEntity(ao);
   makeHostHandlerEntity(ao);
   makeHostDispatchEntity(ao);
 
-  //UCs
+  // UCs
   makeMounterUC(ao);
   makeSandboxAssetPluginContainerUC(ao);
 
   setupDispatchers(ao);
   setupHandlers(ao);
 
-  //PMs
+  // PMs
   makeAssetPluginPM(ao);
 
   return entity;

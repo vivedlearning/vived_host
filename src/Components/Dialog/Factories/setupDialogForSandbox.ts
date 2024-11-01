@@ -17,10 +17,10 @@ import { makeSpinnerFactory } from "./spinnerDialogFactory";
 export function setupDialogForSandbox(appObjects: HostAppObjectRepo) {
   const ao = appObjects.getOrCreate("Dialog");
 
-  //Entities
+  // Entities
   makeDialogQueue(ao);
 
-  //PMs
+  // PMs
   makeDialogQueuePM(ao);
 
   makeMakeAlertDialogUC(ao).factory = makeAlertFactory(appObjects);

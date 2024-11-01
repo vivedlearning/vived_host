@@ -7,13 +7,13 @@ import { makeSetThemeUC } from "../UCs";
 export function setupThemeForSandbox(appObjects: HostAppObjectRepo) {
   const ao = appObjects.getOrCreate("Theme");
 
-  //Entities
+  // Entities
   const theme = makeHostThemeEntity(ao);
 
-  //UCs
+  // UCs
   const setThemeUC = makeSetThemeUC(ao);
 
-  //PMs
+  // PMs
   makeThemeColorsPM(ao);
 
   theme.submitScheme("light", vivedLightThemeData);
