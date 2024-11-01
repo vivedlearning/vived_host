@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
 import { makeDevFeaturesEnabledPMMock } from "../Mocks/DevFeaturesEnabledPMMock";
 import { devFeaturesEnabledAdapter } from "./devFeaturesEnabledAdapter";
 

@@ -1,10 +1,8 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeChallengeResults } from "../../ChallengeResults";
-import {
-  makeHostStateMachine,
-  makeMockHostStateEntity
-} from "../../StateMachine";
-import { makeHostHandlerEntity } from "../Entities";
+import { makeMockHostStateEntity } from "../../StateMachine/Mocks/MockStateEntity";
+import { makeHostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
+import { makeHostHandlerEntity } from "../Entities/HostHandler";
 import {
   makeSubmitResultHandler,
   MultiHitResultV1

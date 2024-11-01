@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
 import { makeStartInZSpacePMMock } from "../Mocks/StartInZSpacePMMock";
 import { startInZSpaceAdapter } from "./startInZSpaceAdapter";
 

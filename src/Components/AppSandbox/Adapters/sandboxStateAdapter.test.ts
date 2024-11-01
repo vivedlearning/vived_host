@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
 import { SandboxState } from "../Entities/AppSandboxEntity";
 import { makeRenderAppPMMock } from "../Mocks/RenderAppPMMock";
 import { sandboxStateAdapter } from "./sandboxStateAdapter";

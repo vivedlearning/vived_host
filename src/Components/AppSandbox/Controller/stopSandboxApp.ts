@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { StopAppUC } from "../../Apps";
+import { StopAppUC } from "../../Apps/UCs/StopAppUC";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
 export function stopSandboxApp(appObjects: HostAppObjectRepo) {

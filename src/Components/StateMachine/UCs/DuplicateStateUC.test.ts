@@ -1,10 +1,9 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostStateMachine } from "../Entities/HostStateMachine";
 import {
   ChallengeResponse,
-  HostStateEntity,
-  makeHostStateEntity,
-  makeHostStateMachine
-} from "../Entities";
+  makeHostStateEntity
+} from "../Entities/HostStateEntity";
 import { DuplicateStateUC, makeDuplicateStateUC } from "./DuplicateStateUC";
 
 function makeTestRig() {

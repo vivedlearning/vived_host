@@ -9,7 +9,7 @@ import {
   DispatchStartAppUC,
   DispatchThemeUC
 } from "../../Dispatcher";
-import { HostEditingStateEntity, HostStateMachine } from "../../StateMachine";
+import { HostEditingStateEntity, HostStateMachine } from "../../StateMachine/Entities";
 
 export abstract class StartAppUC extends HostAppObjectUC {
   static type = "StartAppUC";

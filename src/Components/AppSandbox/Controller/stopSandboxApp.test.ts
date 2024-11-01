@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { StopAppUC } from "../../Apps";
+import { StopAppUC } from "../../Apps/UCs/StopAppUC";
 import { makeAppSandboxEntity } from "../Entities/AppSandboxEntity";
 import { stopSandboxApp } from "./stopSandboxApp";
 

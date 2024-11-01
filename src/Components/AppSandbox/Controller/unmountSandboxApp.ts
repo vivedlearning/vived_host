@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { MounterUC } from "../../Apps";
+import { MounterUC } from "../../Apps/UCs/Mounters/MounterUC";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
 export function unmountSandboxApp(appObjects: HostAppObjectRepo) {

@@ -1,5 +1,5 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { HostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
+import { SingletonPmAdapter } from "../../../Types/SingletonPmAdapter";
 import { ChallengeResultsListPM, ChallengeResultVM } from "../PMs/ChallengeResultsListPM";
 
 export const challengeResultsListAdapter: SingletonPmAdapter<

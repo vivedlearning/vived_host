@@ -1,10 +1,6 @@
-import { stringify } from "uuid";
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import {
-  ChallengeResponse,
-  HostEditingStateEntity,
-  HostStateMachine
-} from "../../StateMachine";
+import { ChallengeResponse } from "../../StateMachine/Entities/HostStateEntity";
+import { HostEditingStateEntity } from "../../StateMachine/Entities/HostEditingStateEntity";
 import {
   HostHandlerEntity,
   RequestHandler,

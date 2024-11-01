@@ -3,7 +3,7 @@ import {
   HostAppObjectPM,
   HostAppObjectRepo
 } from "../../../HostAppObject";
-import { HostStateMachine } from "../../StateMachine";
+import { HostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
 import {
   ChallengeResultHitData,
   ChallengeResultMultiHitData,
@@ -12,7 +12,7 @@ import {
   ChallengeResultScoreData,
   ChallengeResultsEntity,
   ChallengeResultType
-} from "../Entities";
+} from "../Entities/ChallengeResults";
 
 export interface ChallengeResultVM {
   id: string;

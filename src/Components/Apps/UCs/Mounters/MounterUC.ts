@@ -1,10 +1,10 @@
 import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../../HostAppObject";
-import { VIVEDApp_3 } from "../../../../Types";
-import { Version } from "../../../../ValueObjects";
-import { HostDispatchEntity } from "../../../Dispatcher";
-import { HostHandlerEntity } from "../../../Handler";
-import { GetAppFromAPIUC } from "../../../VivedAPI";
-import { AppEntity, AppState } from "../../Entities";
+import { VIVEDApp_3 } from "../../../../Types/PluginBoundary";
+import { Version } from "../../../../ValueObjects/Version";
+import { HostDispatchEntity } from "../../../Dispatcher/Entities/HostDispatchEntity";
+import { HostHandlerEntity } from "../../../Handler/Entities/HostHandler";
+import { GetAppFromAPIUC } from "../../../VivedAPI/UCs/GetAppFromAPIUC";
+import { AppEntity, AppState } from "../../Entities/AppEntity";
 import { appIDWithVersion } from "../appIDWithVersion";
 
 export abstract class MounterUC extends HostAppObjectUC {

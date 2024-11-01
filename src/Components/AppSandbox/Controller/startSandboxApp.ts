@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { StartAppUC } from "../../Apps";
+import { StartAppUC } from "../../Apps/UCs/StartAppUC";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
 export function startSandboxApp(

@@ -1,6 +1,6 @@
-import { MemoizedBoolean } from "../../../Entities";
+import { MemoizedBoolean } from "../../../Entities/MemoizedBoolean";
 import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from "../../../HostAppObject";
-import { AppEntity, makeAppEntity } from "../../Apps";
+import { AppEntity, makeAppEntity } from "../../Apps/Entities/AppEntity";
 
 export enum SandboxState {
   UNMOUNTED = "UNMOUNTED",
