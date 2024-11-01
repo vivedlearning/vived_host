@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { EndActivityUC } from "../UCs/EndActivityUC";
+import { EndActivityUC } from "../UCs/EndActivity/EndActivityUC";
 
 export class EndActivityUCMock extends EndActivityUC {
   end = jest.fn();

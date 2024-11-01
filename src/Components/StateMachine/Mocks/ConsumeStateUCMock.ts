@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { ConsumeStateUC } from "../UCs/ConsumeStateUC";
+import { ConsumeStateUC } from "../UCs/ConsumeState/ConsumeStateUC";
 
 export class ConsumeStateUCMock extends ConsumeStateUC {
   consume = jest.fn();

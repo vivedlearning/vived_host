@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { CancelEditingUC } from "../UCs/CancelEditingUC";
+import { CancelEditingUC } from "../UCs/CancelEditing/CancelEditingUC";
 
 export function cancelEditing(appObjects: HostAppObjectRepo) {
   const uc = CancelEditingUC.get(appObjects);

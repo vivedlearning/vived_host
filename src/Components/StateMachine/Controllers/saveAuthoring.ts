@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SaveAuthoringUC } from "../UCs/SaveAuthoringUC";
+import { SaveAuthoringUC } from "../UCs/SaveAuthoring/SaveAuthoringUC";
 
 export function saveAuthoring(appObjects: HostAppObjectRepo) {
   const uc = SaveAuthoringUC.get(appObjects);

@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { NewStateUC } from "../UCs/NewStateUC";
+import { NewStateUC } from "../UCs/NewState/NewStateUC";
 
 export class NewStateUCMock extends NewStateUC {
   createState = jest.fn();

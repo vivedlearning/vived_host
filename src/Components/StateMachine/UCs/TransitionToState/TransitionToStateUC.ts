@@ -1,4 +1,8 @@
-import { getSingletonComponent, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../../HostAppObject";
 
 export abstract class TransitionToStateUC extends HostAppObjectUC {
   static type = "TransitionToStateUC";

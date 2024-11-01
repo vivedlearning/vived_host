@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { EditStateUC } from "../UCs/EditStateUC";
+import { EditStateUC } from "../UCs/EditState/EditStateUC";
 
 export class EditStateUCMock extends EditStateUC {
   edit = jest.fn();

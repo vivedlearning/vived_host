@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { EditActiveStateUC } from "../UCs/EditActiveStateUC";
+import { EditActiveStateUC } from "../UCs/EditActiveState/EditActiveStateUC";
 
 export function editActiveState(appObjects: HostAppObjectRepo) {
   const uc = EditActiveStateUC.get(appObjects);

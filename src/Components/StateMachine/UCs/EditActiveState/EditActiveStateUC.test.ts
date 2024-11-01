@@ -1,5 +1,5 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockEditActiveStateUC } from "../Mocks/MockEditActiveStateUC";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeMockEditActiveStateUC } from "../../Mocks/MockEditActiveStateUC";
 import { EditActiveStateUC } from "./EditActiveStateUC";
 
 function makeTestRig() {

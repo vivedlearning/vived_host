@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { TransitionToStateUC } from "../UCs/TransitionToStateUC";
+import { TransitionToStateUC } from "../UCs/TransitionToState/TransitionToStateUC";
 
 export class MockTransitionToStateUC extends TransitionToStateUC {
   transitionToState = jest.fn();

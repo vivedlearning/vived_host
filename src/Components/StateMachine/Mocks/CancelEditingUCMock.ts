@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { CancelEditingUC } from "../UCs/CancelEditingUC";
+import { CancelEditingUC } from "../UCs/CancelEditing/CancelEditingUC";
 
 export class CancelEditingUCMock extends CancelEditingUC {
   cancel = jest.fn();

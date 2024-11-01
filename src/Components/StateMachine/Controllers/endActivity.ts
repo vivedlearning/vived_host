@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { EndActivityUC } from "../UCs/EndActivityUC";
+import { EndActivityUC } from "../UCs/EndActivity/EndActivityUC";
 
 export function endActivity(appObjects: HostAppObjectRepo) {
   const uc = EndActivityUC.get(appObjects);

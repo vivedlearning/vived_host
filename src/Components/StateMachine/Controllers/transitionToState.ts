@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { TransitionToStateUC } from "../UCs/TransitionToStateUC";
+import { TransitionToStateUC } from "../UCs/TransitionToState/TransitionToStateUC";
 
 export function transitionToState(
   stateID: string,

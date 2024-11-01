@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { SaveAuthoringUC } from "../UCs/SaveAuthoringUC";
+import { SaveAuthoringUC } from "../UCs/SaveAuthoring/SaveAuthoringUC";
 
 export class MockSaveAuthoringUC extends SaveAuthoringUC {
   saveAuthoring = jest.fn();

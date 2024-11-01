@@ -1,5 +1,5 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockSaveAuthoringUC } from "../Mocks/MockSaveAuthoringUC";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeMockSaveAuthoringUC } from "../../Mocks/MockSaveAuthoringUC";
 import { SaveAuthoringUC } from "./SaveAuthoringUC";
 
 function makeTestRig() {

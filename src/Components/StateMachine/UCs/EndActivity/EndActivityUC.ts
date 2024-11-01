@@ -2,7 +2,7 @@ import {
   getSingletonComponent,
   HostAppObjectRepo,
   HostAppObjectUC
-} from "../../../HostAppObject";
+} from "../../../../HostAppObject";
 
 export abstract class EndActivityUC extends HostAppObjectUC {
   static type = "EndActivityUC";

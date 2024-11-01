@@ -1,5 +1,5 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeEndActivityUCMock } from "../Mocks/EndActivityUCMock";
+import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeEndActivityUCMock } from "../../Mocks/EndActivityUCMock";
 import { EndActivityUC } from "./EndActivityUC";
 
 function makeTestRig() {
