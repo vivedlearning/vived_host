@@ -7,6 +7,7 @@ export * from "./EditState";
 export * from "./EndActivity";
 export * from "./NewState";
 export * from "./SaveAuthoring";
+export * from "./TransitionToState";
 export * from "./SavePersistentStates";
 export * from "./setSandboxStatesFromData";
-export * from "./TransitionToState";
+export * from "./setSandboxStatesFromStingData"

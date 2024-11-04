@@ -2,15 +2,15 @@ import { HostAppObjectRepo } from "../../../HostAppObject";
 import { AppSandboxEntity } from "../../AppSandbox/Entities";
 import { HostStateEntity, HostStateMachine } from "../Entities";
 
-export interface SandboxStateData {
+export interface SandboxStateStringData {
   id: string;
   name: string;
-  data: object;
+  data: string;
   assets: string[];
 }
 
-export function setSandboxStatesFromData(
-  datas: SandboxStateData[],
+export function setSandboxStatesFromStingData(
+  datas: SandboxStateStringData[],
   appObjects: HostAppObjectRepo
 ) {
   const stateMachine = HostStateMachine.get(appObjects);
@@ -36,7 +36,7 @@ export function setSandboxStatesFromData(
     const { data, id, name, assets } = stateData;
 
     const state = stateMachine.stateFactory(id);
-    state.setStateData(data);
+    state.setStateData(JSON.parse(data));
     state.name = name;
     state.appID = sandbox.appID;
     state.assets = assets;
