@@ -1,11 +1,12 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../AppSandbox";
+import { makeAppSandboxEntity, SandboxState } from "../../AppSandbox/Entities";
+import { SpinnerDialogEntity } from "../../Dialog/Entities/Spinner";
 import {
   makeMockMakeAlertDialogUC,
-  makeMockMakeSpinnerDialogUC,
-  SpinnerDialogEntity
-} from "../../Dialog";
-import { makeMockPatchAssetMetaUC, PatchAssetMetaDTO } from "../../VivedAPI";
+  makeMockMakeSpinnerDialogUC
+} from "../../Dialog/Mocks";
+import { PatchAssetMetaDTO } from "../../VivedAPI/UCs/PatchAssetMetaUC";
+import { makeMockPatchAssetMetaUC } from "../../VivedAPI/Mocks/MockPatchAssetMetaUC";
 import { makeAppAssets, makeAssetEntity } from "../Entities";
 import {
   makeUpdateAppAssetMetaUC,

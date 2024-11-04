@@ -2,7 +2,6 @@ import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
 import { ChallengeResultsEntity } from "../../ChallengeResults";
 import { HostStateMachine } from "../../StateMachine";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnableToParsePayload,

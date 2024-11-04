@@ -1,5 +1,6 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { StopZSpaceUC } from "../UCs/StopZSpaceUC";
+import { StopZSpaceUC } from "../UCs";
+
 
 export function stopZSpace(appObjects: HostAppObjectRepo) {
   const uc = StopZSpaceUC.get(appObjects);

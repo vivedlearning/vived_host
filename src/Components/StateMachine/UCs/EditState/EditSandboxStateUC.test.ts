@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox";
+import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import { makeHostStateMachine } from "../../Entities";
 import { makeMockHostEditingStateEntity, makeMockHostStateEntity } from "../../Mocks";
 import { makeEditSandboxStateUC } from "./EditSandboxStateUC";

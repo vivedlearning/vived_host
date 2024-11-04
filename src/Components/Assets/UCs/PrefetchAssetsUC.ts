@@ -4,7 +4,7 @@ import {
   HostAppObjectRepo,
   HostAppObjectUC
 } from "../../../HostAppObject";
-import { HostStateMachine } from "../../StateMachine";
+import { HostStateMachine } from "../../StateMachine/Entities";
 import { GetAssetFileUC } from "./GetAssetFileUC";
 
 export abstract class PrefetchAssetsUC extends HostAppObjectUC {

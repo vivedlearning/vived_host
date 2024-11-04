@@ -1,7 +1,16 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../AppSandbox";
-import { DialogAlertDTO, MakeAlertDialogUC, MakeSpinnerDialogUC } from "../../Dialog";
-import { NewAssetDTO, PostNewAssetUC } from "../../VivedAPI";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import { AppSandboxEntity, SandboxState } from "../../AppSandbox/Entities";
+import {
+  DialogAlertDTO,
+  MakeAlertDialogUC,
+  MakeSpinnerDialogUC
+} from "../../Dialog";
+import { NewAssetDTO, PostNewAssetUC } from "../../VivedAPI/UCs";
 import { AppAssetsEntity, AssetRepo } from "../Entities";
 
 export interface NewAppAssetDTO {
@@ -97,7 +106,7 @@ class NewAppAssetUCImp extends NewAppAssetUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when creating a new app asset. Check the console. ${e.message}`,
-            title: "New App Asset Error",
+            title: "New App Asset Error"
           };
           this.alertFactory?.make(dialogDTO);
 

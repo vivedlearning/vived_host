@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeAppSandboxEntity } from "../../../AppSandbox";
-import { MockDispatchStopZSpaceUC } from "../../../Dispatcher";
+import { makeAppSandboxEntity } from "../../../AppSandbox/Entities";
+import { MockDispatchStopZSpaceUC } from "../../../Dispatcher/Mocks";
 import { makeZSpaceHostEntity } from "../../Entities";
 import { MockXRSession } from "../../Mocks";
 import { makeStopSandboxZSpaceUC } from "./StopSandboxZSpaceUC";

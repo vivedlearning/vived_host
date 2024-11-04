@@ -3,7 +3,7 @@ import {
   makeHostEditingStateEntity,
   HostEditingStateEntity
 } from "./HostEditingStateEntity";
-import { makeMockHostStateEntity } from "../Mocks";
+import { makeMockHostStateEntity } from "../Mocks/MockHostStateEntity";
 import { makeHostStateEntity, StateDTO, ChallengeResponse } from "./HostStateEntity";
 import { makeHostStateMachine } from "./HostStateMachine";
 

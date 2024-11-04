@@ -1,8 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import {
-  makeHostStateMachine,
-  makeMockHostStateEntity
-} from "../../StateMachine";
+import { makeHostStateMachine } from "../../StateMachine/Entities";
+import { makeMockHostStateEntity } from "../../StateMachine/Mocks/MockHostStateEntity";
 import { makeChallengeResults } from "../Entities";
 import {
   ChallengeResultsListPM,

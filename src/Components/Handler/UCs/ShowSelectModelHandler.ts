@@ -1,6 +1,6 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { AssetPluginEntity } from "../../AssetPlugin";
-import { DialogQueue, MakeSelectModelDialogUC } from "../../Dialog";
+import { AssetPluginEntity } from "../../AssetPlugin/Entities";
+import {  MakeSelectModelDialogUC } from "../../Dialog";
 import {
   HostHandlerEntity,
   RequestHandler,

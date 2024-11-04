@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeCancelEditingUCMock } from "../../Mocks";
+import { makeCancelEditingUCMock } from "../../Mocks/CancelEditingUCMock";
 import { CancelEditingUC } from "./CancelEditingUC";
 
 function makeTestRig() {

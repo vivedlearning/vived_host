@@ -1,7 +1,7 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { AssetPluginEntity } from "../../AssetPlugin";
-import { DialogQueue } from "../../Dialog";
-import { DispatchDisposeAppUC, DispatchStopAppUC } from "../../Dispatcher";
+import { AssetPluginEntity } from "../../AssetPlugin/Entities";
+import { DialogQueue } from "../../Dialog/Entities";
+import { DispatchDisposeAppUC, DispatchStopAppUC } from "../../Dispatcher/UCs";
 import { HostHandlerEntity, RequestHandler, UnsupportedRequestVersion } from "../Entities";
 
 export abstract class CloseAssetSystemPluginUC

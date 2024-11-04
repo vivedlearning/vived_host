@@ -1,8 +1,12 @@
 import { HostAppObject } from "../../../HostAppObject";
-import { MounterUC } from "../../Apps";
-import { AppSandboxEntity } from "../../AppSandbox";
-import { BrowseChannelDTO, DispatchStartBrowseChannelsUC, DispatchStopAppUC } from "../../Dispatcher";
-import { VivedAPIEntity } from "../../VivedAPI";
+import { MounterUC } from "../../Apps/UCs/Mounters/MounterUC";
+import { AppSandboxEntity } from "../../AppSandbox/Entities/AppSandboxEntity";
+import {
+  BrowseChannelDTO,
+  DispatchStartBrowseChannelsUC,
+  DispatchStopAppUC
+} from "../../Dispatcher/UCs";
+import { VivedAPIEntity } from "../../VivedAPI/Entities/VivedAPIEntity";
 import { AssetPluginEntity } from "../Entities";
 import { AssetPluginContainerUC } from "./AssetPluginContainerUC";
 

@@ -1,10 +1,10 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeAssetPluginEntity } from "../../AssetPlugin";
-import { makeDialogQueue } from "../../Dialog";
+import { makeAssetPluginEntity } from "../../AssetPlugin/Entities";
+import { makeDialogQueue } from "../../Dialog/Entities";
 import {
   MockDispatchDisposeAppUC,
   MockDispatchStopAppUC
-} from "../../Dispatcher";
+} from "../../Dispatcher/Mocks";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeCloseAssetSystemPluginUC } from "./CloseAssetSystemPlugin";
 

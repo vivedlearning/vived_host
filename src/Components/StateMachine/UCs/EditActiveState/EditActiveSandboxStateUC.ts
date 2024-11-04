@@ -1,6 +1,6 @@
 import { HostAppObject } from "../../../../HostAppObject";
-import { AppSandboxEntity } from "../../../AppSandbox";
-import { DispatchIsAuthoringUC, DispatchSetStateUC } from "../../../Dispatcher";
+import { AppSandboxEntity } from "../../../AppSandbox/Entities/AppSandboxEntity";
+import { DispatchIsAuthoringUC, DispatchSetStateUC } from "../../../Dispatcher/UCs";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { EditActiveStateUC } from "./EditActiveStateUC";
 

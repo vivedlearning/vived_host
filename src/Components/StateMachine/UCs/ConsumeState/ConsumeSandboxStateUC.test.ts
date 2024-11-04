@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox";
-import { makeMockStartZSpaceUC } from "../../../ZSpaceHost";
+import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
+import { makeMockStartZSpaceUC } from "../../../ZSpaceHost/Mocks";
 import { makeHostStateMachine } from "../../Entities";
 import { makeMockHostEditingStateEntity, makeMockHostStateEntity } from "../../Mocks";
 import { makeConsumeSandboxStateUC } from "./ConsumeSandboxStateUC";

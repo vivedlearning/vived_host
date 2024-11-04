@@ -9,7 +9,7 @@ export * from "./MockHostEditingStateEntity";
 export * from "./MockHostStateMachinePM";
 export * from "./MockIsEditingStatePM";
 export * from "./MockSaveAuthoringUC";
-export * from "./MockStateEntity";
+export * from "./MockHostStateEntity";
 export * from "./MockTransitionToStateUC";
 export * from "./NewStateUCMock";
 export * from "./SavePersistentStatesMock";

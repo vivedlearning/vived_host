@@ -1,4 +1,4 @@
-import { Snackbar, SnackbarRepo } from "../..";
+import { Snackbar, SnackbarRepo } from "../../Entities";
 
 export interface SnackbarVM {
     message: string | undefined;

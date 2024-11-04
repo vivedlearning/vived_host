@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockHostEditingStateEntity } from "../Mocks";
+import { makeMockHostEditingStateEntity } from "../Mocks/MockHostEditingStateEntity";
 import { EditingStateVM, makeEditingStatePM } from "./EditingStatePM";
 
 function makeTestRig() {

@@ -1,5 +1,5 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { DuplicateStateUC } from "../UCs";
+import { DuplicateStateUC } from "../UCs/DuplicateStateUC";
 
 export function duplicateState(id: string, appObjects: HostAppObjectRepo) {
   const uc = DuplicateStateUC.get(appObjects);

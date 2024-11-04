@@ -1,4 +1,4 @@
-import { makeSnackbarRepo } from '../..';
+import { makeSnackbarRepo } from '../../Entities';
 import { SnackbarPM, SnackbarVM } from './SnackbarPM';
 
 function viewCallbackCount(view: jest.Mock<any, any>): number {

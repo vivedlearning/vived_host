@@ -1,10 +1,10 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeHostStateMachine } from "../../StateMachine/Entities";
 import {
   makeEndActivityUCMock,
-  makeHostStateMachine,
   makeMockHostStateEntity,
   makeMockTransitionToStateUC
-} from "../../StateMachine";
+} from "../../StateMachine/Mocks";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeGoToNextStateHandler } from "./GoToNextStateHandler";
 

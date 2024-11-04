@@ -1,6 +1,6 @@
 import { HostAppObject } from "../../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../../AppSandbox";
-import { StartZSpaceUC } from "../../../ZSpaceHost";
+import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
+import { StartZSpaceUC } from "../../../ZSpaceHost/UCs";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { ConsumeStateUC } from "./ConsumeStateUC";
 

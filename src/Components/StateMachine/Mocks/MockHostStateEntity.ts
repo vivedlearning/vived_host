@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { ChallengeResponse, HostStateEntity } from "../Entities";
+import { ChallengeResponse, HostStateEntity } from "../Entities/HostStateEntity";
 
 export class MockHostStateEntity extends HostStateEntity {
   get id() {

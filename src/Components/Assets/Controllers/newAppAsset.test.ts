@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { makeMockNewAppAssetUC } from "../Mocks/MockNewAppAsset";
-import { NewAppAssetDTO } from "../UCs";
+import { NewAppAssetDTO } from "../UCs/NewAppAssetUC";
 import { newAppAsset } from "./newAppAsset";
 
 function makeTestRig() {

@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { DuplicateStateUC } from "../UCs";
+import { DuplicateStateUC } from "../UCs/DuplicateStateUC";
 
 export class MockDuplicateStateUC extends DuplicateStateUC {
   duplicateState = jest.fn();

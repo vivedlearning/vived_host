@@ -3,13 +3,13 @@ import {
   HostAppObjectRepo,
   HostAppObjectUC
 } from "../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../AppSandbox";
 import {
-  DialogAlertDTO,
-  MakeAlertDialogUC,
-  MakeSpinnerDialogUC
-} from "../../Dialog";
-import { PatchAssetMetaUC } from "../../VivedAPI";
+  AppSandboxEntity,
+  SandboxState
+} from "../../AppSandbox/Entities/AppSandboxEntity";
+import { DialogAlertDTO } from "../../Dialog/Entities";
+import { MakeAlertDialogUC, MakeSpinnerDialogUC } from "../../Dialog/UCs";
+import { PatchAssetMetaUC } from "../../VivedAPI/UCs/PatchAssetMetaUC";
 import { AssetEntity } from "../Entities";
 
 export interface UpdateAppAssetMetaDTO {
@@ -122,7 +122,7 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when updating the assets meta. Check the console. ${e.message}`,
-            title: "Update Asset Error",
+            title: "Update Asset Error"
           };
           this.alertFactory?.make(dialogDTO);
           resolve();

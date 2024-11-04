@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockDuplicateStateUC } from "../Mocks";
+import { makeMockDuplicateStateUC } from "../Mocks/MockDuplicateStateUC";
 import { duplicateState } from "./duplicateState";
 
 function makeTestRig() {

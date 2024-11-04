@@ -1,4 +1,4 @@
-import { MemoizedBoolean, MemoizedString } from "../../../Entities";
+import { MemoizedBoolean } from "../../../Entities";
 import {
   getSingletonComponent,
   HostAppObject,

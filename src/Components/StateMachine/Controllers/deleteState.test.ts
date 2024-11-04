@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeMockDeleteStateUC } from "../Mocks";
+import { makeMockDeleteStateUC } from "../Mocks/MockDeleteStateUC";
 import { deleteState } from "./deleteState";
 
 function makeTestRig() {

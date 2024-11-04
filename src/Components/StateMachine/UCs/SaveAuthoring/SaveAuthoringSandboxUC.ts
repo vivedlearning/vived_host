@@ -1,5 +1,5 @@
 import { HostAppObject } from "../../../../HostAppObject";
-import { AppSandboxEntity } from "../../../AppSandbox";
+import { AppSandboxEntity } from "../../../AppSandbox/Entities";
 import { DispatchIsAuthoringUC } from "../../../Dispatcher";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { SaveAuthoringUC } from "./SaveAuthoringUC";

@@ -1,13 +1,12 @@
 import { HostAppObjectRepo } from "../../../HostAppObject";
-import { makeSandboxMounter, makeStartAppUC, makeStopAppUC } from "../../Apps";
 import {
-  makeHostDispatchEntity,
-  setupStandardHostDispatchers
-} from "../../Dispatcher";
-import {
-  makeHostHandlerEntity,
-  setupStandardHostHandlers
-} from "../../Handler";
+  makeSandboxMounter,
+  makeStartAppUC,
+  makeStopAppUC
+} from "../../Apps/UCs";
+import { setupStandardHostDispatchers } from "../../Dispatcher/setupStandardHostDispatchers";
+import { makeHostDispatchEntity } from "../../Dispatcher/Entities";
+import { makeHostHandlerEntity } from "../../Handler/Entities";
 import { AppSandboxEntity, makeAppSandboxEntity } from "../Entities";
 import {
   makeDevFeaturesEnabledPM,
@@ -16,6 +15,7 @@ import {
   makeStartInZSpacePM
 } from "../PMs";
 import { makeShowBabylonInspectorUC } from "../UCs";
+import { setupStandardHostHandlers } from "../../Handler/setupStandardHostHandlers";
 
 export function setupAppSandbox(
   appID: string,

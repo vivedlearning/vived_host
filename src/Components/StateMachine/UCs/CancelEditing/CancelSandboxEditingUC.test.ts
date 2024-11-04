@@ -1,14 +1,14 @@
 import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox";
+import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import {
   MockDispatchIsAuthoringUC,
   MockDispatchSetStateUC
-} from "../../../Dispatcher";
+} from "../../../Dispatcher/Mocks";
 import { makeHostStateMachine } from "../../Entities";
+import { makeMockHostEditingStateEntity } from "../../Mocks/MockHostEditingStateEntity";
 import {
-  makeMockHostEditingStateEntity,
   makeMockHostStateEntity
-} from "../../Mocks";
+} from "../../Mocks/MockHostStateEntity";
 import { makeCancelSandboxEditingUC } from "./CancelSandboxEditingUC";
 
 function makeTestRig() {

@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { EditingStatePM } from "../PMs";
+import { EditingStatePM } from "../PMs/EditingStatePM";
 
 export class MockIsEditingStatePM extends EditingStatePM {
   vmsAreEqual = jest.fn();

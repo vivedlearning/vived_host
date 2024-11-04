@@ -1,5 +1,5 @@
 import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
-import { DeleteStateUC } from "../UCs";
+import { DeleteStateUC } from "../UCs/DeleteStateUC";
 
 export class MockDeleteStateUC extends DeleteStateUC {
   deleteState = jest.fn();

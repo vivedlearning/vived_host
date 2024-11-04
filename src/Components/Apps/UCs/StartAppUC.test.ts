@@ -1,6 +1,15 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { MockDispatchIsAuthoringUC, MockDispatchSetStateUC, MockDispatchStartAppUC, MockDispatchThemeUC } from "../../Dispatcher";
-import { makeHostEditingStateEntity, makeHostStateMachine, makeMockHostStateEntity } from "../../StateMachine";
+import {
+  MockDispatchIsAuthoringUC,
+  MockDispatchSetStateUC,
+  MockDispatchStartAppUC,
+  MockDispatchThemeUC
+} from "../../Dispatcher/Mocks";
+import {
+  makeHostEditingStateEntity,
+  makeHostStateMachine
+} from "../../StateMachine/Entities";
+import { makeMockHostStateEntity } from "../../StateMachine/Mocks/MockHostStateEntity";
 import { makeStartAppUC, StartAppUC } from "./StartAppUC";
 
 function makeTestRig() {
@@ -83,8 +92,13 @@ describe("Start App UC", () => {
   });
 
   it("Sends start in author mode when true", () => {
-    const { mockSetAuthoring, uc, container, editingState, state1 } =
-      makeTestRig();
+    const {
+      mockSetAuthoring,
+      uc,
+      container,
+      editingState,
+      state1
+    } = makeTestRig();
     editingState.startEditing(state1);
 
     uc.start(container);

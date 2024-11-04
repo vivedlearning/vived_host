@@ -1,5 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../AppSandbox";
+import { makeAppSandboxEntity, SandboxState } from "../../AppSandbox/Entities/AppSandboxEntity";
 import { makeAppAssets, makeAssetEntity, makeAssetRepo } from "../Entities";
 import { makeEditAppAsset } from "./EditAppAssetUC";
 

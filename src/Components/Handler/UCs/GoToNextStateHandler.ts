@@ -1,9 +1,9 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { HostStateMachine } from "../../StateMachine/Entities";
 import {
   EndActivityUC,
-  HostStateMachine,
   TransitionToStateUC
-} from "../../StateMachine";
+} from "../../StateMachine/UCs";
 import {
   HostHandlerEntity,
   RequestHandler,

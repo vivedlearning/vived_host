@@ -1,9 +1,7 @@
 import {
-  getSingletonComponent,
   makeHostAppObjectRepo
 } from "../../../HostAppObject";
 import { makeMockStopZSpaceUC } from "../../ZSpaceHost/Mocks/MockStopZSpaceUC";
-import { StopZSpaceUC } from "../../ZSpaceHost/UCs/StopZSpaceUC";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeStopZSpaceHandler } from "./StopZSpaceHandler";
 

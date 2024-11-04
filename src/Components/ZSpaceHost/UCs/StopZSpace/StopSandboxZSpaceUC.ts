@@ -1,7 +1,7 @@
 
 import { HostAppObject } from "../../../../HostAppObject";
-import { AppSandboxEntity } from "../../../AppSandbox";
-import { DispatchStopZSpaceUC } from "../../../Dispatcher";
+import { AppSandboxEntity } from "../../../AppSandbox/Entities";
+import { DispatchStopZSpaceUC } from "../../../Dispatcher/UCs";
 import { ZSpaceHostEntity } from "../../Entities";
 import { StopZSpaceUC } from "./StopZSpaceUC";
 

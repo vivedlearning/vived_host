@@ -1,5 +1,5 @@
 import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../AppSandbox";
+import { AppSandboxEntity, SandboxState } from "../../AppSandbox/Entities/AppSandboxEntity";
 import { AppAssetsEntity, AssetRepo } from "../Entities";
 
 export abstract class EditAppAssetUC extends HostAppObjectUC {

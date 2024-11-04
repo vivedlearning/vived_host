@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeHostStateMachine } from "../../StateMachine";
-import { makeMockGetAssetFileUC } from "../Mocks";
+import { makeHostStateMachine } from "../../StateMachine/Entities";
+import { makeMockGetAssetFileUC } from "../Mocks/MockGetAssetFileUC";
 import { makePrefetchAssets } from "./PrefetchAssetsUC";
 
 function makeTestRig() {

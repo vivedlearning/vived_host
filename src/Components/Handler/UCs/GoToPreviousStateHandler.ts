@@ -1,7 +1,7 @@
 import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { HostStateMachine, TransitionToStateUC } from "../../StateMachine";
+import { TransitionToStateUC } from "../../StateMachine/UCs";
+import { HostStateMachine } from "../../StateMachine/Entities";
 import {
-  ActionNotImplemented,
   HostHandlerEntity,
   RequestHandler,
   UnsupportedRequestVersion
@@ -37,13 +37,12 @@ class GoToPreviousStateHandlerImp extends GoToPreviousStateHandler {
     );
   }
 
-
   action = () => {
     const prevState = this.stateMachine?.previousState;
 
     if (prevState) {
       this.transitionToStateUC?.transitionToState(prevState);
-    } 
+    }
   };
 
   handleRequest = (version: number) => {

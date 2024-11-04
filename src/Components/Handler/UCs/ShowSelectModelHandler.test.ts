@@ -1,10 +1,7 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { makeAssetPluginEntity } from "../../AssetPlugin";
+import { makeAssetPluginEntity } from "../../AssetPlugin/Entities";
 import {
-  makeDialogQueue,
   makeMockMakeSelectModelDialogUC,
-  makeSelectModelFactory,
-  SelectModelDialogEntity
 } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeShowSelectModelHandler } from "./ShowSelectModelHandler";

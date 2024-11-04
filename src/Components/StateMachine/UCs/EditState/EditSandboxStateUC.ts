@@ -1,5 +1,5 @@
 import { HostAppObject } from "../../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../../AppSandbox";
+import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { EditStateUC } from "./EditStateUC";
 

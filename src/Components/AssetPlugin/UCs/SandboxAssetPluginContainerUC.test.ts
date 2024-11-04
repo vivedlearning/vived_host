@@ -1,12 +1,12 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
 import { Version, VersionStage } from "../../../ValueObjects";
 import { MockAppMounterUC } from "../../Apps";
-import { makeAppSandboxEntity } from "../../AppSandbox";
+import { makeAppSandboxEntity } from "../../AppSandbox/Entities/AppSandboxEntity";
 import {
   MockDispatchStartBrowseChannelsUC,
   MockDispatchStopAppUC
-} from "../../Dispatcher";
-import { VivedAPIEntity } from "../../VivedAPI";
+} from "../../Dispatcher/Mocks";
+import { VivedAPIEntity } from "../../VivedAPI/Entities/VivedAPIEntity";
 import { makeAssetPluginEntity } from "../Entities";
 import { AssetPluginContainerUC } from "./AssetPluginContainerUC";
 import { makeSandboxAssetPluginContainerUC } from "./SandboxAssetPluginContainerUC";
