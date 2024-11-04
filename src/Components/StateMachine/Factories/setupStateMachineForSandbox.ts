@@ -15,6 +15,7 @@ import {
   makeEndSandboxActivityUC,
   makeNewSandboxStateUC,
   makeSaveAuthoringSandboxUC,
+  makeSavePersistentStatesUC,
   makeTransitionToSandboxStateUC
 } from "../UCs";
 
@@ -37,6 +38,7 @@ export function setupStateMachineForSandbox(
   makeTransitionToSandboxStateUC(ao);
   makeDeleteStateUC(ao);
   makeDuplicateStateUC(ao);
+  makeSavePersistentStatesUC(ao);
 
   // PMs
   makeEditingStatePM(ao);

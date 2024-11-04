@@ -3,8 +3,8 @@ import { makeAppSandboxEntity } from "../../AppSandbox/Entities";
 import { makeHostStateMachine } from "../Entities";
 import {
   SandboxStateStringData,
-  setSandboxStatesFromStingData
-} from "./setSandboxStatesFromStingData";
+  setSandboxStatesFromStringData
+} from "./setSandboxStatesFromStringData";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
@@ -38,7 +38,7 @@ describe("Set sandbox states from data", () => {
       }
     ];
 
-    setSandboxStatesFromStingData(states, appObjects);
+    setSandboxStatesFromStringData(states, appObjects);
 
     expect(stateMachine.states.length).toEqual(2);
   });
@@ -55,7 +55,7 @@ describe("Set sandbox states from data", () => {
       }
     ];
 
-    setSandboxStatesFromStingData(states, appObjects);
+    setSandboxStatesFromStringData(states, appObjects);
 
     const state = stateMachine.getStateByID("state1");
     expect(state?.name).toEqual("state one");
@@ -75,7 +75,7 @@ describe("Set sandbox states from data", () => {
       }
     ];
 
-    setSandboxStatesFromStingData(states, appObjects);
+    setSandboxStatesFromStringData(states, appObjects);
 
     const state = stateMachine.getStateByID("state1");
     expect(state?.appID).toEqual("AnAppID");

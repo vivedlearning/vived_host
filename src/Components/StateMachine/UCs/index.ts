@@ -10,4 +10,4 @@ export * from "./SaveAuthoring";
 export * from "./TransitionToState";
 export * from "./SavePersistentStates";
 export * from "./setSandboxStatesFromData";
-export * from "./setSandboxStatesFromStingData"
+export * from "./setSandboxStatesFromStringData";

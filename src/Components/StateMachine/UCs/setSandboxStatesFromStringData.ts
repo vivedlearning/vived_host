@@ -9,7 +9,7 @@ export interface SandboxStateStringData {
   assets: string[];
 }
 
-export function setSandboxStatesFromStingData(
+export function setSandboxStatesFromStringData(
   datas: SandboxStateStringData[],
   appObjects: HostAppObjectRepo
 ) {

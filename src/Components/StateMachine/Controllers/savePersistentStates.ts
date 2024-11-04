@@ -6,7 +6,7 @@ export function savePersistentStates(appObjects: HostAppObjectRepo) {
   if (!uc) {
     appObjects.submitWarning(
       "savePersistentStates",
-      "Unable to find DeleteStateUC"
+      "Unable to find SavePersistentStatesUC"
     );
     return;
   }
