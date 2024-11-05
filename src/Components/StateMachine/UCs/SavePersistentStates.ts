@@ -25,17 +25,36 @@ export function makeSavePersistentStatesUC(
   return new SavePersistentStatesUCImp(appObject);
 }
 
+interface SandboxStateData {
+  id: string;
+  name: string;
+  data: object;
+  assets: string[];
+}
+
 class SavePersistentStatesUCImp extends SavePersistentStatesUC {
   private get stateMachine() {
-    return this.getCachedSingleton<HostStateMachine>(
-      HostStateMachine.type
-    );
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
   }
 
   saveLocally = (): void => {
     if (!this.stateMachine) return;
 
-    const states = this.stateMachine.states;
+    const states: SandboxStateData[] = [];
+    this.stateMachine.states.forEach((stateID) => {
+      const state = this.stateMachine?.getStateByID(stateID);
+      if (state) {
+        const rVal: SandboxStateData = {
+          assets: state.assets,
+          data: state.stateData,
+          id: state.id,
+          name: state.name
+        };
+
+        states.push(rVal);
+      }
+    });
+
     const statesData = JSON.stringify(states);
     const a = document.createElement("a");
     const file = new Blob([statesData], { type: "text/plain" });
