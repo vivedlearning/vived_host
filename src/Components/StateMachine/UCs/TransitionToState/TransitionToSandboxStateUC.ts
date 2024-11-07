@@ -1,9 +1,8 @@
 import { HostAppObject } from "../../../../HostAppObject";
 import { AppSandboxEntity } from "../../../AppSandbox/Entities";
-import { DispatchSetStateUC } from "../../../Dispatcher";
+import { DispatchSetStateUC, DispatchStateDTO } from "../../../Dispatcher";
 import { HostStateMachine } from "../../Entities";
 import { TransitionToStateUC } from "./TransitionToStateUC";
-
 
 export function makeTransitionToSandboxStateUC(
   appObject: HostAppObject
@@ -42,9 +41,19 @@ class TransitionToSandboxStateUCImp extends TransitionToStateUC {
     }
 
     stateMachine.setActiveStateByID(id);
-    const stateStr = JSON.stringify(state.stateData);
     const duration = stateMachine.transitionDuration;
-    dispatchSetState.doDispatch(stateStr, duration);
+    const hideNavigation = stateMachine.states.length <= 1;
+    const hasNextSlide = stateMachine.nextState !== undefined;
+    const hasPreviousSlide = stateMachine.previousState !== undefined;
+
+    const dto: DispatchStateDTO = {
+      finalState: state.stateData,
+      duration,
+      hideNavigation,
+      hasNextSlide,
+      hasPreviousSlide
+    };
+    dispatchSetState.doDispatch(dto);
   }
 
   constructor(appObject: HostAppObject) {

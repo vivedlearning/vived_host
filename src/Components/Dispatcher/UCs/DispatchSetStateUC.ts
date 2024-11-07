@@ -1,11 +1,23 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { HostDispatchEntity } from "../Entities";
+
+export interface DispatchStateDTO {
+  finalState: object;
+  hideNavigation: boolean;
+  hasNextSlide: boolean;
+  hasPreviousSlide: boolean;
+  duration?: number;
+}
 
 export abstract class DispatchSetStateUC extends HostAppObjectUC {
   static readonly type = "DispatchSetStateUC";
   readonly requestType = "SET_APP_STATE";
 
-  abstract doDispatch(finalState: string, duration?: number | undefined): void;
+  abstract doDispatch(dto: DispatchStateDTO): void;
 
   static get(appObject: HostAppObject): DispatchSetStateUC | undefined {
     const asset = appObject.getComponent<DispatchSetStateUC>(
@@ -20,10 +32,13 @@ export abstract class DispatchSetStateUC extends HostAppObjectUC {
     return asset;
   }
 
-  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchSetStateUC | undefined {
-    const appObject =  appObjects.get(id);
-    
-    if(!appObject) {
+  static getByID(
+    id: string,
+    appObjects: HostAppObjectRepo
+  ): DispatchSetStateUC | undefined {
+    const appObject = appObjects.get(id);
+
+    if (!appObject) {
       appObjects.submitWarning(
         "DispatchSetStateUC.getByID",
         "Unable to find App Object by id " + id
@@ -42,35 +57,69 @@ export function makeDispatchSetStateUC(
 }
 
 class DispatchSetStateUCImp extends DispatchSetStateUC {
-  readonly requestVersion = 2;
-  private dispatcher?: HostDispatchEntity;
+  private get dispatcher() {
+    return this.getCachedLocalComponent<HostDispatchEntity>(
+      HostDispatchEntity.type
+    );
+  }
 
-  doDispatch(finalState: string, duration?: number | undefined): void {
+  doDispatch(dto: DispatchStateDTO): void {
     if (!this.dispatcher) return;
-
-    const payload = {
+    const {
       finalState,
-      duration
+      duration,
+      hasNextSlide,
+      hasPreviousSlide,
+      hideNavigation
+    } = dto;
+
+    const requestedPayload = this.dispatcher.getRequestPayloadVersion(
+      this.requestType
+    );
+    if (!requestedPayload || requestedPayload <= 2) {
+      this.dispatchV2(finalState, duration);
+      return;
+    }
+
+    const payload: SetStatePayloadV3 = {
+      finalState,
+      duration,
+      hasNextSlide,
+      hasPreviousSlide,
+      hideNavigation
     };
 
     this.dispatcher.formRequestAndDispatch(
       this.requestType,
-      this.requestVersion,
+      3,
       payload
     );
   }
 
+  private dispatchV2(state: object, duration?: number) {
+    const payload: SetStatePayloadV2 = {
+      finalState: JSON.stringify(state),
+      duration
+    };
+
+    this.dispatcher?.formRequestAndDispatch(this.requestType, 2, payload);
+  }
+
   constructor(appObject: HostAppObject) {
     super(appObject, DispatchSetStateUC.type);
-
-    this.dispatcher = appObject.getComponent<HostDispatchEntity>(
-      HostDispatchEntity.type
-    );
-    if (!this.dispatcher) {
-      this.error(
-        "UC has been added to an App Object that does not have a HostDispatchEntity. Add a dispatcher first"
-      );
-      this.dispose();
-    }
   }
+}
+
+//No V1 is supported
+export interface SetStatePayloadV2 {
+  finalState: string;
+  duration?: number;
+}
+
+export interface SetStatePayloadV3 {
+  finalState: object;
+  hideNavigation: boolean;
+  hasNextSlide: boolean;
+  hasPreviousSlide: boolean;
+  duration?: number;
 }

@@ -1,6 +1,10 @@
 import { HostAppObject } from "../../../../HostAppObject";
 import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
-import { DispatchIsAuthoringUC, DispatchSetStateUC } from "../../../Dispatcher";
+import {
+  DispatchIsAuthoringUC,
+  DispatchSetStateUC,
+  DispatchStateDTO
+} from "../../../Dispatcher";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { CancelEditingUC } from "./CancelEditingUC";
 
@@ -54,8 +58,16 @@ class CancelSandboxEditingUC extends CancelEditingUC {
         this.stateMachine.activeState
       );
       if (state) {
-        const stateData = JSON.stringify(state.stateData);
-        dispatchSetState.doDispatch(stateData);
+        const hideNavigation = this.stateMachine.states.length <= 1;
+        const hasNextSlide = this.stateMachine.nextState !== undefined;
+        const hasPreviousSlide = this.stateMachine.previousState !== undefined;
+        const dto: DispatchStateDTO = {
+          finalState: state.stateData,
+          hideNavigation,
+          hasNextSlide,
+          hasPreviousSlide
+        };
+        dispatchSetState.doDispatch(dto);
       }
     } else {
       this.sandbox.state = SandboxState.MOUNTED;

@@ -1,4 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { DispatchStateDTO } from "../../Dispatcher";
 import {
   MockDispatchIsAuthoringUC,
   MockDispatchSetStateUC,
@@ -20,7 +21,8 @@ function makeTestRig() {
   );
 
   const state1 = makeMockHostStateEntity("state1", appObjects);
-  stateMachine.setStates([state1]);
+  const state2 = makeMockHostStateEntity("state2", appObjects);
+  stateMachine.setStates([state1, state2]);
 
   const editingState = makeHostEditingStateEntity(
     appObjects.getOrCreate("StateMachine")
@@ -81,14 +83,85 @@ describe("Start App UC", () => {
     expect(mockStart.doDispatch).toBeCalledWith(container);
   });
 
-  it("Send the state on start if one is set as active", () => {
+  it("Sends the state on start if one is set as active", () => {
     const { stateMachine, mockSetState, container, uc } = makeTestRig();
     stateMachine.setActiveStateByID("state1");
 
     uc.start(container);
 
-    const expectedStateStr = JSON.stringify({ foo: "bar" });
-    expect(mockSetState.doDispatch).toBeCalledWith(expectedStateStr);
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.finalState).toEqual({ foo: "bar" });
+  });
+
+  it("Does not send a duration", () => {
+    const { stateMachine, mockSetState, container, uc } = makeTestRig();
+    stateMachine.setActiveStateByID("state1");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.duration).toBeUndefined();
+  });
+
+  it("Sends true if there is a previous slide", () => {
+    const { stateMachine, mockSetState, container, uc } = makeTestRig();
+    stateMachine.setActiveStateByID("state1");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(true)
+  });
+
+  it("Sends false if there is not a previous slide", () => {
+    const { stateMachine, mockSetState, container, uc } = makeTestRig();
+    stateMachine.setActiveStateByID("state1");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(false)
+  });
+
+  it("Sends false if there is not a next slide", () => {
+    const { stateMachine, mockSetState, container, uc } = makeTestRig();
+    stateMachine.setActiveStateByID("state2");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(false)
+  });
+
+  it("Sends true if there is a previous slide", () => {
+    const { stateMachine, mockSetState, container, uc } = makeTestRig();
+    stateMachine.setActiveStateByID("state2");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(true)
+  });
+
+  it("Sends false for has hide nav if there are at least two slides", () => {
+    const { stateMachine, mockSetState, container, uc } = makeTestRig();
+    stateMachine.setActiveStateByID("state1");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(false)
+  });
+
+  it("Sends true for has hide nav of there are less than 2 slides", () => {
+    const { stateMachine, mockSetState, container, uc, state1 } = makeTestRig();
+    stateMachine.setStates([state1]);
+    stateMachine.setActiveStateByID("state1");
+
+    uc.start(container);
+
+    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(true)
   });
 
   it("Sends start in author mode when true", () => {

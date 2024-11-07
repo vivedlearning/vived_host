@@ -7,9 +7,13 @@ import {
   DispatchIsAuthoringUC,
   DispatchSetStateUC,
   DispatchStartAppUC,
+  DispatchStateDTO,
   DispatchThemeUC
 } from "../../Dispatcher";
-import { HostEditingStateEntity, HostStateMachine } from "../../StateMachine/Entities";
+import {
+  HostEditingStateEntity,
+  HostStateMachine
+} from "../../StateMachine/Entities";
 
 export abstract class StartAppUC extends HostAppObjectUC {
   static type = "StartAppUC";
@@ -97,16 +101,22 @@ class StartAppUCImp extends StartAppUC {
 
     this.dispatchStart.doDispatch(container);
 
-    let stateString = "";
+    let state = {};
     if (this.stateMachine.activeState && this.stateMachine.activeState) {
-      const state = this.stateMachine.getStateByID(
-        this.stateMachine.activeState
-      );
-      if (state) {
-        stateString = JSON.stringify(state.stateData);
-      }
+      state =
+        this.stateMachine.getStateByID(this.stateMachine.activeState)?.stateData ?? {};
     }
-    this.dispatchSetState?.doDispatch(stateString);
+
+    const hideNavigation = this.stateMachine.states.length <= 1;
+    const hasNextSlide = this.stateMachine.nextState !== undefined;
+    const hasPreviousSlide = this.stateMachine.previousState !== undefined;
+    const dto: DispatchStateDTO = {
+      finalState: state,
+      hideNavigation,
+      hasNextSlide,
+      hasPreviousSlide
+    };
+    this.dispatchSetState?.doDispatch(dto);
 
     let isAuthoring = this.editStateEntity.isEditing;
     if (this.stateMachine.activeState === undefined) {

@@ -1,6 +1,6 @@
 import { makeHostAppObjectRepo } from "../../../../HostAppObject";
 import { makeAppSandboxEntity } from "../../../AppSandbox/Entities";
-import { MockDispatchSetStateUC } from "../../../Dispatcher";
+import { DispatchStateDTO, MockDispatchSetStateUC } from "../../../Dispatcher";
 import { makeHostStateMachine } from "../../Entities";
 import { makeMockHostStateEntity } from "../../Mocks";
 import { makeTransitionToSandboxStateUC } from "./TransitionToSandboxStateUC";
@@ -16,7 +16,10 @@ function makeTestRig() {
   const stateMachine = makeHostStateMachine(
     appObjects.getOrCreate("StateMachine")
   );
-  stateMachine.setStates([makeMockHostStateEntity("state1", appObjects)]);
+  stateMachine.setStates([
+    makeMockHostStateEntity("state1", appObjects),
+    makeMockHostStateEntity("state2", appObjects)
+  ]);
 
   stateMachine.transitionDuration = 3;
 
@@ -69,13 +72,84 @@ describe("Transition to Sandbox State UC", () => {
     expect(mockLog).toBeCalled();
   });
 
-  it("Dispatches the state and transition duration", () => {
+  it("Passes the object state", () => {
     const { uc, mockDispatchSetState } = makeTestRig();
 
     uc.transitionToState("state1");
 
-    const expectedStateStr = JSON.stringify({ foo: "bar" });
-    expect(mockDispatchSetState.doDispatch).toBeCalledWith(expectedStateStr, 3);
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.finalState).toEqual({ foo: "bar" });
+  });
+
+  it("Passes state machine duration", () => {
+    const { uc, mockDispatchSetState, stateMachine } = makeTestRig();
+
+    stateMachine.transitionDuration = 4;
+
+    uc.transitionToState("state1");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.duration).toEqual(4);
+  });
+
+  it("Passes has next state as true", () => {
+    const { uc, mockDispatchSetState } = makeTestRig();
+
+    uc.transitionToState("state1");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(true);
+  });
+
+  it("Passes has next state as false if there isn't a next state", () => {
+    const { uc, mockDispatchSetState } = makeTestRig();
+
+
+
+    uc.transitionToState("state2");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(false);
+  });
+
+  it("Passes has previous state as false if there isn't a previous state", () => {
+    const { uc, mockDispatchSetState } = makeTestRig();
+
+    uc.transitionToState("state1");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(false);
+  });
+
+  it("Passes has previous state as true if there is a previous state", () => {
+    const { uc, mockDispatchSetState } = makeTestRig();
+
+    uc.transitionToState("state2");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(true);
+  });
+
+  it("Passes hide nav as false if there there are at least two states", () => {
+    const { uc, mockDispatchSetState } = makeTestRig();
+
+    uc.transitionToState("state1");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(false);
+  });
+
+  it("Passes hide nav as true if there there are less than two states", () => {
+    const { uc, mockDispatchSetState, appObjects, stateMachine } = makeTestRig();
+
+    stateMachine.setStates([
+      makeMockHostStateEntity("state1", appObjects)
+    ]);
+
+    uc.transitionToState("state1");
+
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(true);
   });
 
   it("Register as the singleton", () => {

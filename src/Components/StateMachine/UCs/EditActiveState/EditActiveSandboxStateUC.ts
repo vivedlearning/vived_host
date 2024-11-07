@@ -1,9 +1,12 @@
 import { HostAppObject } from "../../../../HostAppObject";
 import { AppSandboxEntity } from "../../../AppSandbox/Entities/AppSandboxEntity";
-import { DispatchIsAuthoringUC, DispatchSetStateUC } from "../../../Dispatcher/UCs";
+import {
+  DispatchIsAuthoringUC,
+  DispatchSetStateUC,
+  DispatchStateDTO
+} from "../../../Dispatcher/UCs";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { EditActiveStateUC } from "./EditActiveStateUC";
-
 
 export function makeEditActiveSandboxStateUC(
   appObject: HostAppObject
@@ -60,8 +63,16 @@ class EditActiveSandboxStateUCImp extends EditActiveStateUC {
       return;
     }
 
-    const stateStr = JSON.stringify(state.stateData);
-    dispatchSetState.doDispatch(stateStr);
+    const hideNavigation = this.stateMachine.states.length <= 1;
+    const hasNextSlide = this.stateMachine.nextState !== undefined;
+    const hasPreviousSlide = this.stateMachine.previousState !== undefined;
+    const dto: DispatchStateDTO = {
+      finalState: state.stateData,
+      hideNavigation,
+      hasNextSlide,
+      hasPreviousSlide
+    };
+    dispatchSetState.doDispatch(dto);
 
     dispatchSetIsAuthoring.doDispatch(true);
 
