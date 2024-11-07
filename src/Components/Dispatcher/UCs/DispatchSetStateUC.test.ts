@@ -198,6 +198,21 @@ describe("Payload version 2", () => {
     expect(payload.duration).toBeUndefined();
   });
 
+  it("Dispatches an empty string if the passed state is undefined", () => {
+    const { uc, mockDispatcher } = makeTestRig();
+
+    mockDispatcher.getRequestPayloadVersion.mockReturnValue(2);
+
+    const dto = basicDTO();
+    dto.finalState = undefined;
+    uc.doDispatch(dto);
+
+    const payload = mockDispatcher.formRequestAndDispatch.mock
+      .calls[0][2] as SetStatePayloadV2;
+    expect(payload.finalState).toEqual("");
+    expect(payload.duration).toBeUndefined();
+  });
+
   it("Dispatches duration", () => {
     const { uc, mockDispatcher } = makeTestRig();
 

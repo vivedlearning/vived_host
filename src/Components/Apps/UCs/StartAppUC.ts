@@ -101,10 +101,10 @@ class StartAppUCImp extends StartAppUC {
 
     this.dispatchStart.doDispatch(container);
 
-    let state = {};
-    if (this.stateMachine.activeState && this.stateMachine.activeState) {
-      state =
-        this.stateMachine.getStateByID(this.stateMachine.activeState)?.stateData ?? {};
+    let state;
+    if (this.stateMachine.activeState) {
+      state = this.stateMachine.getStateByID(this.stateMachine.activeState)
+        ?.stateData;
     }
 
     const hideNavigation = this.stateMachine.states.length <= 1;

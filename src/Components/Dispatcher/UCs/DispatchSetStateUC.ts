@@ -6,7 +6,7 @@ import {
 import { HostDispatchEntity } from "../Entities";
 
 export interface DispatchStateDTO {
-  finalState: object;
+  finalState?: object;
   hideNavigation: boolean;
   hasNextSlide: boolean;
   hasPreviousSlide: boolean;
@@ -89,16 +89,13 @@ class DispatchSetStateUCImp extends DispatchSetStateUC {
       hideNavigation
     };
 
-    this.dispatcher.formRequestAndDispatch(
-      this.requestType,
-      3,
-      payload
-    );
+    this.dispatcher.formRequestAndDispatch(this.requestType, 3, payload);
   }
 
-  private dispatchV2(state: object, duration?: number) {
+  private dispatchV2(state: object | undefined, duration?: number) {
+    const finalState = state ? JSON.stringify(state) : "";
     const payload: SetStatePayloadV2 = {
-      finalState: JSON.stringify(state),
+      finalState,
       duration
     };
 
@@ -117,9 +114,9 @@ export interface SetStatePayloadV2 {
 }
 
 export interface SetStatePayloadV3 {
-  finalState: object;
   hideNavigation: boolean;
   hasNextSlide: boolean;
   hasPreviousSlide: boolean;
   duration?: number;
+  finalState?: object;
 }
