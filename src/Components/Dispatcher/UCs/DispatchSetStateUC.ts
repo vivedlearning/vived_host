@@ -110,7 +110,7 @@ class DispatchSetStateUCImp extends DispatchSetStateUC {
   }
 }
 
-//No V1 is supported
+// No V1 is supported
 export interface SetStatePayloadV2 {
   finalState: string;
   duration?: number;
