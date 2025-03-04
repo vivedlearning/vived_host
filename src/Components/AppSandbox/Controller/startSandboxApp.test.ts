@@ -1,4 +1,5 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { MockStartAppUC } from "../../Apps";
 import { StartAppUC } from "../../Apps/UCs/StartAppUC";
 import { makeAppSandboxEntity } from "../Entities/AppSandboxEntity";
 import { startSandboxApp } from "./startSandboxApp";
@@ -9,6 +10,8 @@ function makeTestRig() {
   const ao = appObjects.getOrCreate("AppID");
 
   const sandbox = makeAppSandboxEntity(ao);
+
+  new MockStartAppUC(ao);
 
   const mockStarter = jest.fn();
   StartAppUC.startByID = mockStarter;
