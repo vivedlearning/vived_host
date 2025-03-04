@@ -3,7 +3,9 @@ import {
   HostAppObjectRepo,
   HostAppObjectUC
 } from "../../../HostAppObject";
+import { AppSandboxEntity } from "../../AppSandbox";
 import {
+  DispatchEnableFeatureUC,
   DispatchIsAuthoringUC,
   DispatchSetStateUC,
   DispatchStartAppUC,
@@ -94,10 +96,21 @@ class StartAppUCImp extends StartAppUC {
     return this.getCachedLocalComponent<DispatchThemeUC>(DispatchThemeUC.type);
   }
 
+  private get dispatchEnableFeature() {
+    return this.getCachedLocalComponent<DispatchEnableFeatureUC>(
+      DispatchEnableFeatureUC.type
+    );
+  }
+
+  private get sandbox() {
+    return this.getCachedSingleton<AppSandboxEntity>(AppSandboxEntity.type);
+  }
+
   start = (container: HTMLElement) => {
     if (!this.stateMachine) return;
     if (!this.dispatchStart) return;
     if (!this.editStateEntity) return;
+    if (!this.sandbox) return;
 
     this.dispatchStart.doDispatch(container);
 
@@ -125,6 +138,14 @@ class StartAppUCImp extends StartAppUC {
     this.dispatchSetIsAuthoring?.doDispatch(isAuthoring);
 
     this.dispatchThemeColors?.doDispatch();
+
+    console.log(this.sandbox.enableDevFeatures)
+    console.log(this.sandbox.devFeatures)
+    if (this.sandbox.enableDevFeatures) {
+      this.sandbox.devFeatures.forEach((feature) => {
+        this.dispatchEnableFeature?.doDispatch(feature);
+      });
+    }
   };
 
   constructor(appObject: HostAppObject) {

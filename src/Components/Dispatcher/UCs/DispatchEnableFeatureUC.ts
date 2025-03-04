@@ -1,4 +1,8 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { HostDispatchEntity } from "../Entities";
 
 export abstract class DispatchEnableFeatureUC extends HostAppObjectUC {

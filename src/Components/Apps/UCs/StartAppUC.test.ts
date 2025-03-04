@@ -1,6 +1,8 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppSandboxEntity } from "../../AppSandbox";
 import { DispatchStateDTO } from "../../Dispatcher";
 import {
+  DispatchEnableFeatureUCMock,
   MockDispatchIsAuthoringUC,
   MockDispatchSetStateUC,
   MockDispatchStartAppUC,
@@ -15,6 +17,9 @@ import { makeStartAppUC, StartAppUC } from "./StartAppUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
+
+  const sandboxAO = appObjects.getOrCreate("Sandbox");
+  const sandbox = makeAppSandboxEntity(sandboxAO);
 
   const stateMachine = makeHostStateMachine(
     appObjects.getOrCreate("StateMachine")
@@ -33,6 +38,7 @@ function makeTestRig() {
   const mockSetState = new MockDispatchSetStateUC(ao);
   const mockSetAuthoring = new MockDispatchIsAuthoringUC(ao);
   const mockSetTheme = new MockDispatchThemeUC(ao);
+  const mockEnableFeature = new DispatchEnableFeatureUCMock(ao);
   const uc = makeStartAppUC(ao);
 
   const container = document.createElement("div");
@@ -48,7 +54,9 @@ function makeTestRig() {
     stateMachine,
     container,
     editingState,
-    state1
+    state1,
+    sandbox,
+    mockEnableFeature
   };
 }
 
@@ -89,7 +97,8 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.finalState).toEqual({ foo: "bar" });
   });
 
@@ -99,7 +108,8 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.duration).toBeUndefined();
   });
 
@@ -109,8 +119,9 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasNextSlide).toEqual(true)
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(true);
   });
 
   it("Sends false if there is not a previous slide", () => {
@@ -119,8 +130,9 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasPreviousSlide).toEqual(false)
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(false);
   });
 
   it("Sends false if there is not a next slide", () => {
@@ -129,8 +141,9 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasNextSlide).toEqual(false)
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(false);
   });
 
   it("Sends true if there is a previous slide", () => {
@@ -139,8 +152,9 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasPreviousSlide).toEqual(true)
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(true);
   });
 
   it("Sends false for has hide nav if there are at least two slides", () => {
@@ -149,8 +163,9 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hideNavigation).toEqual(false)
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(false);
   });
 
   it("Sends true for has hide nav of there are less than 2 slides", () => {
@@ -160,8 +175,9 @@ describe("Start App UC", () => {
 
     uc.start(container);
 
-    const dispatchDTO = mockSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hideNavigation).toEqual(true)
+    const dispatchDTO = mockSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(true);
   });
 
   it("Sends start in author mode when true", () => {
@@ -195,5 +211,28 @@ describe("Start App UC", () => {
     uc.start(container);
 
     expect(mockSetTheme.doDispatch).toBeCalled();
+  });
+
+  it("Dispatches feature flags if dev features are allowed", async () => {
+    const { mockEnableFeature, container, uc, sandbox } = makeTestRig();
+
+    sandbox.devFeatures = ["someFeature", "someOtherFeature"];
+    sandbox.enableDevFeatures = true;
+
+    uc.start(container);
+
+    expect(mockEnableFeature.doDispatch).toBeCalledWith("someFeature");
+    expect(mockEnableFeature.doDispatch).toBeCalledWith("someOtherFeature");
+  });
+
+  it("Does not dispatch feature flags if dev features are not allowed", async () => {
+    const { mockEnableFeature, container, uc, sandbox } = makeTestRig();
+
+    sandbox.devFeatures = ["someFeature", "someOtherFeature"];
+    sandbox.enableDevFeatures = false;
+
+    uc.start(container);
+
+    expect(mockEnableFeature.doDispatch).not.toBeCalled();
   });
 });
