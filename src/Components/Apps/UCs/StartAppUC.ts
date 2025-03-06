@@ -138,9 +138,7 @@ class StartAppUCImp extends StartAppUC {
     this.dispatchSetIsAuthoring?.doDispatch(isAuthoring);
 
     this.dispatchThemeColors?.doDispatch();
-
-    console.log(this.sandbox.enableDevFeatures)
-    console.log(this.sandbox.devFeatures)
+    
     if (this.sandbox.enableDevFeatures) {
       this.sandbox.devFeatures.forEach((feature) => {
         this.dispatchEnableFeature?.doDispatch(feature);
