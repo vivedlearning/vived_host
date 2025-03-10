@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { ChallengeResultsEntity } from "../../ChallengeResults";
 import { HostStateMachine } from "../../StateMachine";
 import {
@@ -52,7 +52,7 @@ export type SubmitResultAction = (
 ) => void;
 
 export abstract class SubmitResultHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "SubmitResultHandler";
 
@@ -63,7 +63,7 @@ export abstract class SubmitResultHandler
 }
 
 export function makeSubmitResultHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): SubmitResultHandler {
   return new SubmitResultHandlerImp(appObject);
 }
@@ -295,7 +295,7 @@ class SubmitResultHandlerImp extends SubmitResultHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SubmitResultHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

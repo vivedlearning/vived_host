@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AssetEntity, GetAssetUC } from "../../Assets";
 import {
   HostHandlerEntity,
@@ -15,7 +15,7 @@ export type GetLinkedAssetsAction = (
 ) => void;
 
 export abstract class GetLinkedAssetsHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "GetLinkedAssetsHandler";
 
@@ -26,7 +26,7 @@ export abstract class GetLinkedAssetsHandler
 }
 
 export function makeGetLinkedAssetsHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): GetLinkedAssetsHandler {
   return new GetLinkedAssetsHandlerImp(appObject);
 }
@@ -103,7 +103,7 @@ class GetLinkedAssetsHandlerImp extends GetLinkedAssetsHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetLinkedAssetsHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

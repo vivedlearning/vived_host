@@ -1,10 +1,15 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
-export abstract class ShowInspectorPM extends HostAppObjectPM<boolean> {
+export abstract class ShowInspectorPM extends AppObjectPM<boolean> {
   static type = "ShowInspectorPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ShowInspectorPM>(
       ShowInspectorPM.type,
       appObjects
@@ -12,7 +17,7 @@ export abstract class ShowInspectorPM extends HostAppObjectPM<boolean> {
   }
 }
 
-export function makeShowInspectorPM(appObject: HostAppObject): ShowInspectorPM {
+export function makeShowInspectorPM(appObject: AppObject): ShowInspectorPM {
   return new ShowInspectorPMImp(appObject);
 }
 
@@ -31,7 +36,7 @@ class ShowInspectorPMImp extends ShowInspectorPM {
     this.doUpdateView(this.sandbox.showBabylonInspector);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowInspectorPM.type);
     this.appObjects.registerSingleton(this);
 

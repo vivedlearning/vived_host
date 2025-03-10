@@ -1,5 +1,8 @@
-
-import { getSingletonComponent, HostAppObject, HostAppObjectEntityRepo, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  AppObject,
+  AppObjectEntityRepo,
+  AppObjectRepo, getSingletonComponent
+} from "@vived/core";
 import { AppEntity, makeAppEntity } from "./AppEntity";
 
 export enum AppReleaseStage {
@@ -8,10 +11,10 @@ export enum AppReleaseStage {
   ALPHA = "ALPHA"
 }
 
-export abstract class AppRepoEntity extends HostAppObjectEntityRepo<AppEntity> {
+export abstract class AppRepoEntity extends AppObjectEntityRepo<AppEntity> {
   static type = "AppRepoEntity";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<AppRepoEntity>(AppRepoEntity.type, appObjects);
   }
 
@@ -26,7 +29,7 @@ export abstract class AppRepoEntity extends HostAppObjectEntityRepo<AppEntity> {
   abstract deleteAllApps: () => void;
 }
 
-export function makeAppRepo(appObject: HostAppObject): AppRepoEntity {
+export function makeAppRepo(appObject: AppObject): AppRepoEntity {
   return new AppRepoImp(appObject);
 }
 
@@ -69,7 +72,7 @@ class AppRepoImp extends AppRepoEntity {
     return this.hasForAppObject(id);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AppRepoEntity.type);
 
     this.appObjects.registerSingleton(this);

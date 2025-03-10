@@ -1,17 +1,18 @@
-import { MemoizedBoolean } from "../../../Entities";
 import {
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo,
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
-import { Version, VersionStage } from "../../../ValueObjects";
+  MemoizedBoolean,
+  Version,
+  VersionStage
+} from "@vived/core";
 import { AppEntity, makeAppEntity } from "../../Apps";
 
-export abstract class AssetPluginEntity extends HostAppObjectEntity {
+export abstract class AssetPluginEntity extends AppObjectEntity {
   static type = "AssetPluginEntity";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<AssetPluginEntity>(
       AssetPluginEntity.type,
       appObjects
@@ -26,9 +27,7 @@ export abstract class AssetPluginEntity extends HostAppObjectEntity {
   abstract callback: (modelId: string, dataId: string) => void;
 }
 
-export function makeAssetPluginEntity(
-  appObject: HostAppObject
-): AssetPluginEntity {
+export function makeAssetPluginEntity(appObject: AppObject): AssetPluginEntity {
   return new AssetPluginEntityImp(appObject);
 }
 
@@ -53,7 +52,7 @@ class AssetPluginEntityImp extends AssetPluginEntity {
     this.warn("Callback has not been injected");
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AssetPluginEntity.type);
 
     this._app = makeAppEntity(this.appObject);

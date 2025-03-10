@@ -45,5 +45,8 @@
     "@types/uuid": "^9.0.8",
     "@types/webxr": "^0.5.20",
     "uuid": "^9.0.1"
+  },
+  "peerDependencies": {
+    "@vived/core": "^1.3.0"
   }
 }

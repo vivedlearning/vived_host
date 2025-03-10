@@ -1,12 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import {
-  makeMockMakeAlertDialogUC
-} from "../../Dialog";
+import { makeAppObjectRepo } from "@vived/core";
+import { makeMockMakeAlertDialogUC } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeShowAlertHandler, ShowAlertActionDTO } from "./ShowAlertHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");

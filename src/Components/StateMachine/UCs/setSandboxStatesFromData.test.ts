@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../../AppSandbox/Entities";
 import { makeHostStateMachine } from "../Entities";
 import {
@@ -7,7 +7,7 @@ import {
 } from "./setSandboxStatesFromData";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const stateMachine = makeHostStateMachine(
     appObjects.getOrCreate("State Machine")
   );
@@ -60,7 +60,7 @@ describe("Set sandbox states from data", () => {
     const state = stateMachine.getStateByID("state1");
     expect(state?.name).toEqual("state one");
     expect(state?.stateData).toEqual({ state: "one" });
-    expect(state?.assets).toEqual(["asset1"])
+    expect(state?.assets).toEqual(["asset1"]);
   });
 
   it("Sets the App ID", () => {

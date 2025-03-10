@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { NewStateUC } from "../UCs/NewState/NewStateUC";
 
-export function newState(appObjects: HostAppObjectRepo) {
+export function newState(appObjects: AppObjectRepo) {
   const uc = NewStateUC.get(appObjects);
 
   if (!uc) {

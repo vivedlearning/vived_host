@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAssetRepo, makeGetAssetUC } from "../../Assets";
 import { makeMockFetchAssetMetaFromAPIUC } from "../../VivedAPI";
 import { makeHostHandlerEntity } from "../Entities";
@@ -7,7 +7,7 @@ import { makeGetLinkedAssetsHandler } from "./GetLinkedAssetsHandler";
 import { makeAssetEntity } from "../../Assets/Entities";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");

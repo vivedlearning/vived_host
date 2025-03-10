@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { GetAssetBlobURLUC } from "../../Assets";
 import {
   HostHandlerEntity,
@@ -13,7 +13,7 @@ export type GetAssetBlobURLHandlerAction = (
 ) => void;
 
 export abstract class GetAssetBlobURLHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "GetAssetBlobURLHandler";
 
@@ -24,7 +24,7 @@ export abstract class GetAssetBlobURLHandler
 }
 
 export function makeGetAssetBlobURLHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): GetAssetBlobURLHandler {
   return new GetAssetBlobURLHandlerImp(appObject);
 }
@@ -77,7 +77,7 @@ class GetAssetBlobURLHandlerImp extends GetAssetBlobURLHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetBlobURLHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

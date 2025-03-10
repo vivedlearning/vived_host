@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { HostStateMachine } from "../Entities";
 
 export interface HostStateMachineVM {
@@ -13,15 +13,15 @@ export interface HostStateMachineVM {
   states: { id: string; name: string }[];
 }
 
-export abstract class HostStateMachinePM extends HostAppObjectPM<HostStateMachineVM> {
+export abstract class HostStateMachinePM extends AppObjectPM<HostStateMachineVM> {
   static type = "HostStateMachinePM";
 
-  static get(appObjects: HostAppObjectRepo): HostStateMachinePM | undefined {
+  static get(appObjects: AppObjectRepo): HostStateMachinePM | undefined {
     return getSingletonComponent(HostStateMachinePM.type, appObjects);
   }
 }
 
-export function makeHostStateMachinePM(appObject: HostAppObject) {
+export function makeHostStateMachinePM(appObject: AppObject) {
   return new HostStateMachinePMImp(appObject);
 }
 
@@ -62,7 +62,7 @@ class HostStateMachinePMImp extends HostStateMachinePM {
     this.doUpdateView(vm);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostStateMachinePM.type);
 
     this.stateMachine = appObject.getComponent<HostStateMachine>(

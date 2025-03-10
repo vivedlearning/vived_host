@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { AppState, makeAppEntity } from "../../Apps";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeOnAppIsReadyHandler } from "./OnAppIsReadyHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const app = makeAppEntity(ao);
   const handler = makeHostHandlerEntity(ao);

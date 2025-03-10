@@ -1,10 +1,10 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { UpdateAssetFileUC } from "../UCs/UpdateAssetFileUC";
 
 export function updateAssetFile(
   file: File,
   assetID: string,
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ) {
   const uc = UpdateAssetFileUC.get(assetID, appObjects);
   if (!uc) {

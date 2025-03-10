@@ -1,4 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import {
   HostStateMachine,
   makeHostEditingStateEntity,
@@ -20,7 +20,7 @@ import {
 } from "../UCs";
 
 export function setupStateMachineForSandbox(
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ): HostStateMachine {
   const ao = appObjects.getOrCreate("State Machine");
 

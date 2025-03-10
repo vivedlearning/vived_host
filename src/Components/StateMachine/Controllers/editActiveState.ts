@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { EditActiveStateUC } from "../UCs/EditActiveState/EditActiveStateUC";
 
-export function editActiveState(appObjects: HostAppObjectRepo) {
+export function editActiveState(appObjects: AppObjectRepo) {
   const uc = EditActiveStateUC.get(appObjects);
 
   if (!uc) {

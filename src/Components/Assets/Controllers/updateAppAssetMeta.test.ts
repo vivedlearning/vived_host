@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockUpdateAppAssetMetaUC } from "../Mocks/MockUpdateAppAssetMetaUC";
 import { UpdateAppAssetMetaDTO } from "../UCs/UpdateAppAssetMetaUC";
 import { updateAppAssetMeta } from "./updateAppAssetMeta";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const mockUC = makeMockUpdateAppAssetMetaUC(appObjects);
 

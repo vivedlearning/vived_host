@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeLoggerEntity } from "../Entities/LoggerEntity";
 import {
   ForwardLogsToConsolePM,
@@ -6,7 +6,7 @@ import {
 } from "./ForwardLogsToConsolePM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const ao = appObjects.getOrCreate("Logger");

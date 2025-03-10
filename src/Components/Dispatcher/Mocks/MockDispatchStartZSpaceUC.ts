@@ -1,11 +1,10 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { DispatchStartZSpaceUC } from "../UCs";
 
 export class MockDispatchStartZSpaceUC extends DispatchStartZSpaceUC {
   doDispatch = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchStartZSpaceUC.type);
   }
 }
-

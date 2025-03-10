@@ -1,23 +1,26 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { generateUniqueID } from "@vived/core";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { FileUploadUC } from "./FileUploadUC";
 import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
 import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
-export abstract class PatchAssetFileUC extends HostAppObjectUC {
+export abstract class PatchAssetFileUC extends AppObjectUC {
   static type = "PatchAssetFileUC";
 
   abstract doPatch(assetId: string, file: File): Promise<string>;
 
-  static get(appObjects: HostAppObjectRepo): PatchAssetFileUC | undefined {
+  static get(appObjects: AppObjectRepo): PatchAssetFileUC | undefined {
     return getSingletonComponent(PatchAssetFileUC.type, appObjects);
   }
 }
 
-export function makePatchAssetFileUC(
-  appObject: HostAppObject
-): PatchAssetFileUC {
+export function makePatchAssetFileUC(appObject: AppObject): PatchAssetFileUC {
   return new PatchAssetFileUCImp(appObject);
 }
 
@@ -90,7 +93,7 @@ class PatchAssetFileUCImp extends PatchAssetFileUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, PatchAssetFileUC.type);
     this.appObjects.registerSingleton(this);
   }

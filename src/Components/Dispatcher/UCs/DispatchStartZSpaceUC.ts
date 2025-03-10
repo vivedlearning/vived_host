@@ -1,13 +1,13 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
-export abstract class DispatchStartZSpaceUC extends HostAppObjectUC {
+export abstract class DispatchStartZSpaceUC extends AppObjectUC {
   static readonly type = "DispatchStartZSpaceUC";
   readonly requestType = "START_ZSPACE";
 
   abstract doDispatch(session: any, emulate: boolean): void;
 
-  static get(appObject: HostAppObject): DispatchStartZSpaceUC | undefined {
+  static get(appObject: AppObject): DispatchStartZSpaceUC | undefined {
     const asset = appObject.getComponent<DispatchStartZSpaceUC>(
       DispatchStartZSpaceUC.type
     );
@@ -20,10 +20,13 @@ export abstract class DispatchStartZSpaceUC extends HostAppObjectUC {
     return asset;
   }
 
-  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchStartZSpaceUC | undefined {
-    const appObject =  appObjects.get(id);
-    
-    if(!appObject) {
+  static getByID(
+    id: string,
+    appObjects: AppObjectRepo
+  ): DispatchStartZSpaceUC | undefined {
+    const appObject = appObjects.get(id);
+
+    if (!appObject) {
       appObjects.submitWarning(
         "DispatchStartZSpaceUC.getByID",
         "Unable to find App Object by id " + id
@@ -36,7 +39,7 @@ export abstract class DispatchStartZSpaceUC extends HostAppObjectUC {
 }
 
 export function makeDispatchStartZSpaceUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchStartZSpaceUC {
   return new DispatchStartZSpaceUCImp(appObject);
 }
@@ -84,7 +87,7 @@ class DispatchStartZSpaceUCImp extends DispatchStartZSpaceUC {
     this.dispatcher.formRequestAndDispatch(this.requestType, 3, payload);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchStartZSpaceUC.type);
 
     this.dispatcher = appObject.getComponent<HostDispatchEntity>(

@@ -1,15 +1,20 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { FetchAssetFileFromAPIUC } from "../../VivedAPI";
 import { AssetEntity } from "../Entities/AssetEntity";
 import { AssetRepo } from "../Entities/AssetRepo";
 import { GetAssetUC } from "./GetAssetUC";
 
-export abstract class GetAssetFileUC extends HostAppObjectUC {
+export abstract class GetAssetFileUC extends AppObjectUC {
   static type = "GetAssetFileUC";
 
   abstract getAssetFile(assetID: string): Promise<File>;
 
-  static get(appObjects: HostAppObjectRepo): GetAssetFileUC | undefined {
+  static get(appObjects: AppObjectRepo): GetAssetFileUC | undefined {
     return getSingletonComponent<GetAssetFileUC>(
       GetAssetFileUC.type,
       appObjects
@@ -17,7 +22,7 @@ export abstract class GetAssetFileUC extends HostAppObjectUC {
   }
 }
 
-export function makeGetAssetFileUC(appObject: HostAppObject): GetAssetFileUC {
+export function makeGetAssetFileUC(appObject: AppObject): GetAssetFileUC {
   return new GetAssetFileUCImp(appObject);
 }
 
@@ -25,8 +30,9 @@ class GetAssetFileUCImp extends GetAssetFileUC {
   private assetRepo?: AssetRepo;
 
   private get fetchAssetFile() {
-    return this.getCachedSingleton<FetchAssetFileFromAPIUC>(FetchAssetFileFromAPIUC.type)
-      ?.doFetch;
+    return this.getCachedSingleton<FetchAssetFileFromAPIUC>(
+      FetchAssetFileFromAPIUC.type
+    )?.doFetch;
   }
 
   private get getAsset() {
@@ -72,9 +78,9 @@ class GetAssetFileUCImp extends GetAssetFileUC {
           reject(e);
         });
     });
-  }
+  };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetFileUC.type);
 
     this.appObjects.registerSingleton(this);

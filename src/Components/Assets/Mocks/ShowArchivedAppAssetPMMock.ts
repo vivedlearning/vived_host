@@ -1,14 +1,16 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo } from "@vived/core";
 import { ShowArchivedAppAssetPM } from "../PMs/ShowArchivedAppAssetPM";
 
 export class ShowArchivedAppAssetPMMock extends ShowArchivedAppAssetPM {
   vmsAreEqual = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowArchivedAppAssetPM.type);
   }
 }
 
-export function makeShowArchivedAppAssetPMMock(appObjects: HostAppObjectRepo) {
-  return new ShowArchivedAppAssetPMMock(appObjects.getOrCreate("ShowArchivedAppAssetPMMock"));
+export function makeShowArchivedAppAssetPMMock(appObjects: AppObjectRepo) {
+  return new ShowArchivedAppAssetPMMock(
+    appObjects.getOrCreate("ShowArchivedAppAssetPMMock")
+  );
 }

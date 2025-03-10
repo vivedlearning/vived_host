@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import {
   EndActivityUC,
   HostStateMachine,
@@ -11,7 +11,7 @@ import {
 } from "../Entities";
 
 export abstract class OnStateCompleteHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "OnStateCompleteHandler";
 
@@ -22,7 +22,7 @@ export abstract class OnStateCompleteHandler
 }
 
 export function makeOnStateCompleteHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): OnStateCompleteHandler {
   return new OnStateCompleteHandlerImp(appObject);
 }
@@ -60,7 +60,7 @@ class OnStateCompleteHandlerImp extends OnStateCompleteHandler {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, OnStateCompleteHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

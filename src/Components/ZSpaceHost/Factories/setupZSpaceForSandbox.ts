@@ -1,10 +1,10 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { makeZSpaceHostEntity, ZSpaceHostEntity } from "../Entities";
 import { makeEmulateZSpacePM, makeZSpaceIsActivePM } from "../PMs";
 import { makeStartSandboxZSpaceUC, makeStopSandboxZSpaceUC } from "../UCs";
 
 export function setupZSpaceForSandbox(
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ): ZSpaceHostEntity {
   const ao = appObjects.getOrCreate("zSpace");
 

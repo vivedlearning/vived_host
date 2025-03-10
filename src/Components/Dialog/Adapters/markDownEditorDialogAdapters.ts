@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { PmAdapter } from "../../../Types/PmAdapter";
+import { AppObjectRepo, PmAdapter } from "@vived/core";
 import {
   MarkDownEditorDialogVM,
   MarkDownEditorDialogPM,
@@ -10,7 +9,7 @@ export const markDownEditorDialogAdapters: PmAdapter<MarkDownEditorDialogVM> = {
   defaultVM: defaultMarkDownEditorDialogVM,
   subscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: MarkDownEditorDialogVM) => void
   ) => {
     const pm = MarkDownEditorDialogPM.get(id, appObjects);
@@ -25,7 +24,7 @@ export const markDownEditorDialogAdapters: PmAdapter<MarkDownEditorDialogVM> = {
   },
   unsubscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: MarkDownEditorDialogVM) => void
   ) => {
     const pm = MarkDownEditorDialogPM.get(id, appObjects);

@@ -1,15 +1,15 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { HostStateMachine } from "../Entities";
 
-export abstract class DuplicateStateUC extends HostAppObjectUC {
+export abstract class DuplicateStateUC extends AppObjectUC {
   static type = "DuplicateStateUC";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<DuplicateStateUC>(
       DuplicateStateUC.type,
       appObjects
@@ -19,9 +19,7 @@ export abstract class DuplicateStateUC extends HostAppObjectUC {
   abstract duplicateState(id: string): void;
 }
 
-export function makeDuplicateStateUC(
-  appObject: HostAppObject
-): DuplicateStateUC {
+export function makeDuplicateStateUC(appObject: AppObject): DuplicateStateUC {
   return new DuplicateStateUCImp(appObject);
 }
 
@@ -48,7 +46,7 @@ class DuplicateStateUCImp extends DuplicateStateUC {
     newState.setDTO(dto);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DuplicateStateUC.type);
 
     this.appObjects.registerSingleton(this);

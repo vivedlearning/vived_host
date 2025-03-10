@@ -1,14 +1,16 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo } from "@vived/core";
 import { ZSpaceIsActivePM } from "../PMs";
 
 export class ZSpaceIsActivePMMock extends ZSpaceIsActivePM {
   vmsAreEqual = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ZSpaceIsActivePM.type);
   }
 }
 
-export function makeZSpaceIsActivePMMock(appObjects: HostAppObjectRepo) {
-  return new ZSpaceIsActivePMMock(appObjects.getOrCreate("ZSpaceIsActivePMMock"))
+export function makeZSpaceIsActivePMMock(appObjects: AppObjectRepo) {
+  return new ZSpaceIsActivePMMock(
+    appObjects.getOrCreate("ZSpaceIsActivePMMock")
+  );
 }

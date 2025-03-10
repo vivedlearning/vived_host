@@ -1,10 +1,10 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { MarkDownEditorDialogPM } from "../PMs";
 
 export class MockMarkDownEditorDialogPM extends MarkDownEditorDialogPM {
   vmsAreEqual = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MarkDownEditorDialogPM.type);
   }
 }

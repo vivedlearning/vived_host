@@ -1,9 +1,5 @@
-import { MemoizedString } from "../../../Entities";
-import {
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { MemoizedString } from "@vived/core";
+import { AppObject, AppObjectEntity, AppObjectRepo } from "@vived/core";
 
 export enum ChallengeResponse {
   NONE = "NONE",
@@ -23,7 +19,7 @@ export interface StateDTO {
   appID: string;
 }
 
-export abstract class HostStateEntity extends HostAppObjectEntity {
+export abstract class HostStateEntity extends AppObjectEntity {
   static type = "HostStateEntity";
 
   abstract get id(): string;
@@ -38,13 +34,13 @@ export abstract class HostStateEntity extends HostAppObjectEntity {
   abstract get stateData(): object;
   abstract setStateData(val: object, checkForChange?: boolean): void;
 
-  static get(id: string, appObjects: HostAppObjectRepo) {
+  static get(id: string, appObjects: AppObjectRepo) {
     const ao = appObjects.get(id);
     return ao?.getComponent<HostStateEntity>(HostStateEntity.type);
   }
 }
 
-export function makeHostStateEntity(appObject: HostAppObject): HostStateEntity {
+export function makeHostStateEntity(appObject: AppObject): HostStateEntity {
   return new HostStateEntityImp(appObject);
 }
 
@@ -158,7 +154,7 @@ class HostStateEntityImp extends HostStateEntity {
     this.memoisedAppID.val = val;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostStateEntity.type);
   }
 }

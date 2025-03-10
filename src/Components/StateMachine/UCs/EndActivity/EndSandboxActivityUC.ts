@@ -1,10 +1,10 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import { StopZSpaceUC, ZSpaceHostEntity } from "../../../ZSpaceHost";
 import { HostStateMachine } from "../../Entities";
 import { EndActivityUC } from "./EndActivityUC";
 
-export function makeEndSandboxActivityUC(appObj: HostAppObject): EndActivityUC {
+export function makeEndSandboxActivityUC(appObj: AppObject): EndActivityUC {
   return new EndSandboxActivityUC(appObj);
 }
 
@@ -36,7 +36,7 @@ class EndSandboxActivityUC extends EndActivityUC {
     }
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, EndActivityUC.type);
   }
 }

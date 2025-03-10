@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { ZSpaceHostEntity } from "../../ZSpaceHost";
 import {
   HostHandlerEntity,
@@ -12,7 +12,7 @@ export type IsZSpaceAvailableAction = (
 ) => void;
 
 export abstract class IsZSpaceAvailableHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "IsZSpaceAvailableHandler";
 
@@ -23,7 +23,7 @@ export abstract class IsZSpaceAvailableHandler
 }
 
 export function makeIsZSpaceAvailableHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): IsZSpaceAvailableHandler {
   return new IsZSpaceAvailableHandlerImp(appObject);
 }
@@ -65,7 +65,7 @@ class IsZSpaceAvailableHandlerImp extends IsZSpaceAvailableHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, IsZSpaceAvailableHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

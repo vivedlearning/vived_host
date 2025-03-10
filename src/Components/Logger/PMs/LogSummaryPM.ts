@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { LoggerEntity } from "../Entities";
 
 export interface LogSummaryVM {
@@ -12,14 +12,14 @@ export interface LogSummaryVM {
   errorsLabel: string;
 }
 
-export abstract class LogSummaryPM extends HostAppObjectPM<LogSummaryVM> {
+export abstract class LogSummaryPM extends AppObjectPM<LogSummaryVM> {
   static type = "LogSummaryPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<LogSummaryPM>(LogSummaryPM.type, appObjects);
   }
 }
-export function makeLogSummaryPM(appObject: HostAppObject): LogSummaryPM {
+export function makeLogSummaryPM(appObject: AppObject): LogSummaryPM {
   return new LogSummaryPMImp(appObject);
 }
 
@@ -75,7 +75,7 @@ class LogSummaryPMImp extends LogSummaryPM {
     this.doUpdateView(vm);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, LogSummaryPM.type);
 
     this.onEntityChange();

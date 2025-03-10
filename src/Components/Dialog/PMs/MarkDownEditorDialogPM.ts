@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { MarkDownEditorDialogEntity } from "../Entities/MarkDownEditor";
 
 export interface MarkDownEditorDialogVM {
@@ -10,12 +6,12 @@ export interface MarkDownEditorDialogVM {
   confirm: (text: string) => void;
 }
 
-export abstract class MarkDownEditorDialogPM extends HostAppObjectPM<MarkDownEditorDialogVM> {
+export abstract class MarkDownEditorDialogPM extends AppObjectPM<MarkDownEditorDialogVM> {
   static type = "MarkDownEditorDialogPM";
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): MarkDownEditorDialogPM | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -42,7 +38,7 @@ export abstract class MarkDownEditorDialogPM extends HostAppObjectPM<MarkDownEdi
 }
 
 export function makeMarkDownEditorDialogPM(
-  appObject: HostAppObject
+  appObject: AppObject
 ): MarkDownEditorDialogPM {
   return new MarkDownEditorDialogPMImp(appObject);
 }
@@ -64,7 +60,7 @@ class MarkDownEditorDialogPMImp extends MarkDownEditorDialogPM {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MarkDownEditorDialogPM.type);
 
     this.dialog = appObject.getComponent<MarkDownEditorDialogEntity>(

@@ -1,9 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../Entities/AppSandboxEntity";
 
 export function setSandboxAppState(
   state: SandboxState,
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ) {
   const sandbox = AppSandboxEntity.get(appObjects);
   if (sandbox) {

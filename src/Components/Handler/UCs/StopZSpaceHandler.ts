@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { StopZSpaceUC } from "../../ZSpaceHost/UCs";
 import {
   HostHandlerEntity,
@@ -7,7 +7,7 @@ import {
 } from "../Entities";
 
 export abstract class StopZSpaceHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "StopZSpaceHandler";
 
@@ -17,9 +17,7 @@ export abstract class StopZSpaceHandler
   abstract handleRequest: (version: number, payload?: unknown) => void;
 }
 
-export function makeStopZSpaceHandler(
-  appObject: HostAppObject
-): StopZSpaceHandler {
+export function makeStopZSpaceHandler(appObject: AppObject): StopZSpaceHandler {
   return new StopZSpaceHandlerImp(appObject);
 }
 
@@ -31,7 +29,7 @@ class StopZSpaceHandlerImp extends StopZSpaceHandler {
   }
 
   action: () => void = () => {
-    this.stopUC?.stopZSpace()
+    this.stopUC?.stopZSpace();
   };
 
   handleRequest = (version: number) => {
@@ -42,7 +40,7 @@ class StopZSpaceHandlerImp extends StopZSpaceHandler {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StopZSpaceHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

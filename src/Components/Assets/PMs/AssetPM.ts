@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { AssetEntity } from "../Entities/AssetEntity";
 
 export interface AssetVM {
@@ -12,12 +8,12 @@ export interface AssetVM {
   archived: boolean;
 }
 
-export abstract class AssetPM extends HostAppObjectPM<AssetVM> {
+export abstract class AssetPM extends AppObjectPM<AssetVM> {
   static type = "AssetPM";
 
   static getByID(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): AssetPM | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -40,7 +36,7 @@ export abstract class AssetPM extends HostAppObjectPM<AssetVM> {
   }
 }
 
-export function makeAssetPM(appObject: HostAppObject): AssetPM {
+export function makeAssetPM(appObject: AppObject): AssetPM {
   return new AssetPMImp(appObject);
 }
 
@@ -69,7 +65,7 @@ class AssetPMImp extends AssetPM {
     this.doUpdateView(vm);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AssetPM.type);
 
     this.asset = appObject.getComponent<AssetEntity>(AssetEntity.type);

@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockIsEditingStatePM } from "../Mocks/MockIsEditingStatePM";
 import { defaultIsEditingStateVM } from "../PMs/EditingStatePM";
 import { editingStateAdapter } from "./editingStateAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeMockIsEditingStatePM(appObjects);
   return { appObjects, mockPM };
 }

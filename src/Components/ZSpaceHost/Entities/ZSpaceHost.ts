@@ -1,12 +1,12 @@
-import { MemoizedBoolean } from "../../../Entities";
+import { MemoizedBoolean } from "@vived/core";
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 
-export abstract class ZSpaceHostEntity extends HostAppObjectEntity {
+export abstract class ZSpaceHostEntity extends AppObjectEntity {
   static type = "ZSpaceHostEntity";
 
   abstract get isSupported(): boolean;
@@ -20,7 +20,7 @@ export abstract class ZSpaceHostEntity extends HostAppObjectEntity {
 
   abstract session: XRSession | undefined;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ZSpaceHostEntity>(
       ZSpaceHostEntity.type,
       appObjects
@@ -28,9 +28,7 @@ export abstract class ZSpaceHostEntity extends HostAppObjectEntity {
   }
 }
 
-export function makeZSpaceHostEntity(
-  appObject: HostAppObject
-): ZSpaceHostEntity {
+export function makeZSpaceHostEntity(appObject: AppObject): ZSpaceHostEntity {
   return new ZSpaceHostImp(appObject);
 }
 
@@ -61,7 +59,7 @@ class ZSpaceHostImp extends ZSpaceHostEntity {
 
   session: XRSession | undefined;
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ZSpaceHostEntity.type);
     this.appObjects.registerSingleton(this);
   }

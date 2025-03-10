@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppEntity } from "../Entities/AppEntity";
 import { AppVM, makeAppPM } from "./AppPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const ao = appObjects.getOrCreate("app0");
   const app = makeAppEntity(ao);

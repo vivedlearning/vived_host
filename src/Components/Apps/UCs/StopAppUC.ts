@@ -1,16 +1,12 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { DispatchStopAppUC } from "../../Dispatcher";
 
-export abstract class StopAppUC extends HostAppObjectUC {
+export abstract class StopAppUC extends AppObjectUC {
   static type = "StopAppUC";
 
   abstract stop(): void;
 
-  static get(appObject: HostAppObject): StopAppUC | undefined {
+  static get(appObject: AppObject): StopAppUC | undefined {
     const asset = appObject.getComponent<StopAppUC>(StopAppUC.type);
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
@@ -21,10 +17,7 @@ export abstract class StopAppUC extends HostAppObjectUC {
     return asset;
   }
 
-  static getByID(
-    id: string,
-    appObjects: HostAppObjectRepo
-  ): StopAppUC | undefined {
+  static getByID(id: string, appObjects: AppObjectRepo): StopAppUC | undefined {
     const appObject = appObjects.get(id);
 
     if (!appObject) {
@@ -38,12 +31,12 @@ export abstract class StopAppUC extends HostAppObjectUC {
     return StopAppUC.get(appObject);
   }
 
-  static stopByID(id: string, appObjects: HostAppObjectRepo) {
+  static stopByID(id: string, appObjects: AppObjectRepo) {
     StopAppUC.getByID(id, appObjects)?.stop();
   }
 }
 
-export function makeStopAppUC(appObject: HostAppObject): StopAppUC {
+export function makeStopAppUC(appObject: AppObject): StopAppUC {
   return new StartAppUCImp(appObject);
 }
 
@@ -58,7 +51,7 @@ class StartAppUCImp extends StopAppUC {
     this.dispatchStop?.doDispatch();
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StopAppUC.type);
   }
 }

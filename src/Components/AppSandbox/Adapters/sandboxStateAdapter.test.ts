@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
+import { makeAppObjectRepo } from "@vived/core";
 import { SandboxState } from "../Entities/AppSandboxEntity";
 import { makeRenderAppPMMock } from "../Mocks/RenderAppPMMock";
 import { sandboxStateAdapter } from "./sandboxStateAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeRenderAppPMMock(appObjects);
   return { appObjects, mockPM };
 }

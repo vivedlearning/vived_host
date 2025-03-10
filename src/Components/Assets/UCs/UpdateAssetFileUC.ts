@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import {
   DialogAlertDTO,
   DialogQueue,
@@ -18,14 +14,14 @@ export interface UpdateAssetMetaDTO {
   archived: boolean;
 }
 
-export abstract class UpdateAssetFileUC extends HostAppObjectUC {
+export abstract class UpdateAssetFileUC extends AppObjectUC {
   static type = "UpdateAssetFileUC";
 
   abstract updateFile(file: File): Promise<void>;
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): UpdateAssetFileUC | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -51,9 +47,7 @@ export abstract class UpdateAssetFileUC extends HostAppObjectUC {
   }
 }
 
-export function makeUpdateAssetFileUC(
-  appObject: HostAppObject
-): UpdateAssetFileUC {
+export function makeUpdateAssetFileUC(appObject: AppObject): UpdateAssetFileUC {
   return new UpdateAssetFileUCImp(appObject);
 }
 
@@ -108,7 +102,7 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, UpdateAssetFileUC.type);
 
     this.asset = appObject.getComponent<AssetEntity>(AssetEntity.type);

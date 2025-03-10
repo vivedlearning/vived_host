@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppRepo } from "../Entities/AppRepo";
 import { AppsListPM, makeAppListPM } from "./AppsListPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const ao = appObjects.getOrCreate("Apps");
   const slideAppRepo = makeAppRepo(ao);

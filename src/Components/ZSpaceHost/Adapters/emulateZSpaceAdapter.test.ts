@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeEmulateZSpacePMMock } from "../Mocks/EmulateZSpacePMMock";
 import { emulateZSpaceAdapter } from "./emulateZSpaceAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeEmulateZSpacePMMock(appObjects);
   return { appObjects, mockPM };
 }

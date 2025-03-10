@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockMarkDownEditorDialogPM } from "../Mocks";
 import { defaultMarkDownEditorDialogVM } from "../PMs";
 import { markDownEditorDialogAdapters } from "./markDownEditorDialogAdapters";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("id");
 
   const mockPM = new MockMarkDownEditorDialogPM(ao);

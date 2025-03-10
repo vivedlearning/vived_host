@@ -1,15 +1,11 @@
-import {
-  getSingletonComponent,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../../HostAppObject";
+import { getSingletonComponent, AppObjectRepo, AppObjectUC } from "@vived/core";
 
-export abstract class TransitionToStateUC extends HostAppObjectUC {
+export abstract class TransitionToStateUC extends AppObjectUC {
   static type = "TransitionToStateUC";
 
   abstract transitionToState(id: string): void;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<TransitionToStateUC>(
       TransitionToStateUC.type,
       appObjects

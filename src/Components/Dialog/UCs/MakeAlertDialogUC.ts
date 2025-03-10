@@ -1,10 +1,10 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { generateUniqueID } from "@vived/core";
 import {
   Dialog,
   DialogAlertDTO,
@@ -12,28 +12,26 @@ import {
   AlertDialogEntity
 } from "../Entities";
 
-export abstract class MakeAlertDialogUC extends HostAppObjectUC {
+export abstract class MakeAlertDialogUC extends AppObjectUC {
   static type = "MakeAlertDialogUC";
 
   abstract make(dto: DialogAlertDTO): void;
   abstract factory(data: DialogAlertDTO): AlertDialogEntity;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<MakeAlertDialogUC>(
       MakeAlertDialogUC.type,
       appObjects
     );
   }
 
-  static make(dto: DialogAlertDTO, appObjects: HostAppObjectRepo) {
+  static make(dto: DialogAlertDTO, appObjects: AppObjectRepo) {
     const uc = MakeAlertDialogUC.get(appObjects);
     uc?.make(dto);
   }
 }
 
-export function makeMakeAlertDialogUC(
-  appObject: HostAppObject
-): MakeAlertDialogUC {
+export function makeMakeAlertDialogUC(appObject: AppObject): MakeAlertDialogUC {
   return new MakeActivityDetailsDialogUCImp(appObject);
 }
 
@@ -55,7 +53,7 @@ class MakeActivityDetailsDialogUCImp extends MakeAlertDialogUC {
     this.dialogRepo.submitDialog(dialog);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MakeAlertDialogUC.type);
     this.appObjects.registerSingleton(this);
   }

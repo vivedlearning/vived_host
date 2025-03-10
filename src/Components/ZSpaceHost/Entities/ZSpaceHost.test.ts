@@ -1,8 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeZSpaceHostEntity } from "./ZSpaceHost";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("ZSpace"));
   const observer = jest.fn();
   zSpace.addChangeObserver(observer);

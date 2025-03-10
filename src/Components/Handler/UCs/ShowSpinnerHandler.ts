@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { DialogQueue, MakeSpinnerDialogUC } from "../../Dialog";
 import {
   ActionNotImplemented,
@@ -17,7 +17,7 @@ export interface ShowSpinnerActionDTO {
 export type ShowSpinnerAction = (confirmData: ShowSpinnerActionDTO) => void;
 
 export abstract class ShowSpinnerHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "ShowSpinnerHandler";
 
@@ -28,7 +28,7 @@ export abstract class ShowSpinnerHandler
 }
 
 export function makeShowSpinnerHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ShowSpinnerHandler {
   return new ShowSpinnerBase(appObject);
 }
@@ -73,7 +73,7 @@ class ShowSpinnerBase extends ShowSpinnerHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowSpinnerHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

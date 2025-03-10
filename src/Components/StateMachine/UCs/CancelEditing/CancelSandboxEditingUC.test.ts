@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   makeAppSandboxEntity,
   SandboxState
@@ -14,7 +14,7 @@ import { makeMockHostStateEntity } from "../../Mocks/MockHostStateEntity";
 import { makeCancelSandboxEditingUC } from "./CancelSandboxEditingUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const sandboxAO = appObjects.getOrCreate("app1");

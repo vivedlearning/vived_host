@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import {
   AppSandboxEntity,
   SandboxState
@@ -18,14 +14,14 @@ export interface UpdateAppAssetMetaDTO {
   archived: boolean;
 }
 
-export abstract class UpdateAppAssetMetaUC extends HostAppObjectUC {
+export abstract class UpdateAppAssetMetaUC extends AppObjectUC {
   static type = "UpdateAppAssetMetaUC";
 
   abstract updateMeta(data: UpdateAppAssetMetaDTO): Promise<void>;
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): UpdateAppAssetMetaUC | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -52,7 +48,7 @@ export abstract class UpdateAppAssetMetaUC extends HostAppObjectUC {
 }
 
 export function makeUpdateAppAssetMetaUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): UpdateAppAssetMetaUC {
   return new UpdateAppAssetMetaUCImp(appObject);
 }
@@ -130,7 +126,7 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, UpdateAppAssetMetaUC.type);
   }
 }

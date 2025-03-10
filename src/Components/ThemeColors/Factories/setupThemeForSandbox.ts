@@ -1,10 +1,10 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { vivedDarkThemeData, vivedLightThemeData } from "../Data";
 import { makeHostThemeEntity } from "../Entities";
 import { makeThemeColorsPM } from "../PM";
 import { makeSetThemeUC } from "../UCs";
 
-export function setupThemeForSandbox(appObjects: HostAppObjectRepo) {
+export function setupThemeForSandbox(appObjects: AppObjectRepo) {
   const ao = appObjects.getOrCreate("Theme");
 
   // Entities
@@ -21,4 +21,3 @@ export function setupThemeForSandbox(appObjects: HostAppObjectRepo) {
 
   setThemeUC.setThemeByName("light"); // Hardcoded for now
 }
-

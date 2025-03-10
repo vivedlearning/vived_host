@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppEntity } from "../../Apps";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeGetAssetFolderURLHandler } from "./GetAssetFolderURLHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const app = makeAppEntity(ao);
   app.appAssetFolderURL = "some/folder";

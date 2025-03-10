@@ -1,11 +1,15 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../Entities/AppSandboxEntity";
 
-
-export abstract class SandboxStatePM extends HostAppObjectPM<SandboxState> {
+export abstract class SandboxStatePM extends AppObjectPM<SandboxState> {
   static type = "SandboxStatePM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<SandboxStatePM>(
       SandboxStatePM.type,
       appObjects
@@ -13,7 +17,7 @@ export abstract class SandboxStatePM extends HostAppObjectPM<SandboxState> {
   }
 }
 
-export function makeSandboxStatePM(appObject: HostAppObject): SandboxStatePM {
+export function makeSandboxStatePM(appObject: AppObject): SandboxStatePM {
   return new SandboxStatePMImp(appObject);
 }
 
@@ -32,7 +36,7 @@ class SandboxStatePMImp extends SandboxStatePM {
     this.doUpdateView(this.sandbox.state);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SandboxStatePM.type);
     this.appObjects.registerSingleton(this);
 

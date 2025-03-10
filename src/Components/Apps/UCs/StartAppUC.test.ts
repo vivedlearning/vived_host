@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../../AppSandbox";
 import { DispatchStateDTO } from "../../Dispatcher";
 import {
@@ -16,7 +16,7 @@ import { makeMockHostStateEntity } from "../../StateMachine/Mocks/MockHostStateE
 import { makeStartAppUC, StartAppUC } from "./StartAppUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const sandboxAO = appObjects.getOrCreate("Sandbox");
   const sandbox = makeAppSandboxEntity(sandboxAO);

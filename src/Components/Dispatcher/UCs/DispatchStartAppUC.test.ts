@@ -1,16 +1,15 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
+import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 import {
-  MockHostDispatchEntity
-} from "../Mocks/MockHostDispatcher";
-import {
-  DispatchStartAppUC, makeDispatchStartAppUC
+  DispatchStartAppUC,
+  makeDispatchStartAppUC
 } from "./DispatchStartAppUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
-  const element = document.createElement('div');
+  const element = document.createElement("div");
 
   const uc = makeDispatchStartAppUC(ao);
 
@@ -52,7 +51,7 @@ describe("Dispatch Start App", () => {
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
     const payload = mockDispatcher.formRequestAndDispatch.mock.calls[0][2];
 
-    expect(payload).toEqual({ container: element});
+    expect(payload).toEqual({ container: element });
   });
 
   it("Warns if it cannot find the app object when getting by ID", () => {

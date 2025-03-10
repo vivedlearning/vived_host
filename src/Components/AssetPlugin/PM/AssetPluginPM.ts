@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { AppState } from "../../Apps";
 import { AssetPluginEntity } from "../Entities/AssetPluginEntity";
 
@@ -14,15 +19,15 @@ export const defaultAssetPluginVM: AssetPluginVM = {
   styleSheets: []
 };
 
-export abstract class AssetPluginPM extends HostAppObjectPM<AssetPluginVM> {
+export abstract class AssetPluginPM extends AppObjectPM<AssetPluginVM> {
   static type = "AssetSystemPluginPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<AssetPluginPM>(AssetPluginPM.type, appObjects);
   }
 }
 
-export function makeAssetPluginPM(appObject: HostAppObject): AssetPluginPM {
+export function makeAssetPluginPM(appObject: AppObject): AssetPluginPM {
   return new AssetPluginPMImp(appObject);
 }
 
@@ -69,7 +74,7 @@ class AssetPluginPMImp extends AssetPluginPM {
     this.doUpdateView(vm);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AssetPluginPM.type);
 
     this.assetPlugin?.addChangeObserver(this.onChange);

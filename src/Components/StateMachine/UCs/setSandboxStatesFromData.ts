@@ -1,4 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { AppSandboxEntity } from "../../AppSandbox/Entities";
 import { HostStateEntity, HostStateMachine } from "../Entities";
 
@@ -11,7 +11,7 @@ export interface SandboxStateData {
 
 export function setSandboxStatesFromData(
   datas: SandboxStateData[],
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ) {
   const stateMachine = HostStateMachine.get(appObjects);
   if (!stateMachine) {

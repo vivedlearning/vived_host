@@ -1,16 +1,10 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { APIStage } from "../Entities";
 import { ApiStagePM } from "../PMs/ApiStagePM";
 
-
-
 export const apiStageAdapter: SingletonPmAdapter<APIStage> = {
   defaultVM: APIStage.PRODUCTION,
-  subscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: APIStage) => void
-  ) => {
+  subscribe: (appObjects: AppObjectRepo, setVM: (vm: APIStage) => void) => {
     const pm = ApiStagePM.get(appObjects);
     if (!pm) {
       appObjects.submitError("apiStageAdapter", "Unable to find ApiStagePM");
@@ -18,10 +12,7 @@ export const apiStageAdapter: SingletonPmAdapter<APIStage> = {
     }
     pm.addView(setVM);
   },
-  unsubscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: APIStage) => void
-  ) => {
+  unsubscribe: (appObjects: AppObjectRepo, setVM: (vm: APIStage) => void) => {
     const pm = ApiStagePM.get(appObjects);
     if (!pm) {
       appObjects.submitError("apiStageAdapter", "Unable to find ApiStagePM");

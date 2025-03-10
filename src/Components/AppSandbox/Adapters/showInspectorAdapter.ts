@@ -1,10 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
-import { SingletonPmAdapter } from "../../../Types/SingletonPmAdapter";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { ShowInspectorPM } from "../PMs/ShowInspectorPM";
 
 export const showInspectorAdapter: SingletonPmAdapter<boolean> = {
   defaultVM: false,
-  subscribe: (appObjects: HostAppObjectRepo, setVM: (vm: boolean) => void) => {
+  subscribe: (appObjects: AppObjectRepo, setVM: (vm: boolean) => void) => {
     const pm = ShowInspectorPM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
@@ -15,10 +14,7 @@ export const showInspectorAdapter: SingletonPmAdapter<boolean> = {
     }
     pm.addView(setVM);
   },
-  unsubscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: boolean) => void
-  ) => {
+  unsubscribe: (appObjects: AppObjectRepo, setVM: (vm: boolean) => void) => {
     const pm = ShowInspectorPM.get(appObjects);
     if (!pm) {
       appObjects.submitError(

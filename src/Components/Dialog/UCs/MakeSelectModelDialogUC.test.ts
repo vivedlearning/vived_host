@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { AlertDialogEntity, makeDialogQueue } from "../Entities";
 import {
   MakeSelectModelDialogUC,
@@ -6,7 +6,7 @@ import {
 } from "./MakeSelectModelDialogUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const resisterSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const dialogQueue = makeDialogQueue(appObjects.getOrCreate("dialog"));
 

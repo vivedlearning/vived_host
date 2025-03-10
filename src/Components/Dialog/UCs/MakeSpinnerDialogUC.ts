@@ -1,10 +1,10 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { generateUniqueID } from "@vived/core";
 import {
   Dialog,
   DialogQueue,
@@ -12,13 +12,13 @@ import {
   SpinnerDialogEntity
 } from "../Entities";
 
-export abstract class MakeSpinnerDialogUC extends HostAppObjectUC {
+export abstract class MakeSpinnerDialogUC extends AppObjectUC {
   static type = "MakeSpinnerDialogUC";
 
   abstract make(dto: DialogSpinnerDTO): SpinnerDialogEntity | undefined;
   abstract factory(data: DialogSpinnerDTO): SpinnerDialogEntity;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<MakeSpinnerDialogUC>(
       MakeSpinnerDialogUC.type,
       appObjects
@@ -27,7 +27,7 @@ export abstract class MakeSpinnerDialogUC extends HostAppObjectUC {
 
   static make(
     dto: DialogSpinnerDTO,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): SpinnerDialogEntity | undefined {
     const uc = MakeSpinnerDialogUC.get(appObjects);
     return uc?.make(dto);
@@ -35,7 +35,7 @@ export abstract class MakeSpinnerDialogUC extends HostAppObjectUC {
 }
 
 export function makeMakeSpinnerDialogUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): MakeSpinnerDialogUC {
   return new MakeSpinnerDialogUCImp(appObject);
 }
@@ -60,7 +60,7 @@ class MakeSpinnerDialogUCImp extends MakeSpinnerDialogUC {
     return dialog;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MakeSpinnerDialogUC.type);
     this.appObjects.registerSingleton(this);
   }

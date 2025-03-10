@@ -1,13 +1,11 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAssetPluginEntity } from "../../AssetPlugin/Entities";
-import {
-  makeMockMakeSelectModelDialogUC,
-} from "../../Dialog";
+import { makeMockMakeSelectModelDialogUC } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeShowSelectModelHandler } from "./ShowSelectModelHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
 
   const assetPlugin = makeAssetPluginEntity(appObjects.getOrCreate("Assets"));

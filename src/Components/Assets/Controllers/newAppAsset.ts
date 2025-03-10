@@ -1,9 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { NewAppAssetDTO, NewAppAssetUC } from "../UCs/NewAppAssetUC";
 
 export function newAppAsset(
   data: NewAppAssetDTO,
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ): Promise<void> {
   const uc = NewAppAssetUC.get(appObjects);
   if (!uc) {

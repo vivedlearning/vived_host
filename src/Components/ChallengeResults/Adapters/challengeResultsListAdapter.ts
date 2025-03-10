@@ -1,13 +1,15 @@
-import { HostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
-import { SingletonPmAdapter } from "../../../Types/SingletonPmAdapter";
-import { ChallengeResultsListPM, ChallengeResultVM } from "../PMs/ChallengeResultsListPM";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
+import {
+  ChallengeResultsListPM,
+  ChallengeResultVM
+} from "../PMs/ChallengeResultsListPM";
 
 export const challengeResultsListAdapter: SingletonPmAdapter<
   ChallengeResultVM[]
 > = {
   defaultVM: [],
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: ChallengeResultVM[]) => void
   ) => {
     const pm = ChallengeResultsListPM.get(appObjects);
@@ -21,7 +23,7 @@ export const challengeResultsListAdapter: SingletonPmAdapter<
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: ChallengeResultVM[]) => void
   ) => {
     const pm = ChallengeResultsListPM.get(appObjects);

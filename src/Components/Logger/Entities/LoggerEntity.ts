@@ -1,10 +1,10 @@
-import { MemoizedBoolean } from "../../../Entities";
+import { MemoizedBoolean } from "@vived/core";
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 
 export type LogSeverity = "LOG" | "WARNING" | "ERROR" | "FATAL";
 
@@ -14,10 +14,10 @@ export type LogEntry = {
   severity: LogSeverity;
 };
 
-export abstract class LoggerEntity extends HostAppObjectEntity {
+export abstract class LoggerEntity extends AppObjectEntity {
   static type = "LoggerEntity";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<LoggerEntity>(LoggerEntity.type, appObjects);
   }
 
@@ -34,7 +34,7 @@ export abstract class LoggerEntity extends HostAppObjectEntity {
   abstract clear: () => void;
 }
 
-export function makeLoggerEntity(appObject: HostAppObject): LoggerEntity {
+export function makeLoggerEntity(appObject: AppObject): LoggerEntity {
   return new LoggerEntityImp(appObject);
 }
 
@@ -105,7 +105,7 @@ class LoggerEntityImp extends LoggerEntity {
     this._lastLog = undefined;
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, LoggerEntity.type);
 
     this.appObjects.registerSingleton(this);

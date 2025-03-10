@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { GetAssetUC } from "../../Assets";
 import {
   HostHandlerEntity,
@@ -14,7 +14,7 @@ export type GetAssetMetaAction = (
 ) => void;
 
 export abstract class GetAssetMetaHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "GetAssetMetaHandler";
 
@@ -25,7 +25,7 @@ export abstract class GetAssetMetaHandler
 }
 
 export function makeGetAssetMetaHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): GetAssetMetaHandler {
   return new GetAssetMetaHandlerImp(appObject);
 }
@@ -84,7 +84,7 @@ class GetAssetMetaHandlerImp extends GetAssetMetaHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetMetaHandler.type);
 
     const hostHander = HostHandlerEntity.get(appObject);

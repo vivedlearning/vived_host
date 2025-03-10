@@ -1,30 +1,41 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { AssetDTO } from '../../Assets';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
-import { SignedAuthTokenUC } from './SignedAuthTokenUC';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { AssetDTO } from "../../Assets";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
+import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
-export abstract class GetAssetsForOwnerFromAPIUC extends HostAppObjectUC {
-  static type = 'GetAssetsForOwnerFromAPIUC';
+export abstract class GetAssetsForOwnerFromAPIUC extends AppObjectUC {
+  static type = "GetAssetsForOwnerFromAPIUC";
 
   abstract getAssets(ownerID: string): Promise<AssetDTO[]>;
 
-  static get(appObjects: HostAppObjectRepo): GetAssetsForOwnerFromAPIUC | undefined {
+  static get(
+    appObjects: AppObjectRepo
+  ): GetAssetsForOwnerFromAPIUC | undefined {
     return getSingletonComponent(GetAssetsForOwnerFromAPIUC.type, appObjects);
   }
 }
 
-export function makeGetAssetsForOwnerFromAPIUC(appObject: HostAppObject): GetAssetsForOwnerFromAPIUC {
+export function makeGetAssetsForOwnerFromAPIUC(
+  appObject: AppObject
+): GetAssetsForOwnerFromAPIUC {
   return new GetAssetsForOwnerUCImp(appObject);
 }
 
 class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
   private get jsonRequester() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get getAuthToken() {
-    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)?.getUserAuthToken;
+    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
+      ?.getUserAuthToken;
   }
 
   private get vivedAPI() {
@@ -46,11 +57,11 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
           const url = vivedAPI.getEndpointURL(`assets/group/${ownerID}`);
           const page = 1;
           const itemsPerPage = 100;
-          url.searchParams.append('page', page.toString());
-          url.searchParams.append('itemsPerPage', itemsPerPage.toString());
+          url.searchParams.append("page", page.toString());
+          url.searchParams.append("itemsPerPage", itemsPerPage.toString());
 
           const options: RequestJSONOptions = {
-            method: 'GET',
+            method: "GET"
           };
 
           return jsonRequester(url, options);
@@ -73,7 +84,7 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
     const linkedAssets = resp.linkedAssets.map((linkedAssetResp) => {
       return {
         type: linkedAssetResp.type,
-        asset: this.responseToDTO(linkedAssetResp.asset),
+        asset: this.responseToDTO(linkedAssetResp.asset)
       };
     });
 
@@ -85,13 +96,13 @@ class GetAssetsForOwnerUCImp extends GetAssetsForOwnerFromAPIUC {
       id: resp.id,
       name: resp.name,
       linkedAssets,
-      ownerId: resp.ownerId,
+      ownerId: resp.ownerId
     };
 
     return dto;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetsForOwnerFromAPIUC.type);
     this.appObjects.registerSingleton(this);
   }

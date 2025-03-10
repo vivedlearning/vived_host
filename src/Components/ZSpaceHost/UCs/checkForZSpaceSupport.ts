@@ -1,9 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { ZSpaceHostEntity } from "../Entities/ZSpaceHost";
 
-export function checkForWebXRSupport(
-  appObjects: HostAppObjectRepo
-): Promise<void> {
+export function checkForWebXRSupport(appObjects: AppObjectRepo): Promise<void> {
   return new Promise<void>((resolve) => {
     const zSpace = ZSpaceHostEntity.get(appObjects);
     if (!zSpace) {

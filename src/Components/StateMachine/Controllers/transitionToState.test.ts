@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockTransitionToStateUC } from "../Mocks/MockTransitionToStateUC";
 import { transitionToState } from "./transitionToState";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const uc = makeMockTransitionToStateUC(appObjects);
 
   return { uc, appObjects };

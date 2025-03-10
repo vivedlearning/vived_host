@@ -1,10 +1,10 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AssetPM } from "../PMs/AssetPM";
 
 export class AssetPMMock extends AssetPM {
   vmsAreEqual = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AssetPM.type);
   }
 }

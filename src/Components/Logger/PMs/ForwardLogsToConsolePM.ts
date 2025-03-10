@@ -1,15 +1,15 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { LoggerEntity } from "../Entities";
 
-export abstract class ForwardLogsToConsolePM extends HostAppObjectPM<boolean> {
+export abstract class ForwardLogsToConsolePM extends AppObjectPM<boolean> {
   static type = "ForwardLogsToConsolePM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ForwardLogsToConsolePM>(
       ForwardLogsToConsolePM.type,
       appObjects
@@ -17,7 +17,7 @@ export abstract class ForwardLogsToConsolePM extends HostAppObjectPM<boolean> {
   }
 }
 export function makeForwardLogsToConsolePM(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ForwardLogsToConsolePM {
   return new ForwardLogsToConsolePMImp(appObject);
 }
@@ -36,7 +36,7 @@ class ForwardLogsToConsolePMImp extends ForwardLogsToConsolePM {
     this.doUpdateView(this.logger.forwardLogsToConsole);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ForwardLogsToConsolePM.type);
 
     this.onEntityChange();

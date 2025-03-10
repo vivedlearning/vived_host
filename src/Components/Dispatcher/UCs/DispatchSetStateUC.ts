@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
 export interface DispatchStateDTO {
@@ -13,13 +9,13 @@ export interface DispatchStateDTO {
   duration?: number;
 }
 
-export abstract class DispatchSetStateUC extends HostAppObjectUC {
+export abstract class DispatchSetStateUC extends AppObjectUC {
   static readonly type = "DispatchSetStateUC";
   readonly requestType = "SET_APP_STATE";
 
   abstract doDispatch(dto: DispatchStateDTO): void;
 
-  static get(appObject: HostAppObject): DispatchSetStateUC | undefined {
+  static get(appObject: AppObject): DispatchSetStateUC | undefined {
     const asset = appObject.getComponent<DispatchSetStateUC>(
       DispatchSetStateUC.type
     );
@@ -34,7 +30,7 @@ export abstract class DispatchSetStateUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DispatchSetStateUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -51,7 +47,7 @@ export abstract class DispatchSetStateUC extends HostAppObjectUC {
 }
 
 export function makeDispatchSetStateUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchSetStateUC {
   return new DispatchSetStateUCImp(appObject);
 }
@@ -102,7 +98,7 @@ class DispatchSetStateUCImp extends DispatchSetStateUC {
     this.dispatcher?.formRequestAndDispatch(this.requestType, 2, payload);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchSetStateUC.type);
   }
 }

@@ -1,6 +1,6 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AssetPluginEntity } from "../../AssetPlugin/Entities";
-import {  MakeSelectModelDialogUC } from "../../Dialog";
+import { MakeSelectModelDialogUC } from "../../Dialog";
 import {
   HostHandlerEntity,
   RequestHandler,
@@ -13,7 +13,7 @@ export type ShowSelectModelAction = (
 ) => void;
 
 export abstract class ShowSelectModelHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "ShowSelectModelHandler";
 
@@ -24,7 +24,7 @@ export abstract class ShowSelectModelHandler
 }
 
 export function makeShowSelectModelHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ShowSelectModelHandler {
   return new ShowSelectModelHandlerImp(appObject);
 }
@@ -65,7 +65,7 @@ class ShowSelectModelHandlerImp extends ShowSelectModelHandler {
     return castPayload.callback;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowSelectModelHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

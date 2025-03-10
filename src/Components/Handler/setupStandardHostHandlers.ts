@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../HostAppObject";
+import { AppObject } from "@vived/core";
 import {
   makeGetAssetBlobURLHandler,
   makeGetAssetFolderURLHandler,
@@ -24,7 +24,7 @@ import {
   makeSubmitResultHandler
 } from "./UCs";
 
-export function setupStandardHostHandlers(appObject: HostAppObject) {
+export function setupStandardHostHandlers(appObject: AppObject) {
   makeGetAssetBlobURLHandler(appObject);
   makeGetAssetFolderURLHandler(appObject);
   makeGetAssetMetaHandler(appObject);

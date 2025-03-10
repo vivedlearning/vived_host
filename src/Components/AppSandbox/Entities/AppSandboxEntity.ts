@@ -1,5 +1,8 @@
-import { MemoizedBoolean } from "../../../Entities/MemoizedBoolean";
-import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from "../../../HostAppObject";
+import {
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo, getSingletonComponent, MemoizedBoolean
+} from "@vived/core";
 import { AppEntity, makeAppEntity } from "../../Apps/Entities/AppEntity";
 
 export enum SandboxState {
@@ -12,7 +15,7 @@ export enum SandboxState {
   NEW_APP_ASSET = "NEW_APP_ASSET"
 }
 
-export abstract class AppSandboxEntity extends HostAppObjectEntity {
+export abstract class AppSandboxEntity extends AppObjectEntity {
   static type = "AppSandboxEntity";
 
   abstract get appID(): string;
@@ -22,7 +25,7 @@ export abstract class AppSandboxEntity extends HostAppObjectEntity {
 
   abstract get channelID(): string;
   abstract set channelID(id: string);
-  
+
   abstract get channelName(): string;
   abstract set channelName(id: string);
 
@@ -44,7 +47,7 @@ export abstract class AppSandboxEntity extends HostAppObjectEntity {
 
   abstract readonly app: AppEntity;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<AppSandboxEntity>(
       AppSandboxEntity.type,
       appObjects
@@ -52,9 +55,7 @@ export abstract class AppSandboxEntity extends HostAppObjectEntity {
   }
 }
 
-export function makeAppSandboxEntity(
-  appObject: HostAppObject
-): AppSandboxEntity {
+export function makeAppSandboxEntity(appObject: AppObject): AppSandboxEntity {
   return new AppSandboxEntityImp(appObject);
 }
 
@@ -124,7 +125,7 @@ class AppSandboxEntityImp extends AppSandboxEntity {
     this.notifyOnChange();
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AppSandboxEntity.type);
     this.app = makeAppEntity(appObject);
     this.appObjects.registerSingleton(this);

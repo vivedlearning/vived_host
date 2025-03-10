@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { ConsumeStateUC } from "../UCs/ConsumeState/ConsumeStateUC";
 
-export function consumeState(id: string, appObjects: HostAppObjectRepo) {
+export function consumeState(id: string, appObjects: AppObjectRepo) {
   const uc = ConsumeStateUC.get(appObjects);
 
   if (!uc) {

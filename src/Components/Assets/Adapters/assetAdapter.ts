@@ -1,12 +1,11 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { PmAdapter } from "../../../Types/PmAdapter";
+import { AppObjectRepo, PmAdapter } from "@vived/core";
 import { defaultAssetVM, AssetPM, AssetVM } from "../PMs/AssetPM";
 
 export const assetAdapter: PmAdapter<AssetVM> = {
   defaultVM: defaultAssetVM,
   subscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: AssetVM) => void
   ) => {
     const pm = AssetPM.getByID(id, appObjects);
@@ -18,7 +17,7 @@ export const assetAdapter: PmAdapter<AssetVM> = {
   },
   unsubscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: AssetVM) => void
   ) => {
     const pm = AssetPM.getByID(id, appObjects);

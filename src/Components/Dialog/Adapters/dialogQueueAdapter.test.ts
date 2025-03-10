@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockDialogQueuePM } from "../Mocks";
 import { defaultDialogVM } from "../PMs";
 import { dialogQueueAdapter } from "./dialogQueueAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeMockDialogQueuePM(appObjects);
   return { appObjects, mockPM };
 }

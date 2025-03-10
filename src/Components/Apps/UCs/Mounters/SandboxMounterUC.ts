@@ -1,6 +1,4 @@
-import { HostAppObject } from "../../../../HostAppObject/HostAppObject";
-import { VIVEDApp_3 } from "../../../../Types/PluginBoundary";
-import { Version } from "../../../../ValueObjects/Version";
+import { AppObject, Version, VIVEDApp_3 } from "@vived/core";
 import {
   AppSandboxEntity,
   SandboxState
@@ -10,7 +8,7 @@ import { HostHandlerEntity } from "../../../Handler/Entities/HostHandler";
 import { AppEntity, AppState } from "../../Entities/AppEntity";
 import { MounterUC } from "./MounterUC";
 
-export function makeSandboxMounter(appObject: HostAppObject): MounterUC {
+export function makeSandboxMounter(appObject: AppObject): MounterUC {
   return new SandboxMounterUC(appObject);
 }
 
@@ -150,7 +148,7 @@ class SandboxMounterUC extends MounterUC {
     return appInterface;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MounterUC.type);
   }
 }

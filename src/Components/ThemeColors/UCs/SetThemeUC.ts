@@ -1,12 +1,12 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { HostThemeEntity } from "../Entities";
 
-export abstract class SetThemeUC extends HostAppObjectUC {
+export abstract class SetThemeUC extends AppObjectUC {
   static type = "SetThemeUC";
 
   abstract lightThemeName: string;
@@ -15,12 +15,12 @@ export abstract class SetThemeUC extends HostAppObjectUC {
   abstract setThemeByName(name: string): void;
   abstract tryDetectTheme(): void;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<SetThemeUC>(SetThemeUC.type, appObjects);
   }
 }
 
-export function makeSetThemeUC(appObject: HostAppObject): SetThemeUC {
+export function makeSetThemeUC(appObject: AppObject): SetThemeUC {
   return new SetThemeUCImp(appObject);
 }
 
@@ -49,7 +49,7 @@ class SetThemeUCImp extends SetThemeUC {
     }
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SetThemeUC.type);
     this.appObjects.registerSingleton(this);
   }

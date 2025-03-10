@@ -1,8 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { LoggerEntity, makeLoggerEntity } from "./LoggerEntity";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const loggerEntity = makeLoggerEntity(appObjects.getOrCreate("log"));
   const observer = jest.fn();
@@ -236,9 +236,9 @@ describe("Logger Entity", () => {
 
     expect(loggerEntity.lastLog).toBeUndefined();
   });
-  
-  it("Notifies when the forward logs to console flag changes", ()=>{
-    const {loggerEntity, observer} = makeTestRig();
+
+  it("Notifies when the forward logs to console flag changes", () => {
+    const { loggerEntity, observer } = makeTestRig();
 
     expect(loggerEntity.forwardLogsToConsole).toEqual(false);
 
@@ -255,5 +255,5 @@ describe("Logger Entity", () => {
 
     expect(loggerEntity.forwardLogsToConsole).toEqual(false);
     expect(observer).toBeCalledTimes(2);
-  })
+  });
 });

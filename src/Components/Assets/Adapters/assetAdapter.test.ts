@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { AssetPMMock } from "../Mocks/AssetPMMock";
 import { defaultAssetVM } from "../PMs/AssetPM";
 import { assetAdapter } from "./assetAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("app1");
 
   const mockPM = new AssetPMMock(ao);

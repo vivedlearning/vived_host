@@ -1,15 +1,11 @@
-import {
-  getSingletonComponent,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../../HostAppObject";
+import { getSingletonComponent, AppObjectRepo, AppObjectUC } from "@vived/core";
 
-export abstract class StartZSpaceUC extends HostAppObjectUC {
+export abstract class StartZSpaceUC extends AppObjectUC {
   static type = "StartZSpaceUC";
 
   abstract startZSpace(): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<StartZSpaceUC>(StartZSpaceUC.type, appObjects);
   }
 }

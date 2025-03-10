@@ -1,13 +1,16 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AssetPluginEntity } from "../../AssetPlugin/Entities";
 import { DialogQueue } from "../../Dialog/Entities";
 import { DispatchDisposeAppUC, DispatchStopAppUC } from "../../Dispatcher/UCs";
-import { HostHandlerEntity, RequestHandler, UnsupportedRequestVersion } from "../Entities";
+import {
+  HostHandlerEntity,
+  RequestHandler,
+  UnsupportedRequestVersion
+} from "../Entities";
 
 export abstract class CloseAssetSystemPluginUC
-  extends HostAppObjectUC
-  implements RequestHandler
-{
+  extends AppObjectUC
+  implements RequestHandler {
   static readonly type = "CloseAssetSystemPluginUC";
 
   readonly requestType = "CLOSE_PLUGIN";
@@ -18,7 +21,7 @@ export abstract class CloseAssetSystemPluginUC
 }
 
 export function makeCloseAssetSystemPluginUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): CloseAssetSystemPluginUC {
   return new CloseAssetSystemPluginUCImp(appObject);
 }
@@ -66,7 +69,7 @@ export class CloseAssetSystemPluginUCImp extends CloseAssetSystemPluginUC {
     this.assetSystemPlugin.show = false;
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, CloseAssetSystemPluginUC.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

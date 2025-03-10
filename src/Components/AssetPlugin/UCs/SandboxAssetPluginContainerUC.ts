@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { MounterUC } from "../../Apps/UCs/Mounters/MounterUC";
 import { AppSandboxEntity } from "../../AppSandbox/Entities/AppSandboxEntity";
 import {
@@ -10,7 +10,7 @@ import { VivedAPIEntity } from "../../VivedAPI/Entities/VivedAPIEntity";
 import { AssetPluginEntity } from "../Entities";
 import { AssetPluginContainerUC } from "./AssetPluginContainerUC";
 
-export function makeSandboxAssetPluginContainerUC(appObject: HostAppObject) {
+export function makeSandboxAssetPluginContainerUC(appObject: AppObject) {
   return new SandboxAssetPluginContainerUC(appObject);
 }
 
@@ -86,7 +86,7 @@ class SandboxAssetPluginContainerUC extends AssetPluginContainerUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AssetPluginContainerUC.type);
 
     this.appObjects.registerSingleton(this);

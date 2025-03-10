@@ -1,9 +1,5 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
-import {
-  AssetPluginPM,
-  AssetPluginVM,
-} from "../PM/AssetPluginPM";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
+import { AssetPluginPM, AssetPluginVM } from "../PM/AssetPluginPM";
 
 export const assetPluginPMAdapter: SingletonPmAdapter<AssetPluginVM> = {
   defaultVM: {
@@ -12,7 +8,7 @@ export const assetPluginPMAdapter: SingletonPmAdapter<AssetPluginVM> = {
     styleSheets: []
   },
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: AssetPluginVM) => void
   ) => {
     const pm = AssetPluginPM.get(appObjects);
@@ -26,7 +22,7 @@ export const assetPluginPMAdapter: SingletonPmAdapter<AssetPluginVM> = {
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: AssetPluginVM) => void
   ) => {
     const pm = AssetPluginPM.get(appObjects);

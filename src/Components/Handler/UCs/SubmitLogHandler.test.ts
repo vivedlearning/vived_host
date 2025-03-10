@@ -1,14 +1,14 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppEntity } from "../../Apps";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeSubmitLogHandler } from "./SubmitLogHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("App1");
 
   const app = makeAppEntity(ao);
-  app.name = "App 1"
+  app.name = "App 1";
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 

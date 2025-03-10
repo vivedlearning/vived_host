@@ -1,5 +1,11 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
-import { ActionNotImplemented, HostHandlerEntity, RequestHandler, UnableToParsePayload, UnsupportedRequestVersion } from "../Entities";
+import { AppObject, AppObjectUC } from "@vived/core";
+import {
+  ActionNotImplemented,
+  HostHandlerEntity,
+  RequestHandler,
+  UnableToParsePayload,
+  UnsupportedRequestVersion
+} from "../Entities";
 
 export interface IsAssetFetchedActionDTO {
   assetId: string;
@@ -11,7 +17,7 @@ export type IsAssetFetchedAction = (
 ) => void;
 
 export abstract class IsAssetFetchedHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "IsAssetFetchedHandler";
 
@@ -22,7 +28,7 @@ export abstract class IsAssetFetchedHandler
 }
 
 export function makeIsAssetFetchedHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): IsAssetFetchedHandler {
   return new IsAssetFetchedHandlerImp(appObject);
 }
@@ -57,7 +63,7 @@ class IsAssetFetchedHandlerImp extends IsAssetFetchedHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, IsAssetFetchedHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

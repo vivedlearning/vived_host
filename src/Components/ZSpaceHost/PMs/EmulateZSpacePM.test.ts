@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeZSpaceHostEntity } from "../Entities/ZSpaceHost";
 import { EmulateZSpacePM, makeEmulateZSpacePM } from "./EmulateZSpacePM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("zSpace"));
 

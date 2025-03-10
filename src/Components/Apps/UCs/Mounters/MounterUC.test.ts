@@ -1,14 +1,18 @@
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { Handler, VIVEDApp_3 } from "../../../../Types";
-import { Version, VersionStage } from "../../../../ValueObjects";
+import {
+  Handler,
+  makeAppObjectRepo,
+  Version,
+  VersionStage,
+  VIVEDApp_3
+} from "@vived/core";
 import { makeHostDispatchEntity } from "../../../Dispatcher";
 import { makeHostHandlerEntity } from "../../../Handler";
+import { makeMockGetAppFromAPIUC } from "../../../VivedAPI/Mocks/MockGetAppFromAPIUC";
 import { AppState, makeAppEntity } from "../../Entities";
 import { makeMounterUC } from "./MounterUC";
-import { makeMockGetAppFromAPIUC } from "../../../VivedAPI/Mocks/MockGetAppFromAPIUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const ao = appObjects.getOrCreate("APP_FOR_JEST_TEST");
 

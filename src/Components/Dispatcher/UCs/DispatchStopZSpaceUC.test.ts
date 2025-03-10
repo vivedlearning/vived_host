@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 import {
   DispatchStopZSpaceUC,
@@ -6,7 +6,7 @@ import {
 } from "./DispatchStopZSpaceUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 

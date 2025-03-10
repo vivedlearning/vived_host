@@ -1,8 +1,8 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { MounterUC } from "../../Apps/UCs/Mounters/MounterUC";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
-export function mountSandboxApp(appObjects: HostAppObjectRepo) {
+export function mountSandboxApp(appObjects: AppObjectRepo) {
   const sandbox = AppSandboxEntity.get(appObjects);
   if (!sandbox) {
     appObjects.submitWarning(

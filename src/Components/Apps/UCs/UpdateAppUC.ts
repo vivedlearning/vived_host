@@ -1,15 +1,11 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 
-export abstract class UpdateAppUC extends HostAppObjectUC {
+export abstract class UpdateAppUC extends AppObjectUC {
   static type = "UpdateAppUC";
 
   abstract updateApp(confirm?: boolean): Promise<void>;
 
-  static get(appObject: HostAppObject): UpdateAppUC | undefined {
+  static get(appObject: AppObject): UpdateAppUC | undefined {
     const asset = appObject.getComponent<UpdateAppUC>(UpdateAppUC.type);
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
@@ -22,7 +18,7 @@ export abstract class UpdateAppUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): UpdateAppUC | undefined {
     const appObject = appObjects.get(id);
 

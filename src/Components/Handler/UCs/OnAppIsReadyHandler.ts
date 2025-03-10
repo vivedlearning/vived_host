@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AppEntity, AppState } from "../../Apps";
 import {
   ActionNotImplemented,
@@ -8,7 +8,7 @@ import {
 } from "../Entities";
 
 export abstract class OnAppIsReadyHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "OnAppIsReadyHandler";
 
@@ -19,7 +19,7 @@ export abstract class OnAppIsReadyHandler
 }
 
 export function makeOnAppIsReadyHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): OnAppIsReadyHandler {
   return new OnAppIsReadyHandlerImp(appObject);
 }
@@ -46,7 +46,7 @@ class OnAppIsReadyHandlerImp extends OnAppIsReadyHandler {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, OnAppIsReadyHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

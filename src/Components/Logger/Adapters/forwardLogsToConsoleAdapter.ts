@@ -1,10 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { ForwardLogsToConsolePM } from "../PMs/ForwardLogsToConsolePM";
 
 export const forwardLogsToConsoleAdapter: SingletonPmAdapter<boolean> = {
   defaultVM: false,
-  subscribe: (appObjects: HostAppObjectRepo, setVM: (vm: boolean) => void) => {
+  subscribe: (appObjects: AppObjectRepo, setVM: (vm: boolean) => void) => {
     const pm = ForwardLogsToConsolePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
@@ -15,10 +14,7 @@ export const forwardLogsToConsoleAdapter: SingletonPmAdapter<boolean> = {
     }
     pm.addView(setVM);
   },
-  unsubscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: boolean) => void
-  ) => {
+  unsubscribe: (appObjects: AppObjectRepo, setVM: (vm: boolean) => void) => {
     const pm = ForwardLogsToConsolePM.get(appObjects);
     if (!pm) {
       appObjects.submitError(

@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   DialogMarkDownEditorDTO,
   MarkDownEditorDialogEntity
@@ -10,7 +10,7 @@ import {
 } from "./MarkDownEditorDialogPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("dialog1");
 
   const mockConfirm = jest.fn();

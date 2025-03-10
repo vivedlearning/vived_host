@@ -1,13 +1,11 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import { DispatchStartZSpaceUC } from "../../../Dispatcher/UCs";
 import { ZSpaceHostEntity } from "../../Entities";
 import { StopZSpaceUC } from "../StopZSpace/StopZSpaceUC";
 import { StartZSpaceUC } from "./StartZSpaceUC";
 
-export function makeStartSandboxZSpaceUC(
-  appObject: HostAppObject
-): StartZSpaceUC {
+export function makeStartSandboxZSpaceUC(appObject: AppObject): StartZSpaceUC {
   return new StartSandboxZSpaceUCImp(appObject);
 }
 
@@ -79,7 +77,7 @@ class StartSandboxZSpaceUCImp extends StartZSpaceUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StartZSpaceUC.type);
     this.appObjects.registerSingleton(this);
   }

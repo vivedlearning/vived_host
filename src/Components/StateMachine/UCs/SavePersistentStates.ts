@@ -1,17 +1,17 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { HostStateMachine } from "../Entities";
 
-export abstract class SavePersistentStatesUC extends HostAppObjectUC {
+export abstract class SavePersistentStatesUC extends AppObjectUC {
   static type = "SavePersistentStatesUC";
 
   abstract saveLocally(): void;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<SavePersistentStatesUC>(
       SavePersistentStatesUC.type,
       appObjects
@@ -20,7 +20,7 @@ export abstract class SavePersistentStatesUC extends HostAppObjectUC {
 }
 
 export function makeSavePersistentStatesUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): SavePersistentStatesUC {
   return new SavePersistentStatesUCImp(appObject);
 }
@@ -63,7 +63,7 @@ class SavePersistentStatesUCImp extends SavePersistentStatesUC {
     a.click();
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SavePersistentStatesUC.type);
     this.appObjects.registerSingleton(this);
   }

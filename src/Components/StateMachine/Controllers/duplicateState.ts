@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { DuplicateStateUC } from "../UCs/DuplicateStateUC";
 
-export function duplicateState(id: string, appObjects: HostAppObjectRepo) {
+export function duplicateState(id: string, appObjects: AppObjectRepo) {
   const uc = DuplicateStateUC.get(appObjects);
   if (!uc) {
     appObjects.submitWarning(

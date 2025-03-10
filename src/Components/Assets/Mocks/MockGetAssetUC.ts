@@ -1,14 +1,14 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo } from "@vived/core";
 import { GetAssetUC } from "../UCs/GetAssetUC";
 
 export class MockGetAssetUC extends GetAssetUC {
   getAsset = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetUC.type);
   }
 }
 
-export function makeMockGetAssetUC(appObjects: HostAppObjectRepo) {
+export function makeMockGetAssetUC(appObjects: AppObjectRepo) {
   return new MockGetAssetUC(appObjects.getOrCreate("MockGetAssetUC"));
 }

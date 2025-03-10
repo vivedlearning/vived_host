@@ -1,15 +1,15 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
-export abstract class StartInZSpacePM extends HostAppObjectPM<boolean> {
+export abstract class StartInZSpacePM extends AppObjectPM<boolean> {
   static type = "StartInZSpacePM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<StartInZSpacePM>(
       StartInZSpacePM.type,
       appObjects
@@ -17,7 +17,7 @@ export abstract class StartInZSpacePM extends HostAppObjectPM<boolean> {
   }
 }
 
-export function makeStartInZSpacePM(appObject: HostAppObject): StartInZSpacePM {
+export function makeStartInZSpacePM(appObject: AppObject): StartInZSpacePM {
   return new StartInZSpacePMImp(appObject);
 }
 
@@ -36,7 +36,7 @@ class StartInZSpacePMImp extends StartInZSpacePM {
     this.doUpdateView(this.sandbox.startInZSpace);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StartInZSpacePM.type);
     this.appObjects.registerSingleton(this);
 

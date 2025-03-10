@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../Entities/AppSandboxEntity";
 import { MockShowBabylonInspectorUC } from "../Mocks/MockShowBabylonInspectorUC";
 import { toggleShowInspector } from "./toggleShowInspector";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const ao = appObjects.getOrCreate("AppID");
   const sandbox = makeAppSandboxEntity(ao);

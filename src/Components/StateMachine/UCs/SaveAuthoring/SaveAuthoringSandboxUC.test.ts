@@ -1,12 +1,15 @@
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../../../AppSandbox/Entities";
 import { MockDispatchIsAuthoringUC } from "../../../Dispatcher";
-import { makeHostEditingStateEntity, makeHostStateMachine } from "../../Entities";
+import {
+  makeHostEditingStateEntity,
+  makeHostStateMachine
+} from "../../Entities";
 import { makeMockHostStateEntity } from "../../Mocks";
 import { makeSaveAuthoringSandboxUC } from "./SaveAuthoringSandboxUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const sandboxAO = appObjects.getOrCreate("anApp");

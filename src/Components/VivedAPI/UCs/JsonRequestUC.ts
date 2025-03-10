@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 
 export interface RequestJSONOptions {
   headers?: any;
@@ -7,12 +12,12 @@ export interface RequestJSONOptions {
   body?: any;
 }
 
-export abstract class JsonRequestUC extends HostAppObjectUC {
+export abstract class JsonRequestUC extends AppObjectUC {
   static type = "JsonRequestUC";
 
   abstract doRequest(url: URL, options?: RequestJSONOptions): Promise<any>;
 
-  static get(appObjects: HostAppObjectRepo): JsonRequestUC | undefined {
+  static get(appObjects: AppObjectRepo): JsonRequestUC | undefined {
     return getSingletonComponent(JsonRequestUC.type, appObjects);
   }
 }

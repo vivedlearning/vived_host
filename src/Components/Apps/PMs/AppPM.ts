@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { AppEntity } from "../Entities/AppEntity";
 
 export interface AppVM {
@@ -15,10 +15,10 @@ export const defaultAppVM: AppVM = {
   name: ""
 };
 
-export abstract class AppPM extends HostAppObjectPM<AppVM> {
+export abstract class AppPM extends AppObjectPM<AppVM> {
   static type = "AppPM";
 
-  static get(id: string, appObjects: HostAppObjectRepo) {
+  static get(id: string, appObjects: AppObjectRepo) {
     const ao = appObjects.get(id);
     if (!ao) {
       return;
@@ -28,7 +28,7 @@ export abstract class AppPM extends HostAppObjectPM<AppVM> {
   }
 }
 
-export function makeAppPM(appObject: HostAppObject): AppPM {
+export function makeAppPM(appObject: AppObject): AppPM {
   return new AppPMImp(appObject);
 }
 
@@ -57,7 +57,7 @@ class AppPMImp extends AppPM {
     this.doUpdateView(vm);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AppPM.type);
 
     this.app?.addChangeObserver(this.onEntityChange);

@@ -1,11 +1,11 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity } from "../../../AppSandbox/Entities";
 import { DispatchSetStateUC, DispatchStateDTO } from "../../../Dispatcher";
 import { HostStateMachine } from "../../Entities";
 import { TransitionToStateUC } from "./TransitionToStateUC";
 
 export function makeTransitionToSandboxStateUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): TransitionToStateUC {
   return new TransitionToSandboxStateUCImp(appObject);
 }
@@ -56,7 +56,7 @@ class TransitionToSandboxStateUCImp extends TransitionToStateUC {
     dispatchSetState.doDispatch(dto);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, TransitionToStateUC.type);
 
     this.appObjects.registerSingleton(this);

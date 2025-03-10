@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
 export class MockHostDispatchEntity extends HostDispatchEntity {
@@ -9,7 +9,7 @@ export class MockHostDispatchEntity extends HostDispatchEntity {
   dispatch = jest.fn();
   formRequestAndDispatch = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostDispatchEntity.type);
   }
 }

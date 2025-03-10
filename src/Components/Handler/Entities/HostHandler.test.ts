@@ -3,8 +3,7 @@ import {
   makeHostHandlerEntity,
   UnsupportedRequestVersion
 } from "./HostHandler";
-import { Request } from "../../../Types/PluginBoundary";
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo, Request } from "@vived/core";
 
 class MockHandler implements RequestHandler {
   readonly requestType: string = "A_REQUEST";
@@ -12,7 +11,7 @@ class MockHandler implements RequestHandler {
 }
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const hostHandler = makeHostHandlerEntity(appObjects.getOrCreate("AO"));
   const mockRequestHandler = new MockHandler();
   hostHandler.registerRequestHandler(mockRequestHandler);

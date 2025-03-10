@@ -1,19 +1,24 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { BasicFetchOptions, BasicFetchUC } from './BasicFetchUC';
-import { JsonRequestUC } from './JsonRequestUC';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { BasicFetchOptions, BasicFetchUC } from "./BasicFetchUC";
+import { JsonRequestUC } from "./JsonRequestUC";
 
-export abstract class FileUploadUC extends HostAppObjectUC {
-  static type = 'FileUploadUC';
+export abstract class FileUploadUC extends AppObjectUC {
+  static type = "FileUploadUC";
 
   abstract doUpload(file: File): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo): FileUploadUC | undefined {
+  static get(appObjects: AppObjectRepo): FileUploadUC | undefined {
     return getSingletonComponent(FileUploadUC.type, appObjects);
   }
 }
 
-export function makeFileUploadUC(appObject: HostAppObject): FileUploadUC {
+export function makeFileUploadUC(appObject: AppObject): FileUploadUC {
   return new FileUploadUCImp(appObject);
 }
 
@@ -23,7 +28,8 @@ class FileUploadUCImp extends FileUploadUC {
   }
 
   private get requestJSON() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get basicFetch() {
@@ -39,14 +45,16 @@ class FileUploadUCImp extends FileUploadUC {
       return Promise.reject();
     }
     return new Promise<void>((resolve, reject) => {
-      const getUploadURL = vivedAPI.getEndpointURL(`upload/large/DataVariants/${file.name}`);
+      const getUploadURL = vivedAPI.getEndpointURL(
+        `upload/large/DataVariants/${file.name}`
+      );
 
       requestJSON(getUploadURL)
         .then((uploadURL) => {
           const url = new URL(uploadURL as string);
           const options: BasicFetchOptions = {
-            method: 'PUT',
-            body: file,
+            method: "PUT",
+            body: file
           };
 
           return basicFetch(url, options);
@@ -61,7 +69,7 @@ class FileUploadUCImp extends FileUploadUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, FileUploadUC.type);
     this.appObjects.registerSingleton(this);
   }

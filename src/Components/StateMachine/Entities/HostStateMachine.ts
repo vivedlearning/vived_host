@@ -1,15 +1,13 @@
-import { MemoizedBoolean } from "../../../Entities";
+import { generateUniqueID, MemoizedBoolean } from "@vived/core";
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectEntityRepo,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 import { HostStateEntity, makeHostStateEntity } from "./HostStateEntity";
 
-export abstract class HostStateMachine extends HostAppObjectEntity {
+export abstract class HostStateMachine extends AppObjectEntity {
   static type = "HostStateMachine";
 
   abstract states: string[];
@@ -30,7 +28,7 @@ export abstract class HostStateMachine extends HostAppObjectEntity {
   abstract hasState: (id: string) => boolean;
   abstract stateFactory: (id: string) => HostStateEntity;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<HostStateMachine>(
       HostStateMachine.type,
       appObjects
@@ -38,9 +36,7 @@ export abstract class HostStateMachine extends HostAppObjectEntity {
   }
 }
 
-export function makeHostStateMachine(
-  appObject: HostAppObject
-): HostStateMachine {
+export function makeHostStateMachine(appObject: AppObject): HostStateMachine {
   return new HostStateMachineImp(appObject);
 }
 
@@ -222,7 +218,7 @@ class HostStateMachineImp extends HostStateMachine {
     return undefined;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostStateMachine.type);
 
     this.appObjects.registerSingleton(this);

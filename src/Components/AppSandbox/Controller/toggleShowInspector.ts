@@ -1,8 +1,8 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 import { ShowBabylonInspectorUC } from "../UCs/ShowBabylonInspectorUC";
 
-export function toggleShowInspector(appObjects: HostAppObjectRepo) {
+export function toggleShowInspector(appObjects: AppObjectRepo) {
   const sandbox = AppSandboxEntity.get(appObjects);
   if (!sandbox) {
     appObjects.submitWarning(

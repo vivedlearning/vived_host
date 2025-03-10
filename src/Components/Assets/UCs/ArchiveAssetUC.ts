@@ -1,17 +1,21 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { DialogAlertDTO, DialogQueue, MakeAlertDialogUC, MakeSpinnerDialogUC } from "../../Dialog";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
+import {
+  DialogAlertDTO,
+  MakeAlertDialogUC,
+  MakeSpinnerDialogUC
+} from "../../Dialog";
 import { PatchAssetIsArchivedUC } from "../../VivedAPI";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetEntity } from "../Entities/AssetEntity";
 
-export abstract class ArchiveAssetUC extends HostAppObjectUC {
+export abstract class ArchiveAssetUC extends AppObjectUC {
   static type = "ArchiveAssetUC";
 
   abstract setArchived(archived: boolean): Promise<void>;
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): ArchiveAssetUC | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -35,7 +39,7 @@ export abstract class ArchiveAssetUC extends HostAppObjectUC {
   }
 }
 
-export function makeArchiveAssetUC(appObject: HostAppObject): ArchiveAssetUC {
+export function makeArchiveAssetUC(appObject: AppObject): ArchiveAssetUC {
   return new ArchiveAssetUCImp(appObject);
 }
 
@@ -69,10 +73,13 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
     }
 
     const title = archived ? "Archiving Asset" : "Unarchive Asset";
-    const spinner = MakeSpinnerDialogUC.make({
-      title,
-      message: "Updating asset's archived flag..."
-    }, this.appObjects);
+    const spinner = MakeSpinnerDialogUC.make(
+      {
+        title,
+        message: "Updating asset's archived flag..."
+      },
+      this.appObjects
+    );
 
     return new Promise((resolve, reject) => {
       patchAssetIsArchived(asset.id, archived)
@@ -91,7 +98,7 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when setting the asset's archived flag. Check the console. ${e.message}`,
-            title: "Archive Asset Error",
+            title: "Archive Asset Error"
           };
 
           MakeAlertDialogUC.make(dialogDTO, this.appObjects);
@@ -100,7 +107,7 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ArchiveAssetUC.type);
 
     this.asset = appObject.getComponent<AssetEntity>(AssetEntity.type);

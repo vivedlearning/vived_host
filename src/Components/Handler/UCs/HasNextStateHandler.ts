@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { HostStateMachine } from "../../StateMachine";
 import {
   ActionNotImplemented,
@@ -13,7 +13,7 @@ export type HasNextStateAction = (
 ) => void;
 
 export abstract class HasNextStateHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "HasNextStateHandler";
 
@@ -24,7 +24,7 @@ export abstract class HasNextStateHandler
 }
 
 export function makeHasNextStateHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): HasNextStateHandler {
   return new HasNextStateHandlerImp(appObject);
 }
@@ -69,7 +69,7 @@ class HasNextStateHandlerImp extends HasNextStateHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HasNextStateHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

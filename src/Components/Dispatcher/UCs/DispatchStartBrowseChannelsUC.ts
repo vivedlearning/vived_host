@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
 export interface BrowseChannelDTO {
@@ -12,15 +8,13 @@ export interface BrowseChannelDTO {
   callback: (modelID: string, dataID: string) => void;
 }
 
-export abstract class DispatchStartBrowseChannelsUC extends HostAppObjectUC {
+export abstract class DispatchStartBrowseChannelsUC extends AppObjectUC {
   static readonly type = "DispatchStartBrowseChannelsUC";
   readonly requestType = "START_SELECT_CHANNEL_MODEL";
 
   abstract doDispatch(dto: BrowseChannelDTO): void;
 
-  static get(
-    appObject: HostAppObject
-  ): DispatchStartBrowseChannelsUC | undefined {
+  static get(appObject: AppObject): DispatchStartBrowseChannelsUC | undefined {
     const asset = appObject.getComponent<DispatchStartBrowseChannelsUC>(
       DispatchStartBrowseChannelsUC.type
     );
@@ -36,7 +30,7 @@ export abstract class DispatchStartBrowseChannelsUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DispatchStartBrowseChannelsUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -53,7 +47,7 @@ export abstract class DispatchStartBrowseChannelsUC extends HostAppObjectUC {
 }
 
 export function makeDispatchStartBrowseChannelsUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchStartBrowseChannelsUC {
   return new DispatchStartBrowseChannelsUCImp(appObject);
 }
@@ -79,7 +73,7 @@ class DispatchStartBrowseChannelsUCImp extends DispatchStartBrowseChannelsUC {
     );
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchStartBrowseChannelsUC.type);
 
     this.dispatcher = appObject.getComponent<HostDispatchEntity>(

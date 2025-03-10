@@ -1,13 +1,18 @@
-
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
-import { makeMockStopZSpaceUC, makeZSpaceHostEntity } from "../../../ZSpaceHost";
+import { makeAppObjectRepo } from "@vived/core";
+import {
+  makeAppSandboxEntity,
+  SandboxState
+} from "../../../AppSandbox/Entities";
+import {
+  makeMockStopZSpaceUC,
+  makeZSpaceHostEntity
+} from "../../../ZSpaceHost";
 import { makeHostStateMachine } from "../../Entities";
 import { makeMockHostStateEntity } from "../../Mocks";
 import { makeEndSandboxActivityUC } from "./EndSandboxActivityUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const sandbox = makeAppSandboxEntity(appObjects.getOrCreate("Sandbox"));
   sandbox.state = SandboxState.PLAYING;
 

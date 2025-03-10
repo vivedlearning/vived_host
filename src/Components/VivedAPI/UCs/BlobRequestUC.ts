@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 
 export interface RequestBlobOptions {
   headers?: any;
@@ -7,13 +12,12 @@ export interface RequestBlobOptions {
   body?: any;
 }
 
-export abstract class BlobRequestUC extends HostAppObjectUC {
+export abstract class BlobRequestUC extends AppObjectUC {
   static type = "BlobRequestUC";
 
   abstract doRequest(url: URL, options?: RequestBlobOptions): Promise<Blob>;
 
-  static get(appObjects: HostAppObjectRepo): BlobRequestUC | undefined {
+  static get(appObjects: AppObjectRepo): BlobRequestUC | undefined {
     return getSingletonComponent(BlobRequestUC.type, appObjects);
   }
 }
-

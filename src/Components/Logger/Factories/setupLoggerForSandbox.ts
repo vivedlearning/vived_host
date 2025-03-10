@@ -1,9 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { makeLoggerEntity } from "../Entities";
 import { makeForwardLogsToConsolePM, makeLogSummaryPM } from "../PMs";
 import { makeDownloadLogUC } from "../UCs";
 
-export function setupLoggerForSandbox(appObjects: HostAppObjectRepo) {
+export function setupLoggerForSandbox(appObjects: AppObjectRepo) {
   const ao = appObjects.getOrCreate("Logger");
 
   // Entities

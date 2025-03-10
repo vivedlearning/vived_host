@@ -1,9 +1,9 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { EditStateUC } from "./EditStateUC";
 
-export function makeEditSandboxStateUC(appObject: HostAppObject): EditStateUC {
+export function makeEditSandboxStateUC(appObject: AppObject): EditStateUC {
   return new EditSandboxStateUC(appObject);
 }
 
@@ -36,7 +36,7 @@ class EditSandboxStateUC extends EditStateUC {
     this.sandbox.state = SandboxState.PLAYING;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, EditStateUC.type);
 
     this.appObjects.registerSingleton(this);

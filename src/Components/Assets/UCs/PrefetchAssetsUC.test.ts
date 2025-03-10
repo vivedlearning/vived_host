@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeHostStateMachine } from "../../StateMachine/Entities";
 import { makeMockGetAssetFileUC } from "../Mocks/MockGetAssetFileUC";
 import { makePrefetchAssets } from "./PrefetchAssetsUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const mockGetAssetFile = makeMockGetAssetFileUC(appObjects);
   mockGetAssetFile.getAssetFile.mockResolvedValue(undefined);

@@ -1,14 +1,13 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import {
-  makeMockMakeMarkdownDialogUC
-} from "../../Dialog";
+import { makeAppObjectRepo } from "@vived/core";
+import { makeMockMakeMarkdownDialogUC } from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
-  makeShowMarkDownEditorHandler, ShowMarkDownEditorActionDTO
+  makeShowMarkDownEditorHandler,
+  ShowMarkDownEditorActionDTO
 } from "./ShowMarkDownEditorHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");

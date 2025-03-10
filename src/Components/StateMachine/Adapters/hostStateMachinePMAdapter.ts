@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types/SingletonPmAdapter";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import {
   HostStateMachineVM,
   defaultHostStateMachineVM,
@@ -9,7 +8,7 @@ import {
 export const hostStateMachinePMAdapter: SingletonPmAdapter<HostStateMachineVM> = {
   defaultVM: defaultHostStateMachineVM,
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: HostStateMachineVM) => void
   ) => {
     const pm = HostStateMachinePM.get(appObjects);
@@ -23,7 +22,7 @@ export const hostStateMachinePMAdapter: SingletonPmAdapter<HostStateMachineVM> =
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: HostStateMachineVM) => void
   ) => {
     const pm = HostStateMachinePM.get(appObjects);

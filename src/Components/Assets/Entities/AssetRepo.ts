@@ -1,5 +1,10 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
-import { AssetEntity, makeAssetEntity } from './AssetEntity';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
+import { AssetEntity, makeAssetEntity } from "./AssetEntity";
 
 export interface AssetDTO {
   id: string;
@@ -12,8 +17,8 @@ export interface AssetDTO {
   linkedAssets: { type: string; asset: AssetDTO }[];
 }
 
-export abstract class AssetRepo extends HostAppObjectEntity {
-  static type = 'AssetRepository';
+export abstract class AssetRepo extends AppObjectEntity {
+  static type = "AssetRepository";
 
   abstract add(asset: AssetEntity): void;
   abstract has(id: string): boolean;
@@ -24,12 +29,12 @@ export abstract class AssetRepo extends HostAppObjectEntity {
   abstract assetFactory(id: string): AssetEntity;
   abstract addFromDTO(dto: AssetDTO): AssetEntity;
 
-  static get(hostAppObjects: HostAppObjectRepo): AssetRepo | undefined {
+  static get(hostAppObjects: AppObjectRepo): AssetRepo | undefined {
     return getSingletonComponent(AssetRepo.type, hostAppObjects);
   }
 }
 
-export function makeAssetRepo(appObj: HostAppObject): AssetRepo {
+export function makeAssetRepo(appObj: AppObject): AssetRepo {
   return new AssetRepositoryImp(appObj);
 }
 
@@ -41,7 +46,7 @@ class AssetRepositoryImp extends AssetRepo {
   };
 
   assetFactory = (id: string): AssetEntity => {
-    this.error('Asset factory has not been injected');
+    this.error("Asset factory has not been injected");
     return makeAssetEntity(this.appObjects.getOrCreate(id));
   };
 
@@ -92,10 +97,16 @@ class AssetRepositoryImp extends AssetRepo {
     return baseAsset;
   }
 
-  private addLinkedAssetDTOsRecursively(linkedAssetList: { type: string; asset: AssetDTO }[], metaList: AssetDTO[]) {
+  private addLinkedAssetDTOsRecursively(
+    linkedAssetList: { type: string; asset: AssetDTO }[],
+    metaList: AssetDTO[]
+  ) {
     linkedAssetList.forEach((linkedAsset) => {
       metaList.push(linkedAsset.asset);
-      this.addLinkedAssetDTOsRecursively(linkedAsset.asset.linkedAssets, metaList);
+      this.addLinkedAssetDTOsRecursively(
+        linkedAsset.asset.linkedAssets,
+        metaList
+      );
     });
   }
 
@@ -114,7 +125,7 @@ class AssetRepositoryImp extends AssetRepo {
     return asset;
   };
 
-  constructor(appObj: HostAppObject) {
+  constructor(appObj: AppObject) {
     super(appObj, AssetRepo.type);
     this.appObjects.registerSingleton(this);
   }

@@ -1,8 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity, SandboxState } from "./AppSandboxEntity";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const sandbox = makeAppSandboxEntity(appObjects.getOrCreate("Sandbox"));
 
   const observer = jest.fn();

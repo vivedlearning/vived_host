@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeHostStateMachine } from "../../StateMachine/Entities";
 import { makeMockHostStateEntity } from "../../StateMachine/Mocks/MockHostStateEntity";
 import { makeChallengeResults } from "../Entities";
@@ -9,7 +9,7 @@ import {
 } from "./ChallengeResultsListPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const results = makeChallengeResults(appObjects.getOrCreate("Results"));
 

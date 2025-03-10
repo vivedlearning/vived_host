@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { AlertDialogEntity } from "./Alert";
 import { DialogQueue, makeDialogQueue } from "./DialogQueue";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("Queue");
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 

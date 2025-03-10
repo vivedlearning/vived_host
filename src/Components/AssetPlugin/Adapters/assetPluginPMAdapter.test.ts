@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockAssetPluginPM } from "../Mocks/MockAssetPluginPM";
 import { defaultAssetPluginVM } from "../PM/AssetPluginPM";
 import { assetPluginPMAdapter } from "./assetPluginPMAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeMockAssetPluginPM(appObjects);
   return { appObjects, mockPM };
 }

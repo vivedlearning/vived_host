@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { SaveAuthoringUC } from "../UCs/SaveAuthoring/SaveAuthoringUC";
 
-export function saveAuthoring(appObjects: HostAppObjectRepo) {
+export function saveAuthoring(appObjects: AppObjectRepo) {
   const uc = SaveAuthoringUC.get(appObjects);
 
   if (!uc) {

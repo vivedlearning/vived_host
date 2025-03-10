@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { makeMockFileUploadUC } from "../Mocks/MockFileUpload";
 import { makeMockJsonRequestUC } from "../Mocks/MockJsonRequestUC";
@@ -7,7 +7,7 @@ import { RequestJSONOptions } from "./JsonRequestUC";
 import { makePatchAssetUC, PatchAssetDTO, PatchAssetUC } from "./PatchAssetUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const vivedAPI = new VivedAPIEntity(appObjects.getOrCreate("API"));

@@ -1,24 +1,24 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { downloadFile } from "../../../Utilities/downloadFile";
 import { LoggerEntity } from "../Entities";
 
-export abstract class DownloadLogUC extends HostAppObjectUC {
+export abstract class DownloadLogUC extends AppObjectUC {
   static type = "DownloadLogUC";
 
   abstract downloadFile(filename: string, file: Blob): void;
   abstract doDownload(): void;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<DownloadLogUC>(DownloadLogUC.type, appObjects);
   }
 }
 
-export function makeDownloadLogUC(appObject: HostAppObject): DownloadLogUC {
+export function makeDownloadLogUC(appObject: AppObject): DownloadLogUC {
   return new DownloadLogUCImp(appObject);
 }
 
@@ -41,7 +41,7 @@ class DownloadLogUCImp extends DownloadLogUC {
     this.downloadFile(filename, file);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DownloadLogUC.type);
 
     this.appObjects.registerSingleton(this);

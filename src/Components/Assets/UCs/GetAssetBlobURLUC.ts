@@ -1,15 +1,20 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { FetchAssetFileFromAPIUC } from "../../VivedAPI";
 import { AssetEntity } from "../Entities/AssetEntity";
 import { AssetRepo } from "../Entities/AssetRepo";
 import { GetAssetUC } from "./GetAssetUC";
 
-export abstract class GetAssetBlobURLUC extends HostAppObjectUC {
+export abstract class GetAssetBlobURLUC extends AppObjectUC {
   static type = "GetAssetBlobURLUC";
 
   abstract getAssetBlobURL(assetID: string): Promise<string>;
 
-  static get(appObjects: HostAppObjectRepo): GetAssetBlobURLUC | undefined {
+  static get(appObjects: AppObjectRepo): GetAssetBlobURLUC | undefined {
     return getSingletonComponent<GetAssetBlobURLUC>(
       GetAssetBlobURLUC.type,
       appObjects
@@ -17,9 +22,7 @@ export abstract class GetAssetBlobURLUC extends HostAppObjectUC {
   }
 }
 
-export function makeGetAssetBlobURLUC(
-  appObject: HostAppObject
-): GetAssetBlobURLUC {
+export function makeGetAssetBlobURLUC(appObject: AppObject): GetAssetBlobURLUC {
   return new GetAssetBlobURLUCImp(appObject);
 }
 
@@ -27,8 +30,9 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
   private assetRepo?: AssetRepo;
 
   private get fetchAssetFile() {
-    return this.getCachedSingleton<FetchAssetFileFromAPIUC>(FetchAssetFileFromAPIUC.type)
-      ?.doFetch;
+    return this.getCachedSingleton<FetchAssetFileFromAPIUC>(
+      FetchAssetFileFromAPIUC.type
+    )?.doFetch;
   }
 
   private get getAsset() {
@@ -79,9 +83,9 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
           reject(e);
         });
     });
-  }
+  };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetBlobURLUC.type);
 
     this.appObjects.registerSingleton(this);

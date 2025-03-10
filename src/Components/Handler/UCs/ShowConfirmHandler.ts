@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import {
   DialogConfirmDTO,
   DialogQueue,
@@ -23,7 +23,7 @@ export interface ShowConfirmActionDTO {
 export type ShowConfirmAction = (confirmData: ShowConfirmActionDTO) => void;
 
 export abstract class ShowConfirmHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "ShowConfirmHandler";
 
@@ -34,7 +34,7 @@ export abstract class ShowConfirmHandler
 }
 
 export function makeShowConfirmHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ShowConfirmHandler {
   return new ShowConfirmHandlerImp(appObject);
 }
@@ -92,7 +92,7 @@ class ShowConfirmHandlerImp extends ShowConfirmHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowConfirmHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

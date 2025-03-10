@@ -1,12 +1,13 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import {
   makeSandboxMounter,
   makeStartAppUC,
   makeStopAppUC
 } from "../../Apps/UCs";
-import { setupStandardHostDispatchers } from "../../Dispatcher/setupStandardHostDispatchers";
 import { makeHostDispatchEntity } from "../../Dispatcher/Entities";
+import { setupStandardHostDispatchers } from "../../Dispatcher/setupStandardHostDispatchers";
 import { makeHostHandlerEntity } from "../../Handler/Entities";
+import { setupStandardHostHandlers } from "../../Handler/setupStandardHostHandlers";
 import { AppSandboxEntity, makeAppSandboxEntity } from "../Entities";
 import {
   makeDevFeaturesEnabledPM,
@@ -15,11 +16,10 @@ import {
   makeStartInZSpacePM
 } from "../PMs";
 import { makeShowBabylonInspectorUC } from "../UCs";
-import { setupStandardHostHandlers } from "../../Handler/setupStandardHostHandlers";
 
 export function setupAppSandbox(
   appID: string,
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ): AppSandboxEntity {
   const ao = appObjects.getOrCreate(appID);
 

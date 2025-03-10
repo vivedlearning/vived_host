@@ -1,4 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import {
   UpdateAppAssetMetaUC,
   UpdateAppAssetMetaDTO
@@ -7,7 +7,7 @@ import {
 export function updateAppAssetMeta(
   data: UpdateAppAssetMetaDTO,
   assetID: string,
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ) {
   const uc = UpdateAppAssetMetaUC.get(assetID, appObjects);
   if (!uc) {

@@ -1,12 +1,11 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { PmAdapter } from "../../../Types/PmAdapter";
+import { AppObjectRepo, PmAdapter } from "@vived/core";
 import { AlertDialogPM, AlertDialogVM, defaultAlertDialogVM } from "../PMs";
 
 export const alertDialogAdapter: PmAdapter<AlertDialogVM> = {
   defaultVM: defaultAlertDialogVM,
   subscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: AlertDialogVM) => void
   ) => {
     const pm = AlertDialogPM.get(id, appObjects);
@@ -18,7 +17,7 @@ export const alertDialogAdapter: PmAdapter<AlertDialogVM> = {
   },
   unsubscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: AlertDialogVM) => void
   ) => {
     const pm = AlertDialogPM.get(id, appObjects);

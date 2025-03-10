@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 import {
   BrowseChannelDTO,
@@ -7,7 +7,7 @@ import {
 } from "./DispatchStartBrowseChannelsUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
@@ -89,6 +89,8 @@ describe("Dispatch Start Browse Channel Models", () => {
   it("Gets by ID", () => {
     const { appObjects, uc } = makeTestRig();
 
-    expect(DispatchStartBrowseChannelsUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+    expect(
+      DispatchStartBrowseChannelsUC.getByID(uc.appObject.id, appObjects)
+    ).toEqual(uc);
   });
 });

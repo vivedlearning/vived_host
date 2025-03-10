@@ -1,9 +1,14 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { generateUniqueID } from '../../../Utilities';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { FileUploadUC } from './FileUploadUC';
-import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
-import { SignedAuthTokenUC } from './SignedAuthTokenUC';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { generateUniqueID } from "@vived/core";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { FileUploadUC } from "./FileUploadUC";
+import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
+import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
 export interface NewAssetDTO {
   name: string;
@@ -17,27 +22,29 @@ export interface NewAssetResponseDTO {
   filename: string;
 }
 
-export abstract class PostNewAssetUC extends HostAppObjectUC {
-  static type = 'PostNewAssetUC';
+export abstract class PostNewAssetUC extends AppObjectUC {
+  static type = "PostNewAssetUC";
 
   abstract doPost(data: NewAssetDTO): Promise<NewAssetResponseDTO>;
 
-  static get(appObjects: HostAppObjectRepo): PostNewAssetUC | undefined {
+  static get(appObjects: AppObjectRepo): PostNewAssetUC | undefined {
     return getSingletonComponent(PostNewAssetUC.type, appObjects);
   }
 }
 
-export function makePostNewAssetUC(appObject: HostAppObject): PostNewAssetUC {
+export function makePostNewAssetUC(appObject: AppObject): PostNewAssetUC {
   return new PostNewAssetUCImp(appObject);
 }
 
 class PostNewAssetUCImp extends PostNewAssetUC {
   private get jsonRequester() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get getPlayerAuthToken() {
-    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)?.getUserAuthToken;
+    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
+      ?.getUserAuthToken;
   }
 
   private get fileUploader() {
@@ -62,11 +69,11 @@ class PostNewAssetUCImp extends PostNewAssetUC {
       const { description, file, name, ownerID } = data;
       let assetId: string;
 
-      const nameSplits = file.name.split('.');
+      const nameSplits = file.name.split(".");
       const extension = nameSplits[nameSplits.length - 1];
       const filename = `${generateUniqueID()}.${extension}`;
       const assetFile = new File([file], filename, {
-        lastModified: Date.now(),
+        lastModified: Date.now()
       });
 
       fileUploader(assetFile)
@@ -74,21 +81,21 @@ class PostNewAssetUCImp extends PostNewAssetUC {
           return getPlayerAuthToken();
         })
         .then((token) => {
-          const postURL = vivedAPI.getEndpointURL('assets');
+          const postURL = vivedAPI.getEndpointURL("assets");
 
           const body = {
             ownerId: ownerID,
             name,
             description,
-            filename,
+            filename
           };
 
           const options: RequestJSONOptions = {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(body),
             headers: {
-              Authorization: 'Bearer ' + token,
-            },
+              Authorization: "Bearer " + token
+            }
           };
 
           return jsonRequester(postURL, options);
@@ -97,7 +104,7 @@ class PostNewAssetUCImp extends PostNewAssetUC {
           assetId = result.assetId;
           resolve({
             id: assetId,
-            filename,
+            filename
           });
         })
         .catch((e) => {
@@ -107,7 +114,7 @@ class PostNewAssetUCImp extends PostNewAssetUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, PostNewAssetUC.type);
     this.appObjects.registerSingleton(this);
   }

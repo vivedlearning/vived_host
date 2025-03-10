@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   makeEndActivityUCMock,
   makeHostStateMachine,
@@ -9,7 +9,7 @@ import { makeHostHandlerEntity } from "../Entities";
 import { makeOnStateCompleteHandler } from "./OnStateCompleteHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");

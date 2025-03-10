@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity } from "../../../AppSandbox/Entities/AppSandboxEntity";
 import {
   DispatchIsAuthoringUC,
@@ -9,7 +9,7 @@ import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { EditActiveStateUC } from "./EditActiveStateUC";
 
 export function makeEditActiveSandboxStateUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): EditActiveStateUC {
   return new EditActiveSandboxStateUCImp(appObject);
 }
@@ -79,7 +79,7 @@ class EditActiveSandboxStateUCImp extends EditActiveStateUC {
     this.editStateEntity.startEditing(state);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, EditActiveStateUC.type);
     this.appObjects.registerSingleton(this);
   }

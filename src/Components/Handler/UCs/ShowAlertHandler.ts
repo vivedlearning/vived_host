@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { MakeAlertDialogUC } from "../../Dialog";
 import {
   HostHandlerEntity,
@@ -17,7 +17,7 @@ export interface ShowAlertActionDTO {
 export type ShowAlertAction = (actionDTO: ShowAlertActionDTO) => void;
 
 export abstract class ShowAlertHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "ShowAlertHandler";
 
@@ -27,9 +27,7 @@ export abstract class ShowAlertHandler
   abstract handleRequest: (version: number, payload?: unknown) => void;
 }
 
-export function makeShowAlertHandler(
-  appObject: HostAppObject
-): ShowAlertHandler {
+export function makeShowAlertHandler(appObject: AppObject): ShowAlertHandler {
   return new ShowAlertHandlerImp(appObject);
 }
 
@@ -75,7 +73,7 @@ class ShowAlertHandlerImp extends ShowAlertHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowAlertHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { MounterUC } from "../UCs/Mounters";
 
 export class MockAppMounterUC extends MounterUC {
@@ -8,7 +8,7 @@ export class MockAppMounterUC extends MounterUC {
   getAppInterface = jest.fn();
   mount = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MounterUC.type);
   }
 }

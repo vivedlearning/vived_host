@@ -1,9 +1,12 @@
-import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { MockHostDispatchEntity } from '../Mocks/MockHostDispatcher';
-import { DispatchIsAuthoringUC, makeDispatchIsAuthoringUC } from './DispatchIsAuthoringUC';
+import { makeAppObjectRepo } from "@vived/core";
+import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
+import {
+  DispatchIsAuthoringUC,
+  makeDispatchIsAuthoringUC
+} from "./DispatchIsAuthoringUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
@@ -12,23 +15,25 @@ function makeTestRig() {
   return { uc, appObjects, mockDispatcher };
 }
 
-describe('Dispatch is authoring', () => {
-  it('Gets the UC', () => {
+describe("Dispatch is authoring", () => {
+  it("Gets the UC", () => {
     const { uc } = makeTestRig();
 
     expect(DispatchIsAuthoringUC.get(uc.appObject)).toEqual(uc);
   });
 
-  it('Dispatches the correct type', () => {
+  it("Dispatches the correct type", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
     uc.doDispatch(true);
 
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
-    expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][0]).toEqual('SET_IS_AUTHORING');
+    expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][0]).toEqual(
+      "SET_IS_AUTHORING"
+    );
   });
 
-  it('Dispatches the correct version', () => {
+  it("Dispatches the correct version", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
     uc.doDispatch(true);
@@ -37,7 +42,7 @@ describe('Dispatch is authoring', () => {
     expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][1]).toEqual(1);
   });
 
-  it('Dispatches the show flag', () => {
+  it("Dispatches the show flag", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
     uc.doDispatch(true);
@@ -47,7 +52,7 @@ describe('Dispatch is authoring', () => {
 
     expect(payload).toEqual({ isAuthoring: true });
   });
-  it('Dispatches the hide flag', () => {
+  it("Dispatches the hide flag", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
     uc.doDispatch(false);
@@ -80,6 +85,8 @@ describe('Dispatch is authoring', () => {
   it("Gets by ID", () => {
     const { appObjects, uc } = makeTestRig();
 
-    expect(DispatchIsAuthoringUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+    expect(DispatchIsAuthoringUC.getByID(uc.appObject.id, appObjects)).toEqual(
+      uc
+    );
   });
 });

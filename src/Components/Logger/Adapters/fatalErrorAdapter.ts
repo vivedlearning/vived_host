@@ -1,13 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { defaultFatalErrorVM, FatalErrorPM, FatalErrorVM } from "../PMs";
 
 export const fatalErrorAdapter: SingletonPmAdapter<FatalErrorVM> = {
   defaultVM: defaultFatalErrorVM,
-  subscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: FatalErrorVM) => void
-  ) => {
+  subscribe: (appObjects: AppObjectRepo, setVM: (vm: FatalErrorVM) => void) => {
     const pm = FatalErrorPM.get(appObjects);
     if (!pm) {
       appObjects.submitError("appListPMAdapter", "Unable to find AppsListPM");
@@ -16,7 +12,7 @@ export const fatalErrorAdapter: SingletonPmAdapter<FatalErrorVM> = {
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: FatalErrorVM) => void
   ) => {
     const pm = FatalErrorPM.get(appObjects);

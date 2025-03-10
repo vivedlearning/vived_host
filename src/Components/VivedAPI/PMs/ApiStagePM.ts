@@ -1,20 +1,20 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { APIStage, VivedAPIEntity } from "../Entities";
 
-export abstract class ApiStagePM extends HostAppObjectPM<APIStage> {
+export abstract class ApiStagePM extends AppObjectPM<APIStage> {
   static type = "ApiStagePM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ApiStagePM>(ApiStagePM.type, appObjects);
   }
 }
 
-export function makeApiStagePM(appObject: HostAppObject): ApiStagePM {
+export function makeApiStagePM(appObject: AppObject): ApiStagePM {
   return new ApiStagePMImp(appObject);
 }
 
@@ -33,7 +33,7 @@ class ApiStagePMImp extends ApiStagePM {
     this.doUpdateView(this.api.apiStage);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ApiStagePM.type);
     this.appObjects.registerSingleton(this);
 

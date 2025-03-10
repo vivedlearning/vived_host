@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { SavePersistentStatesUC } from "../UCs/SavePersistentStates";
 
-export function savePersistentStates(appObjects: HostAppObjectRepo) {
+export function savePersistentStates(appObjects: AppObjectRepo) {
   const uc = SavePersistentStatesUC.get(appObjects);
   if (!uc) {
     appObjects.submitWarning(

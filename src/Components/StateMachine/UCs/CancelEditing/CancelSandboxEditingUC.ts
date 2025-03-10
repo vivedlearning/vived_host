@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import {
   DispatchIsAuthoringUC,
@@ -9,7 +9,7 @@ import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { CancelEditingUC } from "./CancelEditingUC";
 
 export function makeCancelSandboxEditingUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): CancelEditingUC {
   return new CancelSandboxEditingUC(appObject);
 }
@@ -74,7 +74,7 @@ class CancelSandboxEditingUC extends CancelEditingUC {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, CancelEditingUC.type);
     this.appObjects.registerSingleton(this);
   }

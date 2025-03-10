@@ -1,12 +1,11 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity } from "../../../AppSandbox/Entities";
 import { DispatchIsAuthoringUC } from "../../../Dispatcher";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { SaveAuthoringUC } from "./SaveAuthoringUC";
 
-
 export function makeSaveAuthoringSandboxUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): SaveAuthoringUC {
   return new SaveAuthoringSandboxUCImp(appObject);
 }
@@ -58,7 +57,7 @@ class SaveAuthoringSandboxUCImp extends SaveAuthoringUC {
     dispatchSetIsAuthoring.doDispatch(false);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SaveAuthoringUC.type);
 
     this.appObjects.registerSingleton(this);

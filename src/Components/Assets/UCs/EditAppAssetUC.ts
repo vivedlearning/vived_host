@@ -1,13 +1,21 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../AppSandbox/Entities/AppSandboxEntity";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import {
+  AppSandboxEntity,
+  SandboxState
+} from "../../AppSandbox/Entities/AppSandboxEntity";
 import { AppAssetsEntity, AssetRepo } from "../Entities";
 
-export abstract class EditAppAssetUC extends HostAppObjectUC {
+export abstract class EditAppAssetUC extends AppObjectUC {
   static type = "EditAppAssetUC";
 
   abstract editAsset(assetID: string): void;
 
-  static get(appObjects: HostAppObjectRepo): EditAppAssetUC | undefined {
+  static get(appObjects: AppObjectRepo): EditAppAssetUC | undefined {
     return getSingletonComponent<EditAppAssetUC>(
       EditAppAssetUC.type,
       appObjects
@@ -15,7 +23,7 @@ export abstract class EditAppAssetUC extends HostAppObjectUC {
   }
 }
 
-export function makeEditAppAsset(appObject: HostAppObject): EditAppAssetUC {
+export function makeEditAppAsset(appObject: AppObject): EditAppAssetUC {
   return new GetAssetUCImp(appObject);
 }
 
@@ -43,7 +51,7 @@ class GetAssetUCImp extends EditAppAssetUC {
     this.sandbox.state = SandboxState.EDIT_ASSET;
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, EditAppAssetUC.type);
 
     this.appObjects.registerSingleton(this);

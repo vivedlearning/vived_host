@@ -1,8 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppRepo } from "./AppRepo";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const repo = makeAppRepo(appObjects.getOrCreate("AppRepo"));
   const repoChangeObserver = jest.fn();
 

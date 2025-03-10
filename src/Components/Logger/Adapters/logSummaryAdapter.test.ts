@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { logSummaryAdapter } from "./logSummaryAdapter";
 import { makeLogSummaryPMMock } from "../Mocks/LogSummaryPMMock";
 import { defaultLogSummaryVM } from "../PMs/LogSummaryPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeLogSummaryPMMock(appObjects);
   return { appObjects, mockPM };
 }

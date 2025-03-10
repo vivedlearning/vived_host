@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockSpinnerDialogPM } from "../Mocks";
 import { defaultSpinnerDialogVM } from "../PMs";
 import { spinnerDialogAdapter } from "./spinnerDialogAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("id");
 
   const mockPM = new MockSpinnerDialogPM(ao);

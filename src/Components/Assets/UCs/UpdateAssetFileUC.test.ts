@@ -1,7 +1,5 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
-  AlertDialogEntity,
-  makeDialogQueue,
   makeMockMakeAlertDialogUC,
   makeMockMakeSpinnerDialogUC,
   SpinnerDialogEntity
@@ -11,7 +9,7 @@ import { makeAssetEntity } from "../Entities/AssetEntity";
 import { makeUpdateAssetFileUC, UpdateAssetFileUC } from "./UpdateAssetFileUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const assetAO = appObjects.getOrCreate("asset1");
   const asset = makeAssetEntity(assetAO);

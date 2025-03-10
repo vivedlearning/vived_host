@@ -1,18 +1,14 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostThemeEntity } from "../../ThemeColors";
 import { HostDispatchEntity } from "../Entities";
 
-export abstract class DispatchThemeUC extends HostAppObjectUC {
+export abstract class DispatchThemeUC extends AppObjectUC {
   static readonly type = "DispatchThemeUC";
   readonly requestType = "SET_THEME_COLORS";
 
   abstract doDispatch(): void;
 
-  static get(appObject: HostAppObject): DispatchThemeUC | undefined {
+  static get(appObject: AppObject): DispatchThemeUC | undefined {
     const asset = appObject.getComponent<DispatchThemeUC>(DispatchThemeUC.type);
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
@@ -25,7 +21,7 @@ export abstract class DispatchThemeUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DispatchThemeUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -41,7 +37,7 @@ export abstract class DispatchThemeUC extends HostAppObjectUC {
   }
 }
 
-export function makeDispatchThemeUC(appObject: HostAppObject): DispatchThemeUC {
+export function makeDispatchThemeUC(appObject: AppObject): DispatchThemeUC {
   return new DispatchThemeUCImp(appObject);
 }
 
@@ -69,7 +65,7 @@ class DispatchThemeUCImp extends DispatchThemeUC {
     );
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchThemeUC.type);
 
     this.dispatcher = appObject.getComponent<HostDispatchEntity>(

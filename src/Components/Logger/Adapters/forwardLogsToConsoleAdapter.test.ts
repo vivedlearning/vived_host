@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { forwardLogsToConsoleAdapter } from "./forwardLogsToConsoleAdapter";
 import { makeForwardLogsToConsolePMMock } from "../Mocks/ForwardLogsToConsolePMMock";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeForwardLogsToConsolePMMock(appObjects);
   return { appObjects, mockPM };
 }

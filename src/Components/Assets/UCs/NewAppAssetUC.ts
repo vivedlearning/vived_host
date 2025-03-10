@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../../AppSandbox/Entities";
 import {
   DialogAlertDTO,
@@ -19,17 +19,17 @@ export interface NewAppAssetDTO {
   description: string;
 }
 
-export abstract class NewAppAssetUC extends HostAppObjectUC {
+export abstract class NewAppAssetUC extends AppObjectUC {
   static type = "NewAppAssetUC";
 
   abstract create(data: NewAppAssetDTO): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo): NewAppAssetUC | undefined {
+  static get(appObjects: AppObjectRepo): NewAppAssetUC | undefined {
     return getSingletonComponent(NewAppAssetUC.type, appObjects);
   }
 }
 
-export function makeNewAppAssetUC(appObject: HostAppObject): NewAppAssetUC {
+export function makeNewAppAssetUC(appObject: AppObject): NewAppAssetUC {
   return new NewAppAssetUCImp(appObject);
 }
 
@@ -115,7 +115,7 @@ class NewAppAssetUCImp extends NewAppAssetUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, NewAppAssetUC.type);
     this.appObjects.registerSingleton(this);
 

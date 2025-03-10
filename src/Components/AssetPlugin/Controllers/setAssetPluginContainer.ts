@@ -1,9 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { AssetPluginContainerUC } from "../UCs/AssetPluginContainerUC";
 
 export function setAssetPluginContainer(
   container: HTMLElement,
-  appObject: HostAppObjectRepo
+  appObject: AppObjectRepo
 ) {
   const uc = AssetPluginContainerUC.get(appObject);
   if (uc) {

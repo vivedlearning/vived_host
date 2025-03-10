@@ -1,14 +1,16 @@
-import { HostAppObject, HostAppObjectRepo } from '../../../HostAppObject';
-import { FetchAssetFileFromAPIUC } from '../UCs/FetchAssetFileFromAPIUC';
+import { AppObject, AppObjectRepo } from "@vived/core";
+import { FetchAssetFileFromAPIUC } from "../UCs/FetchAssetFileFromAPIUC";
 
 export class MockFetchAssetFileFromAPIUC extends FetchAssetFileFromAPIUC {
   doFetch = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, FetchAssetFileFromAPIUC.type);
   }
 }
 
-export function makeMockFetchAssetFileFromAPIUC(appObjects: HostAppObjectRepo) {
-  return new MockFetchAssetFileFromAPIUC(appObjects.getOrCreate('MockFetchAssetFileFromAPIUC'));
+export function makeMockFetchAssetFileFromAPIUC(appObjects: AppObjectRepo) {
+  return new MockFetchAssetFileFromAPIUC(
+    appObjects.getOrCreate("MockFetchAssetFileFromAPIUC")
+  );
 }

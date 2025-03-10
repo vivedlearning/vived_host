@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeZSpaceHostEntity } from "../Entities/ZSpaceHost";
 import { checkForWebXRSupport } from "./checkForZSpaceSupport";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("zSpace"));
 
   const mockIsSupported = jest.fn();

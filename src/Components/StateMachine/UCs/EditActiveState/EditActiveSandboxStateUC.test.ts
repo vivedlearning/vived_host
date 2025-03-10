@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../../../AppSandbox/Entities";
 import { DispatchStateDTO } from "../../../Dispatcher";
 import {
@@ -13,7 +13,7 @@ import {
 import { makeEditActiveSandboxStateUC } from "./EditActiveSandboxStateUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const sandboxAO = appObjects.getOrCreate("anApp");
@@ -54,7 +54,8 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.finalState).toEqual({ foo: "bar" });
   });
 
@@ -64,7 +65,8 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.duration).toBeUndefined();
   });
 
@@ -74,8 +76,9 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasNextSlide).toEqual(true)
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(true);
   });
 
   it("Sends false if there is not a previous slide", () => {
@@ -84,8 +87,9 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasPreviousSlide).toEqual(false)
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(false);
   });
 
   it("Sends false if there is not a next slide", () => {
@@ -94,8 +98,9 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasNextSlide).toEqual(false)
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasNextSlide).toEqual(false);
   });
 
   it("Sends true if there is a previous slide", () => {
@@ -104,8 +109,9 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hasPreviousSlide).toEqual(true)
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hasPreviousSlide).toEqual(true);
   });
 
   it("Sends false for has hide nav if there are at least two slides", () => {
@@ -114,8 +120,9 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hideNavigation).toEqual(false)
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(false);
   });
 
   it("Sends true for has hide nav of there are less than 2 slides", () => {
@@ -125,8 +132,9 @@ describe("Edit Active State UC", () => {
 
     uc.editActiveState();
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
-    expect(dispatchDTO.hideNavigation).toEqual(true)
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
+    expect(dispatchDTO.hideNavigation).toEqual(true);
   });
 
   it("Dispatches the authoring flag to the app", () => {

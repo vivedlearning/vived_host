@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import {
   LogSummaryPM,
   LogSummaryVM,
@@ -8,10 +7,7 @@ import {
 
 export const logSummaryAdapter: SingletonPmAdapter<LogSummaryVM> = {
   defaultVM: defaultLogSummaryVM,
-  subscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: LogSummaryVM) => void
-  ) => {
+  subscribe: (appObjects: AppObjectRepo, setVM: (vm: LogSummaryVM) => void) => {
     const pm = LogSummaryPM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
@@ -23,7 +19,7 @@ export const logSummaryAdapter: SingletonPmAdapter<LogSummaryVM> = {
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: LogSummaryVM) => void
   ) => {
     const pm = LogSummaryPM.get(appObjects);

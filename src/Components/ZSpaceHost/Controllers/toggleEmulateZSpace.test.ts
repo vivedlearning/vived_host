@@ -1,8 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeZSpaceHostEntity } from "../Entities";
 import { toggleEmulateZSpace } from "./toggleEmulateZSpace";
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("zspace"));
 
   return { appObjects, zSpace };

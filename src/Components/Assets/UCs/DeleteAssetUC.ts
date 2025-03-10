@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import {
   DialogAlertDTO,
   MakeAlertDialogUC,
@@ -14,7 +10,7 @@ import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetEntity } from "../Entities/AssetEntity";
 import { AssetRepo } from "../Entities/AssetRepo";
 
-export abstract class DeleteAssetUC extends HostAppObjectUC {
+export abstract class DeleteAssetUC extends AppObjectUC {
   static type = "DeleteAssetUC";
 
   abstract delete(): Promise<void>;
@@ -22,7 +18,7 @@ export abstract class DeleteAssetUC extends HostAppObjectUC {
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DeleteAssetUC | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -46,7 +42,7 @@ export abstract class DeleteAssetUC extends HostAppObjectUC {
   }
 }
 
-export function makeDeleteAssetUC(appObject: HostAppObject): DeleteAssetUC {
+export function makeDeleteAssetUC(appObject: AppObject): DeleteAssetUC {
   return new DeleteAssetUCImp(appObject);
 }
 
@@ -129,7 +125,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DeleteAssetUC.type);
 
     this.asset = appObject.getComponent<AssetEntity>(AssetEntity.type);

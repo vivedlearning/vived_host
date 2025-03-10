@@ -1,4 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import {
   AssetEntity,
   makeAppAssets,
@@ -26,7 +26,7 @@ import {
   makeUpdateAssetFileUC
 } from "../UCs";
 
-export function setupAssetsForSandbox(appObjects: HostAppObjectRepo) {
+export function setupAssetsForSandbox(appObjects: AppObjectRepo) {
   const assetRepoAO = appObjects.getOrCreate("Asset Repository");
   const appAssetsAO = appObjects.getOrCreate("App Assets");
 
@@ -51,7 +51,7 @@ export function setupAssetsForSandbox(appObjects: HostAppObjectRepo) {
   makeEditingAppAssetPM(appAssetsAO);
 }
 
-function makeAssetFactory(appObjects: HostAppObjectRepo) {
+function makeAssetFactory(appObjects: AppObjectRepo) {
   return function assetFactory(id: string): AssetEntity {
     const ao = appObjects.getOrCreate(id);
 

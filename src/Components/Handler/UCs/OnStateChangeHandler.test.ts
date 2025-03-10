@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   ChallengeResponse,
   makeHostEditingStateEntity,
@@ -9,7 +9,7 @@ import { makeHostHandlerEntity } from "../Entities";
 import { makeOnStateChangeHandler } from "./OnStateChangeHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
@@ -131,7 +131,7 @@ describe("On State Change Handler", () => {
     const { uc } = makeTestRig();
     uc.action = jest.fn();
 
-    const payload  = {
+    const payload = {
       stateObject: { foo: "bar" },
       assets: ["id1", "id2"],
       validationErrorMessage: "Something is wrong",

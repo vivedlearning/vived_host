@@ -1,13 +1,16 @@
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
-import { makeAppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
+import { makeAppObjectRepo } from "@vived/core";
+import {
+  makeAppSandboxEntity,
+  SandboxState
+} from "../../../AppSandbox/Entities";
 import { MockDispatchStartZSpaceUC } from "../../../Dispatcher";
 import { makeZSpaceHostEntity } from "../../Entities";
 import { makeMockStopZSpaceUC } from "../../Mocks";
 import { makeStartSandboxZSpaceUC } from "./StartSandboxZSpaceUC";
-import {MockXRSession} from "../../Mocks/MockXRSession"
+import { MockXRSession } from "../../Mocks/MockXRSession";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const sandboxAO = appObjects.getOrCreate("anApp");

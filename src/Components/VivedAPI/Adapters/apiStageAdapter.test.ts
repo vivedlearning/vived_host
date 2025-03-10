@@ -1,11 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { APIStage } from "../Entities";
 import { makeApiStagePMMock } from "../Mocks/ApiStagePMMock";
 import { apiStageAdapter } from "./apiStageAdapter";
 
-
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeApiStagePMMock(appObjects);
   return { appObjects, mockPM };
 }

@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { EditingAppAssetPM, EditingAppAssetVM } from "../PMs/EditingAppAssetPM";
 
 export const editingAppAssetAdapter: SingletonPmAdapter<
@@ -7,7 +6,7 @@ export const editingAppAssetAdapter: SingletonPmAdapter<
 > = {
   defaultVM: undefined,
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: EditingAppAssetVM | undefined) => void
   ) => {
     const pm = EditingAppAssetPM.get(appObjects);
@@ -21,7 +20,7 @@ export const editingAppAssetAdapter: SingletonPmAdapter<
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: EditingAppAssetVM | undefined) => void
   ) => {
     const pm = EditingAppAssetPM.get(appObjects);

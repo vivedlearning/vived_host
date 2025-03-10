@@ -1,5 +1,9 @@
-import { HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from "../../../HostAppObject";
-import { Version } from "../../../ValueObjects";
+import {
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo,
+  Version
+} from "@vived/core";
 
 export enum AppState {
   INIT = "INIT",
@@ -8,10 +12,10 @@ export enum AppState {
   ERROR = "ERROR"
 }
 
-export abstract class AppEntity extends HostAppObjectEntity {
+export abstract class AppEntity extends AppObjectEntity {
   static type = "AppEntity";
 
-  static get(id: string, appObjects: HostAppObjectRepo) {
+  static get(id: string, appObjects: AppObjectRepo) {
     const ao = appObjects.get(id);
     if (!ao) {
       appObjects.submitWarning(
@@ -42,7 +46,7 @@ export abstract class AppEntity extends HostAppObjectEntity {
   abstract mountedVersion: Version | undefined;
 }
 
-export function makeAppEntity(appObject: HostAppObject): AppEntity {
+export function makeAppEntity(appObject: AppObject): AppEntity {
   return new AppEntityImp(appObject);
 }
 
@@ -66,7 +70,7 @@ class AppEntityImp extends AppEntity {
     return this._mountedVersion;
   }
   set mountedVersion(val: Version | undefined) {
-    if(this._mountedVersion === val) return;
+    if (this._mountedVersion === val) return;
 
     this._mountedVersion = val;
     this.notifyOnChange();
@@ -120,7 +124,7 @@ class AppEntityImp extends AppEntity {
     return this._errorMsg === undefined ? false : true;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AppEntity.type);
   }
 }

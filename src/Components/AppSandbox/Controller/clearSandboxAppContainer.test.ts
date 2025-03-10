@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../Entities/AppSandboxEntity";
 import { clearSandboxAppContainer } from "./clearSandboxAppContainer";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const sandboxEntity = makeAppSandboxEntity(appObjects.getOrCreate("Sandbox"));
 

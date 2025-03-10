@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeLoggerEntity } from "../Entities/LoggerEntity";
 import { DownloadLogUC, makeDownloadLogUC } from "./DownloadLogUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const logger = makeLoggerEntity(appObjects.getOrCreate("Logger"));

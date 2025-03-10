@@ -1,8 +1,12 @@
-import { MemoizedBoolean, MemoizedString } from '../../../Entities';
-import { HostAppObject, HostAppObjectRepo } from '../../../HostAppObject';
-import { Dialog } from './DialogQueue';
+import {
+  AppObject,
+  AppObjectRepo,
+  MemoizedBoolean,
+  MemoizedString
+} from "@vived/core";
+import { Dialog } from "./DialogQueue";
 
-export const spinnerDialogType = 'SPINNER';
+export const spinnerDialogType = "SPINNER";
 
 export interface DialogSpinnerDTO {
   message: string;
@@ -10,18 +14,29 @@ export interface DialogSpinnerDTO {
 }
 
 export class SpinnerDialogEntity extends Dialog {
-  static type = 'SpinnerDialogEntity';
+  static type = "SpinnerDialogEntity";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): SpinnerDialogEntity | undefined {
+  static get(
+    assetID: string,
+    appObjects: AppObjectRepo
+  ): SpinnerDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('SpinnerDialogEntity.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "SpinnerDialogEntity.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
-    const uc = appObject.getComponent<SpinnerDialogEntity>(SpinnerDialogEntity.type);
+    const uc = appObject.getComponent<SpinnerDialogEntity>(
+      SpinnerDialogEntity.type
+    );
     if (!uc) {
-      appObjects.submitWarning('SpinnerDialogEntity.get', 'App Object does not have SpinnerDialogEntity');
+      appObjects.submitWarning(
+        "SpinnerDialogEntity.get",
+        "App Object does not have SpinnerDialogEntity"
+      );
       return undefined;
     }
 
@@ -72,9 +87,12 @@ export class SpinnerDialogEntity extends Dialog {
     }
   };
 
-  constructor(data: DialogSpinnerDTO, appObject: HostAppObject) {
+  constructor(data: DialogSpinnerDTO, appObject: AppObject) {
     super(appObject, SpinnerDialogEntity.type);
-    this.memoizedMessage = new MemoizedString(data.message, this.notifyOnChange);
+    this.memoizedMessage = new MemoizedString(
+      data.message,
+      this.notifyOnChange
+    );
     this.title = data.title;
   }
 }

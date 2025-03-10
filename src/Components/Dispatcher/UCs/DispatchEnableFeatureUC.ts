@@ -1,17 +1,13 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
-export abstract class DispatchEnableFeatureUC extends HostAppObjectUC {
+export abstract class DispatchEnableFeatureUC extends AppObjectUC {
   static readonly type = "DispatchEnableFeatureUC";
   readonly requestType = "ENABLE_FEATURE";
 
   abstract doDispatch(featureFlag: string): void;
 
-  static get(appObject: HostAppObject): DispatchEnableFeatureUC | undefined {
+  static get(appObject: AppObject): DispatchEnableFeatureUC | undefined {
     const uc = appObject.getComponent<DispatchEnableFeatureUC>(
       DispatchEnableFeatureUC.type
     );
@@ -26,7 +22,7 @@ export abstract class DispatchEnableFeatureUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DispatchEnableFeatureUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -43,7 +39,7 @@ export abstract class DispatchEnableFeatureUC extends HostAppObjectUC {
 }
 
 export function makeDispatchEnableFeatureUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchEnableFeatureUC {
   return new DispatchAddChannelModelUCImp(appObject);
 }
@@ -70,7 +66,7 @@ class DispatchAddChannelModelUCImp extends DispatchEnableFeatureUC {
     );
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchEnableFeatureUC.type);
 
     if (!this.dispatcher) {

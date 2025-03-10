@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 
 export interface EditingAppAssetVM {
@@ -14,19 +14,17 @@ export interface EditingAppAssetVM {
   filename: string;
 }
 
-export abstract class EditingAppAssetPM extends HostAppObjectPM<
+export abstract class EditingAppAssetPM extends AppObjectPM<
   EditingAppAssetVM | undefined
 > {
   static type = "EditingAppAssetPM";
 
-  static get(appObjects: HostAppObjectRepo): EditingAppAssetPM | undefined {
+  static get(appObjects: AppObjectRepo): EditingAppAssetPM | undefined {
     return getSingletonComponent(EditingAppAssetPM.type, appObjects);
   }
 }
 
-export function makeEditingAppAssetPM(
-  appObject: HostAppObject
-): EditingAppAssetPM {
+export function makeEditingAppAssetPM(appObject: AppObject): EditingAppAssetPM {
   return new EditingAppAssetPMImp(appObject);
 }
 
@@ -72,7 +70,7 @@ class EditingAppAssetPMImp extends EditingAppAssetPM {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, EditingAppAssetPM.type);
 
     this.appAssets = appObject.getComponent<AppAssetsEntity>(

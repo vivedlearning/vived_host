@@ -1,22 +1,22 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { HostStateMachine } from "../Entities";
 
-export abstract class DeleteStateUC extends HostAppObjectUC {
+export abstract class DeleteStateUC extends AppObjectUC {
   static type = "DeleteStateUC";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<DeleteStateUC>(DeleteStateUC.type, appObjects);
   }
 
   abstract deleteState(id: string): void;
 }
 
-export function makeDeleteStateUC(appObject: HostAppObject): DeleteStateUC {
+export function makeDeleteStateUC(appObject: AppObject): DeleteStateUC {
   return new DeleteStateUCImp(appObject);
 }
 
@@ -39,7 +39,7 @@ class DeleteStateUCImp extends DeleteStateUC {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DeleteStateUC.type);
     this.appObjects.registerSingleton(this);
   }

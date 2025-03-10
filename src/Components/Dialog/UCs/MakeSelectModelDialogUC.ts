@@ -1,33 +1,33 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { generateUniqueID } from "@vived/core";
 import { Dialog, DialogQueue, SelectModelDialogEntity } from "../Entities";
 
-export abstract class MakeSelectModelDialogUC extends HostAppObjectUC {
+export abstract class MakeSelectModelDialogUC extends AppObjectUC {
   static type = "MakeSelectModelDialogUC";
 
   abstract make(): void;
   abstract factory(): SelectModelDialogEntity;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<MakeSelectModelDialogUC>(
       MakeSelectModelDialogUC.type,
       appObjects
     );
   }
 
-  static make(appObjects: HostAppObjectRepo) {
+  static make(appObjects: AppObjectRepo) {
     const uc = MakeSelectModelDialogUC.get(appObjects);
     uc?.make();
   }
 }
 
 export function makeMakeSelectModelDialogUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): MakeSelectModelDialogUC {
   return new MakeSelectModelDialogUCImp(appObject);
 }
@@ -50,7 +50,7 @@ class MakeSelectModelDialogUCImp extends MakeSelectModelDialogUC {
     this.dialogRepo.submitDialog(dialog);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MakeSelectModelDialogUC.type);
     this.appObjects.registerSingleton(this);
   }

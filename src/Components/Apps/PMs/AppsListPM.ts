@@ -1,16 +1,15 @@
-import { HostAppObject, HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { AppRepoEntity } from "../Entities";
 
-
-export abstract class AppsListPM extends HostAppObjectPM<string[]> {
+export abstract class AppsListPM extends AppObjectPM<string[]> {
   static type = "AppsListPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return appObjects.getSingleton<AppsListPM>(AppsListPM.type);
   }
 }
 
-export function makeAppListPM(appObject: HostAppObject): AppsListPM {
+export function makeAppListPM(appObject: AppObject): AppsListPM {
   return new AppListImp(appObject);
 }
 
@@ -45,7 +44,7 @@ class AppListImp extends AppsListPM {
     this.doUpdateView(vms);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AppsListPM.type);
 
     this.slideApps?.addChangeObserver(this.onEntityChange);

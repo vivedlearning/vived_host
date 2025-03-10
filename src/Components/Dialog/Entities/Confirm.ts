@@ -1,6 +1,6 @@
-import { MemoizedBoolean } from '../../../Entities';
-import { HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
-import { Dialog } from './DialogQueue';
+import { MemoizedBoolean } from "@vived/core";
+import { AppObject, AppObjectRepo } from "@vived/core";
+import { Dialog } from "./DialogQueue";
 
 export interface DialogConfirmDTO {
   message: string;
@@ -11,21 +11,32 @@ export interface DialogConfirmDTO {
   onConfirm?: () => void;
 }
 
-export const confirmDialogType = 'CONFIRM';
+export const confirmDialogType = "CONFIRM";
 
 export class ConfirmDialogEntity extends Dialog {
-  static type = 'ConfirmDialogEntity';
+  static type = "ConfirmDialogEntity";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): ConfirmDialogEntity | undefined {
+  static get(
+    assetID: string,
+    appObjects: AppObjectRepo
+  ): ConfirmDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('ConfirmDialogEntity.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "ConfirmDialogEntity.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
-    const uc = appObject.getComponent<ConfirmDialogEntity>(ConfirmDialogEntity.type);
+    const uc = appObject.getComponent<ConfirmDialogEntity>(
+      ConfirmDialogEntity.type
+    );
     if (!uc) {
-      appObjects.submitWarning('ConfirmDialogEntity.get', 'App Object does not have ConfirmDialogEntity');
+      appObjects.submitWarning(
+        "ConfirmDialogEntity.get",
+        "App Object does not have ConfirmDialogEntity"
+      );
       return undefined;
     }
 
@@ -63,7 +74,7 @@ export class ConfirmDialogEntity extends Dialog {
     this._isOpen.val = val;
   }
 
-  constructor(data: DialogConfirmDTO, appObject: HostAppObject) {
+  constructor(data: DialogConfirmDTO, appObject: AppObject) {
     super(appObject, ConfirmDialogEntity.type);
 
     this.confirmButtonLabel = data.confirmButtonLabel;

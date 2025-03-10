@@ -1,30 +1,32 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
-export abstract class DispatchIsAuthoringUC extends HostAppObjectUC {
+export abstract class DispatchIsAuthoringUC extends AppObjectUC {
   static readonly type = "DispatchIsAuthoringUC";
   readonly requestType = "SET_IS_AUTHORING";
 
   abstract doDispatch(isAuthoring: boolean): void;
 
-  static get(appObject: HostAppObject): DispatchIsAuthoringUC | undefined {
+  static get(appObject: AppObject): DispatchIsAuthoringUC | undefined {
     const asset = appObject.getComponent<DispatchIsAuthoringUC>(
       DispatchIsAuthoringUC.type
     );
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
         "DispatchIsAuthoringUC.get",
-        "Unable to find DispatchIsAuthoringUC on app object " +
-          appObject.id
+        "Unable to find DispatchIsAuthoringUC on app object " + appObject.id
       );
     }
     return asset;
   }
 
-  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchIsAuthoringUC | undefined {
-    const appObject =  appObjects.get(id);
-    
-    if(!appObject) {
+  static getByID(
+    id: string,
+    appObjects: AppObjectRepo
+  ): DispatchIsAuthoringUC | undefined {
+    const appObject = appObjects.get(id);
+
+    if (!appObject) {
       appObjects.submitWarning(
         "DispatchIsAuthoringUC.getByID",
         "Unable to find App Object by id " + id
@@ -37,7 +39,7 @@ export abstract class DispatchIsAuthoringUC extends HostAppObjectUC {
 }
 
 export function makeDispatchIsAuthoringUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchIsAuthoringUC {
   return new DispatchIsAuthoringUCImp(appObject);
 }
@@ -59,7 +61,7 @@ class DispatchIsAuthoringUCImp extends DispatchIsAuthoringUC {
     );
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchIsAuthoringUC.type);
 
     this.dispatcher = appObject.getComponent<HostDispatchEntity>(

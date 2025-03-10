@@ -1,11 +1,11 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockFetchAssetMetaFromAPIUC } from "../../VivedAPI";
 import { makeAssetEntity } from "../Entities/AssetEntity";
 import { AssetDTO, makeAssetRepo } from "../Entities/AssetRepo";
 import { GetAssetUC, makeGetAssetUC } from "./GetAssetUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const assetRepo = makeAssetRepo(appObjects.getOrCreate("AssetRepo"));

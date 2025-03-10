@@ -1,22 +1,32 @@
-import { MemoizedBoolean } from '../../../Entities';
-import { HostAppObject, HostAppObjectRepo } from '../../../HostAppObject';
-import { Dialog } from './DialogQueue';
+import { AppObject, AppObjectRepo, MemoizedBoolean } from "@vived/core";
+import { Dialog } from "./DialogQueue";
 
-export const selectModelDialogType = 'SELECT_CHANNEL_MODEL';
+export const selectModelDialogType = "SELECT_CHANNEL_MODEL";
 
 export class SelectModelDialogEntity extends Dialog {
-  static type = 'SelectModelDialogEntity';
+  static type = "SelectModelDialogEntity";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): SelectModelDialogEntity | undefined {
+  static get(
+    assetID: string,
+    appObjects: AppObjectRepo
+  ): SelectModelDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('SelectModelDialogEntity.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "SelectModelDialogEntity.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
-    const uc = appObject.getComponent<SelectModelDialogEntity>(SelectModelDialogEntity.type);
+    const uc = appObject.getComponent<SelectModelDialogEntity>(
+      SelectModelDialogEntity.type
+    );
     if (!uc) {
-      appObjects.submitWarning('SelectModelDialogEntity.get', 'App Object does not have SelectModelDialogEntity');
+      appObjects.submitWarning(
+        "SelectModelDialogEntity.get",
+        "App Object does not have SelectModelDialogEntity"
+      );
       return undefined;
     }
 
@@ -52,7 +62,7 @@ export class SelectModelDialogEntity extends Dialog {
     this.memoizedIsReady.val = isReady;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SelectModelDialogEntity.type);
   }
 }

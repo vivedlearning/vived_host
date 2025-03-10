@@ -1,5 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { Version, VersionStage } from "../../../ValueObjects";
+import { makeAppObjectRepo, Version, VersionStage } from "@vived/core";
 import { MockAppMounterUC } from "../../Apps";
 import { makeAppSandboxEntity } from "../../AppSandbox/Entities/AppSandboxEntity";
 import {
@@ -12,7 +11,7 @@ import { AssetPluginContainerUC } from "./AssetPluginContainerUC";
 import { makeSandboxAssetPluginContainerUC } from "./SandboxAssetPluginContainerUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const sandbox = makeAppSandboxEntity(appObjects.getOrCreate("Sandbox"));

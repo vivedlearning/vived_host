@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { DialogAlertDTO, AlertDialogEntity } from "../Entities";
 import {
   AlertDialogPM,
@@ -7,7 +7,7 @@ import {
 } from "./AlertDialogPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("dialog1");
 
   const data: DialogAlertDTO = {

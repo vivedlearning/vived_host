@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAssetPluginEntity } from "../../AssetPlugin/Entities";
 import { makeDialogQueue } from "../../Dialog/Entities";
 import {
@@ -9,7 +9,7 @@ import { makeHostHandlerEntity } from "../Entities";
 import { makeCloseAssetSystemPluginUC } from "./CloseAssetSystemPlugin";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const dialog = makeDialogQueue(appObjects.getOrCreate("Dialog"));
   const ao = appObjects.getOrCreate("AO");

@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo } from "@vived/core";
 import { makeMounterUC } from "../../Apps";
 import {
   makeDispatchDisposeAppUC,
@@ -18,7 +18,7 @@ import { makeSandboxAssetPluginContainerUC } from "../UCs";
 
 export function setupAssetsPluginForSandbox(
   id: string,
-  appObjects: HostAppObjectRepo
+  appObjects: AppObjectRepo
 ): AssetPluginEntity {
   const ao = appObjects.getOrCreate(id);
 
@@ -40,13 +40,13 @@ export function setupAssetsPluginForSandbox(
   return entity;
 }
 
-function setupDispatchers(ao: HostAppObject) {
+function setupDispatchers(ao: AppObject) {
   makeDispatchStartBrowseChannelsUC(ao);
   makeDispatchStopAppUC(ao);
   makeDispatchDisposeAppUC(ao);
 }
 
-function setupHandlers(ao: HostAppObject) {
+function setupHandlers(ao: AppObject) {
   makeGetAssetFolderURLHandler(ao);
   makeRegisterExternalStyleSheetsHandler(ao);
   makeCloseAssetSystemPluginUC(ao);

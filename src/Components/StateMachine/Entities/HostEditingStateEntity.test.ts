@@ -1,14 +1,18 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   makeHostEditingStateEntity,
   HostEditingStateEntity
 } from "./HostEditingStateEntity";
 import { makeMockHostStateEntity } from "../Mocks/MockHostStateEntity";
-import { makeHostStateEntity, StateDTO, ChallengeResponse } from "./HostStateEntity";
+import {
+  makeHostStateEntity,
+  StateDTO,
+  ChallengeResponse
+} from "./HostStateEntity";
 import { makeHostStateMachine } from "./HostStateMachine";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const ao = appObjects.getOrCreate("State1");
@@ -292,7 +296,7 @@ describe("Host Edit State Entity", () => {
     expect(stateMachine.hasState(newState!.id)).toEqual(false);
   });
 
-  it("Notifies when the state validation message changes", ()=>{
+  it("Notifies when the state validation message changes", () => {
     const { editStateEntity, observer } = makeTestRig();
 
     editStateEntity.stateValidationMessage = "Some Message";
@@ -306,9 +310,9 @@ describe("Host Edit State Entity", () => {
     editStateEntity.stateValidationMessage = undefined;
 
     expect(observer).toBeCalledTimes(2);
-  })
+  });
 
-  it("Clears the validation message when cancelled", ()=>{
+  it("Clears the validation message when cancelled", () => {
     const { editStateEntity, appObjects } = makeTestRig();
     const state = makeMockHostStateEntity("state1", appObjects);
     editStateEntity.startEditing(state);
@@ -318,9 +322,9 @@ describe("Host Edit State Entity", () => {
     editStateEntity.cancelEditState();
 
     expect(editStateEntity.stateValidationMessage).toBeUndefined();
-  })
+  });
 
-  it("Clears the validation message when finished", ()=>{
+  it("Clears the validation message when finished", () => {
     const { editStateEntity, appObjects } = makeTestRig();
     const state = makeMockHostStateEntity("state1", appObjects);
     editStateEntity.startEditing(state);
@@ -330,9 +334,9 @@ describe("Host Edit State Entity", () => {
     editStateEntity.finishEditing();
 
     expect(editStateEntity.stateValidationMessage).toBeUndefined();
-  })
+  });
 
-  it("Notifies when the has changed flag changes", ()=>{
+  it("Notifies when the has changed flag changes", () => {
     const { editStateEntity, appObjects, observer } = makeTestRig();
 
     const state = makeHostStateEntity(appObjects.getOrCreate("State1"));
@@ -352,9 +356,9 @@ describe("Host Edit State Entity", () => {
     state.expectedResponse = ChallengeResponse.NONE;
 
     expect(observer).toHaveBeenCalledTimes(1);
-  })
+  });
 
-  it("Sets the is new flag", ()=>{
+  it("Sets the is new flag", () => {
     const { editStateEntity } = makeTestRig();
 
     expect(editStateEntity.isNewState).toEqual(false);
@@ -366,5 +370,5 @@ describe("Host Edit State Entity", () => {
     editStateEntity.finishEditing();
 
     expect(editStateEntity.isNewState).toEqual(false);
-  })
+  });
 });

@@ -1,12 +1,10 @@
-import {
-  makeHostAppObjectRepo
-} from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockStopZSpaceUC } from "../../ZSpaceHost/Mocks/MockStopZSpaceUC";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeStopZSpaceHandler } from "./StopZSpaceHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");

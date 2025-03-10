@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { fatalErrorAdapter } from "./fatalErrorAdapter";
 import { makeMockFatalErrorPM } from "../Mocks/MockFatalErrorPM";
 import { defaultFatalErrorVM } from "../PMs";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeMockFatalErrorPM(appObjects);
   return { appObjects, mockPM };
 }

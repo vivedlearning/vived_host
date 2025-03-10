@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 import { DialogAlertDTO, AlertDialogEntity } from "./Alert";
 import { DialogConfirmDTO, ConfirmDialogEntity } from "./Confirm";
 import {
@@ -13,25 +13,25 @@ import {
 import { SelectModelDialogEntity } from "./SelectModel";
 import { DialogSpinnerDTO, SpinnerDialogEntity } from "./Spinner";
 
-export abstract class Dialog extends HostAppObjectEntity {
+export abstract class Dialog extends AppObjectEntity {
   abstract dialogType: string;
   abstract preventOutsideDismiss: boolean;
   abstract isOpen: boolean;
 }
 
-export abstract class DialogQueue extends HostAppObjectEntity {
+export abstract class DialogQueue extends AppObjectEntity {
   static type = "DialogQueue";
 
   abstract get activeDialog(): Dialog | null;
   abstract submitDialog(dialog: Dialog): void;
   abstract activeDialogHasClosed(): void;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<DialogQueue>(DialogQueue.type, appObjects);
   }
 }
 
-export function makeDialogQueue(appObject: HostAppObject): DialogQueue {
+export function makeDialogQueue(appObject: AppObject): DialogQueue {
   return new DialogRepoImp(appObject);
 }
 
@@ -70,7 +70,7 @@ class DialogRepoImp extends DialogQueue {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DialogQueue.type);
     this.appObjects.registerSingleton(this);
   }

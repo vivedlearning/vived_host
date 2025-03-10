@@ -1,14 +1,14 @@
-import { MemoizedBoolean } from "../../../Entities";
+import { MemoizedBoolean } from "@vived/core";
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 import { HostStateEntity, StateDTO } from "./HostStateEntity";
 import { HostStateMachine } from "./HostStateMachine";
 
-export abstract class HostEditingStateEntity extends HostAppObjectEntity {
+export abstract class HostEditingStateEntity extends AppObjectEntity {
   static type = "HostEditingStateEntity";
 
   abstract get isEditing(): boolean;
@@ -22,7 +22,7 @@ export abstract class HostEditingStateEntity extends HostAppObjectEntity {
   abstract cancelEditState(): void;
   abstract finishEditing(): void;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<HostEditingStateEntity>(
       HostEditingStateEntity.type,
       appObjects
@@ -31,7 +31,7 @@ export abstract class HostEditingStateEntity extends HostAppObjectEntity {
 }
 
 export function makeHostEditingStateEntity(
-  appObject: HostAppObject
+  appObject: AppObject
 ): HostEditingStateEntity {
   return new HostEditingStateEntityImp(appObject);
 }
@@ -162,7 +162,7 @@ class HostEditingStateEntityImp extends HostEditingStateEntity {
     this.notifyOnChange();
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostEditingStateEntity.type);
     this.appObjects.registerSingleton(this);
   }

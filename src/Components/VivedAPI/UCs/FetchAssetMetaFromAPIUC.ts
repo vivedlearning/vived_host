@@ -1,25 +1,33 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { AssetDTO } from '../../Assets';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { AssetDTO } from "../../Assets";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
 
-export abstract class FetchAssetMetaFromAPIUC extends HostAppObjectUC {
-  static type = 'FetchAssetMetaFromAPIUC';
+export abstract class FetchAssetMetaFromAPIUC extends AppObjectUC {
+  static type = "FetchAssetMetaFromAPIUC";
 
   abstract doFetch(assetID: string): Promise<AssetDTO>;
 
-  static get(appObjects: HostAppObjectRepo): FetchAssetMetaFromAPIUC | undefined {
+  static get(appObjects: AppObjectRepo): FetchAssetMetaFromAPIUC | undefined {
     return getSingletonComponent(FetchAssetMetaFromAPIUC.type, appObjects);
   }
 }
 
-export function makeFetchAssetMetaFromAPIUC(appObject: HostAppObject): FetchAssetMetaFromAPIUC {
+export function makeFetchAssetMetaFromAPIUC(
+  appObject: AppObject
+): FetchAssetMetaFromAPIUC {
   return new FetchAssetMetaUCImp(appObject);
 }
 
 class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
   private get requestJSON() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get vivedAPI(): VivedAPIEntity | undefined {
@@ -37,7 +45,7 @@ class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
     return new Promise<AssetDTO>((resolve, reject) => {
       const endpointUrl = vivedAPI.getEndpointURL(`assets/${assetID}`);
       const options: RequestJSONOptions = {
-        method: 'GET',
+        method: "GET"
       };
 
       requestJSON(endpointUrl, options)
@@ -52,9 +60,9 @@ class FetchAssetMetaUCImp extends FetchAssetMetaFromAPIUC {
           reject(e);
         });
     });
-  }
+  };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, FetchAssetMetaFromAPIUC.type);
     this.appObjects.registerSingleton(this);
   }
@@ -79,7 +87,7 @@ function responseToDTO(resp: BaseAssetResp): AssetDTO {
   const linkedAssets = resp.linkedAssets.map((linkedAssetResp) => {
     return {
       type: linkedAssetResp.type,
-      asset: responseToDTO(linkedAssetResp.asset),
+      asset: responseToDTO(linkedAssetResp.asset)
     };
   });
 
@@ -91,7 +99,7 @@ function responseToDTO(resp: BaseAssetResp): AssetDTO {
     id: resp.id,
     name: resp.name,
     linkedAssets,
-    ownerId: resp.ownerId,
+    ownerId: resp.ownerId
   };
 
   return dto;

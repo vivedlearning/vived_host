@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   makeMockMakeAlertDialogUC,
   makeMockMakeConfirmDialogUC,
@@ -12,7 +12,7 @@ import { makeAssetRepo } from "../Entities/AssetRepo";
 import { DeleteAssetUC, makeDeleteAssetUC } from "./DeleteAssetUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const appAssets = makeAppAssets(appObjects.getOrCreate("AppAsset"));
   const assetRepo = makeAssetRepo(appObjects.getOrCreate("AppAsset"));

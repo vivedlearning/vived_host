@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity, SandboxState } from "../../AppSandbox/Entities";
 import { SpinnerDialogEntity } from "../../Dialog/Entities/Spinner";
 import {
@@ -15,7 +15,7 @@ import {
 } from "./UpdateAppAssetMetaUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const appAssets = makeAppAssets(appObjects.getOrCreate("AppAsset"));
   const sandbox = makeAppSandboxEntity(appObjects.getOrCreate("Sandbox"));

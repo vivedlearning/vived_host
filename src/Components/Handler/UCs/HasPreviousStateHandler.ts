@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { HostStateMachine } from "../../StateMachine";
 import {
   ActionNotImplemented,
@@ -13,7 +13,7 @@ export type HasPreviousStateAction = (
 ) => void;
 
 export abstract class HasPreviousStateHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "HasPreviousStateHandler";
 
@@ -24,7 +24,7 @@ export abstract class HasPreviousStateHandler
 }
 
 export function makeHasPreviousStateHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): HasPreviousStateHandler {
   return new HasPreviousStateHandlerImp(appObject);
 }
@@ -71,7 +71,7 @@ class HasPreviousStateHandlerImp extends HasPreviousStateHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HasPreviousStateHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

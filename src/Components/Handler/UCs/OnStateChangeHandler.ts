@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { ChallengeResponse } from "../../StateMachine/Entities/HostStateEntity";
 import { HostEditingStateEntity } from "../../StateMachine/Entities/HostEditingStateEntity";
 import {
@@ -16,7 +16,7 @@ export type OnStateChangeAction = (
 ) => void;
 
 export abstract class OnStateChangeHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "OnStateChangeHandler";
 
@@ -27,7 +27,7 @@ export abstract class OnStateChangeHandler
 }
 
 export function makeOnStateChangeHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): OnStateChangeHandler {
   return new OnStateChangeHandlerImp(appObject);
 }
@@ -145,7 +145,7 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, OnStateChangeHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

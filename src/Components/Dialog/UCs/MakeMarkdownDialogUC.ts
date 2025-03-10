@@ -1,10 +1,10 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { generateUniqueID } from "@vived/core";
 import {
   Dialog,
   DialogMarkDownEditorDTO,
@@ -12,27 +12,27 @@ import {
   MarkDownEditorDialogEntity
 } from "../Entities";
 
-export abstract class MakeMarkdownDialogUC extends HostAppObjectUC {
+export abstract class MakeMarkdownDialogUC extends AppObjectUC {
   static type = "MakeMarkdownDialogUC";
 
   abstract make(dto: DialogMarkDownEditorDTO): void;
   abstract factory(data: DialogMarkDownEditorDTO): MarkDownEditorDialogEntity;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<MakeMarkdownDialogUC>(
       MakeMarkdownDialogUC.type,
       appObjects
     );
   }
 
-  static make(dto: DialogMarkDownEditorDTO, appObjects: HostAppObjectRepo) {
+  static make(dto: DialogMarkDownEditorDTO, appObjects: AppObjectRepo) {
     const uc = MakeMarkdownDialogUC.get(appObjects);
     uc?.make(dto);
   }
 }
 
 export function makeMakeMarkdownDialogUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): MakeMarkdownDialogUC {
   return new MakeMarkdownDialogUCImp(appObject);
 }
@@ -55,7 +55,7 @@ class MakeMarkdownDialogUCImp extends MakeMarkdownDialogUC {
     this.dialogRepo.submitDialog(dialog);
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MakeMarkdownDialogUC.type);
     this.appObjects.registerSingleton(this);
   }

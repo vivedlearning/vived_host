@@ -1,24 +1,32 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { AssetEntity } from '../../Assets';
-import { BlobRequestUC } from './BlobRequestUC';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { AssetEntity } from "../../Assets";
+import { BlobRequestUC } from "./BlobRequestUC";
 
-export abstract class FetchAssetFileFromAPIUC extends HostAppObjectUC {
-  static type = 'FetchAssetFileFromAPIUC';
+export abstract class FetchAssetFileFromAPIUC extends AppObjectUC {
+  static type = "FetchAssetFileFromAPIUC";
 
   abstract doFetch(asset: AssetEntity): Promise<File>;
 
-  static get(appObjects: HostAppObjectRepo): FetchAssetFileFromAPIUC | undefined {
+  static get(appObjects: AppObjectRepo): FetchAssetFileFromAPIUC | undefined {
     return getSingletonComponent(FetchAssetFileFromAPIUC.type, appObjects);
   }
 }
 
-export function makeFetchAssetFileFromAPIUC(appObject: HostAppObject): FetchAssetFileFromAPIUC {
+export function makeFetchAssetFileFromAPIUC(
+  appObject: AppObject
+): FetchAssetFileFromAPIUC {
   return new FetchAssetFileUCImp(appObject);
 }
 
 class FetchAssetFileUCImp extends FetchAssetFileFromAPIUC {
   private get requestBlob() {
-    return this.getCachedSingleton<BlobRequestUC>(BlobRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<BlobRequestUC>(BlobRequestUC.type)
+      ?.doRequest;
   }
 
   doFetch = (asset: AssetEntity): Promise<File> => {
@@ -51,9 +59,9 @@ class FetchAssetFileUCImp extends FetchAssetFileFromAPIUC {
           reject(e);
         });
     });
-  }
+  };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, FetchAssetFileFromAPIUC.type);
     this.appObjects.registerSingleton(this);
   }

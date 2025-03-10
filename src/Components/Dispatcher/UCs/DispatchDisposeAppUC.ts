@@ -1,13 +1,13 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
-export abstract class DispatchDisposeAppUC extends HostAppObjectUC {
+export abstract class DispatchDisposeAppUC extends AppObjectUC {
   static readonly type = "DispatchDisposeAppUC";
   readonly requestType = "DISPOSE_APP";
 
   abstract doDispatch(): void;
 
-  static get(appObject: HostAppObject): DispatchDisposeAppUC | undefined {
+  static get(appObject: AppObject): DispatchDisposeAppUC | undefined {
     const asset = appObject.getComponent<DispatchDisposeAppUC>(
       DispatchDisposeAppUC.type
     );
@@ -20,10 +20,13 @@ export abstract class DispatchDisposeAppUC extends HostAppObjectUC {
     return asset;
   }
 
-  static getByID(id: string, appObjects: HostAppObjectRepo): DispatchDisposeAppUC | undefined {
-    const appObject =  appObjects.get(id);
-    
-    if(!appObject) {
+  static getByID(
+    id: string,
+    appObjects: AppObjectRepo
+  ): DispatchDisposeAppUC | undefined {
+    const appObject = appObjects.get(id);
+
+    if (!appObject) {
       appObjects.submitWarning(
         "DispatchDisposeAppUC.getByID",
         "Unable to find App Object by id " + id
@@ -36,7 +39,7 @@ export abstract class DispatchDisposeAppUC extends HostAppObjectUC {
 }
 
 export function makeDispatchDisposeAppUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchDisposeAppUC {
   return new DispatchDisposeAppUCImp(appObject);
 }
@@ -53,7 +56,7 @@ class DispatchDisposeAppUCImp extends DispatchDisposeAppUC {
     );
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchDisposeAppUC.type);
 
     this.dispatcher = appObject.getComponent<HostDispatchEntity>(

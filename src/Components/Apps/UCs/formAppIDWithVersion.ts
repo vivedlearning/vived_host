@@ -1,4 +1,4 @@
-import { Version } from "../../../ValueObjects";
+import { Version } from "@vived/core";
 import { AppEntity } from "../Entities";
 
 export function formAppIDWithVersion(app: AppEntity, version: Version) {

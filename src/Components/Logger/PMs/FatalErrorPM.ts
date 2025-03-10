@@ -1,8 +1,4 @@
-import {
-  getSingletonComponent,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { getSingletonComponent, AppObjectPM, AppObjectRepo } from "@vived/core";
 
 export interface FatalErrorVM {
   show: boolean;
@@ -20,10 +16,10 @@ export const defaultFatalErrorVM: FatalErrorVM = {
   sender: ""
 };
 
-export abstract class FatalErrorPM extends HostAppObjectPM<FatalErrorVM> {
+export abstract class FatalErrorPM extends AppObjectPM<FatalErrorVM> {
   static type = "FatalErrorPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<FatalErrorPM>(FatalErrorPM.type, appObjects);
   }
 }

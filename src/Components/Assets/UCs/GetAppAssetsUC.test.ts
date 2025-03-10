@@ -1,5 +1,4 @@
-
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockGetAssetsForOwnerFromAPIUC } from "../../VivedAPI";
 import { makeAppAssets } from "../Entities/AppAssetsEntity";
 import { makeAssetEntity } from "../Entities/AssetEntity";
@@ -7,7 +6,7 @@ import { AssetDTO, makeAssetRepo } from "../Entities/AssetRepo";
 import { makeGetAppAssetUC } from "./GetAppAssetsUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const appAssets = makeAppAssets(appObjects.getOrCreate("AppAsset"));
   const assetRepo = makeAssetRepo(appObjects.getOrCreate("AssetRepo"));

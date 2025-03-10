@@ -1,4 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { makeDialogQueue } from "../Entities";
 import { makeDialogQueuePM } from "../PMs";
 import {
@@ -14,7 +14,7 @@ import { makeMarkdownEditorFactory } from "./markdownDialogEditorFactory";
 import { makeSelectModelFactory } from "./selectDialogModelFactory";
 import { makeSpinnerFactory } from "./spinnerDialogFactory";
 
-export function setupDialogForSandbox(appObjects: HostAppObjectRepo) {
+export function setupDialogForSandbox(appObjects: AppObjectRepo) {
   const ao = appObjects.getOrCreate("Dialog");
 
   // Entities

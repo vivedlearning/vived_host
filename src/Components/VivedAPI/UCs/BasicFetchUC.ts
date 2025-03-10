@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 
 export interface BasicFetchOptions {
   headers?: any;
@@ -7,15 +12,12 @@ export interface BasicFetchOptions {
   body?: any;
 }
 
-export abstract class BasicFetchUC extends HostAppObjectUC {
+export abstract class BasicFetchUC extends AppObjectUC {
   static type = "BasicFetchUC";
 
-  abstract doRequest(
-    url: URL,
-    options?: BasicFetchOptions
-  ): Promise<Response>;
+  abstract doRequest(url: URL, options?: BasicFetchOptions): Promise<Response>;
 
-  static get(appObjects: HostAppObjectRepo): BasicFetchUC | undefined {
+  static get(appObjects: AppObjectRepo): BasicFetchUC | undefined {
     return getSingletonComponent(BasicFetchUC.type, appObjects);
   }
 }

@@ -1,21 +1,21 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetRepo } from "../Entities/AssetRepo";
 
-export abstract class AppAssetListPM extends HostAppObjectPM<string[]> {
+export abstract class AppAssetListPM extends AppObjectPM<string[]> {
   static type = "AppAssetListPM";
 
-  static get(appObjects: HostAppObjectRepo): AppAssetListPM | undefined {
+  static get(appObjects: AppObjectRepo): AppAssetListPM | undefined {
     return getSingletonComponent(AppAssetListPM.type, appObjects);
   }
 }
 
-export function makeAppAssetListPM(appObject: HostAppObject): AppAssetListPM {
+export function makeAppAssetListPM(appObject: AppObject): AppAssetListPM {
   return new AppAssetListPMImp(appObject);
 }
 
@@ -61,7 +61,7 @@ class AppAssetListPMImp extends AppAssetListPM {
     this.doUpdateView(nonArchivedAssets);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AppAssetListPM.type);
 
     this.appAssets = appObject.getComponent<AppAssetsEntity>(

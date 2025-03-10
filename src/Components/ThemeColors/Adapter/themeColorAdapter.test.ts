@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { themeColorAdapter } from "./themeColorAdapter";
 import { makeMockThemeColorPM } from "../Mocks/MockThemeColorPM";
 import { defaultThemeColorsVM } from "../PM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeMockThemeColorPM(appObjects);
   return { appObjects, mockPM };
 }

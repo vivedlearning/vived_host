@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../../AppSandbox/Entities";
 import { makeHostStateMachine } from "../Entities";
 import {
@@ -7,7 +7,7 @@ import {
 } from "./setSandboxStatesFromStringData";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const stateMachine = makeHostStateMachine(
     appObjects.getOrCreate("State Machine")
   );

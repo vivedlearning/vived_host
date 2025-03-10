@@ -1,29 +1,38 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
-import { SignedAuthTokenUC } from './SignedAuthTokenUC';
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
+import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
-export abstract class DeleteAssetOnAPIUC extends HostAppObjectUC {
-  static type = 'DeleteAssetOnAPIUC';
+export abstract class DeleteAssetOnAPIUC extends AppObjectUC {
+  static type = "DeleteAssetOnAPIUC";
 
   abstract doDelete(assetID: string): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo): DeleteAssetOnAPIUC | undefined {
+  static get(appObjects: AppObjectRepo): DeleteAssetOnAPIUC | undefined {
     return getSingletonComponent(DeleteAssetOnAPIUC.type, appObjects);
   }
 }
 
-export function makeDeleteAssetOnAPIUC(appObject: HostAppObject): DeleteAssetOnAPIUC {
+export function makeDeleteAssetOnAPIUC(
+  appObject: AppObject
+): DeleteAssetOnAPIUC {
   return new DeleteAssetUCImp(appObject);
 }
 
 class DeleteAssetUCImp extends DeleteAssetOnAPIUC {
   private get jsonRequester() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get getAuthToken() {
-    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)?.getUserAuthToken;
+    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
+      ?.getUserAuthToken;
   }
 
   private get vivedAPI() {
@@ -45,10 +54,10 @@ class DeleteAssetUCImp extends DeleteAssetOnAPIUC {
           const postURL = vivedAPI.getEndpointURL(`assets/${assetID}`);
 
           const options: RequestJSONOptions = {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-              Authorization: 'Bearer ' + token,
-            },
+              Authorization: "Bearer " + token
+            }
           };
 
           return jsonRequester(postURL, options);
@@ -63,7 +72,7 @@ class DeleteAssetUCImp extends DeleteAssetOnAPIUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DeleteAssetOnAPIUC.type);
     this.appObjects.registerSingleton(this);
   }

@@ -1,10 +1,10 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { SpinnerDialogPM } from "../PMs";
 
 export class MockSpinnerDialogPM extends SpinnerDialogPM {
   vmsAreEqual = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SpinnerDialogPM.type);
   }
 }

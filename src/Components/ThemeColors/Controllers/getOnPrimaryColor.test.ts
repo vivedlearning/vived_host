@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { Color } from "../../../ValueObjects";
+import { makeAppObjectRepo } from "@vived/core";
+import { Color } from "@vived/core";
 import { makeHostThemeEntity, ThemeColorType } from "../Entities";
 import { getOnPrimaryColor } from "./getOnPrimaryColor";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const theme = makeHostThemeEntity(appObjects.getOrCreate("theme"));
   const mockColor = Color.Hex("123456");
   const getColorMock = jest.fn().mockReturnValue(mockColor);
@@ -30,7 +30,7 @@ describe("Get On Primary Color", () => {
   });
 
   it("Warns if it cannot find the Theme Colors Entity", () => {
-    const appObjects = makeHostAppObjectRepo();
+    const appObjects = makeAppObjectRepo();
     appObjects.submitError = jest.fn();
     appObjects.submitWarning = jest.fn();
 

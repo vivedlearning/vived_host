@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types/SingletonPmAdapter";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import {
   EditingStatePM,
   EditingStateVM,
@@ -9,7 +8,7 @@ import {
 export const editingStateAdapter: SingletonPmAdapter<EditingStateVM> = {
   defaultVM: defaultIsEditingStateVM,
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: EditingStateVM) => void
   ) => {
     const pm = EditingStatePM.get(appObjects);
@@ -23,7 +22,7 @@ export const editingStateAdapter: SingletonPmAdapter<EditingStateVM> = {
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: EditingStateVM) => void
   ) => {
     const pm = EditingStatePM.get(appObjects);

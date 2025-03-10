@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeStopAppUC, StopAppUC } from "./StopAppUC";
 import { MockDispatchStopAppUC } from "../../Dispatcher";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const ao = appObjects.getOrCreate("App1");
   const uc = makeStopAppUC(ao);

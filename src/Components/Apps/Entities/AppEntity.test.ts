@@ -1,10 +1,8 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { Version, VersionStage } from "../../../ValueObjects";
-import { AppEntity, makeAppEntity, AppState } from "./AppEntity";
-
+import { makeAppObjectRepo, Version, VersionStage } from "@vived/core";
+import { AppEntity, AppState, makeAppEntity } from "./AppEntity";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const app = makeAppEntity(appObjects.getOrCreate("appID"));
   const observer = jest.fn();
   app.addChangeObserver(observer);

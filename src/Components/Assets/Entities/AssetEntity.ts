@@ -1,10 +1,11 @@
 import {
+  AppObject,
+  AppObjectEntity,
   MemoizedBoolean,
   MemoizedString
-} from "../../../Entities";
-import { HostAppObject, HostAppObjectEntity } from "../../../HostAppObject";
+} from "@vived/core";
 
-export abstract class AssetEntity extends HostAppObjectEntity {
+export abstract class AssetEntity extends AppObjectEntity {
   static type = "AssetEntity";
 
   abstract readonly id: string;
@@ -43,7 +44,7 @@ export abstract class AssetEntity extends HostAppObjectEntity {
   abstract get fetchError(): Error | undefined;
   abstract set fetchError(fetchError: Error | undefined);
 
-  static get(appObject: HostAppObject): AssetEntity | undefined {
+  static get(appObject: AppObject): AssetEntity | undefined {
     const asset = appObject.getComponent<AssetEntity>(AssetEntity.type);
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
@@ -55,7 +56,7 @@ export abstract class AssetEntity extends HostAppObjectEntity {
   }
 }
 
-export function makeAssetEntity(appObject: HostAppObject): AssetEntity {
+export function makeAssetEntity(appObject: AppObject): AssetEntity {
   return new AssetImp(appObject);
 }
 
@@ -241,7 +242,7 @@ class AssetImp extends AssetEntity {
     super.dispose();
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AssetEntity.type);
   }
 }

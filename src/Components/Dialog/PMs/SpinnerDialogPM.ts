@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { SpinnerDialogEntity } from "../Entities";
 
 export interface SpinnerDialogVM {
@@ -10,12 +6,12 @@ export interface SpinnerDialogVM {
   title: string;
 }
 
-export abstract class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
+export abstract class SpinnerDialogPM extends AppObjectPM<SpinnerDialogVM> {
   static type = "SpinnerDialogPM";
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): SpinnerDialogPM | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -39,7 +35,7 @@ export abstract class SpinnerDialogPM extends HostAppObjectPM<SpinnerDialogVM> {
   }
 }
 
-export function makeSpinnerDialogPM(appObject: HostAppObject): SpinnerDialogPM {
+export function makeSpinnerDialogPM(appObject: AppObject): SpinnerDialogPM {
   return new SpinnerDialogPMImp(appObject);
 }
 
@@ -62,7 +58,7 @@ class SpinnerDialogPMImp extends SpinnerDialogPM {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SpinnerDialogPM.type);
 
     this.dialog = appObject.getComponent<SpinnerDialogEntity>(

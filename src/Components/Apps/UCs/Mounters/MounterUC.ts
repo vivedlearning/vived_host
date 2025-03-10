@@ -1,17 +1,17 @@
 import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../../HostAppObject";
-import { VIVEDApp_3 } from "../../../../Types/PluginBoundary";
-import { Version } from "../../../../ValueObjects/Version";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC,
+  Version,
+  VIVEDApp_3
+} from "@vived/core";
 import { HostDispatchEntity } from "../../../Dispatcher/Entities/HostDispatchEntity";
 import { HostHandlerEntity } from "../../../Handler/Entities/HostHandler";
 import { GetAppFromAPIUC } from "../../../VivedAPI/UCs/GetAppFromAPIUC";
 import { AppEntity, AppState } from "../../Entities/AppEntity";
 import { formAppIDWithVersion } from "../formAppIDWithVersion";
 
-export abstract class MounterUC extends HostAppObjectUC {
+export abstract class MounterUC extends AppObjectUC {
   static type = "MounterUC";
 
   abstract mount(majorVersion: number, minorVersion: number): Promise<void>;
@@ -23,17 +23,17 @@ export abstract class MounterUC extends HostAppObjectUC {
   ): Promise<void>; // Exposed for testing purposes
   abstract getAppInterface(version: Version): VIVEDApp_3 | undefined; // Exposed for test purposes
 
-  static get(appObject: HostAppObject) {
+  static get(appObject: AppObject) {
     return appObject.getComponent<MounterUC>(MounterUC.type);
   }
 
-  static getById(id: string, appObjects: HostAppObjectRepo) {
+  static getById(id: string, appObjects: AppObjectRepo) {
     const ao = appObjects.get(id);
     return ao?.getComponent<MounterUC>(MounterUC.type);
   }
 }
 
-export function makeMounterUC(appObject: HostAppObject): MounterUC {
+export function makeMounterUC(appObject: AppObject): MounterUC {
   return new MounterUCImp(appObject);
 }
 
@@ -351,7 +351,7 @@ class MounterUCImp extends MounterUC {
     });
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, MounterUC.type);
   }
 }

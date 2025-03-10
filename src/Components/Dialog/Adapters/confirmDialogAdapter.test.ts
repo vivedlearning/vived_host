@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockConfirmDialogPM } from "../Mocks";
 import { defaultConfirmDialogVM } from "../PMs";
 import { confirmDialogAdapter } from "./confirmDialogAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("id");
 
   const mockPM = new MockConfirmDialogPM(ao);

@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { APIStage, VivedAPIEntity } from "../Entities";
 import { setApiStage } from "./setApiStage";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const apiEntity = new VivedAPIEntity(appObjects.getOrCreate("Sandbox"));
   return {
     appObjects,
@@ -23,7 +23,7 @@ describe("Set API Stage", () => {
   });
 
   it("Warns if it cannot find the Entity", () => {
-    const appObjects = makeHostAppObjectRepo();
+    const appObjects = makeAppObjectRepo();
 
     appObjects.submitWarning = jest.fn();
 

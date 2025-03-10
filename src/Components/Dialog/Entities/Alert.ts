@@ -1,6 +1,5 @@
-import { MemoizedBoolean } from '../../../Entities';
-import { HostAppObject, HostAppObjectRepo } from '../../../HostAppObject';
-import { Dialog } from './DialogQueue';
+import { AppObject, AppObjectRepo, MemoizedBoolean } from "@vived/core";
+import { Dialog } from "./DialogQueue";
 
 export interface DialogAlertDTO {
   message: string;
@@ -10,21 +9,32 @@ export interface DialogAlertDTO {
   preventOutsideDismiss?: boolean;
 }
 
-export const alertDialogType = 'ALERT';
+export const alertDialogType = "ALERT";
 
 export class AlertDialogEntity extends Dialog {
-  static type = 'AlertDialogEntity';
+  static type = "AlertDialogEntity";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): AlertDialogEntity | undefined {
+  static get(
+    assetID: string,
+    appObjects: AppObjectRepo
+  ): AlertDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('AlertDialogEntity.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "AlertDialogEntity.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
-    const uc = appObject.getComponent<AlertDialogEntity>(AlertDialogEntity.type);
+    const uc = appObject.getComponent<AlertDialogEntity>(
+      AlertDialogEntity.type
+    );
     if (!uc) {
-      appObjects.submitWarning('AlertDialogEntity.get', 'App Object does not have AlertDialogEntity');
+      appObjects.submitWarning(
+        "AlertDialogEntity.get",
+        "App Object does not have AlertDialogEntity"
+      );
       return undefined;
     }
 
@@ -53,7 +63,7 @@ export class AlertDialogEntity extends Dialog {
     this._isOpen.val = val;
   }
 
-  constructor(data: DialogAlertDTO, appObject: HostAppObject) {
+  constructor(data: DialogAlertDTO, appObject: AppObject) {
     super(appObject, AlertDialogEntity.type);
     this.buttonLabel = data.buttonLabel;
     this.message = data.message;

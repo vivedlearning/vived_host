@@ -1,4 +1,4 @@
-import { HostAppObjectPM, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectPM, AppObjectRepo } from "@vived/core";
 
 export interface ActiveAppVM {
   id: string;
@@ -10,10 +10,10 @@ export const defaultActiveAppVM: ActiveAppVM = {
   stylesheets: []
 };
 
-export abstract class ActiveAppPM extends HostAppObjectPM<ActiveAppVM> {
+export abstract class ActiveAppPM extends AppObjectPM<ActiveAppVM> {
   static type = "ActiveAppPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return appObjects.getSingleton<ActiveAppPM>(ActiveAppPM.type);
   }
 }

@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { defaultScheme, makeHostThemeEntity } from "../../ThemeColors";
 import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 import {
@@ -8,7 +8,7 @@ import {
 } from "./DispatchThemeUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 

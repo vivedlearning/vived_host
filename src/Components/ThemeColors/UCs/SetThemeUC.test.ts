@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { defaultScheme, makeHostThemeEntity } from "../Entities";
 import { makeSetThemeUC, SetThemeUC } from "./SetThemeUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const theme = makeHostThemeEntity(appObjects.getOrCreate("theme"));
@@ -25,14 +25,14 @@ describe("Set Theme UC", () => {
     expect(registerSingletonSpy).toBeCalledWith(uc);
   });
 
-	it("Sets the theme by name", ()=>{
-		const {uc, theme} = makeTestRig();
+  it("Sets the theme by name", () => {
+    const { uc, theme } = makeTestRig();
 
-		theme.warn = jest.fn(); //avoids the warn because we have not setup the scheme
-		const spy = jest.spyOn(theme, "activeSchemeName", 'set');
+    theme.warn = jest.fn(); //avoids the warn because we have not setup the scheme
+    const spy = jest.spyOn(theme, "activeSchemeName", "set");
 
-		uc.setThemeByName("aTheme");
+    uc.setThemeByName("aTheme");
 
-		expect(spy).toBeCalledWith("aTheme");
-	})
+    expect(spy).toBeCalledWith("aTheme");
+  });
 });

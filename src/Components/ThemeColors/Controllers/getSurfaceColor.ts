@@ -1,8 +1,8 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { Color } from "../../../ValueObjects";
+import { AppObjectRepo } from "@vived/core";
+import { Color } from "@vived/core";
 import { HostThemeEntity, ThemeColorType } from "../Entities";
 
-export function getSurfaceColor(appObjects: HostAppObjectRepo): Color {
+export function getSurfaceColor(appObjects: AppObjectRepo): Color {
   const theme = HostThemeEntity.get(appObjects);
   if (theme) {
     return theme.getColorForType(ThemeColorType.surface);

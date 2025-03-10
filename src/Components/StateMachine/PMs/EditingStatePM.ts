@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { HostEditingStateEntity } from "../Entities";
 
 export interface EditingStateVM {
@@ -18,15 +18,15 @@ export const defaultIsEditingStateVM: EditingStateVM = {
   isNewState: false
 };
 
-export abstract class EditingStatePM extends HostAppObjectPM<EditingStateVM> {
+export abstract class EditingStatePM extends AppObjectPM<EditingStateVM> {
   static type = "EditingStatePM";
 
-  static get(appObjects: HostAppObjectRepo): EditingStatePM | undefined {
+  static get(appObjects: AppObjectRepo): EditingStatePM | undefined {
     return getSingletonComponent(EditingStatePM.type, appObjects);
   }
 }
 
-export function makeEditingStatePM(appObject: HostAppObject) {
+export function makeEditingStatePM(appObject: AppObject) {
   return new EditingStatePMImp(appObject);
 }
 
@@ -59,7 +59,7 @@ class EditingStatePMImp extends EditingStatePM {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, EditingStatePM.type);
     this.editingEntity?.addChangeObserver(this.onEntityChange);
     this.onEntityChange();

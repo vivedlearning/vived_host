@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockDownloadAssetFileUC } from "../Mocks/MockDownloadAssetFileUC";
 import { downloadAssetFile } from "./downloadAssetFile";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const mockDownload = makeMockDownloadAssetFileUC(appObjects);
 

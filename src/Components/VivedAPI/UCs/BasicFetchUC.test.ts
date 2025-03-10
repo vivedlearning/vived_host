@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { BasicFetchUC } from "./BasicFetchUC";
 import { makeMockBasicFetchUC } from "../Mocks/MockBasicFetchUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const uc = makeMockBasicFetchUC(appObjects);

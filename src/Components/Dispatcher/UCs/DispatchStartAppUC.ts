@@ -1,17 +1,13 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { HostDispatchEntity } from "../Entities";
 
-export abstract class DispatchStartAppUC extends HostAppObjectUC {
+export abstract class DispatchStartAppUC extends AppObjectUC {
   static readonly type = "DispatchStartAppUC";
   readonly requestType = "START_APP";
 
   abstract doDispatch(container: HTMLElement): void;
 
-  static get(appObject: HostAppObject): DispatchStartAppUC | undefined {
+  static get(appObject: AppObject): DispatchStartAppUC | undefined {
     const asset = appObject.getComponent<DispatchStartAppUC>(
       DispatchStartAppUC.type
     );
@@ -26,7 +22,7 @@ export abstract class DispatchStartAppUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DispatchStartAppUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -43,7 +39,7 @@ export abstract class DispatchStartAppUC extends HostAppObjectUC {
 }
 
 export function makeDispatchStartAppUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DispatchStartAppUC {
   return new DispatchStartAppUCImp(appObject);
 }
@@ -66,7 +62,7 @@ class DispatchStartAppUCImp extends DispatchStartAppUC {
     );
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DispatchStartAppUC.type);
 
     this.dispatcher = appObject.getComponent<HostDispatchEntity>(

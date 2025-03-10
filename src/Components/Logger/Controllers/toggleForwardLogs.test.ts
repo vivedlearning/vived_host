@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeLoggerEntity } from "../Entities";
 import { makeMockDownloadLogUC } from "../Mocks/MockDownloadLogUC";
 import { toggleForwardLogs } from "./toggleForwardLogs";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const entity = makeLoggerEntity(appObjects.getOrCreate("Logger"));
 

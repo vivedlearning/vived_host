@@ -1,10 +1,14 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { AlertDialogEntity } from "../Entities";
 import { makeDialogQueue } from "../Entities/DialogQueue";
-import { DialogQueuePM, DialogQueueVM, makeDialogQueuePM } from "./DialogQueuePM";
+import {
+  DialogQueuePM,
+  DialogQueueVM,
+  makeDialogQueuePM
+} from "./DialogQueuePM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const queue = makeDialogQueue(ao);
 

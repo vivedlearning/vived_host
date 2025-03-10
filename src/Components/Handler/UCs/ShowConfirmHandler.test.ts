@@ -1,5 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { ConfirmDialogEntity, makeDialogQueue, makeMockMakeConfirmDialogUC } from "../../Dialog";
+import { makeAppObjectRepo } from "@vived/core";
+import {
+  ConfirmDialogEntity,
+  makeDialogQueue,
+  makeMockMakeConfirmDialogUC
+} from "../../Dialog";
 import { makeHostHandlerEntity } from "../Entities";
 import {
   makeShowConfirmHandler,
@@ -7,7 +11,7 @@ import {
 } from "./ShowConfirmHandler";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const handler = makeHostHandlerEntity(ao);
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");

@@ -1,4 +1,4 @@
-import { HostAppObject } from "../../HostAppObject";
+import { AppObject } from "@vived/core";
 import {
   makeDispatchDisposeAppUC,
   makeDispatchEnableFeatureUC,
@@ -12,7 +12,7 @@ import {
   makeDispatchThemeUC
 } from "./UCs";
 
-export function setupStandardHostDispatchers(appObject: HostAppObject) {
+export function setupStandardHostDispatchers(appObject: AppObject) {
   makeDispatchDisposeAppUC(appObject);
   makeDispatchEnableFeatureUC(appObject);
   makeDispatchIsAuthoringUC(appObject);

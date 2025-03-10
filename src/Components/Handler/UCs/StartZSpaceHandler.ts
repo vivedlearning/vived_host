@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { StartZSpaceUC } from "../../ZSpaceHost/UCs/StartZSpace/StartZSpaceUC";
 import {
   HostHandlerEntity,
@@ -7,7 +7,7 @@ import {
 } from "../Entities";
 
 export abstract class StartZSpaceHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "StartZSpaceHandler";
 
@@ -18,7 +18,7 @@ export abstract class StartZSpaceHandler
 }
 
 export function makeStartZSpaceHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): StartZSpaceHandler {
   return new StartZSpaceHandlerImp(appObject);
 }
@@ -42,7 +42,7 @@ class StartZSpaceHandlerImp extends StartZSpaceHandler {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StartZSpaceHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

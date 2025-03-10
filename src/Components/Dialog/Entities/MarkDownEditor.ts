@@ -1,27 +1,37 @@
-import { MemoizedBoolean } from '../../../Entities';
-import { HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
-import { Dialog } from './DialogQueue';
+import { AppObject, AppObjectRepo, MemoizedBoolean } from "@vived/core";
+import { Dialog } from "./DialogQueue";
 
 export interface DialogMarkDownEditorDTO {
   initialText: string;
   onConfirm: (text: string) => void;
 }
 
-export const markDownEditorDialogType = 'MARKDOWN_EDITOR';
+export const markDownEditorDialogType = "MARKDOWN_EDITOR";
 
 export class MarkDownEditorDialogEntity extends Dialog {
-  static type = 'MarkDownEditorDialogEntity';
+  static type = "MarkDownEditorDialogEntity";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): MarkDownEditorDialogEntity | undefined {
+  static get(
+    assetID: string,
+    appObjects: AppObjectRepo
+  ): MarkDownEditorDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('MarkDownEditorDialogEntity.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "MarkDownEditorDialogEntity.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
-    const uc = appObject.getComponent<MarkDownEditorDialogEntity>(MarkDownEditorDialogEntity.type);
+    const uc = appObject.getComponent<MarkDownEditorDialogEntity>(
+      MarkDownEditorDialogEntity.type
+    );
     if (!uc) {
-      appObjects.submitWarning('MarkDownEditorDialogEntity.get', 'App Object does not have DialogAlertEntity');
+      appObjects.submitWarning(
+        "MarkDownEditorDialogEntity.get",
+        "App Object does not have DialogAlertEntity"
+      );
       return undefined;
     }
 
@@ -50,7 +60,7 @@ export class MarkDownEditorDialogEntity extends Dialog {
     this._isOpen.val = val;
   }
 
-  constructor(data: DialogMarkDownEditorDTO, appObject: HostAppObject) {
+  constructor(data: DialogMarkDownEditorDTO, appObject: AppObject) {
     super(appObject, MarkDownEditorDialogEntity.type);
     this.initialText = data.initialText;
     this.postConfirm = data.onConfirm;

@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import {
   DialogMarkDownEditorDTO,
   DialogQueue,
@@ -23,7 +23,7 @@ export type ShowMarkDownEditorAction = (
 ) => void;
 
 export abstract class ShowMarkDownEditorHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "ShowMarkDownEditorHandler";
 
@@ -34,7 +34,7 @@ export abstract class ShowMarkDownEditorHandler
 }
 
 export function makeShowMarkDownEditorHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ShowMarkDownEditorHandler {
   return new ShowMarkDownEditorHandlerImp(appObject);
 }
@@ -79,7 +79,7 @@ export class ShowMarkDownEditorHandlerImp extends ShowMarkDownEditorHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowMarkDownEditorHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

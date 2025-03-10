@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockSaveAuthoringUC } from "../Mocks/MockSaveAuthoringUC";
 import { saveAuthoring } from "./saveAuthoring";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const uc = makeMockSaveAuthoringUC(appObjects);
 
   return { uc, appObjects };

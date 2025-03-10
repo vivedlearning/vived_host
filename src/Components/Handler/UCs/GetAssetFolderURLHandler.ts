@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AppEntity } from "../../Apps";
 import {
   HostHandlerEntity,
@@ -12,7 +12,7 @@ export type GetAssetFolderURLAction = (
 ) => void;
 
 export abstract class GetAssetFolderURLHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "GetAssetFolderURLHandler";
 
@@ -23,7 +23,7 @@ export abstract class GetAssetFolderURLHandler
 }
 
 export function makeGetAssetFolderURLHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): GetAssetFolderURLHandler {
   return new GetAssetFolderURLHandlerImp(appObject);
 }
@@ -67,7 +67,7 @@ class GetAssetFolderURLHandlerImp extends GetAssetFolderURLHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAssetFolderURLHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

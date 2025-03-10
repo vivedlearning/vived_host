@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import {
   ColorScheme,
   defaultScheme,
@@ -20,15 +20,15 @@ export const defaultThemeColorsVM: ThemeColorsVM = {
   scheme: defaultScheme
 };
 
-export abstract class ThemeColorsPM extends HostAppObjectPM<ThemeColorsVM> {
+export abstract class ThemeColorsPM extends AppObjectPM<ThemeColorsVM> {
   static readonly type = "ThemeColorsPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ThemeColorsPM>(ThemeColorsPM.type, appObjects);
   }
 }
 
-export function makeThemeColorsPM(appObject: HostAppObject): ThemeColorsPM {
+export function makeThemeColorsPM(appObject: AppObject): ThemeColorsPM {
   return new ThemeColorsPMImp(appObject);
 }
 
@@ -47,7 +47,7 @@ class ThemeColorsPMImp extends ThemeColorsPM {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ThemeColorsPM.type);
 
     this.appObjects.registerSingleton(this);

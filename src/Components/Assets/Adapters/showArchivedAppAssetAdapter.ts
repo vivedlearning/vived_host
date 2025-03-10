@@ -1,15 +1,9 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
-import {ShowArchivedAppAssetPM} from "../PMs/ShowArchivedAppAssetPM";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
+import { ShowArchivedAppAssetPM } from "../PMs/ShowArchivedAppAssetPM";
 
-export const showArchivedAppAssetAdapter: SingletonPmAdapter<
-  boolean
-> = {
+export const showArchivedAppAssetAdapter: SingletonPmAdapter<boolean> = {
   defaultVM: false,
-  subscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: boolean) => void
-  ) => {
+  subscribe: (appObjects: AppObjectRepo, setVM: (vm: boolean) => void) => {
     const pm = ShowArchivedAppAssetPM.get(appObjects);
     if (!pm) {
       appObjects.submitError(
@@ -20,10 +14,7 @@ export const showArchivedAppAssetAdapter: SingletonPmAdapter<
     }
     pm.addView(setVM);
   },
-  unsubscribe: (
-    appObjects: HostAppObjectRepo,
-    setVM: (vm: boolean) => void
-  ) => {
+  unsubscribe: (appObjects: AppObjectRepo, setVM: (vm: boolean) => void) => {
     const pm = ShowArchivedAppAssetPM.get(appObjects);
     if (!pm) {
       appObjects.submitError(

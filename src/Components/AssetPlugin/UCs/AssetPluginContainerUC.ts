@@ -1,14 +1,9 @@
-import {
-  getSingletonComponent,
+import { getSingletonComponent, AppObjectRepo, AppObjectUC } from "@vived/core";
 
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
-
-export abstract class AssetPluginContainerUC extends HostAppObjectUC {
+export abstract class AssetPluginContainerUC extends AppObjectUC {
   static type = "AssetPluginContainerUC";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<AssetPluginContainerUC>(
       AssetPluginContainerUC.type,
       appObjects

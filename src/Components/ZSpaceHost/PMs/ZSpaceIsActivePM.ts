@@ -1,15 +1,15 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { ZSpaceHostEntity } from "../Entities/ZSpaceHost";
 
-export abstract class ZSpaceIsActivePM extends HostAppObjectPM<boolean> {
+export abstract class ZSpaceIsActivePM extends AppObjectPM<boolean> {
   static type = "ZSpaceIsActivePM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ZSpaceIsActivePM>(
       ZSpaceIsActivePM.type,
       appObjects
@@ -17,9 +17,7 @@ export abstract class ZSpaceIsActivePM extends HostAppObjectPM<boolean> {
   }
 }
 
-export function makeZSpaceIsActivePM(
-  appObject: HostAppObject
-): ZSpaceIsActivePM {
+export function makeZSpaceIsActivePM(appObject: AppObject): ZSpaceIsActivePM {
   return new ZSpaceIsActivePMImp(appObject);
 }
 
@@ -36,7 +34,7 @@ class ZSpaceIsActivePMImp extends ZSpaceIsActivePM {
     this.doUpdateView(this.zSpace.isActive);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ZSpaceIsActivePM.type);
 
     this.zSpace = appObject.getComponent<ZSpaceHostEntity>(

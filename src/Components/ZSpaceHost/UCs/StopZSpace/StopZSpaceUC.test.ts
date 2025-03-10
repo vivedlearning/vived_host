@@ -1,12 +1,10 @@
-
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeMockStopZSpaceUC } from "../../Mocks";
 import { StopZSpaceUC } from "./StopZSpaceUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockUC = makeMockStopZSpaceUC(appObjects);
-
 
   return {
     mockUC,
@@ -21,4 +19,3 @@ describe("Stop ZSpace Use Case", () => {
     expect(StopZSpaceUC.get(appObjects)).toEqual(mockUC);
   });
 });
-

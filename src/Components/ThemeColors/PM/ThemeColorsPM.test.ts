@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { defaultScheme, makeHostThemeEntity } from "../Entities";
 import {
   makeThemeColorsPM,
@@ -7,7 +7,7 @@ import {
 } from "./ThemeColorsPM";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
   const themeColors = makeHostThemeEntity(appObjects.getOrCreate("Theme"));
 

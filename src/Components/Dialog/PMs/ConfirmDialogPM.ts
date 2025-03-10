@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { ConfirmDialogEntity } from "../Entities";
 
 export interface ConfirmDialogVM {
@@ -14,12 +10,12 @@ export interface ConfirmDialogVM {
   confirm: () => void;
 }
 
-export abstract class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
+export abstract class ConfirmDialogPM extends AppObjectPM<ConfirmDialogVM> {
   static type = "ConfirmDialogPM";
 
   static get(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): ConfirmDialogPM | undefined {
     const appObject = appObjects.get(id);
     if (!appObject) {
@@ -43,7 +39,7 @@ export abstract class ConfirmDialogPM extends HostAppObjectPM<ConfirmDialogVM> {
   }
 }
 
-export function makeConfirmDialogPM(appObject: HostAppObject): ConfirmDialogPM {
+export function makeConfirmDialogPM(appObject: AppObject): ConfirmDialogPM {
   return new ConfirmDialogPMImp(appObject);
 }
 
@@ -72,7 +68,7 @@ class ConfirmDialogPMImp extends ConfirmDialogPM {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ConfirmDialogPM.type);
 
     this.dialog = appObject.getComponent<ConfirmDialogEntity>(

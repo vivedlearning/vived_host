@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { PmAdapter } from "../../../Types/PmAdapter";
+import { AppObjectRepo, PmAdapter } from "@vived/core";
 import {
   ConfirmDialogVM,
   ConfirmDialogPM,
@@ -10,7 +9,7 @@ export const confirmDialogAdapter: PmAdapter<ConfirmDialogVM> = {
   defaultVM: defaultConfirmDialogVM,
   subscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: ConfirmDialogVM) => void
   ) => {
     const pm = ConfirmDialogPM.get(id, appObjects);
@@ -22,7 +21,7 @@ export const confirmDialogAdapter: PmAdapter<ConfirmDialogVM> = {
   },
   unsubscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: ConfirmDialogVM) => void
   ) => {
     const pm = ConfirmDialogPM.get(id, appObjects);

@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AppEntity } from "../../Apps";
 import {
   ActionNotImplemented,
@@ -17,7 +17,7 @@ export type SubmitLogAction = (
 ) => void;
 
 export abstract class SubmitLogHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "SubmitLogHandler";
 
@@ -27,9 +27,7 @@ export abstract class SubmitLogHandler
   abstract handleRequest: (version: number, payload?: unknown) => void;
 }
 
-export function makeSubmitLogHandler(
-  appObject: HostAppObject
-): SubmitLogHandler {
+export function makeSubmitLogHandler(appObject: AppObject): SubmitLogHandler {
   return new SubmitLogHandlerImp(appObject);
 }
 
@@ -92,7 +90,7 @@ class SubmitLogHandlerImp extends SubmitLogHandler {
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, SubmitLogHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

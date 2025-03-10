@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockAlertDialogPM } from "../Mocks";
 import { defaultAlertDialogVM } from "../PMs";
 import { alertDialogAdapter } from "./alertDialogAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("id");
 
   const mockPM = new MockAlertDialogPM(ao);

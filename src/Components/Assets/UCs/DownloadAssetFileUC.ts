@@ -1,18 +1,13 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import {
   DialogAlertDTO,
-  DialogQueue,
   MakeAlertDialogUC,
   MakeSpinnerDialogUC
 } from "../../Dialog";
 import { AssetEntity } from "../Entities/AssetEntity";
 import { GetAssetFileUC } from "./GetAssetFileUC";
 
-export abstract class DownloadAssetFileUC extends HostAppObjectUC {
+export abstract class DownloadAssetFileUC extends AppObjectUC {
   static type = "DownloadAssetFileUC";
 
   abstract download(): Promise<void>;
@@ -20,7 +15,7 @@ export abstract class DownloadAssetFileUC extends HostAppObjectUC {
 
   static get(
     assetID: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): DownloadAssetFileUC | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
@@ -47,7 +42,7 @@ export abstract class DownloadAssetFileUC extends HostAppObjectUC {
 }
 
 export function makeDownloadAssetFileUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): DownloadAssetFileUC {
   return new DownloadAssetFileUCImp(appObject);
 }
@@ -124,7 +119,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
     a.click();
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DownloadAssetFileUC.type);
 
     this.asset = appObject.getComponent<AssetEntity>(AssetEntity.type);

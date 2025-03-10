@@ -1,11 +1,7 @@
-import {
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
-import { Handler, Request } from "../../../Types";
+import { AppObject, AppObjectEntity, AppObjectRepo } from "@vived/core";
+import { Handler, Request } from "@vived/core";
 
-export abstract class HostDispatchEntity extends HostAppObjectEntity {
+export abstract class HostDispatchEntity extends AppObjectEntity {
   static readonly type = "HostDispatchEntity";
 
   abstract appHandlerVersion: number;
@@ -19,7 +15,7 @@ export abstract class HostDispatchEntity extends HostAppObjectEntity {
     payload?: object | undefined
   ) => void;
 
-  static get(appObject: HostAppObject): HostDispatchEntity | undefined {
+  static get(appObject: AppObject): HostDispatchEntity | undefined {
     const component = appObject.getComponent<HostDispatchEntity>(
       HostDispatchEntity.type
     );
@@ -34,7 +30,7 @@ export abstract class HostDispatchEntity extends HostAppObjectEntity {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): HostDispatchEntity | undefined {
     const appObject = appObjects.get(id);
     if (!appObject) {
@@ -49,13 +45,12 @@ export abstract class HostDispatchEntity extends HostAppObjectEntity {
 }
 
 export function makeHostDispatchEntity(
-  appObject: HostAppObject
+  appObject: AppObject
 ): HostDispatchEntity {
   return new HostDispatchEntityImp(appObject);
 }
 
 class HostDispatchEntityImp extends HostDispatchEntity {
-  
   private appHandler?: Handler;
 
   private _appHandlerVersion = 0;
@@ -137,7 +132,7 @@ class HostDispatchEntityImp extends HostDispatchEntity {
     this.dispatch(request);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostDispatchEntity.type);
   }
 }

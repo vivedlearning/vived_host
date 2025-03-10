@@ -1,5 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { PmAdapter } from "../../../Types/PmAdapter";
+import { AppObjectRepo, PmAdapter } from "@vived/core";
 import {
   SpinnerDialogPM,
   SpinnerDialogVM,
@@ -10,7 +9,7 @@ export const spinnerDialogAdapter: PmAdapter<SpinnerDialogVM> = {
   defaultVM: defaultSpinnerDialogVM,
   subscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: SpinnerDialogVM) => void
   ) => {
     const pm = SpinnerDialogPM.get(id, appObjects);
@@ -22,7 +21,7 @@ export const spinnerDialogAdapter: PmAdapter<SpinnerDialogVM> = {
   },
   unsubscribe: (
     id: string,
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: SpinnerDialogVM) => void
   ) => {
     const pm = SpinnerDialogPM.get(id, appObjects);

@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   makeHostStateEntity,
   ChallengeResponse,
@@ -7,7 +7,7 @@ import {
 } from "./HostStateEntity";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("State1");
   const entity = makeHostStateEntity(ao);
   const observer = jest.fn();

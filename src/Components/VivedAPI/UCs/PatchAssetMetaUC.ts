@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
 import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
@@ -7,22 +12,20 @@ export interface PatchAssetMetaDTO {
   id: string;
   name: string;
   description: string;
-  archived: boolean
+  archived: boolean;
 }
 
-export abstract class PatchAssetMetaUC extends HostAppObjectUC {
+export abstract class PatchAssetMetaUC extends AppObjectUC {
   static type = "PatchAssetMetaUC";
 
   abstract doPatch(data: PatchAssetMetaDTO): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo): PatchAssetMetaUC | undefined {
+  static get(appObjects: AppObjectRepo): PatchAssetMetaUC | undefined {
     return getSingletonComponent(PatchAssetMetaUC.type, appObjects);
   }
 }
 
-export function makePatchAssetMetaUC(
-  appObject: HostAppObject
-): PatchAssetMetaUC {
+export function makePatchAssetMetaUC(appObject: AppObject): PatchAssetMetaUC {
   return new PatchAssetMetaUCImp(appObject);
 }
 
@@ -83,7 +86,7 @@ class PatchAssetMetaUCImp extends PatchAssetMetaUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, PatchAssetMetaUC.type);
     this.appObjects.registerSingleton(this);
   }

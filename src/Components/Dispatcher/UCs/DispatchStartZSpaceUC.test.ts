@@ -1,13 +1,12 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
+import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 import {
-  MockHostDispatchEntity
-} from "../Mocks/MockHostDispatcher";
-import {
-  DispatchStartZSpaceUC, makeDispatchStartZSpaceUC
+  DispatchStartZSpaceUC,
+  makeDispatchStartZSpaceUC
 } from "./DispatchStartZSpaceUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
@@ -135,6 +134,8 @@ describe("Dispatch start zSpace", () => {
   it("Gets by ID", () => {
     const { appObjects, uc } = makeTestRig();
 
-    expect(DispatchStartZSpaceUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+    expect(DispatchStartZSpaceUC.getByID(uc.appObject.id, appObjects)).toEqual(
+      uc
+    );
   });
 });

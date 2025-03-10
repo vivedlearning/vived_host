@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject/HostAppObjectRepo";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeShowInspectorPMMock } from "../Mocks/ShowInspectorPMMock";
 import { showInspectorAdapter } from "./showInspectorAdapter";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockPM = makeShowInspectorPMMock(appObjects);
   return { appObjects, mockPM };
 }

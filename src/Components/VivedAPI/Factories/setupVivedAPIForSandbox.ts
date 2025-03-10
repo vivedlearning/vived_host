@@ -1,4 +1,4 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { VivedAPIEntity } from "../Entities";
 import { makeUserTokenPM } from "../PMs";
 import {
@@ -15,7 +15,7 @@ import {
   makePostNewAssetUC
 } from "../UCs";
 
-export function setupVivedAPIForSandbox(appObjects: HostAppObjectRepo) {
+export function setupVivedAPIForSandbox(appObjects: AppObjectRepo) {
   const ao = appObjects.getOrCreate("VIVED API");
 
   // Entities

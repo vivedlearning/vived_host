@@ -1,36 +1,36 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppAssets } from "../Entities/AppAssetsEntity";
-import {toggleShowArchivedAssets} from "../Controllers/toggleShowArchivedAssets"
+import { toggleShowArchivedAssets } from "../Controllers/toggleShowArchivedAssets";
 
 function makeTestRig() {
-	const appObjects = makeHostAppObjectRepo();
-	const appAssets = makeAppAssets(appObjects.getOrCreate("AppAssets"));
+  const appObjects = makeAppObjectRepo();
+  const appAssets = makeAppAssets(appObjects.getOrCreate("AppAssets"));
 
-	return {appObjects, appAssets}
+  return { appObjects, appAssets };
 }
 
-describe("Toggle Show Archived Assets Controller", ()=>{
-	it("Toggles the value on the entity", ()=>{
-		const {appAssets, appObjects} = makeTestRig();
+describe("Toggle Show Archived Assets Controller", () => {
+  it("Toggles the value on the entity", () => {
+    const { appAssets, appObjects } = makeTestRig();
 
-		appAssets.showArchived = true;
+    appAssets.showArchived = true;
 
-		toggleShowArchivedAssets(appObjects);
+    toggleShowArchivedAssets(appObjects);
 
-		expect(appAssets.showArchived).toEqual(false);
+    expect(appAssets.showArchived).toEqual(false);
 
-		toggleShowArchivedAssets(appObjects);
+    toggleShowArchivedAssets(appObjects);
 
-		expect(appAssets.showArchived).toEqual(true);
-	})
+    expect(appAssets.showArchived).toEqual(true);
+  });
 
-	it("Warns if it cannot find the entity", ()=>{
-		const appObjects = makeHostAppObjectRepo();
+  it("Warns if it cannot find the entity", () => {
+    const appObjects = makeAppObjectRepo();
 
-		appObjects.submitWarning = jest.fn();
+    appObjects.submitWarning = jest.fn();
 
-		toggleShowArchivedAssets(appObjects);
+    toggleShowArchivedAssets(appObjects);
 
-		expect(appObjects.submitWarning).toBeCalled();
-	})
-})
+    expect(appObjects.submitWarning).toBeCalled();
+  });
+});

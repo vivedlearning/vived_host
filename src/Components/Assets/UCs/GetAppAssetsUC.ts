@@ -1,14 +1,19 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { GetAssetsForOwnerFromAPIUC } from "../../VivedAPI";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 import { AssetRepo } from "../Entities/AssetRepo";
 
-export abstract class GetAppAssetsUC extends HostAppObjectUC {
+export abstract class GetAppAssetsUC extends AppObjectUC {
   static type = "GetAppAssetsUC";
 
   abstract getAppAssets(appID: string): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo): GetAppAssetsUC | undefined {
+  static get(appObjects: AppObjectRepo): GetAppAssetsUC | undefined {
     return getSingletonComponent<GetAppAssetsUC>(
       GetAppAssetsUC.type,
       appObjects
@@ -16,7 +21,7 @@ export abstract class GetAppAssetsUC extends HostAppObjectUC {
   }
 }
 
-export function makeGetAppAssetUC(appObject: HostAppObject): GetAppAssetsUC {
+export function makeGetAppAssetUC(appObject: AppObject): GetAppAssetsUC {
   return new GetAppAssetsUCImp(appObject);
 }
 
@@ -55,9 +60,9 @@ class GetAppAssetsUCImp extends GetAppAssetsUC {
           reject(e);
         });
     });
-  }
+  };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GetAppAssetsUC.type);
 
     this.appObjects.registerSingleton(this);

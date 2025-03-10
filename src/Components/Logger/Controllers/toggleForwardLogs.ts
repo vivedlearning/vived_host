@@ -1,7 +1,7 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObjectRepo } from "@vived/core";
 import { LoggerEntity } from "../Entities";
 
-export function toggleForwardLogs(appObjects: HostAppObjectRepo) {
+export function toggleForwardLogs(appObjects: AppObjectRepo) {
   const entity = LoggerEntity.get(appObjects);
   if (entity) {
     entity.forwardLogsToConsole = !entity.forwardLogsToConsole;

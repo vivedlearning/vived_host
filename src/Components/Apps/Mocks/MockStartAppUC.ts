@@ -1,10 +1,10 @@
-import { HostAppObject } from "../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { StartAppUC } from "../UCs/StartAppUC";
 
 export class MockStartAppUC extends StartAppUC {
   start = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StartAppUC.type);
   }
 }

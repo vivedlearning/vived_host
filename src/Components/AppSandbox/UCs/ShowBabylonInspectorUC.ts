@@ -1,15 +1,14 @@
-import { HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { DispatchShowBabylonInspectorUC } from "../../Dispatcher";
 import { AppSandboxEntity } from "../Entities/AppSandboxEntity";
 
-
-export abstract class ShowBabylonInspectorUC extends HostAppObjectUC {
+export abstract class ShowBabylonInspectorUC extends AppObjectUC {
   static type = "ShowBabylonInspectorUC";
 
   abstract toggleShow(): void;
   abstract hide(): void;
 
-  static get(appObject: HostAppObject): ShowBabylonInspectorUC | undefined {
+  static get(appObject: AppObject): ShowBabylonInspectorUC | undefined {
     const asset = appObject.getComponent<ShowBabylonInspectorUC>(
       ShowBabylonInspectorUC.type
     );
@@ -24,7 +23,7 @@ export abstract class ShowBabylonInspectorUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): ShowBabylonInspectorUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -41,7 +40,7 @@ export abstract class ShowBabylonInspectorUC extends HostAppObjectUC {
 }
 
 export function makeShowBabylonInspectorUC(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ShowBabylonInspectorUC {
   return new ShowBabylonInspectorUCImp(appObject);
 }
@@ -71,7 +70,7 @@ class ShowBabylonInspectorUCImp extends ShowBabylonInspectorUC {
     this.dispatchShowBabylon.doDispatch(false);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ShowBabylonInspectorUC.type);
   }
 }

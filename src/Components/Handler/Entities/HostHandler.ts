@@ -1,15 +1,15 @@
-import { HostAppObject, HostAppObjectEntity } from "../../../HostAppObject";
-import { Handler, Request } from "../../../Types";
+import { AppObject, AppObjectEntity } from "@vived/core";
+import { Handler, Request } from "@vived/core";
 
 export interface RequestHandler {
   readonly requestType: string;
   handleRequest: (version: number, payload?: unknown) => void;
 }
 
-export abstract class HostHandlerEntity extends HostAppObjectEntity {
+export abstract class HostHandlerEntity extends AppObjectEntity {
   static type = "HostHandlerEntity";
 
-  static get(appObject: HostAppObject) {
+  static get(appObject: AppObject) {
     return appObject.getComponent<HostHandlerEntity>(HostHandlerEntity.type);
   }
 
@@ -17,9 +17,7 @@ export abstract class HostHandlerEntity extends HostAppObjectEntity {
   abstract registerRequestHandler: (requestHandler: RequestHandler) => void;
 }
 
-export function makeHostHandlerEntity(
-  appObject: HostAppObject
-): HostHandlerEntity {
+export function makeHostHandlerEntity(appObject: AppObject): HostHandlerEntity {
   return new RequestHandlerImp(appObject);
 }
 
@@ -51,7 +49,7 @@ class RequestHandlerImp extends HostHandlerEntity {
     this.handlers.set(handler.requestType, handler);
   };
 
-  constructor(appObj: HostAppObject) {
+  constructor(appObj: AppObject) {
     super(appObj, HostHandlerEntity.type);
   }
 }

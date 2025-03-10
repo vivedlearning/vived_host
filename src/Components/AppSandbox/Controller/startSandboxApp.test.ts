@@ -1,11 +1,11 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockStartAppUC } from "../../Apps";
 import { StartAppUC } from "../../Apps/UCs/StartAppUC";
 import { makeAppSandboxEntity } from "../Entities/AppSandboxEntity";
 import { startSandboxApp } from "./startSandboxApp";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
 
   const ao = appObjects.getOrCreate("AppID");
 

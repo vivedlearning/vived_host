@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockHostDispatchEntity } from "../Mocks";
 
 import {
@@ -7,7 +7,7 @@ import {
 } from "./DispatchDisposeAppUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
@@ -76,6 +76,8 @@ describe("Dispatch Dispose App", () => {
   it("Gets by ID", () => {
     const { appObjects, uc } = makeTestRig();
 
-    expect(DispatchDisposeAppUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+    expect(DispatchDisposeAppUC.getByID(uc.appObject.id, appObjects)).toEqual(
+      uc
+    );
   });
 });

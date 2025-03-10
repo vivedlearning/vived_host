@@ -1,12 +1,12 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import { Handler, Request } from "../../../Types";
+import { makeAppObjectRepo, Handler, Request } from "@vived/core";
+import {  } from "../../../Types";
 import {
   HostDispatchEntity,
   makeHostDispatchEntity
 } from "./HostDispatchEntity";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const dispatcherAO = appObjects.getOrCreate("appDispatcher");
   const mockHandler = jest.fn();
 

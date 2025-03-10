@@ -1,9 +1,8 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { generateUniqueID } from "../../../Utilities";
+import { AppObjectRepo, generateUniqueID } from "@vived/core";
 import { ConfirmDialogEntity, DialogConfirmDTO } from "../Entities";
 import { makeConfirmDialogPM } from "../PMs";
 
-export function makeConfirmFactory(appObjects: HostAppObjectRepo) {
+export function makeConfirmFactory(appObjects: AppObjectRepo) {
   return function confirmFactory(data: DialogConfirmDTO): ConfirmDialogEntity {
     const ao = appObjects.getOrCreate(generateUniqueID());
 

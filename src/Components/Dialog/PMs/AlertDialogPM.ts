@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { AlertDialogEntity } from "../Entities";
 
 export interface AlertDialogVM {
@@ -21,13 +17,10 @@ export const defaultAlertDialogVM: AlertDialogVM = {
   title: ""
 };
 
-export abstract class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
+export abstract class AlertDialogPM extends AppObjectPM<AlertDialogVM> {
   static type = "AlertDialogPM";
 
-  static get(
-    id: string,
-    appObjects: HostAppObjectRepo
-  ): AlertDialogPM | undefined {
+  static get(id: string, appObjects: AppObjectRepo): AlertDialogPM | undefined {
     const appObject = appObjects.get(id);
     if (!appObject) {
       appObjects.submitWarning(
@@ -50,7 +43,7 @@ export abstract class AlertDialogPM extends HostAppObjectPM<AlertDialogVM> {
   }
 }
 
-export function makeAlertDialogPM(appObject: HostAppObject): AlertDialogPM {
+export function makeAlertDialogPM(appObject: AppObject): AlertDialogPM {
   return new AlertDialogPMImp(appObject);
 }
 
@@ -76,7 +69,7 @@ class AlertDialogPMImp extends AlertDialogPM {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, AlertDialogPM.type);
 
     this.alert = appObject.getComponent<AlertDialogEntity>(

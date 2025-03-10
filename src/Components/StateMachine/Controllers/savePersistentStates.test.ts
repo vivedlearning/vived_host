@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeSavePersistentStatesMock } from "../Mocks/SavePersistentStatesMock";
 import { savePersistentStates } from "./savePersistentStates";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const mockUC = makeSavePersistentStatesMock(appObjects);
 
   return { appObjects, mockUC };

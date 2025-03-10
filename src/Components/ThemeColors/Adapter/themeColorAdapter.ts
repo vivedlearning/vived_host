@@ -1,11 +1,10 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { defaultThemeColorsVM, ThemeColorsPM, ThemeColorsVM } from "../PM";
 
 export const themeColorAdapter: SingletonPmAdapter<ThemeColorsVM> = {
   defaultVM: defaultThemeColorsVM,
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: ThemeColorsVM) => void
   ) => {
     const pm = ThemeColorsPM.get(appObjects);
@@ -19,7 +18,7 @@ export const themeColorAdapter: SingletonPmAdapter<ThemeColorsVM> = {
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: ThemeColorsVM) => void
   ) => {
     const pm = ThemeColorsPM.get(appObjects);

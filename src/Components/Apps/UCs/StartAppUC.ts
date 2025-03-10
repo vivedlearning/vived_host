@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+import { AppObject, AppObjectRepo, AppObjectUC } from "@vived/core";
 import { AppSandboxEntity } from "../../AppSandbox";
 import {
   DispatchEnableFeatureUC,
@@ -17,12 +13,12 @@ import {
   HostStateMachine
 } from "../../StateMachine/Entities";
 
-export abstract class StartAppUC extends HostAppObjectUC {
+export abstract class StartAppUC extends AppObjectUC {
   static type = "StartAppUC";
 
   abstract start(container: HTMLElement): void;
 
-  static get(appObject: HostAppObject): StartAppUC | undefined {
+  static get(appObject: AppObject): StartAppUC | undefined {
     const asset = appObject.getComponent<StartAppUC>(StartAppUC.type);
     if (!asset) {
       appObject.appObjectRepo.submitWarning(
@@ -35,7 +31,7 @@ export abstract class StartAppUC extends HostAppObjectUC {
 
   static getByID(
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ): StartAppUC | undefined {
     const appObject = appObjects.get(id);
 
@@ -53,13 +49,13 @@ export abstract class StartAppUC extends HostAppObjectUC {
   static startByID(
     container: HTMLElement,
     id: string,
-    appObjects: HostAppObjectRepo
+    appObjects: AppObjectRepo
   ) {
     StartAppUC.getByID(id, appObjects)?.start(container);
   }
 }
 
-export function makeStartAppUC(appObject: HostAppObject): StartAppUC {
+export function makeStartAppUC(appObject: AppObject): StartAppUC {
   return new StartAppUCImp(appObject);
 }
 
@@ -138,7 +134,7 @@ class StartAppUCImp extends StartAppUC {
     this.dispatchSetIsAuthoring?.doDispatch(isAuthoring);
 
     this.dispatchThemeColors?.doDispatch();
-    
+
     if (this.sandbox.enableDevFeatures) {
       this.sandbox.devFeatures.forEach((feature) => {
         this.dispatchEnableFeature?.doDispatch(feature);
@@ -146,7 +142,7 @@ class StartAppUCImp extends StartAppUC {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, StartAppUC.type);
   }
 }

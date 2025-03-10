@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 
 export type ChallengeResultType =
   | "HIT"
@@ -49,7 +49,7 @@ export interface ChallengeResultScoreData {
   maxScore: number;
 }
 
-export abstract class ChallengeResultsEntity extends HostAppObjectEntity {
+export abstract class ChallengeResultsEntity extends AppObjectEntity {
   static type = "ChallengeResultsEntity";
 
   abstract get results(): ChallengeResult[];
@@ -93,7 +93,7 @@ export abstract class ChallengeResultsEntity extends HostAppObjectEntity {
 
   abstract getResultForSlide: (slideID: string) => ChallengeResult | undefined;
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ChallengeResultsEntity>(
       ChallengeResultsEntity.type,
       appObjects
@@ -102,7 +102,7 @@ export abstract class ChallengeResultsEntity extends HostAppObjectEntity {
 }
 
 export function makeChallengeResults(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ChallengeResultsEntity {
   return new ChallengeResultsImp(appObject);
 }
@@ -239,7 +239,7 @@ class ChallengeResultsImp extends ChallengeResultsEntity {
     this.notifyOnChange();
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ChallengeResultsEntity.type);
     this.appObjects.registerSingleton(this);
   }

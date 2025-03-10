@@ -1,5 +1,10 @@
-import { MemoizedString } from '../../../Entities';
-import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
+import { MemoizedString } from "@vived/core";
+import {
+  getSingletonComponent,
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 
 export enum APIStage {
   PRODUCTION = "Production",
@@ -8,10 +13,10 @@ export enum APIStage {
   LOCAL = "LOCAL"
 }
 
-export class VivedAPIEntity extends HostAppObjectEntity {
-  static type = 'VivedAPIEntity';
+export class VivedAPIEntity extends AppObjectEntity {
+  static type = "VivedAPIEntity";
 
-  static get(appObjects: HostAppObjectRepo): VivedAPIEntity | undefined {
+  static get(appObjects: AppObjectRepo): VivedAPIEntity | undefined {
     return getSingletonComponent(VivedAPIEntity.type, appObjects);
   }
 
@@ -32,8 +37,6 @@ export class VivedAPIEntity extends HostAppObjectEntity {
     this.memoizedApiState.val = apiState;
   }
 
-
-
   get baseUrl(): string {
     if (this.memoizedApiState.val === APIStage.PRODUCTION) {
       return "https://api.vivedlearning.com";
@@ -51,7 +54,7 @@ export class VivedAPIEntity extends HostAppObjectEntity {
     return new URL(endpoint, this.baseUrl);
   };
 
-  private memoizedUserToken = new MemoizedString('', this.notifyOnChange);
+  private memoizedUserToken = new MemoizedString("", this.notifyOnChange);
   get userToken(): string {
     return this.memoizedUserToken.val;
   }
@@ -59,7 +62,7 @@ export class VivedAPIEntity extends HostAppObjectEntity {
     this.memoizedUserToken.val = val;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, VivedAPIEntity.type);
     this.appObjects.registerSingleton(this);
   }

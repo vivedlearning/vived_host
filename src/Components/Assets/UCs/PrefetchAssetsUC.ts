@@ -1,23 +1,23 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectRepo,
-  HostAppObjectUC
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectRepo,
+  AppObjectUC
+} from "@vived/core";
 import { HostStateMachine } from "../../StateMachine/Entities";
 import { GetAssetFileUC } from "./GetAssetFileUC";
 
-export abstract class PrefetchAssetsUC extends HostAppObjectUC {
+export abstract class PrefetchAssetsUC extends AppObjectUC {
   static type = "PrefetchAssetsUC";
 
   abstract prefetchAssets(): Promise<void>;
 
-  static get(appObjects: HostAppObjectRepo): PrefetchAssetsUC | undefined {
+  static get(appObjects: AppObjectRepo): PrefetchAssetsUC | undefined {
     return getSingletonComponent(PrefetchAssetsUC.type, appObjects);
   }
 }
 
-export function makePrefetchAssets(appObject: HostAppObject): PrefetchAssetsUC {
+export function makePrefetchAssets(appObject: AppObject): PrefetchAssetsUC {
   return new HostAppObjectRepoImp(appObject);
 }
 
@@ -67,7 +67,7 @@ class HostAppObjectRepoImp extends PrefetchAssetsUC {
     });
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, PrefetchAssetsUC.type);
     this.appObjects.registerSingleton(this);
   }

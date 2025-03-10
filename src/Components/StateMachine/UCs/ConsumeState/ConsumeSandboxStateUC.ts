@@ -1,12 +1,10 @@
-import { HostAppObject } from "../../../../HostAppObject";
+import { AppObject } from "@vived/core";
 import { AppSandboxEntity, SandboxState } from "../../../AppSandbox/Entities";
 import { StartZSpaceUC } from "../../../ZSpaceHost/UCs";
 import { HostEditingStateEntity, HostStateMachine } from "../../Entities";
 import { ConsumeStateUC } from "./ConsumeStateUC";
 
-export function makeConsumeSandboxStateUC(
-  appObj: HostAppObject
-): ConsumeStateUC {
+export function makeConsumeSandboxStateUC(appObj: AppObject): ConsumeStateUC {
   return new ConsumeSandboxStateUC(appObj);
 }
 
@@ -55,7 +53,7 @@ class ConsumeSandboxStateUC extends ConsumeStateUC {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ConsumeStateUC.type);
 
     this.appObjects.registerSingleton(this);

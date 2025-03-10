@@ -1,8 +1,4 @@
-import {
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { HostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
 import {
   ChallengeResultHitData,
@@ -28,12 +24,12 @@ export interface ChallengeResultVM {
     | ChallengeResultProgressData;
 }
 
-export abstract class ChallengeResultsListPM extends HostAppObjectPM<
+export abstract class ChallengeResultsListPM extends AppObjectPM<
   ChallengeResultVM[]
 > {
   static type = "ChallengeResultsListPM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return appObjects.getSingleton<ChallengeResultsListPM>(
       ChallengeResultsListPM.type
     );
@@ -41,7 +37,7 @@ export abstract class ChallengeResultsListPM extends HostAppObjectPM<
 }
 
 export function makeChallengeResultsPM(
-  appObject: HostAppObject
+  appObject: AppObject
 ): ChallengeResultsListPM {
   return new ChallengeResultsPMImp(appObject);
 }
@@ -93,7 +89,7 @@ class ChallengeResultsPMImp extends ChallengeResultsListPM {
     this.doUpdateView(organizedResults);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, ChallengeResultsListPM.type);
     this.doUpdateView([]);
     this.results?.addChangeObserver(this.onEntityChange);

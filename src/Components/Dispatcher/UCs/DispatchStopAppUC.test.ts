@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { MockHostDispatchEntity } from '../Mocks/MockHostDispatcher';
-import { DispatchStopAppUC, makeDispatchStopAppUC } from './DispatchStopAppUC';
+import { makeAppObjectRepo } from "@vived/core";
+import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
+import { DispatchStopAppUC, makeDispatchStopAppUC } from "./DispatchStopAppUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
@@ -12,23 +12,25 @@ function makeTestRig() {
   return { uc, appObjects, mockDispatcher };
 }
 
-describe('Dispatch Stop App', () => {
-  it('Gets the UC', () => {
+describe("Dispatch Stop App", () => {
+  it("Gets the UC", () => {
     const { uc } = makeTestRig();
 
     expect(DispatchStopAppUC.get(uc.appObject)).toEqual(uc);
   });
 
-  it('Dispatches the correct type', () => {
+  it("Dispatches the correct type", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
     uc.doDispatch();
 
     expect(mockDispatcher.formRequestAndDispatch).toBeCalledTimes(1);
-    expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][0]).toEqual('STOP_APP');
+    expect(mockDispatcher.formRequestAndDispatch.mock.calls[0][0]).toEqual(
+      "STOP_APP"
+    );
   });
 
-  it('Dispatches the correct version', () => {
+  it("Dispatches the correct version", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
     uc.doDispatch();

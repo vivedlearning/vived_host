@@ -1,9 +1,9 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeEndActivityUCMock } from "../Mocks/EndActivityUCMock";
 import { endActivity } from "./endActivity";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const uc = makeEndActivityUCMock(appObjects);
 
   return { uc, appObjects };

@@ -1,9 +1,9 @@
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectPM,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
+  AppObject,
+  AppObjectPM,
+  AppObjectRepo
+} from "@vived/core";
 import { DialogQueue } from "../Entities";
 
 export interface DialogQueueVM {
@@ -13,15 +13,15 @@ export interface DialogQueueVM {
   preventOutsideDismiss?: boolean;
 }
 
-export abstract class DialogQueuePM extends HostAppObjectPM<DialogQueueVM> {
+export abstract class DialogQueuePM extends AppObjectPM<DialogQueueVM> {
   static type = "DialogQueuePM";
 
-  static get(appObjects: HostAppObjectRepo) {
+  static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<DialogQueuePM>(DialogQueuePM.type, appObjects);
   }
 }
 
-export function makeDialogQueuePM(appObject: HostAppObject): DialogQueuePM {
+export function makeDialogQueuePM(appObject: AppObject): DialogQueuePM {
   return new DialogQueuePMImp(appObject);
 }
 
@@ -56,7 +56,7 @@ class DialogQueuePMImp extends DialogQueuePM {
     this.doUpdateView(vm);
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, DialogQueuePM.type);
 
     this.queue = appObject.getComponent<DialogQueue>(DialogQueue.type);

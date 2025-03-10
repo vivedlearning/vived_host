@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import {
   DispatchEnableFeatureUC,
   makeDispatchEnableFeatureUC
@@ -6,13 +6,13 @@ import {
 import { MockHostDispatchEntity } from "../Mocks/MockHostDispatcher";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
   const uc = makeDispatchEnableFeatureUC(ao);
 
-  return { uc, appObjects, mockDispatcher};
+  return { uc, appObjects, mockDispatcher };
 }
 
 describe("Dispatch Feature Flag", () => {

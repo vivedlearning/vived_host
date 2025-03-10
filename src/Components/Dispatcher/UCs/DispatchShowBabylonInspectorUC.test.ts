@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { MockHostDispatchEntity } from "../Mocks";
 import {
   DispatchShowBabylonInspectorUC,
@@ -6,7 +6,7 @@ import {
 } from "./DispatchShowBabylonInspectorUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("AO");
   const mockDispatcher = new MockHostDispatchEntity(ao);
 
@@ -85,6 +85,8 @@ describe("Dispatch show babylon inspector", () => {
   it("Gets by ID", () => {
     const { appObjects, uc } = makeTestRig();
 
-    expect(DispatchShowBabylonInspectorUC.getByID(uc.appObject.id, appObjects)).toEqual(uc);
+    expect(
+      DispatchShowBabylonInspectorUC.getByID(uc.appObject.id, appObjects)
+    ).toEqual(uc);
   });
 });

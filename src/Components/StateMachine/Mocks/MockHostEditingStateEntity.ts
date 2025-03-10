@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
+import { AppObject, AppObjectRepo } from "@vived/core";
 import { HostEditingStateEntity, HostStateEntity } from "../Entities";
 
 export class MockHostEditingStateEntity extends HostEditingStateEntity {
@@ -20,12 +20,12 @@ export class MockHostEditingStateEntity extends HostEditingStateEntity {
   cancelEditState = jest.fn();
   finishEditing = jest.fn();
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostEditingStateEntity.type);
   }
 }
 
-export function makeMockHostEditingStateEntity(appObjects: HostAppObjectRepo) {
+export function makeMockHostEditingStateEntity(appObjects: AppObjectRepo) {
   return new MockHostEditingStateEntity(
     appObjects.getOrCreate("MockHostEditingStateEntity")
   );

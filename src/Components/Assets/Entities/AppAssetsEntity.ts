@@ -1,9 +1,14 @@
-import { MemoizedBoolean, ObservableEntity } from '../../../Entities';
-import { getSingletonComponent, HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
-import { AssetEntity } from './AssetEntity';
+import {
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo,
+  getSingletonComponent,
+  MemoizedBoolean
+} from "@vived/core";
+import { AssetEntity } from "./AssetEntity";
 
-export abstract class AppAssetsEntity extends HostAppObjectEntity {
-  static type = 'AppAssetsEntity';
+export abstract class AppAssetsEntity extends AppObjectEntity {
+  static type = "AppAssetsEntity";
 
   abstract getAll(): string[];
   abstract add(assetID: string): void;
@@ -16,12 +21,12 @@ export abstract class AppAssetsEntity extends HostAppObjectEntity {
   abstract get showArchived(): boolean;
   abstract set showArchived(show: boolean);
 
-  static get(hostAppObjects: HostAppObjectRepo): AppAssetsEntity | undefined {
+  static get(hostAppObjects: AppObjectRepo): AppAssetsEntity | undefined {
     return getSingletonComponent(AppAssetsEntity.type, hostAppObjects);
   }
 }
 
-export function makeAppAssets(appObj: HostAppObject): AppAssetsEntity {
+export function makeAppAssets(appObj: AppObject): AppAssetsEntity {
   return new AppAssetsImp(appObj);
 }
 
@@ -72,7 +77,10 @@ class AppAssetsImp extends AppAssetsEntity {
     }
   }
 
-  private memoizedShowArchived = new MemoizedBoolean(false, this.notifyOnChange);
+  private memoizedShowArchived = new MemoizedBoolean(
+    false,
+    this.notifyOnChange
+  );
   get showArchived(): boolean {
     return this.memoizedShowArchived.val;
   }
@@ -80,7 +88,7 @@ class AppAssetsImp extends AppAssetsEntity {
     this.memoizedShowArchived.val = show;
   }
 
-  constructor(appObj: HostAppObject) {
+  constructor(appObj: AppObject) {
     super(appObj, AppAssetsEntity.type);
     this.appObjects.registerSingleton(this);
   }

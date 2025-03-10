@@ -1,11 +1,10 @@
-import { MemoizedColor, MemoizedString } from "../../../Entities";
+import { Color, MemoizedString } from "@vived/core";
 import {
   getSingletonComponent,
-  HostAppObject,
-  HostAppObjectEntity,
-  HostAppObjectRepo
-} from "../../../HostAppObject";
-import { Color } from "../../../ValueObjects";
+  AppObject,
+  AppObjectEntity,
+  AppObjectRepo
+} from "@vived/core";
 
 export enum ThemeColorType {
   primary = "primary",
@@ -111,7 +110,7 @@ export interface ColorScheme {
   surfaceDim: string;
 }
 
-export abstract class HostThemeEntity extends HostAppObjectEntity {
+export abstract class HostThemeEntity extends AppObjectEntity {
   static readonly type = "HostThemeEntity";
 
   abstract submitScheme(name: string, scheme: ColorScheme): void;
@@ -121,11 +120,11 @@ export abstract class HostThemeEntity extends HostAppObjectEntity {
   abstract getColorForType(type: ThemeColorType): Color;
   abstract getHexForType(type: ThemeColorType): string;
 
-  static get = (appObjects: HostAppObjectRepo): HostThemeEntity | undefined =>
+  static get = (appObjects: AppObjectRepo): HostThemeEntity | undefined =>
     getSingletonComponent(HostThemeEntity.type, appObjects);
 }
 
-export function makeHostThemeEntity(appObject: HostAppObject) {
+export function makeHostThemeEntity(appObject: AppObject) {
   return new HostThemeEntityImp(appObject);
 }
 
@@ -171,7 +170,7 @@ class HostThemeEntityImp extends HostThemeEntity {
     this.memoizedActiveScheme.val = val;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, HostThemeEntity.type);
 
     this.appObjects.registerSingleton(this);

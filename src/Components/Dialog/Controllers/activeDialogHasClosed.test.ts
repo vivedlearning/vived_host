@@ -1,10 +1,10 @@
-import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { makeDialogQueue } from '../Entities/DialogQueue';
-import { activeDialogHasClosed } from './activeDialogHasClosed';
+import { makeAppObjectRepo } from "@vived/core";
+import { makeDialogQueue } from "../Entities/DialogQueue";
+import { activeDialogHasClosed } from "./activeDialogHasClosed";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
-  const queue = makeDialogQueue(appObjects.getOrCreate('Dialog'));
+  const appObjects = makeAppObjectRepo();
+  const queue = makeDialogQueue(appObjects.getOrCreate("Dialog"));
 
   const mockClose = jest.fn();
   queue.activeDialogHasClosed = mockClose;
@@ -12,8 +12,8 @@ function makeTestRig() {
   return { mockClose, queue, appObjects };
 }
 
-describe('Active Dialog Has Closed Controller', () => {
-  it('Calls the Entity', () => {
+describe("Active Dialog Has Closed Controller", () => {
+  it("Calls the Entity", () => {
     const { mockClose, appObjects } = makeTestRig();
 
     activeDialogHasClosed(appObjects);
@@ -21,8 +21,8 @@ describe('Active Dialog Has Closed Controller', () => {
     expect(mockClose).toBeCalled();
   });
 
-  it('Warns if it cannot find the entity', () => {
-    const appObjects = makeHostAppObjectRepo();
+  it("Warns if it cannot find the entity", () => {
+    const appObjects = makeAppObjectRepo();
     appObjects.submitWarning = jest.fn();
 
     activeDialogHasClosed(appObjects);

@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { AppEntity } from "../../Apps";
 import {
   ActionNotImplemented,
@@ -11,7 +11,7 @@ import {
 export type RegisterStylesheetsAction = (stylesheets: string[]) => void;
 
 export abstract class RegisterExternalStyleSheetsHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "RegisterExternalStyleSheetsHandler";
 
@@ -22,7 +22,7 @@ export abstract class RegisterExternalStyleSheetsHandler
 }
 
 export function makeRegisterExternalStyleSheetsHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): RegisterExternalStyleSheetsHandler {
   return new RegisterExternalStyleSheetsHandlerImp(appObject);
 }
@@ -43,7 +43,7 @@ class RegisterExternalStyleSheetsHandlerImp extends RegisterExternalStyleSheetsH
 
     this.app.notifyOnChange();
   };
-  
+
   handleRequest = (version: number, payload: unknown) => {
     if (version === 1) {
       const { stylesheets } = this.castPayloadV1(payload);
@@ -66,7 +66,7 @@ class RegisterExternalStyleSheetsHandlerImp extends RegisterExternalStyleSheetsH
     return castPayload;
   }
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, RegisterExternalStyleSheetsHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);

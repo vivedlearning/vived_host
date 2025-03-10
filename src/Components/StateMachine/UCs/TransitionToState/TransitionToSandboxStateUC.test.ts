@@ -1,4 +1,4 @@
-import { makeHostAppObjectRepo } from "../../../../HostAppObject";
+import { makeAppObjectRepo } from "@vived/core";
 import { makeAppSandboxEntity } from "../../../AppSandbox/Entities";
 import { DispatchStateDTO, MockDispatchSetStateUC } from "../../../Dispatcher";
 import { makeHostStateMachine } from "../../Entities";
@@ -6,7 +6,7 @@ import { makeMockHostStateEntity } from "../../Mocks";
 import { makeTransitionToSandboxStateUC } from "./TransitionToSandboxStateUC";
 
 function makeTestRig() {
-  const appObjects = makeHostAppObjectRepo();
+  const appObjects = makeAppObjectRepo();
   const registerSingletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
   const sandboxAO = appObjects.getOrCreate("anApp");
@@ -77,7 +77,8 @@ describe("Transition to Sandbox State UC", () => {
 
     uc.transitionToState("state1");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.finalState).toEqual({ foo: "bar" });
   });
 
@@ -88,7 +89,8 @@ describe("Transition to Sandbox State UC", () => {
 
     uc.transitionToState("state1");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.duration).toEqual(4);
   });
 
@@ -97,18 +99,18 @@ describe("Transition to Sandbox State UC", () => {
 
     uc.transitionToState("state1");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.hasNextSlide).toEqual(true);
   });
 
   it("Passes has next state as false if there isn't a next state", () => {
     const { uc, mockDispatchSetState } = makeTestRig();
 
-
-
     uc.transitionToState("state2");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.hasNextSlide).toEqual(false);
   });
 
@@ -117,7 +119,8 @@ describe("Transition to Sandbox State UC", () => {
 
     uc.transitionToState("state1");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.hasPreviousSlide).toEqual(false);
   });
 
@@ -126,7 +129,8 @@ describe("Transition to Sandbox State UC", () => {
 
     uc.transitionToState("state2");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.hasPreviousSlide).toEqual(true);
   });
 
@@ -135,20 +139,25 @@ describe("Transition to Sandbox State UC", () => {
 
     uc.transitionToState("state1");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.hideNavigation).toEqual(false);
   });
 
   it("Passes hide nav as true if there there are less than two states", () => {
-    const { uc, mockDispatchSetState, appObjects, stateMachine } = makeTestRig();
+    const {
+      uc,
+      mockDispatchSetState,
+      appObjects,
+      stateMachine
+    } = makeTestRig();
 
-    stateMachine.setStates([
-      makeMockHostStateEntity("state1", appObjects)
-    ]);
+    stateMachine.setStates([makeMockHostStateEntity("state1", appObjects)]);
 
     uc.transitionToState("state1");
 
-    const dispatchDTO = mockDispatchSetState.doDispatch.mock.calls[0][0] as DispatchStateDTO;
+    const dispatchDTO = mockDispatchSetState.doDispatch.mock
+      .calls[0][0] as DispatchStateDTO;
     expect(dispatchDTO.hideNavigation).toEqual(true);
   });
 

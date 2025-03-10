@@ -1,11 +1,10 @@
-import { HostAppObjectRepo } from "../../../HostAppObject";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { defaultDialogVM, DialogQueuePM, DialogQueueVM } from "../PMs";
 
 export const dialogQueueAdapter: SingletonPmAdapter<DialogQueueVM> = {
   defaultVM: defaultDialogVM,
   subscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: DialogQueueVM) => void
   ) => {
     const pm = DialogQueuePM.get(appObjects);
@@ -19,7 +18,7 @@ export const dialogQueueAdapter: SingletonPmAdapter<DialogQueueVM> = {
     pm.addView(setVM);
   },
   unsubscribe: (
-    appObjects: HostAppObjectRepo,
+    appObjects: AppObjectRepo,
     setVM: (vm: DialogQueueVM) => void
   ) => {
     const pm = DialogQueuePM.get(appObjects);

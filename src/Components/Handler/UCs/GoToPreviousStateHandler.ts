@@ -1,4 +1,4 @@
-import { HostAppObject, HostAppObjectUC } from "../../../HostAppObject";
+import { AppObject, AppObjectUC } from "@vived/core";
 import { TransitionToStateUC } from "../../StateMachine/UCs";
 import { HostStateMachine } from "../../StateMachine/Entities";
 import {
@@ -8,7 +8,7 @@ import {
 } from "../Entities";
 
 export abstract class GoToPreviousStateHandler
-  extends HostAppObjectUC
+  extends AppObjectUC
   implements RequestHandler {
   static readonly type = "GoToPreviousStateHandler";
 
@@ -19,7 +19,7 @@ export abstract class GoToPreviousStateHandler
 }
 
 export function makeGoToPreviousStateHandler(
-  appObject: HostAppObject
+  appObject: AppObject
 ): GoToPreviousStateHandler {
   return new GoToPreviousStateHandlerImp(appObject);
 }
@@ -53,7 +53,7 @@ class GoToPreviousStateHandlerImp extends GoToPreviousStateHandler {
     }
   };
 
-  constructor(appObject: HostAppObject) {
+  constructor(appObject: AppObject) {
     super(appObject, GoToPreviousStateHandler.type);
 
     const hostHandler = HostHandlerEntity.get(appObject);
