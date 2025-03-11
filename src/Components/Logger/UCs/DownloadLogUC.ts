@@ -2,9 +2,9 @@ import {
   getSingletonComponent,
   AppObject,
   AppObjectRepo,
-  AppObjectUC
+  AppObjectUC,
+  downloadFile
 } from "@vived/core";
-import { downloadFile } from "../../../Utilities/downloadFile";
 import { LoggerEntity } from "../Entities";
 
 export abstract class DownloadLogUC extends AppObjectUC {
