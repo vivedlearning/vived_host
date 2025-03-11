@@ -1,5 +1,4 @@
-import { AppObjectRepo } from "@vived/core";
-import { SingletonPmAdapter } from "../../../Types";
+import { AppObjectRepo, SingletonPmAdapter } from "@vived/core";
 import { ZSpaceIsActivePM } from "../PMs/ZSpaceIsActivePM";
 
 export const zSpaceIsActiveAdapter: SingletonPmAdapter<boolean> = {

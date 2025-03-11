@@ -6,6 +6,6 @@
     "max-classes-per-file": ["error", 10],
     "variable-name": [false],
     "forin": false,
-    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"]
+    "no-empty": false
   }
 }
