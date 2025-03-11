@@ -63,7 +63,7 @@ describe("Transition to Sandbox State UC", () => {
     const { uc, mockDispatchSetState, appObjects } = makeTestRig();
     const mockLog = jest.fn();
     uc.error = mockLog;
-    appObjects.submitWarning = jest.fn(); //Suppresses the warning from getSingleton
+    appObjects.submitWarning = jest.fn(); // Suppresses the warning from getSingleton
 
     mockDispatchSetState.dispose();
 

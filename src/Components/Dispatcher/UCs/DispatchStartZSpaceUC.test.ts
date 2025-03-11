@@ -87,7 +87,7 @@ describe("Dispatch start zSpace", () => {
   it("Defaults to version 3 if an unsupported version is requested", () => {
     const { uc, mockDispatcher } = makeTestRig();
 
-    uc.warn = jest.fn(); //suppresses consoles
+    uc.warn = jest.fn(); // Suppresses consoles
     mockDispatcher.getRequestPayloadVersion = jest.fn().mockReturnValue(-1);
 
     uc.doDispatch("mockSession", true);

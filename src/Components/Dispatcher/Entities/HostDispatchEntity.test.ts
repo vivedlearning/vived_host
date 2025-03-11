@@ -130,9 +130,9 @@ describe("Host Dispatch Entity", () => {
 
     const handleGetVersion = jest
       .fn()
-      .mockImplementation((request: Request) => {
-        if (request.type === "GET_APP_HANDLER_VERSION") {
-          const cb = (request.payload as any).callback;
+      .mockImplementation((req: Request) => {
+        if (req.type === "GET_APP_HANDLER_VERSION") {
+          const cb = (req.payload as any).callback;
           cb(1);
         }
       });

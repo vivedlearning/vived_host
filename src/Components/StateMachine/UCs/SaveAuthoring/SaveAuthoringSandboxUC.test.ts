@@ -62,7 +62,7 @@ describe("Edit Active State UC", () => {
     const { uc, mockDispatchSetAuthoring, appObjects } = makeTestRig();
     const mockLog = jest.fn();
     uc.error = mockLog;
-    appObjects.submitWarning = jest.fn(); //Suppresses the warning from getSingleton
+    appObjects.submitWarning = jest.fn(); // Suppresses the warning from getSingleton
 
     mockDispatchSetAuthoring.dispose();
 

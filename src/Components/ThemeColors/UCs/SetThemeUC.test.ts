@@ -28,7 +28,7 @@ describe("Set Theme UC", () => {
   it("Sets the theme by name", () => {
     const { uc, theme } = makeTestRig();
 
-    theme.warn = jest.fn(); //avoids the warn because we have not setup the scheme
+    theme.warn = jest.fn(); // Avoids the warn because we have not setup the scheme
     const spy = jest.spyOn(theme, "activeSchemeName", "set");
 
     uc.setThemeByName("aTheme");

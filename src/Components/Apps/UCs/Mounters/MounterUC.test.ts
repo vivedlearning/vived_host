@@ -26,7 +26,7 @@ function makeTestRig() {
 
   const appHandler = jest.fn();
   const mockApp: VIVEDApp_3 = {
-    mount: (hostHandler: Handler) => {
+    mount: (h: Handler) => {
       return appHandler;
     },
     mountDev: (container: HTMLElement) => {}

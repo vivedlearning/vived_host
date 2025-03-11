@@ -20,7 +20,7 @@ describe("Logger Entity", () => {
     const { loggerEntity } = makeTestRig();
     loggerEntity.submitLog("sender", "message");
 
-    let entry = loggerEntity.logs[0];
+    const entry = loggerEntity.logs[0];
 
     expect(entry.sender).toBe("sender");
     expect(entry.message).toBe("message");
@@ -38,7 +38,7 @@ describe("Logger Entity", () => {
     const { loggerEntity } = makeTestRig();
     loggerEntity.submitWarning("sender", "message");
 
-    let entry = loggerEntity.logs[0];
+    const entry = loggerEntity.logs[0];
 
     expect(entry.sender).toBe("sender");
     expect(entry.message).toBe("message");
@@ -56,7 +56,7 @@ describe("Logger Entity", () => {
     const { loggerEntity } = makeTestRig();
     loggerEntity.submitError("sender", "message");
 
-    let entry = loggerEntity.logs[0];
+    const entry = loggerEntity.logs[0];
 
     expect(entry.sender).toBe("sender");
     expect(entry.message).toBe("message");
@@ -74,7 +74,7 @@ describe("Logger Entity", () => {
     const { loggerEntity } = makeTestRig();
     loggerEntity.submitFatal("sender", "message");
 
-    let entry = loggerEntity.logs[0];
+    const entry = loggerEntity.logs[0];
 
     expect(entry.sender).toBe("sender");
     expect(entry.message).toBe("message");

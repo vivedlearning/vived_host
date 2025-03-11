@@ -157,7 +157,7 @@ describe("Edit Active State UC", () => {
     const { uc, mockDispatchSetAuthoring, appObjects } = makeTestRig();
     const mockLog = jest.fn();
     uc.error = mockLog;
-    appObjects.submitWarning = jest.fn(); //Suppresses the warning from getSingleton
+    appObjects.submitWarning = jest.fn(); // Suppresses the warning from getSingleton
 
     mockDispatchSetAuthoring.dispose();
 
@@ -170,7 +170,7 @@ describe("Edit Active State UC", () => {
     const { uc, mockDispatchSetState, appObjects } = makeTestRig();
     const mockLog = jest.fn();
     uc.error = mockLog;
-    appObjects.submitWarning = jest.fn(); //Suppresses the warning from getSingleton
+    appObjects.submitWarning = jest.fn(); // Suppresses the warning from getSingleton
 
     mockDispatchSetState.dispose();
 
@@ -183,7 +183,7 @@ describe("Edit Active State UC", () => {
     const { uc, stateMachine, appObjects } = makeTestRig();
     const mockLog = jest.fn();
     uc.error = mockLog;
-    appObjects.submitWarning = jest.fn(); //Suppresses the warning from getSingleton
+    appObjects.submitWarning = jest.fn(); // Suppresses the warning from getSingleton
 
     stateMachine.clearActiveState();
 

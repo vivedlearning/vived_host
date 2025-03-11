@@ -4,7 +4,6 @@ import { AlertDialogEntity, DialogAlertDTO, alertDialogType } from "./Alert";
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("dialog1");
-  appObjects;
   const data: DialogAlertDTO = {
     buttonLabel: "button label",
     message: "a message",

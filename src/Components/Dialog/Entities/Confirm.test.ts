@@ -8,7 +8,6 @@ import {
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
   const ao = appObjects.getOrCreate("dialog1");
-  appObjects;
 
   const data: DialogConfirmDTO = {
     confirmButtonLabel: "confirm label",

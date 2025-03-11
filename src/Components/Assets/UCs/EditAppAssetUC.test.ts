@@ -44,7 +44,7 @@ describe("Edit App Asset", () => {
 
   it("Does not set or changes the state if the asset is not an app asset", () => {
     const { appAssets, uc } = makeTestRig();
-    uc.warn = jest.fn(); //Suppresses the console
+    uc.warn = jest.fn(); // Suppresses the console
 
     uc.editAsset("someOtherAsset");
 
