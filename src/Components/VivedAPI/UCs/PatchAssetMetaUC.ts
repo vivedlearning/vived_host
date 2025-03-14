@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
 import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
@@ -7,7 +12,7 @@ export interface PatchAssetMetaDTO {
   id: string;
   name: string;
   description: string;
-  archived: boolean
+  archived: boolean;
 }
 
 export abstract class PatchAssetMetaUC extends HostAppObjectUC {
@@ -34,7 +39,7 @@ class PatchAssetMetaUCImp extends PatchAssetMetaUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get vivedAPI() {

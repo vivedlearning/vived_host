@@ -20,6 +20,7 @@ import {
   makeShowSpinnerHandler,
   makeStartZSpaceHandler,
   makeStopZSpaceHandler,
+  makeSubmitActivityAssetHandler,
   makeSubmitLogHandler,
   makeSubmitResultHandler
 } from "./UCs";
@@ -45,6 +46,7 @@ export function setupStandardHostHandlers(appObject: HostAppObject) {
   makeShowSpinnerHandler(appObject);
   makeStartZSpaceHandler(appObject);
   makeStopZSpaceHandler(appObject);
+  makeSubmitActivityAssetHandler(appObject);
   makeSubmitLogHandler(appObject);
   makeSubmitResultHandler(appObject);
 }

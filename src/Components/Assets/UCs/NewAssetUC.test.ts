@@ -1,25 +1,15 @@
 import { makeHostAppObjectRepo } from "../../../HostAppObject";
-import {
-  makeAppSandboxEntity,
-  SandboxState
-} from "../../AppSandbox/Entities/AppSandboxEntity";
 import { SpinnerDialogEntity } from "../../Dialog/Entities";
 import { makeMockMakeAlertDialogUC } from "../../Dialog/Mocks/MockMakeAlertDialogUC";
 import { makeMockMakeSpinnerDialogUC } from "../../Dialog/Mocks/MockMakeSpinnerDialogUC";
-import { NewAssetApiDto } from "../../VivedAPI/UCs/PostNewAssetUC";
 import { makeMockPostNewAssetUC } from "../../VivedAPI/Mocks/MockPostNewAssetUC";
-import { makeAppAssets, makeAssetEntity, makeAssetRepo } from "../Entities";
-import {
-  makeNewAppAssetUC,
-  NewAppAssetDTO,
-  NewAppAssetUC
-} from "./NewAppAssetUC";
+import { NewAssetApiDto } from "../../VivedAPI/UCs/PostNewAssetUC";
+import { makeAssetEntity, makeAssetRepo } from "../Entities";
+import { makeNewAssetUC, NewAssetDto, NewAssetUC } from "./NewAssetUC";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
-
-  const sandbox = makeAppSandboxEntity(appObjects.getOrCreate("anAppID"));
 
   const mockPost = makeMockPostNewAssetUC(appObjects);
   mockPost.doPost.mockResolvedValue({
@@ -30,7 +20,6 @@ function makeTestRig() {
   URL.createObjectURL = jest.fn();
 
   const ao = appObjects.getOrCreate("ao");
-  const appAssets = makeAppAssets(ao);
   const assetRepo = makeAssetRepo(ao);
   assetRepo.assetFactory = (id: string) => {
     return makeAssetEntity(appObjects.getOrCreate(id));
@@ -48,16 +37,14 @@ function makeTestRig() {
 
   const mockMakeAlert = makeMockMakeAlertDialogUC(appObjects);
 
-  const uc = makeNewAppAssetUC(ao);
+  const uc = makeNewAssetUC(ao);
 
   return {
     uc,
     appObjects,
     singletonSpy,
     mockPost,
-    sandbox,
     ao,
-    appAssets,
     assetRepo,
     spinner,
     mockMakeAlert,
@@ -65,15 +52,16 @@ function makeTestRig() {
   };
 }
 
-function makeDTO(): NewAppAssetDTO {
+function makeDTO(): NewAssetDto {
   return {
     description: "some description",
     file: new File([], "filename.file"),
-    name: "some name"
+    name: "some name",
+    owner: "anOwnderID"
   };
 }
 
-describe("JSON Requester", () => {
+describe("New Asset UC", () => {
   it("Registers itself as the Singleton", () => {
     const { uc, singletonSpy } = makeTestRig();
 
@@ -83,35 +71,7 @@ describe("JSON Requester", () => {
   it("Gets the singleton", () => {
     const { uc, appObjects } = makeTestRig();
 
-    expect(NewAppAssetUC.get(appObjects)).toEqual(uc);
-  });
-
-  it("Adds the asset to the App Assets", async () => {
-    const { appAssets, uc } = makeTestRig();
-
-    expect(appAssets.has("newAssetID")).toEqual(false);
-
-    await uc.create({
-      description: "some description",
-      file: new File([], "filename.file"),
-      name: "some name"
-    });
-
-    expect(appAssets.has("newAssetID")).toEqual(true);
-  });
-
-  it("Sets the sandbox stat", async () => {
-    const { uc, sandbox } = makeTestRig();
-
-    sandbox.state = SandboxState.PLAYING;
-
-    await uc.create({
-      description: "some description",
-      file: new File([], "filename.file"),
-      name: "some name"
-    });
-
-    expect(sandbox.state).toEqual(SandboxState.MOUNTED);
+    expect(NewAssetUC.get(appObjects)).toEqual(uc);
   });
 
   it("Forms the post DTO as expected", async () => {
@@ -119,10 +79,11 @@ describe("JSON Requester", () => {
 
     const mockFile = new File([], "filename.file");
 
-    const newAppAssetDTO = {
+    const newAppAssetDTO: NewAssetDto = {
       description: "some description",
       file: mockFile,
-      name: "some name"
+      name: "some name",
+      owner: "anOwnerID"
     };
 
     await uc.create(newAppAssetDTO);
@@ -130,7 +91,7 @@ describe("JSON Requester", () => {
     const mockPostDTO = mockPost.doPost.mock.calls[0][0] as NewAssetApiDto;
 
     expect(mockPostDTO.description).toEqual("some description");
-    expect(mockPostDTO.ownerID).toEqual("anAppID");
+    expect(mockPostDTO.ownerID).toEqual("anOwnerID");
     expect(mockPostDTO.name).toEqual("some name");
     expect(mockPostDTO.file).toEqual(mockFile);
   });
@@ -189,43 +150,35 @@ describe("JSON Requester", () => {
   });
 
   it("Adds the asset to the asset repo", async () => {
-    const { uc, assetRepo, appAssets } = makeTestRig();
+    const { uc, assetRepo } = makeTestRig();
 
     const mockFile = new File([], "filename.file");
 
     const newAppAssetDTO = {
       description: "some description",
       file: mockFile,
-      name: "some name"
+      name: "some name",
+      owner: "anOwnerID"
     };
 
-    expect(appAssets.getAll()).toHaveLength(0);
-
-    await uc.create(newAppAssetDTO);
-
-    expect(appAssets.getAll()).toHaveLength(1);
-    const newAssetID = appAssets.getAll()[0];
+    const newAssetID = await uc.create(newAppAssetDTO);
 
     expect(assetRepo.has(newAssetID)).toEqual(true);
   });
 
   it("Sets up the new asset in the repo", async () => {
-    const { uc, assetRepo, appAssets } = makeTestRig();
+    const { uc, assetRepo } = makeTestRig();
 
     const mockFile = new File([], "filename.file");
 
     const newAppAssetDTO = {
       description: "some description",
       file: mockFile,
-      name: "some name"
+      name: "some name",
+      owner: "anOwnerID"
     };
 
-    expect(appAssets.getAll()).toHaveLength(0);
-
-    await uc.create(newAppAssetDTO);
-
-    expect(appAssets.getAll()).toHaveLength(1);
-    const newAssetID = appAssets.getAll()[0];
+    const newAssetID = await uc.create(newAppAssetDTO);
 
     const repoAsset = assetRepo.get(newAssetID);
 
@@ -233,5 +186,13 @@ describe("JSON Requester", () => {
     expect(repoAsset?.description).toEqual("some description");
     expect(repoAsset?.file).toEqual(mockFile);
     expect(repoAsset?.filename).toEqual("newAssetFile.name");
+  });
+
+  it("Reruns the new asset ID", async () => {
+    const { uc } = makeTestRig();
+
+    const newAssetID = await uc.create(makeDTO());
+
+    expect(newAssetID).toEqual("newAssetID");
   });
 });

@@ -1,7 +1,12 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
-import { SignedAuthTokenUC } from './SignedAuthTokenUC';
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
+import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
 export interface GetAppResponseDTO {
   interfaceVersion: string;
@@ -10,7 +15,7 @@ export interface GetAppResponseDTO {
 }
 
 export abstract class GetAppFromAPIUC extends HostAppObjectUC {
-  static type = 'GetAppFromAPIUC';
+  static type = "GetAppFromAPIUC";
 
   abstract getApp(appID: string, version: string): Promise<GetAppResponseDTO>;
 
@@ -25,11 +30,13 @@ export function makeGetAppFromAPIUC(appObject: HostAppObject): GetAppFromAPIUC {
 
 class GetAppUCImp extends GetAppFromAPIUC {
   private get jsonRequester() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get getAuthToken() {
-    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)?.getUserAuthToken;
+    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
+      ?.getAuthToken;
   }
 
   private get vivedAPI() {
@@ -48,14 +55,16 @@ class GetAppUCImp extends GetAppFromAPIUC {
     return new Promise((resolve, reject) => {
       getAuthToken()
         .then((token) => {
-          const endpointURL = vivedAPI.getEndpointURL(`apps/${appID}/${version}`);
-          endpointURL.searchParams.set('function_version', '2');
+          const endpointURL = vivedAPI.getEndpointURL(
+            `apps/${appID}/${version}`
+          );
+          endpointURL.searchParams.set("function_version", "2");
 
           const options: RequestJSONOptions = {
-            method: 'GET',
+            method: "GET",
             headers: {
-              Authorization: 'Bearer ' + token,
-            },
+              Authorization: "Bearer " + token
+            }
           };
 
           return jsonRequester(endpointURL, options);
@@ -66,7 +75,7 @@ class GetAppUCImp extends GetAppFromAPIUC {
           const appDTO: GetAppResponseDTO = {
             interfaceVersion: app.appInterfaceVersion,
             assetFolderURL: app.baseAssetsUrl,
-            entrypoints: [...app.files],
+            entrypoints: [...app.files]
           };
 
           resolve(appDTO);

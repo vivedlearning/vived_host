@@ -2,8 +2,7 @@ import { HostAppObject, HostAppObjectRepo } from "../../../HostAppObject";
 import { SignedAuthTokenUC } from "../UCs/SignedAuthTokenUC";
 
 export class MockSignedAuthTokenUC extends SignedAuthTokenUC {
-  getPlayerAuthToken = jest.fn();
-  getUserAuthToken = jest.fn();
+  getAuthToken = jest.fn();
 
   constructor(appObject: HostAppObject) {
     super(appObject, SignedAuthTokenUC.type);

@@ -4,48 +4,42 @@ import {
   HostAppObjectRepo,
   HostAppObjectUC
 } from "../../../HostAppObject";
-import { AppSandboxEntity, SandboxState } from "../../AppSandbox/Entities";
 import {
   DialogAlertDTO,
   MakeAlertDialogUC,
   MakeSpinnerDialogUC
 } from "../../Dialog";
 import { NewAssetApiDto, PostNewAssetUC } from "../../VivedAPI/UCs";
-import { AppAssetsEntity, AssetRepo } from "../Entities";
+import { AssetRepo } from "../Entities";
 
-export interface NewAppAssetDTO {
+export interface NewAssetDto {
   file: File;
   name: string;
   description: string;
+  owner: string;
 }
 
-export abstract class NewAppAssetUC extends HostAppObjectUC {
-  static type = "NewAppAssetUC";
+export abstract class NewAssetUC extends HostAppObjectUC {
+  static type = "NewAssetUC";
 
-  abstract create(data: NewAppAssetDTO): Promise<void>;
+  abstract create(data: NewAssetDto): Promise<string>;
 
-  static get(appObjects: HostAppObjectRepo): NewAppAssetUC | undefined {
-    return getSingletonComponent(NewAppAssetUC.type, appObjects);
+  static get(appObjects: HostAppObjectRepo): NewAssetUC | undefined {
+    return getSingletonComponent(NewAssetUC.type, appObjects);
   }
 }
 
-export function makeNewAppAssetUC(appObject: HostAppObject): NewAppAssetUC {
-  return new NewAppAssetUCImp(appObject);
+export function makeNewAssetUC(appObject: HostAppObject): NewAssetUC {
+  return new NewAssetUCImp(appObject);
 }
 
-class NewAppAssetUCImp extends NewAppAssetUC {
-  private appAssets?: AppAssetsEntity;
-
+class NewAssetUCImp extends NewAssetUC {
   private get postNewAsset() {
     return this.getCachedSingleton<PostNewAssetUC>(PostNewAssetUC.type)?.doPost;
   }
 
   private get assetRepo() {
     return this.getCachedSingleton<AssetRepo>(AssetRepo.type);
-  }
-
-  private get sandbox() {
-    return this.getCachedSingleton<AppSandboxEntity>(AppSandboxEntity.type);
   }
 
   private get spinnerFactory() {
@@ -58,35 +52,31 @@ class NewAppAssetUCImp extends NewAppAssetUC {
     return this.getCachedSingleton<MakeAlertDialogUC>(MakeAlertDialogUC.type);
   }
 
-  create = (data: NewAppAssetDTO): Promise<void> => {
-    const appAssets = this.appAssets;
+  create = (data: NewAssetDto): Promise<string> => {
     const postNewAsset = this.postNewAsset;
-    const sandbox = this.sandbox;
     const assetRepo = this.assetRepo;
 
-    if (!appAssets || !postNewAsset || !sandbox || !assetRepo) {
+    if (!postNewAsset || !assetRepo) {
       return Promise.reject();
     }
 
-    return new Promise<void>((resolve) => {
-      const { description, file, name } = data;
+    return new Promise<string>((resolve) => {
+      const { description, file, name, owner } = data;
 
       const newAssetData: NewAssetApiDto = {
         description,
         name,
         file,
-        ownerID: sandbox.appID
+        ownerID: owner
       };
 
       const spinnerDialog = this.spinnerFactory?.make({
-        title: "New App Asset",
-        message: "Posting new app asset..."
+        title: "New Asset",
+        message: "Posting new asset..."
       });
 
       postNewAsset(newAssetData)
         .then((resp) => {
-          appAssets.add(resp.id);
-
           const newAsset = assetRepo.assetFactory(resp.id);
           newAsset.setFile(file);
           newAsset.description = description;
@@ -94,10 +84,9 @@ class NewAppAssetUCImp extends NewAppAssetUC {
           newAsset.filename = resp.filename;
 
           assetRepo.add(newAsset);
-          this.sandbox!.state = SandboxState.MOUNTED;
 
           spinnerDialog?.close();
-          resolve();
+          resolve(resp.id);
         })
         .catch((e: Error) => {
           this.error("create new asset error: " + e.message);
@@ -106,27 +95,17 @@ class NewAppAssetUCImp extends NewAppAssetUC {
           const dialogDTO: DialogAlertDTO = {
             buttonLabel: "OK",
             message: `Something went wrong when creating a new app asset. Check the console. ${e.message}`,
-            title: "New App Asset Error"
+            title: "New Asset Error"
           };
           this.alertFactory?.make(dialogDTO);
 
-          resolve();
+          resolve("");
         });
     });
   };
 
   constructor(appObject: HostAppObject) {
-    super(appObject, NewAppAssetUC.type);
+    super(appObject, NewAssetUC.type);
     this.appObjects.registerSingleton(this);
-
-    this.appAssets = appObject.getComponent<AppAssetsEntity>(
-      AppAssetsEntity.type
-    );
-    if (!this.appAssets) {
-      this.error(
-        "UC added to an App Object that does not have AppAssetsEntity"
-      );
-      return;
-    }
   }
 }

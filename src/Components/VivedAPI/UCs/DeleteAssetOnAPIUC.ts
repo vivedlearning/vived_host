@@ -1,10 +1,15 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from '../../../HostAppObject';
-import { VivedAPIEntity } from '../Entities/VivedAPIEntity';
-import { JsonRequestUC, RequestJSONOptions } from './JsonRequestUC';
-import { SignedAuthTokenUC } from './SignedAuthTokenUC';
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
+import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
+import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
+import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
 export abstract class DeleteAssetOnAPIUC extends HostAppObjectUC {
-  static type = 'DeleteAssetOnAPIUC';
+  static type = "DeleteAssetOnAPIUC";
 
   abstract doDelete(assetID: string): Promise<void>;
 
@@ -13,17 +18,21 @@ export abstract class DeleteAssetOnAPIUC extends HostAppObjectUC {
   }
 }
 
-export function makeDeleteAssetOnAPIUC(appObject: HostAppObject): DeleteAssetOnAPIUC {
+export function makeDeleteAssetOnAPIUC(
+  appObject: HostAppObject
+): DeleteAssetOnAPIUC {
   return new DeleteAssetUCImp(appObject);
 }
 
 class DeleteAssetUCImp extends DeleteAssetOnAPIUC {
   private get jsonRequester() {
-    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)?.doRequest;
+    return this.getCachedSingleton<JsonRequestUC>(JsonRequestUC.type)
+      ?.doRequest;
   }
 
   private get getAuthToken() {
-    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)?.getUserAuthToken;
+    return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
+      ?.getAuthToken;
   }
 
   private get vivedAPI() {
@@ -45,10 +54,10 @@ class DeleteAssetUCImp extends DeleteAssetOnAPIUC {
           const postURL = vivedAPI.getEndpointURL(`assets/${assetID}`);
 
           const options: RequestJSONOptions = {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-              Authorization: 'Bearer ' + token,
-            },
+              Authorization: "Bearer " + token
+            }
           };
 
           return jsonRequester(postURL, options);

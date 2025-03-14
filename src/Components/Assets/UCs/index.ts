@@ -7,6 +7,7 @@ export * from "./GetAssetBlobURLUC";
 export * from "./GetAssetFileUC";
 export * from "./GetAssetUC";
 export * from "./NewAppAssetUC";
+export * from "./NewAssetUC";
 export * from "./PrefetchAssetsUC";
 export * from "./UpdateAppAssetMetaUC";
 export * from "./UpdateAssetFileUC";

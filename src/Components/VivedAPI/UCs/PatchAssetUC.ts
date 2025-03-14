@@ -1,4 +1,9 @@
-import { getSingletonComponent, HostAppObject, HostAppObjectRepo, HostAppObjectUC } from "../../../HostAppObject";
+import {
+  getSingletonComponent,
+  HostAppObject,
+  HostAppObjectRepo,
+  HostAppObjectUC
+} from "../../../HostAppObject";
 import { generateUniqueID } from "../../../Utilities";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { FileUploadUC } from "./FileUploadUC";
@@ -42,7 +47,7 @@ class PatchAssetUCImp extends PatchAssetUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get fileUpload() {
