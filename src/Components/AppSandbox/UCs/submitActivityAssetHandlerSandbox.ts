@@ -6,7 +6,7 @@ import { SubmitActivityAssetAction } from "../../Handler/UCs/SubmitActivityAsset
 export function makeSubmitActivityAssetHandlerSandbox(
   appObjects: HostAppObjectRepo
 ): SubmitActivityAssetAction {
-  return function (
+  return function submitActivityAssetHandler (
     assetFile: File,
     callback: (assetID: string | undefined) => void
   ): void {
