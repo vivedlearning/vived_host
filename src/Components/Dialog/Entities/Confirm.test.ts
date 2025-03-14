@@ -1,18 +1,22 @@
-import { makeHostAppObjectRepo } from '../../../HostAppObject';
-import { confirmDialogType, DialogConfirmDTO, ConfirmDialogEntity } from './Confirm';
+import { makeHostAppObjectRepo } from "../../../HostAppObject";
+import {
+  confirmDialogType,
+  DialogConfirmDTO,
+  ConfirmDialogEntity
+} from "./Confirm";
 
 function makeTestRig() {
   const appObjects = makeHostAppObjectRepo();
-  const ao = appObjects.getOrCreate('dialog1');
+  const ao = appObjects.getOrCreate("dialog1");
   appObjects;
 
   const data: DialogConfirmDTO = {
-    confirmButtonLabel: 'confirm label',
-    cancelButtonLabel: 'cancel label',
-    message: 'a message',
+    confirmButtonLabel: "confirm label",
+    cancelButtonLabel: "cancel label",
+    message: "a message",
     onCancel: jest.fn(),
     onConfirm: jest.fn(),
-    title: 'a title',
+    title: "a title"
   };
 
   const dialog = new ConfirmDialogEntity(data, ao);
@@ -22,8 +26,8 @@ function makeTestRig() {
   return { dialog, observer, data, appObjects };
 }
 
-describe('Alert Dialog', () => {
-  it('Sets the open to false when cancel is called', () => {
+describe("Alert Dialog", () => {
+  it("Sets the open to false when cancel is called", () => {
     const { dialog } = makeTestRig();
     dialog.isOpen = true;
     dialog.cancel();
@@ -31,7 +35,7 @@ describe('Alert Dialog', () => {
     expect(dialog.isOpen).toEqual(false);
   });
 
-  it('Calls the onCancel when cancelled', () => {
+  it("Calls the onCancel when cancelled", () => {
     const { dialog, data } = makeTestRig();
 
     dialog.cancel();
@@ -39,7 +43,7 @@ describe('Alert Dialog', () => {
     expect(data.onCancel).toBeCalled();
   });
 
-  it('Sets the open to false when accept is called', () => {
+  it("Sets the open to false when accept is called", () => {
     const { dialog } = makeTestRig();
 
     dialog.isOpen = true;
@@ -48,7 +52,7 @@ describe('Alert Dialog', () => {
     expect(dialog.isOpen).toEqual(false);
   });
 
-  it('Calls the onAccept when accepted', () => {
+  it("Calls the onAccept when accepted", () => {
     const { dialog, data } = makeTestRig();
 
     dialog.confirm();
@@ -56,7 +60,7 @@ describe('Alert Dialog', () => {
     expect(data.onConfirm).toBeCalled();
   });
 
-  it('Applies the data', () => {
+  it("Applies the data", () => {
     const { dialog, data } = makeTestRig();
 
     expect(dialog.message).toEqual(data.message);
@@ -65,19 +69,19 @@ describe('Alert Dialog', () => {
     expect(dialog.title).toEqual(data.title);
   });
 
-  it('Sets the dialog type', () => {
+  it("Sets the dialog type", () => {
     const { dialog } = makeTestRig();
 
     expect(dialog.dialogType).toEqual(confirmDialogType);
   });
 
-  it('Disable outside dismiss', () => {
+  it("Disable outside dismiss", () => {
     const { dialog } = makeTestRig();
 
     expect(dialog.preventOutsideDismiss).toEqual(true);
   });
 
-  it('Notifies when the is open flag changes', () => {
+  it("Notifies when the is open flag changes", () => {
     const { dialog, observer } = makeTestRig();
 
     dialog.isOpen = true;
@@ -103,32 +107,46 @@ describe('Alert Dialog', () => {
     expect(observer).toBeCalledTimes(2);
   });
 
-  it('Warns if it cannot find the app object by ID when getting', () => {
+  it("Warns if it cannot find the app object by ID when getting", () => {
     const { appObjects } = makeTestRig();
 
     appObjects.submitWarning = jest.fn();
 
-    ConfirmDialogEntity.get('unknownID', appObjects);
+    ConfirmDialogEntity.get("unknownID", appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
 
-  it('Warns if the App Object does not have the UC when getting', () => {
+  it("Warns if the App Object does not have the UC when getting", () => {
     const { appObjects } = makeTestRig();
 
     appObjects.submitWarning = jest.fn();
 
-    appObjects.getOrCreate('anAppObject');
-    ConfirmDialogEntity.get('anAppObject', appObjects);
+    appObjects.getOrCreate("anAppObject");
+    ConfirmDialogEntity.get("anAppObject", appObjects);
 
     expect(appObjects.submitWarning).toBeCalled();
   });
 
-  it('Returns the UC when getting', () => {
+  it("Returns the UC when getting", () => {
     const { appObjects, dialog } = makeTestRig();
 
-    const returnedUC = ConfirmDialogEntity.get('dialog1', appObjects);
+    const returnedUC = ConfirmDialogEntity.get("dialog1", appObjects);
 
     expect(returnedUC).toEqual(dialog);
+  });
+
+  it("Sets hasBeenClosed to true when cancel is called", () => {
+    const { dialog } = makeTestRig();
+    dialog.isOpen = true;
+    dialog.cancel();
+    expect(dialog.hasBeenClosed).toEqual(true);
+  });
+
+  it("Sets hasBeenClosed to true when confirm is called", () => {
+    const { dialog } = makeTestRig();
+    dialog.isOpen = true;
+    dialog.confirm();
+    expect(dialog.hasBeenClosed).toEqual(true);
   });
 });

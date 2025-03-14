@@ -13,6 +13,7 @@ export interface DialogAlertDTO {
 export const alertDialogType = 'ALERT';
 
 export class AlertDialogEntity extends Dialog {
+  
   static type = 'AlertDialogEntity';
 
   static get(assetID: string, appObjects: HostAppObjectRepo): AlertDialogEntity | undefined {
@@ -36,9 +37,11 @@ export class AlertDialogEntity extends Dialog {
   readonly message: string;
   readonly buttonLabel: string;
   readonly preventOutsideDismiss: boolean = false;
+  hasBeenClosed: boolean = false;
 
   private postClose?: () => void;
   close = () => {
+    this.hasBeenClosed = true;
     this.isOpen = false;
     if (this.postClose) {
       this.postClose();

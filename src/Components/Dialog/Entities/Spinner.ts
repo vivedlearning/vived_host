@@ -10,6 +10,7 @@ export interface DialogSpinnerDTO {
 }
 
 export class SpinnerDialogEntity extends Dialog {
+  
   static type = 'SpinnerDialogEntity';
 
   static get(assetID: string, appObjects: HostAppObjectRepo): SpinnerDialogEntity | undefined {
@@ -53,8 +54,10 @@ export class SpinnerDialogEntity extends Dialog {
   get isOpen() {
     return this._isOpen.val;
   }
+  hasBeenClosed: boolean = false;
 
   close = () => {
+    this.hasBeenClosed = true;
     if (this.createdAt === undefined) {
       this.isOpen = false;
       return;

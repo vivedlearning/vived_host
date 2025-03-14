@@ -16,6 +16,8 @@ import {
 } from "../PMs";
 import { makeShowBabylonInspectorUC } from "../UCs";
 import { setupStandardHostHandlers } from "../../Handler/setupStandardHostHandlers";
+import { SubmitActivityAssetHandler } from "../../Handler";
+import { makeSubmitActivityAssetHandlerSandbox } from "../UCs/submitActivityAssetHandlerSandbox";
 
 export function setupAppSandbox(
   appID: string,
@@ -41,6 +43,15 @@ export function setupAppSandbox(
   makeSandboxStatePM(ao);
   makeShowInspectorPM(ao);
   makeStartInZSpacePM(ao);
+
+  const submitActivityAssetUC = appObjects.getSingleton<SubmitActivityAssetHandler>(
+    SubmitActivityAssetHandler.type
+  );
+  if (submitActivityAssetUC) {
+    submitActivityAssetUC.action = makeSubmitActivityAssetHandlerSandbox(
+      appObjects
+    );
+  }
 
   return entity;
 }

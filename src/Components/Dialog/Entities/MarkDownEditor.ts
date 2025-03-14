@@ -1,27 +1,42 @@
-import { MemoizedBoolean } from '../../../Entities';
-import { HostAppObject, HostAppObjectEntity, HostAppObjectRepo } from '../../../HostAppObject';
-import { Dialog } from './DialogQueue';
+import { MemoizedBoolean } from "../../../Entities";
+import {
+  HostAppObject,
+  HostAppObjectEntity,
+  HostAppObjectRepo
+} from "../../../HostAppObject";
+import { Dialog } from "./DialogQueue";
 
 export interface DialogMarkDownEditorDTO {
   initialText: string;
   onConfirm: (text: string) => void;
 }
 
-export const markDownEditorDialogType = 'MARKDOWN_EDITOR';
+export const markDownEditorDialogType = "MARKDOWN_EDITOR";
 
 export class MarkDownEditorDialogEntity extends Dialog {
-  static type = 'MarkDownEditorDialogEntity';
+  static type = "MarkDownEditorDialogEntity";
 
-  static get(assetID: string, appObjects: HostAppObjectRepo): MarkDownEditorDialogEntity | undefined {
+  static get(
+    assetID: string,
+    appObjects: HostAppObjectRepo
+  ): MarkDownEditorDialogEntity | undefined {
     const appObject = appObjects.get(assetID);
     if (!appObject) {
-      appObjects.submitWarning('MarkDownEditorDialogEntity.get', 'Unable to find app object');
+      appObjects.submitWarning(
+        "MarkDownEditorDialogEntity.get",
+        "Unable to find app object"
+      );
       return undefined;
     }
 
-    const uc = appObject.getComponent<MarkDownEditorDialogEntity>(MarkDownEditorDialogEntity.type);
+    const uc = appObject.getComponent<MarkDownEditorDialogEntity>(
+      MarkDownEditorDialogEntity.type
+    );
     if (!uc) {
-      appObjects.submitWarning('MarkDownEditorDialogEntity.get', 'App Object does not have DialogAlertEntity');
+      appObjects.submitWarning(
+        "MarkDownEditorDialogEntity.get",
+        "App Object does not have DialogAlertEntity"
+      );
       return undefined;
     }
 
@@ -31,13 +46,16 @@ export class MarkDownEditorDialogEntity extends Dialog {
   readonly dialogType = markDownEditorDialogType;
   readonly initialText: string;
   readonly preventOutsideDismiss = true;
+  hasBeenClosed: boolean = false;
 
   cancel = () => {
+    this.hasBeenClosed = true; // added setting hasBeenClosed
     this.isOpen = false;
   };
 
   private postConfirm: (text: string) => void;
   confirm = (text: string) => {
+    this.hasBeenClosed = true; // added setting hasBeenClosed
     this.isOpen = false;
     this.postConfirm(text);
   };

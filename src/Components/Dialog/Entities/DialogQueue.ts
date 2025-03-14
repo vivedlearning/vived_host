@@ -4,19 +4,12 @@ import {
   HostAppObjectEntity,
   HostAppObjectRepo
 } from "../../../HostAppObject";
-import { DialogAlertDTO, AlertDialogEntity } from "./Alert";
-import { DialogConfirmDTO, ConfirmDialogEntity } from "./Confirm";
-import {
-  DialogMarkDownEditorDTO,
-  MarkDownEditorDialogEntity
-} from "./MarkDownEditor";
-import { SelectModelDialogEntity } from "./SelectModel";
-import { DialogSpinnerDTO, SpinnerDialogEntity } from "./Spinner";
 
 export abstract class Dialog extends HostAppObjectEntity {
   abstract dialogType: string;
   abstract preventOutsideDismiss: boolean;
   abstract isOpen: boolean;
+  abstract hasBeenClosed: boolean;
 }
 
 export abstract class DialogQueue extends HostAppObjectEntity {
@@ -55,19 +48,34 @@ class DialogRepoImp extends DialogQueue {
   };
 
   activeDialogHasClosed = (): void => {
-    const activeDialog = this.activeDialog;
-    if (activeDialog !== null) {
-      this.dialogQueue.splice(0, 1);
+    const currentActiveDialog = this.activeDialog;
+    if (currentActiveDialog !== null) {
+      currentActiveDialog.removeChangeObserver(this.notifyOnChange);
 
+      this.filterOutClosedDialogs();
+
+      this.dialogQueue.splice(0, 1);
       const newActiveDialog = this.activeDialog;
       if (newActiveDialog !== null) {
         newActiveDialog.isOpen = true;
       }
 
-      activeDialog.removeChangeObserver(this.notifyOnChange);
-
       this.notifyOnChange();
     }
+  };
+
+  private filterOutClosedDialogs = () => {
+    const dialogsToKeep: Dialog[] = [];
+
+    this.dialogQueue.forEach((dialog) => {
+      if (!dialog.hasBeenClosed) {
+        dialogsToKeep.push(dialog);
+      } else {
+        dialog.removeChangeObserver(this.notifyOnChange);
+      }
+    });
+
+    this.dialogQueue = dialogsToKeep;
   };
 
   constructor(appObject: HostAppObject) {

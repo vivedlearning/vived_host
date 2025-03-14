@@ -5,6 +5,7 @@ import { Dialog } from './DialogQueue';
 export const selectModelDialogType = 'SELECT_CHANNEL_MODEL';
 
 export class SelectModelDialogEntity extends Dialog {
+  
   static type = 'SelectModelDialogEntity';
 
   static get(assetID: string, appObjects: HostAppObjectRepo): SelectModelDialogEntity | undefined {
@@ -24,7 +25,8 @@ export class SelectModelDialogEntity extends Dialog {
   }
 
   readonly dialogType = selectModelDialogType;
-
+  hasBeenClosed: boolean = false;
+  
   private _isOpen = new MemoizedBoolean(false, this.notifyOnChange);
   get isOpen(): boolean {
     return this._isOpen.val;
