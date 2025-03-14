@@ -6,7 +6,7 @@ import {
 import { SpinnerDialogEntity } from "../../Dialog/Entities";
 import { makeMockMakeAlertDialogUC } from "../../Dialog/Mocks/MockMakeAlertDialogUC";
 import { makeMockMakeSpinnerDialogUC } from "../../Dialog/Mocks/MockMakeSpinnerDialogUC";
-import { NewAssetDTO } from "../../VivedAPI/UCs/PostNewAssetUC";
+import { NewAssetApiDto } from "../../VivedAPI/UCs/PostNewAssetUC";
 import { makeMockPostNewAssetUC } from "../../VivedAPI/Mocks/MockPostNewAssetUC";
 import { makeAppAssets, makeAssetEntity, makeAssetRepo } from "../Entities";
 import {
@@ -127,7 +127,7 @@ describe("JSON Requester", () => {
 
     await uc.create(newAppAssetDTO);
 
-    const mockPostDTO = mockPost.doPost.mock.calls[0][0] as NewAssetDTO;
+    const mockPostDTO = mockPost.doPost.mock.calls[0][0] as NewAssetApiDto;
 
     expect(mockPostDTO.description).toEqual("some description");
     expect(mockPostDTO.ownerID).toEqual("anAppID");

@@ -1,16 +1,16 @@
 import {
-  getSingletonComponent,
   AppObject,
   AppObjectRepo,
-  AppObjectUC
+  AppObjectUC,
+  generateUniqueID,
+  getSingletonComponent
 } from "@vived/core";
-import { generateUniqueID } from "@vived/core";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { FileUploadUC } from "./FileUploadUC";
 import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
 import { SignedAuthTokenUC } from "./SignedAuthTokenUC";
 
-export interface NewAssetDTO {
+export interface NewAssetApiDto {
   name: string;
   description: string;
   ownerID: string;
@@ -25,7 +25,7 @@ export interface NewAssetResponseDTO {
 export abstract class PostNewAssetUC extends AppObjectUC {
   static type = "PostNewAssetUC";
 
-  abstract doPost(data: NewAssetDTO): Promise<NewAssetResponseDTO>;
+  abstract doPost(data: NewAssetApiDto): Promise<NewAssetResponseDTO>;
 
   static get(appObjects: AppObjectRepo): PostNewAssetUC | undefined {
     return getSingletonComponent(PostNewAssetUC.type, appObjects);
@@ -44,7 +44,7 @@ class PostNewAssetUCImp extends PostNewAssetUC {
 
   private get getPlayerAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get fileUploader() {
@@ -55,7 +55,7 @@ class PostNewAssetUCImp extends PostNewAssetUC {
     return this.getCachedSingleton<VivedAPIEntity>(VivedAPIEntity.type);
   }
 
-  doPost = (data: NewAssetDTO): Promise<NewAssetResponseDTO> => {
+  doPost = (data: NewAssetApiDto): Promise<NewAssetResponseDTO> => {
     const fileUploader = this.fileUploader;
     const getPlayerAuthToken = this.getPlayerAuthToken;
     const vivedAPI = this.vivedAPI;

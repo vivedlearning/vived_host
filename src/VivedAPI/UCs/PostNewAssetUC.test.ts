@@ -6,7 +6,7 @@ import { makeMockSignedAuthTokenUC } from "../Mocks/MockSignedAuthToken";
 import { RequestJSONOptions } from "./JsonRequestUC";
 import {
   makePostNewAssetUC,
-  NewAssetDTO,
+  NewAssetApiDto,
   PostNewAssetUC
 } from "./PostNewAssetUC";
 
@@ -23,7 +23,7 @@ function makeTestRig() {
   mockUpload.doUpload.mockResolvedValue(undefined);
 
   const mockAuth = makeMockSignedAuthTokenUC(appObjects);
-  mockAuth.getUserAuthToken.mockResolvedValue("mockAuthToken");
+  mockAuth.getAuthToken.mockResolvedValue("mockAuthToken");
 
   const uc = makePostNewAssetUC(appObjects.getOrCreate("ao"));
 
@@ -54,7 +54,7 @@ describe("JSON Requester", () => {
   it("Resolves with the new Asset ID and filename", async () => {
     const { uc } = makeTestRig();
 
-    const dto: NewAssetDTO = {
+    const dto: NewAssetApiDto = {
       description: "some desc",
       file: new File([], "file.name"),
       name: "some name",
@@ -73,7 +73,7 @@ describe("JSON Requester", () => {
 
     mockJsonRequester.doRequest.mockRejectedValue(new Error("Some JSON Error"));
 
-    const dto: NewAssetDTO = {
+    const dto: NewAssetApiDto = {
       description: "some desc",
       file: new File([], "filename"),
       name: "some name",
@@ -86,7 +86,7 @@ describe("JSON Requester", () => {
   it("Requests the JSON with the expected url", async () => {
     const { uc, mockJsonRequester } = makeTestRig();
 
-    const dto: NewAssetDTO = {
+    const dto: NewAssetApiDto = {
       description: "some desc",
       file: new File([], "filename"),
       name: "some name",
@@ -102,7 +102,7 @@ describe("JSON Requester", () => {
   it("Requests the JSON with the expected options", async () => {
     const { uc, mockJsonRequester } = makeTestRig();
 
-    const dto: NewAssetDTO = {
+    const dto: NewAssetApiDto = {
       description: "some desc",
       file: new File([], "filename.file"),
       name: "some name",
@@ -128,13 +128,13 @@ describe("JSON Requester", () => {
   it("Rejects if the get auth token fails", () => {
     const { uc, mockAuth } = makeTestRig();
 
-    const dto: NewAssetDTO = {
+    const dto: NewAssetApiDto = {
       description: "some desc",
       file: new File([], "filename.file"),
       name: "some name",
       ownerID: "someOwner"
     };
-    mockAuth.getUserAuthToken.mockRejectedValue(
+    mockAuth.getAuthToken.mockRejectedValue(
       new Error("Some Auth token error Error")
     );
 
@@ -146,7 +146,7 @@ describe("JSON Requester", () => {
   it("Rejects if the upload fails", () => {
     const { uc, mockUpload } = makeTestRig();
 
-    const dto: NewAssetDTO = {
+    const dto: NewAssetApiDto = {
       description: "some desc",
       file: new File([], "filename.file"),
       name: "some name",

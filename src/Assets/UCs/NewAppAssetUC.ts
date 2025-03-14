@@ -10,7 +10,7 @@ import {
   MakeAlertDialogUC,
   MakeSpinnerDialogUC
 } from "../../Dialog";
-import { NewAssetDTO, PostNewAssetUC } from "../../VivedAPI/UCs";
+import { NewAssetApiDto, PostNewAssetUC } from "../../VivedAPI/UCs";
 import { AppAssetsEntity, AssetRepo } from "../Entities";
 
 export interface NewAppAssetDTO {
@@ -71,7 +71,7 @@ class NewAppAssetUCImp extends NewAppAssetUC {
     return new Promise<void>((resolve) => {
       const { description, file, name } = data;
 
-      const newAssetData: NewAssetDTO = {
+      const newAssetData: NewAssetApiDto = {
         description,
         name,
         file,

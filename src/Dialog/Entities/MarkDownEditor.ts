@@ -41,13 +41,16 @@ export class MarkDownEditorDialogEntity extends Dialog {
   readonly dialogType = markDownEditorDialogType;
   readonly initialText: string;
   readonly preventOutsideDismiss = true;
+  hasBeenClosed: boolean = false;
 
   cancel = () => {
+    this.hasBeenClosed = true; // added setting hasBeenClosed
     this.isOpen = false;
   };
 
   private postConfirm: (text: string) => void;
   confirm = (text: string) => {
+    this.hasBeenClosed = true; // added setting hasBeenClosed
     this.isOpen = false;
     this.postConfirm(text);
   };

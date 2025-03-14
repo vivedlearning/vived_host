@@ -49,9 +49,11 @@ export class ConfirmDialogEntity extends Dialog {
   readonly confirmButtonLabel: string;
   readonly cancelButtonLabel: string;
   readonly preventOutsideDismiss = true;
+  hasBeenClosed: boolean = false;
 
   private postCancel?: () => void;
   cancel = () => {
+    this.hasBeenClosed = true;
     this.isOpen = false;
     if (this.postCancel) {
       this.postCancel();
@@ -60,7 +62,9 @@ export class ConfirmDialogEntity extends Dialog {
 
   private postConfirm?: () => void;
   confirm = () => {
+    this.hasBeenClosed = true;
     this.isOpen = false;
+  
     if (this.postConfirm) {
       this.postConfirm();
     }

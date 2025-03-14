@@ -2,8 +2,7 @@ import { AppObject, AppObjectRepo } from "@vived/core";
 import { SignedAuthTokenUC } from "../UCs/SignedAuthTokenUC";
 
 export class MockSignedAuthTokenUC extends SignedAuthTokenUC {
-  getPlayerAuthToken = jest.fn();
-  getUserAuthToken = jest.fn();
+  getAuthToken = jest.fn();
 
   constructor(appObject: AppObject) {
     super(appObject, SignedAuthTokenUC.type);

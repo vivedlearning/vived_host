@@ -18,7 +18,7 @@ function makeTestRig() {
   mockJsonRequester.doRequest.mockResolvedValue(makeMockResp());
 
   const mockAuth = makeMockSignedAuthTokenUC(appObjects);
-  mockAuth.getUserAuthToken.mockResolvedValue("mockAuthToken");
+  mockAuth.getAuthToken.mockResolvedValue("mockAuthToken");
 
   const uc = makeGetAssetsForOwnerFromAPIUC(appObjects.getOrCreate("ao"));
 
@@ -107,7 +107,7 @@ describe("Get Assets for Owner UC", () => {
   it("Rejects if the get auth token fails", () => {
     const { uc, mockAuth } = makeTestRig();
 
-    mockAuth.getUserAuthToken.mockRejectedValue(
+    mockAuth.getAuthToken.mockRejectedValue(
       new Error("Some Auth token error Error")
     );
 

@@ -166,4 +166,23 @@ describe("Spinner Dialog", () => {
 
     expect(returnedUC).toEqual(spinner);
   });
+
+  it("Sets hasBeenClosed to true when close is called with no createdAt", () => {
+    const { spinner } = makeTestRig();
+    spinner.close();
+    expect(spinner.hasBeenClosed).toEqual(true);
+    expect(spinner.isOpen).toEqual(false);
+  });
+
+  it("Sets hasBeenClosed to true when close is called (delayed close)", () => {
+    jest.useFakeTimers();
+    const { spinner } = makeTestRig();
+    spinner.isOpen = true; // sets createdAt
+    spinner.close();
+    expect(spinner.hasBeenClosed).toEqual(true);
+    // spinner might still be open until timer expires
+    jest.advanceTimersByTime(spinner.mininumuLifespan);
+    expect(spinner.isOpen).toEqual(false);
+    jest.useRealTimers();
+  });
 });

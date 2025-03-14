@@ -120,4 +120,18 @@ describe("MarkDown Editor Dialog", () => {
 
     expect(returnedUC).toEqual(dialog);
   });
+
+  it("Sets hasBeenClosed to true when cancel is called", () => {
+    const { dialog } = makeTestRig();
+    dialog.isOpen = true;
+    dialog.cancel();
+    expect(dialog.hasBeenClosed).toEqual(true);
+  });
+
+  it("Sets hasBeenClosed to true when confirm is called", () => {
+    const { dialog } = makeTestRig();
+    dialog.isOpen = true;
+    dialog.confirm("MarkDown Text");
+    expect(dialog.hasBeenClosed).toEqual(true);
+  });
 });

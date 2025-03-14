@@ -32,7 +32,7 @@ class PatchAssetFileUCImp extends PatchAssetFileUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get fileUpload() {

@@ -32,7 +32,7 @@ class PatchAssetIsArchivedUCImp extends PatchAssetIsArchivedUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get vivedAPI() {

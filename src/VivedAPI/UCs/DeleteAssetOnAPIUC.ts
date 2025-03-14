@@ -32,7 +32,7 @@ class DeleteAssetUCImp extends DeleteAssetOnAPIUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get vivedAPI() {

@@ -1,10 +1,10 @@
 import {
-  getSingletonComponent,
   AppObject,
   AppObjectRepo,
-  AppObjectUC
+  AppObjectUC,
+  generateUniqueID,
+  getSingletonComponent
 } from "@vived/core";
-import { generateUniqueID } from "@vived/core";
 import { VivedAPIEntity } from "../Entities/VivedAPIEntity";
 import { FileUploadUC } from "./FileUploadUC";
 import { JsonRequestUC, RequestJSONOptions } from "./JsonRequestUC";
@@ -47,7 +47,7 @@ class PatchAssetUCImp extends PatchAssetUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get fileUpload() {

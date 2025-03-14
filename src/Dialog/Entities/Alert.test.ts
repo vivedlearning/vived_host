@@ -106,4 +106,11 @@ describe("Alert Dialog", () => {
 
     expect(returnedUC).toEqual(alert);
   });
+
+  it("Sets hasBeenClosed to true when close is called", () => {
+    const { alert } = makeTestRig();
+    alert.isOpen = true;
+    alert.close();
+    expect(alert.hasBeenClosed).toEqual(true);
+  });
 });

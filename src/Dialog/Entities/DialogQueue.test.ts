@@ -201,4 +201,36 @@ describe("Dialog Repo Entity", () => {
     firstAlert.notifyOnChange();
     expect(observer).not.toBeCalled();
   });
+
+  it("Filters out closed dialogs when dismissing active dialog", () => {
+    const { dialogRepo, appObjects, observer } = makeTestRig();
+    const firstAlert = new AlertDialogEntity(
+      {
+        buttonLabel: "button1",
+        message: "message1",
+        title: "title1"
+      },
+      appObjects.getOrCreate("alert1")
+    );
+    dialogRepo.submitDialog(firstAlert);
+
+    const secondAlert = new AlertDialogEntity(
+      {
+        buttonLabel: "button2",
+        message: "message2",
+        title: "title2"
+      },
+      appObjects.getOrCreate("alert2")
+    );
+    dialogRepo.submitDialog(secondAlert);
+
+    // Mark the second alert as closed before dismissing the active dialog.
+    secondAlert.hasBeenClosed = true;
+
+    // Dismiss the active (first) dialog.
+    dialogRepo.activeDialogHasClosed();
+
+    // The closed secondAlert should be filtered out and no active dialog remains.
+    expect(dialogRepo.activeDialog).toBeNull();
+  });
 });

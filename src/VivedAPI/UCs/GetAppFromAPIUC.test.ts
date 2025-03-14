@@ -21,7 +21,7 @@ function makeTestRig() {
   });
 
   const mockAuth = makeMockSignedAuthTokenUC(appObjects);
-  mockAuth.getUserAuthToken.mockResolvedValue("mockAuthToken");
+  mockAuth.getAuthToken.mockResolvedValue("mockAuthToken");
 
   const uc = makeGetAppFromAPIUC(appObjects.getOrCreate("ao"));
 
@@ -97,7 +97,7 @@ describe("Patch Asset Is Archived UC", () => {
   it("Rejects if the get auth token fails", () => {
     const { uc, mockAuth } = makeTestRig();
 
-    mockAuth.getUserAuthToken.mockRejectedValue(
+    mockAuth.getAuthToken.mockRejectedValue(
       new Error("Some Auth token error Error")
     );
 

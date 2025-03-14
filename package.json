@@ -1,6 +1,6 @@
 {
   "name": "@vived/host",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Public Host package for the VIVED Learning App system",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",

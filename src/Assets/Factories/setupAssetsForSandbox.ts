@@ -21,6 +21,7 @@ import {
   makeGetAssetFileUC,
   makeGetAssetUC,
   makeNewAppAssetUC,
+  makeNewAssetUC,
   makePrefetchAssets,
   makeUpdateAppAssetMetaUC,
   makeUpdateAssetFileUC
@@ -41,7 +42,7 @@ export function setupAssetsForSandbox(appObjects: AppObjectRepo) {
   makeGetAssetFileUC(assetRepoAO);
   makeGetAssetUC(assetRepoAO);
   makePrefetchAssets(assetRepoAO);
-
+  makeNewAssetUC(assetRepoAO);
   makeNewAppAssetUC(appAssetsAO);
   makeGetAppAssetUC(appAssetsAO);
 

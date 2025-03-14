@@ -46,9 +46,11 @@ export class AlertDialogEntity extends Dialog {
   readonly message: string;
   readonly buttonLabel: string;
   readonly preventOutsideDismiss: boolean = false;
+  hasBeenClosed: boolean = false;
 
   private postClose?: () => void;
   close = () => {
+    this.hasBeenClosed = true;
     this.isOpen = false;
     if (this.postClose) {
       this.postClose();

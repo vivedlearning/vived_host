@@ -37,7 +37,7 @@ class PatchAssetMetaUCImp extends PatchAssetMetaUC {
 
   private get getAuthToken() {
     return this.getCachedSingleton<SignedAuthTokenUC>(SignedAuthTokenUC.type)
-      ?.getUserAuthToken;
+      ?.getAuthToken;
   }
 
   private get vivedAPI() {
