@@ -8,9 +8,11 @@ import { HostStateMachine } from "../Entities";
 
 export interface HostStateMachineVM {
   activeSlideID: string | undefined;
+  activeSlideName: string | undefined;
   nextSlideID: string | undefined;
   previousSlideID: string | undefined;
   states: { id: string; name: string }[];
+  isSingleSlide: boolean;
 }
 
 export abstract class HostStateMachinePM extends AppObjectPM<HostStateMachineVM> {
@@ -30,9 +32,11 @@ class HostStateMachinePMImp extends HostStateMachinePM {
 
   vmsAreEqual(a: HostStateMachineVM, b: HostStateMachineVM): boolean {
     if (a.activeSlideID !== b.activeSlideID) return false;
+    if (a.activeSlideName !== b.activeSlideName) return false;
     if (a.nextSlideID !== b.nextSlideID) return false;
     if (a.previousSlideID !== b.previousSlideID) return false;
     if (a.states.length !== b.states.length) return false;
+    if (a.isSingleSlide !== b.isSingleSlide) return false;
 
     let statesAreEqual = true;
     a.states.forEach((stateA, i) => {
@@ -52,11 +56,17 @@ class HostStateMachinePMImp extends HostStateMachinePM {
       return { id: stateID, name };
     });
 
+    const activeStateName = this.stateMachine.activeState
+      ? this.stateMachine.getStateByID(this.stateMachine.activeState)?.name
+      : undefined;
+
     const vm: HostStateMachineVM = {
       activeSlideID: this.stateMachine.activeState,
+      activeSlideName: activeStateName,
       nextSlideID: this.stateMachine.nextState,
       previousSlideID: this.stateMachine.previousState,
-      states
+      states,
+      isSingleSlide: states.length === 1
     };
 
     this.doUpdateView(vm);
@@ -83,7 +93,9 @@ class HostStateMachinePMImp extends HostStateMachinePM {
 
 export const defaultHostStateMachineVM: HostStateMachineVM = {
   activeSlideID: undefined,
+  activeSlideName: undefined,
   nextSlideID: undefined,
   previousSlideID: undefined,
-  states: []
+  states: [],
+  isSingleSlide: false
 };

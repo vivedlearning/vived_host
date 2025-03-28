@@ -55,9 +55,11 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm = pm.lastVM as HostStateMachineVM;
     expect(vm.activeSlideID).toEqual("state1");
+    expect(vm.activeSlideName).toEqual("State 1");
     expect(vm.previousSlideID).toBeUndefined();
     expect(vm.nextSlideID).toEqual("state2");
     expect(vm.states).toHaveLength(3);
+    expect(vm.isSingleSlide).toEqual(false);
   });
 
   it("Checks for equal vms", () => {
@@ -65,12 +67,14 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = { ...vm1 };
@@ -78,20 +82,69 @@ describe("Host State Machine Presentation Manager", () => {
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(true);
   });
 
+  it("Sets isSingleSlide to true when there is only one state", () => {
+    const { pm, stateMachine } = makeTestRig();
+
+    stateMachine.setStates([stateMachine.getStateByID("state1")!]);
+
+    const vm = pm.lastVM as HostStateMachineVM;
+    expect(vm.states).toHaveLength(1);
+    expect(vm.isSingleSlide).toEqual(true);
+  });
+
+  it("Checks for a change in isSingleSlide", () => {
+    const { pm } = makeTestRig();
+
+    const vm1: HostStateMachineVM = {
+      activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
+      nextSlideID: "newSlideID",
+      previousSlideID: "previousSlideID",
+      states: [{ id: "state1", name: "State 1" }],
+      isSingleSlide: true
+    };
+
+    const vm2 = { ...vm1, isSingleSlide: false };
+
+    expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
+  });
+
   it("Checks for a change in the active slide", () => {
     const { pm } = makeTestRig();
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = { ...vm1, activeSlideID: "CHANGED" };
+
+    expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
+  });
+
+  it("Checks for a change in the active slide name", () => {
+    const { pm } = makeTestRig();
+
+    const vm1: HostStateMachineVM = {
+      activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
+      nextSlideID: "newSlideID",
+      previousSlideID: "previousSlideID",
+      states: [
+        { id: "state1", name: "State 1" },
+        { id: "state2", name: "State 2" }
+      ],
+      isSingleSlide: false
+    };
+
+    const vm2 = { ...vm1, activeSlideName: "CHANGED" };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
   });
@@ -101,12 +154,14 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = { ...vm1, nextSlideID: "CHANGED" };
@@ -119,12 +174,14 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = { ...vm1, previousSlideID: "CHANGED" };
@@ -137,12 +194,14 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = {
@@ -151,7 +210,8 @@ describe("Host State Machine Presentation Manager", () => {
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" },
         { id: "state3", name: "State 3" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
@@ -162,15 +222,21 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
-    const vm2 = { ...vm1, states: [{ id: "state1", name: "State 1" }] };
+    const vm2 = {
+      ...vm1,
+      states: [{ id: "state1", name: "State 1" }],
+      isSingleSlide: true
+    };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
   });
@@ -180,12 +246,14 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = {
@@ -193,7 +261,8 @@ describe("Host State Machine Presentation Manager", () => {
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "RENAMED" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);
@@ -204,12 +273,14 @@ describe("Host State Machine Presentation Manager", () => {
 
     const vm1: HostStateMachineVM = {
       activeSlideID: "activeSlideID",
+      activeSlideName: "Active Slide",
       nextSlideID: "newSlideID",
       previousSlideID: "previousSlideID",
       states: [
         { id: "state1", name: "State 1" },
         { id: "state2", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     const vm2 = {
@@ -217,7 +288,8 @@ describe("Host State Machine Presentation Manager", () => {
       states: [
         { id: "state1", name: "State 1" },
         { id: "CHANGED", name: "State 2" }
-      ]
+      ],
+      isSingleSlide: false
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toEqual(false);

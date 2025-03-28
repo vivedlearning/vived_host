@@ -11,6 +11,7 @@ export abstract class HostStateMachine extends AppObjectEntity {
   static type = "HostStateMachine";
 
   abstract states: string[];
+  abstract stateCount: number;
 
   abstract activeState: string | undefined;
   abstract previousState: string | undefined;
@@ -19,14 +20,18 @@ export abstract class HostStateMachine extends AppObjectEntity {
   abstract transitionDuration: number;
 
   abstract setActiveStateByID: (id: string) => void;
+  abstract setActiveStateByIndex: (index: number) => void;
   abstract clearActiveState: () => void;
   abstract setStates: (states: HostStateEntity[]) => void;
   abstract createNewState: () => HostStateEntity;
   abstract getStateByID: (id: string) => HostStateEntity | undefined;
   abstract deleteState: (id: string) => void;
+  abstract deleteAllStates: () => void;
   abstract getStateIndex: (id: string) => number | undefined;
   abstract hasState: (id: string) => boolean;
   abstract stateFactory: (id: string) => HostStateEntity;
+  abstract setPreviousStateActive: () => void;
+  abstract setNextStateActive: () => void;
 
   static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<HostStateMachine>(
@@ -47,6 +52,10 @@ class HostStateMachineImp extends HostStateMachine {
 
   get states() {
     return this._states.map((state) => state.id);
+  }
+
+  get stateCount(): number {
+    return this._states.length;
   }
 
   private _activeState: string | undefined;
@@ -147,6 +156,13 @@ class HostStateMachineImp extends HostStateMachine {
     this.notifyOnChange();
   };
 
+  setActiveStateByIndex = (index: number): void => {
+    if (index < 0 || index >= this._states.length) return;
+
+    const state = this._states[index];
+    this.setActiveStateByID(state.id);
+  };
+
   clearActiveState = (): void => {
     if (!this.activeState) return;
 
@@ -192,6 +208,19 @@ class HostStateMachineImp extends HostStateMachine {
     this.notifyOnChange();
   };
 
+  deleteAllStates = (): void => {
+    if (this._states.length === 0) return;
+
+    // Dispose all state app objects
+    this._states.forEach((state) => {
+      state.appObject.dispose();
+    });
+
+    this._states = [];
+    this.clearActiveState();
+    this.notifyOnChange();
+  };
+
   getStateIndex = (id: string): number | undefined => {
     let index = -1;
 
@@ -217,6 +246,18 @@ class HostStateMachineImp extends HostStateMachine {
 
     return undefined;
   }
+
+  setPreviousStateActive = (): void => {
+    if (!this._previousState) return;
+
+    this.setActiveStateByID(this._previousState);
+  };
+
+  setNextStateActive = (): void => {
+    if (!this._nextState) return;
+
+    this.setActiveStateByID(this._nextState);
+  };
 
   constructor(appObject: AppObject) {
     super(appObject, HostStateMachine.type);

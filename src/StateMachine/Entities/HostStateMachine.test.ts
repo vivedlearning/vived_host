@@ -188,4 +188,166 @@ describe("State Machine", () => {
     expect(stateMachine.hasState("state1")).toEqual(true);
     expect(stateMachine.hasState("somethingElse")).toEqual(false);
   });
+
+  it("Reports correct state count", () => {
+    const { stateMachine } = makeTestRig();
+
+    // Initial state has 2 states
+    expect(stateMachine.stateCount).toEqual(2);
+
+    // After adding a state
+    stateMachine.createNewState();
+    expect(stateMachine.stateCount).toEqual(3);
+
+    // After deleting a state
+    stateMachine.deleteState("state1");
+    expect(stateMachine.stateCount).toEqual(2);
+  });
+
+  it("Sets active state by index", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    stateMachine.setActiveStateByIndex(1);
+
+    expect(stateMachine.activeState).toEqual("state2");
+    expect(observer).toBeCalled();
+  });
+
+  it("Does nothing if index is out of bounds", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    // With negative index
+    stateMachine.setActiveStateByIndex(-1);
+    expect(stateMachine.activeState).toBeUndefined();
+    expect(observer).not.toBeCalled();
+
+    // With too large index
+    stateMachine.setActiveStateByIndex(5);
+    expect(stateMachine.activeState).toBeUndefined();
+    expect(observer).not.toBeCalled();
+  });
+
+  it("Sets previous and next state correctly when using setActiveStateByIndex", () => {
+    const { stateMachine } = makeTestRig();
+    stateMachine.createNewState(); // Now 3 states
+
+    stateMachine.setActiveStateByIndex(1);
+
+    expect(stateMachine.activeState).toEqual("state2");
+    expect(stateMachine.previousState).toEqual("state1");
+    expect(stateMachine.nextState).not.toBeUndefined();
+  });
+
+  it("Deletes all states", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    stateMachine.deleteAllStates();
+
+    expect(stateMachine.states).toHaveLength(0);
+    expect(stateMachine.stateCount).toEqual(0);
+    expect(observer).toBeCalled();
+  });
+
+  it("Does not notify if there are no states to delete", () => {
+    const { stateMachine, observer } = makeTestRig();
+
+    stateMachine.deleteAllStates(); // Clear all states first
+    observer.mockClear();
+
+    stateMachine.deleteAllStates(); // Try again with empty states
+    expect(observer).not.toBeCalled();
+  });
+
+  it("Disposes all state app objects when deleting all states", () => {
+    const { stateMachine } = makeTestRig();
+
+    // Create mock dispose functions for each state
+    const state1 = stateMachine.getStateByID("state1");
+    const state2 = stateMachine.getStateByID("state2");
+
+    expect(state1).not.toBeUndefined();
+    expect(state2).not.toBeUndefined();
+
+    state1!.appObject.dispose = jest.fn();
+    state2!.appObject.dispose = jest.fn();
+
+    stateMachine.deleteAllStates();
+
+    expect(state1!.appObject.dispose).toBeCalled();
+    expect(state2!.appObject.dispose).toBeCalled();
+  });
+
+  it("Clears active state when deleting all states", () => {
+    const { stateMachine } = makeTestRig();
+
+    stateMachine.setActiveStateByID("state1");
+    expect(stateMachine.activeState).toEqual("state1");
+
+    stateMachine.deleteAllStates();
+
+    expect(stateMachine.activeState).toBeUndefined();
+    expect(stateMachine.previousState).toBeUndefined();
+    expect(stateMachine.nextState).toBeUndefined();
+  });
+
+  it("Sets previous state active", () => {
+    const { stateMachine, observer } = makeTestRig();
+
+    // Set state2 as active so state1 becomes the previous state
+    stateMachine.setActiveStateByID("state2");
+    observer.mockClear();
+
+    // Now call setPreviousStateActive
+    stateMachine.setPreviousStateActive();
+
+    expect(stateMachine.activeState).toEqual("state1");
+    expect(observer).toBeCalled();
+  });
+
+  it("Does nothing when setting previous state active if there is no previous state", () => {
+    const { stateMachine, observer } = makeTestRig();
+
+    // Set state1 as active (which has no previous state)
+    stateMachine.setActiveStateByID("state1");
+    observer.mockClear();
+
+    // Now call setPreviousStateActive
+    stateMachine.setPreviousStateActive();
+
+    // Should remain on state1
+    expect(stateMachine.activeState).toEqual("state1");
+    expect(observer).not.toHaveBeenCalled();
+  });
+
+  it("Sets next state active", () => {
+    const { stateMachine, observer } = makeTestRig();
+
+    // Set state1 as active so state2 becomes the next state
+    stateMachine.setActiveStateByID("state1");
+    observer.mockClear();
+
+    // Now call setNextStateActive
+    stateMachine.setNextStateActive();
+
+    expect(stateMachine.activeState).toEqual("state2");
+    expect(observer).toHaveBeenCalled();
+  });
+
+  it("Does nothing when setting next state active if there is no next state", () => {
+    const { stateMachine, observer } = makeTestRig();
+
+    // Set state2 as active (which has no next state)
+    stateMachine.setActiveStateByID("state2");
+    observer.mockClear();
+
+    // Now call setNextStateActive
+    stateMachine.setNextStateActive();
+
+    // Should remain on state2
+    expect(stateMachine.activeState).toEqual("state2");
+    expect(observer).not.toHaveBeenCalled();
+  });
 });
