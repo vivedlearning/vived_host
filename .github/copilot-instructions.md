@@ -905,6 +905,42 @@ export class AppObjectEntityRepo<
 }
 ```
 
+6. **SingletonPmAdapter<VM>**: An interface that makes it easy for a View to bind to a Singleton Presentation Manager
+   - Defines a default VM
+   - Subscribe provide a uniform way for the View to inject a callback (setVM) that will be notified when the PM changes
+   - Unsubscribe allows the View to unregister it's setVM callback
+
+Source code:
+```typescript
+export interface SingletonPmAdapter<VM> {
+  defaultVM: VM;
+  subscribe(appObjects: AppObjectRepo, setVM: (vm: VM) => void): void;
+  unsubscribe(appObjects: AppObjectRepo, setVM: (vm: VM) => void): void;
+}
+```
+
+7. **PmAdapter<VM>**: An interface that makes it easy for a View to bind to a Non-Singleton Presentation Manager
+   - Defines a default VM
+   - Subscribe provide a uniform way for the View to inject a callback (setVM) that will be notified when the PM changes
+   - Unsubscribe allows the View to unregister it's setVM callback
+
+Source code:
+```typescript
+export interface SingletonPmAdapter<VM> {
+  defaultVM: VM;
+  subscribe(
+    id: string,
+    appObjects: AppObjectRepo,
+    setVM: (vm: VM) => void
+  ): void;
+  unsubscribe(
+    id: string,
+    appObjects: AppObjectRepo,
+    setVM: (vm: VM) => void
+  ): void;
+}
+```
+
 #### Component Access Methods
 
 The `AppObjectComponent` class provides two key methods for accessing other components:
