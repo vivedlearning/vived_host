@@ -41,17 +41,6 @@ describe("hostStateAdapter", () => {
     expect(removeViewSpy).toHaveBeenCalledWith(setVM);
   });
 
-  it("should handle missing id on subscribe by returning early", () => {
-    appObjects.submitWarning = jest.fn();
-
-    hostStateAdapter.subscribe("", appObjects, setVM);
-
-    expect(appObjects.submitWarning).toHaveBeenCalledWith(
-      "hostStateAdapter",
-      "Missing ID for hostStateAdapter"
-    );
-  });
-
   it("should handle missing PM on subscribe", () => {
     // Create a new AppObjectRepo without the PM
     const emptyAppObjects = makeAppObjectRepo();

@@ -9,10 +9,6 @@ export const hostStateAdapter: PmAdapter<HostStateVM> = {
     setVM: (vm: HostStateVM) => void
   ) => {
     if (!id) {
-      appObjects.submitWarning(
-        "hostStateAdapter",
-        "Missing ID for hostStateAdapter"
-      );
       return;
     }
 

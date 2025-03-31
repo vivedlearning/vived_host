@@ -4,6 +4,7 @@ export * from "./deleteState";
 export * from "./duplicateState";
 export * from "./editActiveState";
 export * from "./editState";
+export * from "./editStateName";
 export * from "./endActivity";
 export * from "./newState";
 export * from "./saveAuthoring";

@@ -2,6 +2,7 @@ export * from "./CancelEditing";
 export * from "./ConsumeState";
 export * from "./DeleteStateUC";
 export * from "./DuplicateStateUC";
+export * from "./EditStateNameUC";
 export * from "./EditActiveState";
 export * from "./EditState";
 export * from "./EndActivity";

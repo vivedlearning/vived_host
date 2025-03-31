@@ -130,10 +130,10 @@ class HostStatePMImp extends HostStatePM {
       name: entity.name,
       data: entity.stateData,
       isActive: isActive || false,
-      appName: appName,
-      canBumpBackwards: canBumpBackwards,
-      canBumpForward: canBumpForward,
-      index: index
+      appName,
+      canBumpBackwards,
+      canBumpForward,
+      index
     };
 
     // Update the view with the new view model
