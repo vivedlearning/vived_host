@@ -11,7 +11,7 @@ export interface HostStateMachineVM {
   activeSlideName: string | undefined;
   nextSlideID: string | undefined;
   previousSlideID: string | undefined;
-  states: { id: string; name: string }[];
+  states: string[];
   isSingleSlide: boolean;
 }
 
@@ -38,23 +38,19 @@ class HostStateMachinePMImp extends HostStateMachinePM {
     if (a.states.length !== b.states.length) return false;
     if (a.isSingleSlide !== b.isSingleSlide) return false;
 
-    let statesAreEqual = true;
-    a.states.forEach((stateA, i) => {
-      const stateB = b.states[i];
-      if (stateA.id !== stateB.id) statesAreEqual = false;
-      if (stateA.name !== stateB.name) statesAreEqual = false;
-    });
+    // Compare states arrays
+    for (let i = 0; i < a.states.length; i++) {
+      if (a.states[i] !== b.states[i]) return false;
+    }
 
-    return statesAreEqual;
+    return true;
   }
 
   private onEntityChange = () => {
     if (!this.stateMachine) return;
 
-    const states = this.stateMachine.states.map((stateID) => {
-      const name = this.stateMachine?.getStateByID(stateID)?.name ?? "";
-      return { id: stateID, name };
-    });
+    // Get the state IDs directly without mapping to name
+    const states = [...this.stateMachine.states];
 
     const activeStateName = this.stateMachine.activeState
       ? this.stateMachine.getStateByID(this.stateMachine.activeState)?.name

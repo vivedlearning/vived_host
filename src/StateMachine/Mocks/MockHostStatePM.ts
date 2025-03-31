@@ -7,6 +7,11 @@ export class MockHostStatePM extends HostStatePM {
     return true;
   }
 
+  // Exposed method to manually trigger a view model update
+  updateVM(vm: HostStateVM): void {
+    this.doUpdateView(vm);
+  }
+
   constructor(appObject: AppObject) {
     super(appObject, HostStatePM.type);
   }

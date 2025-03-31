@@ -32,6 +32,7 @@ export abstract class HostStateMachine extends AppObjectEntity {
   abstract stateFactory: (id: string) => HostStateEntity;
   abstract setPreviousStateActive: () => void;
   abstract setNextStateActive: () => void;
+  abstract setStateIndex: (stateID: string, index: number) => void;
 
   static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<HostStateMachine>(
@@ -63,14 +64,22 @@ class HostStateMachineImp extends HostStateMachine {
     return this._activeState;
   }
 
-  private _previousState: string | undefined;
-  get previousState() {
-    return this._previousState;
+  get previousState(): string | undefined {
+    if (!this._activeState) return undefined;
+    
+    const currentIndex = this.getStateIndex(this._activeState);
+    if (currentIndex === undefined || currentIndex === 0) return undefined;
+    
+    return this._states[currentIndex - 1].id;
   }
 
-  private _nextState: string | undefined;
-  get nextState() {
-    return this._nextState;
+  get nextState(): string | undefined {
+    if (!this._activeState) return undefined;
+    
+    const currentIndex = this.getStateIndex(this._activeState);
+    if (currentIndex === undefined || currentIndex >= this._states.length - 1) return undefined;
+    
+    return this._states[currentIndex + 1].id;
   }
 
   private memoizedIsAuthoring = new MemoizedBoolean(false, this.notifyOnChange);
@@ -130,29 +139,6 @@ class HostStateMachineImp extends HostStateMachine {
     if (state.id === this._activeState) return;
     this._activeState = state.id;
 
-    const index = this.getStateIndex(id);
-
-    if (index === undefined) {
-      this._nextState = undefined;
-      this._previousState = undefined;
-      return;
-    }
-
-    const prevIndex = index - 1;
-    const nextIndex = index + 1;
-
-    if (prevIndex >= 0) {
-      this._previousState = this._states[prevIndex].id;
-    } else {
-      this._previousState = undefined;
-    }
-
-    if (nextIndex < this._states.length) {
-      this._nextState = this._states[nextIndex].id;
-    } else {
-      this._nextState = undefined;
-    }
-
     this.notifyOnChange();
   };
 
@@ -166,8 +152,6 @@ class HostStateMachineImp extends HostStateMachine {
   clearActiveState = (): void => {
     if (!this.activeState) return;
 
-    this._nextState = undefined;
-    this._previousState = undefined;
     this._activeState = undefined;
     this.notifyOnChange();
   };
@@ -248,15 +232,44 @@ class HostStateMachineImp extends HostStateMachine {
   }
 
   setPreviousStateActive = (): void => {
-    if (!this._previousState) return;
+    if (!this.previousState) return;
 
-    this.setActiveStateByID(this._previousState);
+    this.setActiveStateByID(this.previousState);
   };
 
   setNextStateActive = (): void => {
-    if (!this._nextState) return;
+    if (!this.nextState) return;
 
-    this.setActiveStateByID(this._nextState);
+    this.setActiveStateByID(this.nextState);
+  };
+
+  setStateIndex = (stateID: string, index: number): void => {
+    // Check if the state exists
+    const state = this.getStateByID(stateID);
+    if (!state) return;
+
+    // Check if the index is valid
+    if (index < 0 || index >= this._states.length) return;
+
+    // Get the current index
+    const currentIndex = this.getStateIndex(stateID);
+    if (currentIndex === undefined) return;
+
+    // If the index is the same, do nothing
+    if (currentIndex === index) return;
+
+    // Remove the state from the current position
+    const stateToMove = this._states.splice(currentIndex, 1)[0];
+
+    // Insert it at the new position
+    this._states.splice(index, 0, stateToMove);
+
+    // If the moved state was active, update previous and next states
+    if (stateID === this._activeState) {
+      this.setActiveStateByID(stateID);
+    }
+
+    this.notifyOnChange();
   };
 
   constructor(appObject: AppObject) {

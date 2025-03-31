@@ -350,4 +350,80 @@ describe("State Machine", () => {
     expect(stateMachine.activeState).toEqual("state2");
     expect(observer).not.toHaveBeenCalled();
   });
+
+  it("Sets state index", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    // Save the initial states order
+    const initialStates = [...stateMachine.states];
+
+    // Move state2 to index 0 (before state1)
+    stateMachine.setStateIndex("state2", 0);
+
+    // Check that the order changed correctly
+    expect(stateMachine.states[0]).toEqual("state2");
+    expect(stateMachine.states[1]).toEqual("state1");
+    expect(observer).toHaveBeenCalled();
+  });
+
+  it("Does nothing if state ID doesn't exist when setting state index", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    // Save the initial states order
+    const initialStates = [...stateMachine.states];
+
+    // Try to move a non-existent state
+    stateMachine.setStateIndex("nonExistentState", 0);
+
+    // Check that states remain unchanged
+    expect(stateMachine.states).toEqual(initialStates);
+    expect(observer).not.toHaveBeenCalled();
+  });
+
+  it("Does nothing if index is out of bounds when setting state index", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    // Save the initial states order
+    const initialStates = [...stateMachine.states];
+
+    // Try to move to an invalid index (negative)
+    stateMachine.setStateIndex("state1", -1);
+    expect(stateMachine.states).toEqual(initialStates);
+    expect(observer).not.toHaveBeenCalled();
+
+    // Try to move to an invalid index (too large)
+    stateMachine.setStateIndex("state1", 10);
+    expect(stateMachine.states).toEqual(initialStates);
+    expect(observer).not.toHaveBeenCalled();
+  });
+
+  it("Does nothing if moving state to its current index", () => {
+    const { stateMachine, observer } = makeTestRig();
+    observer.mockClear();
+
+    // Try to move state1 to index 0 (its current position)
+    stateMachine.setStateIndex("state1", 0);
+
+    // Verify no notification happened
+    expect(observer).not.toHaveBeenCalled();
+  });
+
+  it("Updates active state relationships when moving the active state", () => {
+    const { stateMachine } = makeTestRig();
+
+    // Set state1 as active
+    stateMachine.setActiveStateByID("state1");
+    expect(stateMachine.nextState).toEqual("state2");
+
+    // Move state1 after state2
+    stateMachine.setStateIndex("state1", 1);
+
+    // Check that relationships updated correctly
+    expect(stateMachine.activeState).toEqual("state1");
+    expect(stateMachine.previousState).toEqual("state2");
+    expect(stateMachine.nextState).toBeUndefined();
+  });
 });
