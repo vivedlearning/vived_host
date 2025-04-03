@@ -16,6 +16,7 @@ export interface ChallengeResultVM {
   attempts: number;
   message: string;
   resultType: ChallengeResultType;
+  stateIndex: number;
   resultData:
     | ChallengeResultHitData
     | ChallengeResultMultiHitData
@@ -73,12 +74,16 @@ class ChallengeResultsPMImp extends ChallengeResultsListPM {
     this.results.results.forEach((result) => {
       const state = this.stateMachine!.getStateByID(result.slideID);
       if (state) {
+        const stateIndex =
+          this.stateMachine!.getStateIndex(result.slideID) ?? -1;
+
         const vm: ChallengeResultVM = {
           id: result.slideID,
           slideName: state.name,
           attempts: result.tries,
           resultType: result.type,
           message: result.message,
+          stateIndex: stateIndex,
           resultData: result.resultData
         };
 

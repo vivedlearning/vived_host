@@ -37,7 +37,8 @@ function makeChallengeResultVM(id: string): ChallengeResultVM {
       success: true
     },
     resultType: "HIT",
-    slideName: "slide name"
+    slideName: "slide name",
+    stateIndex: 0
   };
 }
 
@@ -139,7 +140,8 @@ describe("Challenge Results PM", () => {
         },
         resultType: "HIT",
         id: "state1",
-        slideName: "State Name"
+        slideName: "State Name",
+        stateIndex: 0
       }
     ]);
   });

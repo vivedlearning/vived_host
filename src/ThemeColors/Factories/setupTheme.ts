@@ -4,7 +4,7 @@ import { makeHostThemeEntity } from "../Entities";
 import { makeThemeColorsPM } from "../PM";
 import { makeSetThemeUC } from "../UCs";
 
-export function setupThemeForSandbox(appObjects: AppObjectRepo) {
+export function setupTheme(appObjects: AppObjectRepo) {
   const ao = appObjects.getOrCreate("Theme");
 
   // Entities

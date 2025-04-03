@@ -1,1 +1,1 @@
-export * from "./setupThemeForSandbox"
+export * from "./setupTheme"

@@ -1,1 +1,1 @@
-export * from "./setupChallengeResultsForSandbox"
+export * from "./setupChallengeResults"

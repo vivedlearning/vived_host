@@ -39,7 +39,7 @@ class SetThemeUCImp extends SetThemeUC {
   }
 
   tryDetectTheme(): void {
-    if (!this.theme) return;
+    if (!this.theme || !window.matchMedia) return;
 
     const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
     if (darkThemeMq.matches) {
