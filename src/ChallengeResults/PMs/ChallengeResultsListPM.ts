@@ -83,7 +83,7 @@ class ChallengeResultsPMImp extends ChallengeResultsListPM {
           attempts: result.tries,
           resultType: result.type,
           message: result.message,
-          stateIndex: stateIndex,
+          stateIndex,
           resultData: result.resultData
         };
 
