@@ -15,6 +15,10 @@
   "scripts": {
     "test": "jest --watch --config jestconfig.json",
     "testOnce": "jest --config jestconfig.json",
+    "test:unit": "jest --config jestconfig.json --testMatch \"**/?(*.)+(test).+(ts|tsx|js)\" --watch",
+    "test:unit:once": "jest --config jestconfig.json --testMatch \"**/?(*.)+(test).+(ts|tsx|js)\"",
+    "test:integration": "jest --config jestconfig.json --testMatch \"**/__tests__/integration/**/*.+(ts|tsx|js)\" --watch",
+    "test:integration:once": "jest --config jestconfig.json --testMatch \"**/__tests__/integration/**/*.+(ts|tsx|js)\"",
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc",
     "build:cjs": "tsc -p tsconfig.cjs.json",
@@ -57,6 +61,6 @@
     "@types/webxr": "^0.5.20"
   },
   "peerDependencies": {
-    "@vived/core": "^1.4.2"
+    "@vived/core": "^1.4.3"
   }
 }
