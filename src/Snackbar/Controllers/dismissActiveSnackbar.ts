@@ -1,7 +1,12 @@
 import { AppObjectRepo } from "@vived/core";
 import { SnackbarRepo } from "../Entities/SnackbarRepo";
 
-export function dismissActiveSnackbar(appObjects: AppObjectRepo) {
+/**
+ * Dismisses the currently active snackbar, if any exists
+ * 
+ * @param appObjects The application object repository
+ */
+export function dismissActiveSnackbar(appObjects: AppObjectRepo): void {
   const repo = SnackbarRepo.get(appObjects);
   if (repo) {
     repo.dismissActiveSnackbar();
