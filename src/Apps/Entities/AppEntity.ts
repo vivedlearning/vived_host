@@ -5,6 +5,15 @@ import {
   Version
 } from "@vived/core";
 
+/**
+ * Enum representing the possible states of an application
+ * 
+ * @enum {string}
+ * @property {string} INIT - Initial state before app loading starts
+ * @property {string} LOADING - App is currently loading resources
+ * @property {string} READY - App is loaded and ready to use
+ * @property {string} ERROR - App encountered an error during loading
+ */
 export enum AppState {
   INIT = "INIT",
   LOADING = "LOADING",
@@ -12,7 +21,16 @@ export enum AppState {
   ERROR = "ERROR"
 }
 
+/**
+ * AppEntity - Core entity representing an application in the system
+ * 
+ * This abstract class defines the properties and behaviors of an application.
+ * It manages app state, versioning, mounting status, and error handling.
+ * 
+ * @extends AppObjectEntity from @vived/core
+ */
 export abstract class AppEntity extends AppObjectEntity {
+  /** Type identifier for the AppEntity component */
   static type = "AppEntity";
 
   static get(id: string, appObjects: AppObjectRepo) {
@@ -46,6 +64,12 @@ export abstract class AppEntity extends AppObjectEntity {
   abstract mountedVersion: Version | undefined;
 }
 
+/**
+ * Factory function to create a new AppEntity instance
+ * 
+ * @param appObject - The app object to attach the entity to
+ * @returns A concrete implementation of AppEntity
+ */
 export function makeAppEntity(appObject: AppObject): AppEntity {
   return new AppEntityImp(appObject);
 }

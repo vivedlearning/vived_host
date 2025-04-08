@@ -1,7 +1,8 @@
 import {
   AppObject,
   AppObjectEntityRepo,
-  AppObjectRepo, getSingletonComponent
+  AppObjectRepo,
+  getSingletonComponent
 } from "@vived/core";
 import { AppEntity, makeAppEntity } from "./AppEntity";
 
@@ -15,7 +16,7 @@ export abstract class AppRepoEntity extends AppObjectEntityRepo<AppEntity> {
   static type = "AppRepoEntity";
 
   static get(appObjects: AppObjectRepo) {
-    return getSingletonComponent<AppRepoEntity>(AppRepoEntity.type, appObjects);
+    return appObjects.getSingleton<AppRepoEntity>(AppRepoEntity.type);
   }
 
   abstract createApp: (id: string) => AppEntity;

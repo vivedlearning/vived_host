@@ -11,53 +11,138 @@ import { GetAppFromAPIUC } from "../../../VivedAPI/UCs/GetAppFromAPIUC";
 import { AppEntity, AppState } from "../../Entities/AppEntity";
 import { formAppIDWithVersion } from "../formAppIDWithVersion";
 
+/**
+ * Abstract base class for app mounting use cases.
+ *
+ * The MounterUC is responsible for loading, initializing, and managing app
+ * lifecycle. It handles script loading, version management, and communication
+ * setup between the host and app.
+ *
+ * @extends AppObjectUC from @vived/core
+ */
 export abstract class MounterUC extends AppObjectUC {
   static type = "MounterUC";
 
+  /**
+   * Mounts a specific version of the app.
+   *
+   * @param majorVersion - The major version number
+   * @param minorVersion - The minor version number
+   * @returns A promise that resolves when the app is mounted
+   */
   abstract mount(majorVersion: number, minorVersion: number): Promise<void>;
+
+  /**
+   * Mounts the latest available version of the app.
+   *
+   * @returns A promise that resolves when the app is mounted
+   */
   abstract mountLatestVersion(): Promise<void>;
+
+  /**
+   * Unmounts the app, removing it from the runtime environment.
+   */
   abstract unmount(): void;
+
+  /**
+   * Loads a script into the document.
+   *
+   * @param scriptURL - URL of the script to load
+   * @param appIDWithVersion - Versioned ID of the app
+   * @returns A promise that resolves when the script is loaded
+   */
   abstract loadScriptIntoDocument(
     scriptURL: string,
     appIDWithVersion: string
   ): Promise<void>; // Exposed for testing purposes
+
+  /**
+   * Gets the app interface for a specific version.
+   *
+   * @param version - The version to get the interface for
+   * @returns The app interface or undefined if not found
+   */
   abstract getAppInterface(version: Version): VIVEDApp_3 | undefined; // Exposed for test purposes
 
+  /**
+   * Retrieves the MounterUC component from an app object.
+   *
+   * @param appObject - The app object to get the component from
+   * @returns The MounterUC component or undefined if not found
+   */
   static get(appObject: AppObject) {
     return appObject.getComponent<MounterUC>(MounterUC.type);
   }
 
+  /**
+   * Retrieves the MounterUC component by app object ID.
+   *
+   * @param id - The ID of the app object
+   * @param appObjects - The app object repository
+   * @returns The MounterUC component or undefined if not found
+   */
   static getById(id: string, appObjects: AppObjectRepo) {
     const ao = appObjects.get(id);
     return ao?.getComponent<MounterUC>(MounterUC.type);
   }
 }
 
+/**
+ * Factory function to create a new MounterUC instance.
+ *
+ * @param appObject - The app object to attach the mounter to
+ * @returns A new MounterUC instance
+ */
 export function makeMounterUC(appObject: AppObject): MounterUC {
   return new MounterUCImp(appObject);
 }
 
+/**
+ * Concrete implementation of the MounterUC abstract class.
+ *
+ * This implementation provides the standard mounting behavior for loading
+ * and initializing apps, handling script loading, and managing app lifecycle.
+ */
 class MounterUCImp extends MounterUC {
+  /**
+   * Gets the use case for retrieving apps from the API.
+   */
   private get getAppFromAPI() {
     return this.getCachedSingleton<GetAppFromAPIUC>(GetAppFromAPIUC.type);
   }
 
+  /**
+   * Gets the app entity representing the app being mounted.
+   */
   private get app() {
     return this.getCachedLocalComponent<AppEntity>(AppEntity.type);
   }
 
+  /**
+   * Gets the host handler entity for receiving messages from apps.
+   */
   private get hostHandler() {
     return this.getCachedLocalComponent<HostHandlerEntity>(
       HostHandlerEntity.type
     );
   }
 
+  /**
+   * Gets the host dispatcher entity for sending messages to apps.
+   */
   private get hostDispatcher() {
     return this.getCachedLocalComponent<HostDispatchEntity>(
       HostDispatchEntity.type
     );
   }
 
+  /**
+   * Helper method to find a specific version of the app.
+   *
+   * @param major - Major version number
+   * @param minor - Minor version number
+   * @returns The Version object or undefined if not found
+   */
   private getAppVersion(major: number, minor: number): Version | undefined {
     if (!this.app) {
       return;
@@ -82,8 +167,16 @@ class MounterUCImp extends MounterUC {
     return appVersion;
   }
 
+  /**
+   * Tracks script elements added to the document to enable cleanup.
+   */
   private scriptElements: HTMLScriptElement[] = [];
 
+  /**
+   * Mounts the latest available version of the app.
+   *
+   * @returns A promise that resolves when the app is mounted
+   */
   mountLatestVersion(): Promise<void> {
     if (!this.app) {
       this.error("Missing Components");
@@ -99,6 +192,12 @@ class MounterUCImp extends MounterUC {
     return this.mount(version.major, version.minor);
   }
 
+  /**
+   * Unmounts the app, removing it from the runtime environment.
+   *
+   * This removes script elements, cleans up global references,
+   * and resets app state.
+   */
   unmount = () => {
     if (!this.app) return;
     if (!this.app.mountedVersion) return;
@@ -118,6 +217,17 @@ class MounterUCImp extends MounterUC {
     this.app.state = AppState.INIT;
   };
 
+  /**
+   * Mounts a specific version of the app.
+   *
+   * This method fetches the app from the API, loads scripts,
+   * establishes communication with the app, and waits for the
+   * app to be ready.
+   *
+   * @param majorVersion - The major version number
+   * @param minorVersion - The minor version number
+   * @returns A promise that resolves when the app is mounted
+   */
   mount = (majorVersion: number, minorVersion: number): Promise<void> => {
     const fetchApp = this.getAppFromAPI;
     if (!fetchApp) {
@@ -191,6 +301,13 @@ class MounterUCImp extends MounterUC {
     });
   };
 
+  /**
+   * Loads app scripts and retrieves the app interface.
+   *
+   * @param scripts - Array of script URLs to load
+   * @param version - The app version
+   * @returns A promise that resolves with the app interface
+   */
   private loadScripts = (
     scripts: string[],
     version: Version
@@ -232,6 +349,13 @@ class MounterUCImp extends MounterUC {
     });
   };
 
+  /**
+   * Loads a script into the document.
+   *
+   * @param scriptURL - URL of the script to load
+   * @param appIDWithVersion - Versioned ID of the app
+   * @returns A promise that resolves when the script is loaded
+   */
   loadScriptIntoDocument = (
     scriptURL: string,
     appIDWithVersion: string
@@ -256,6 +380,12 @@ class MounterUCImp extends MounterUC {
     });
   };
 
+  /**
+   * Gets the app interface for a specific version.
+   *
+   * @param version - The version to get the interface for
+   * @returns The app interface or undefined if not found
+   */
   getAppInterface = (version: Version): VIVEDApp_3 | undefined => {
     if (!this.app) return;
 
@@ -270,9 +400,13 @@ class MounterUCImp extends MounterUC {
     return appInterface;
   };
 
-  private parseEndpoints(
-    endpoints: string[]
-  ): {
+  /**
+   * Parses app entrypoints into scripts and styles.
+   *
+   * @param endpoints - Array of endpoint URLs
+   * @returns Object with separate arrays for scripts and styles
+   */
+  private parseEndpoints(endpoints: string[]): {
     scripts: string[];
     styles: string[];
   } {
@@ -295,6 +429,17 @@ class MounterUCImp extends MounterUC {
     };
   }
 
+  /**
+   * Waits for an app to report it's ready.
+   *
+   * This method handles special cases for apps that don't properly
+   * report their ready state, as well as the normal case where
+   * apps transition to the READY state.
+   *
+   * @param app - The app entity
+   * @param appVersion - The app version
+   * @returns A promise that resolves when the app is ready
+   */
   waitForAppIsReady(app: AppEntity, appVersion: Version): Promise<void> {
     // Edge cases here
     if (
@@ -351,6 +496,11 @@ class MounterUCImp extends MounterUC {
     });
   }
 
+  /**
+   * Creates a new MounterUCImp instance.
+   *
+   * @param appObject - The app object to attach to
+   */
   constructor(appObject: AppObject) {
     super(appObject, MounterUC.type);
   }

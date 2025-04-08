@@ -13,11 +13,37 @@ import {
   HostStateMachine
 } from "../../StateMachine/Entities";
 
+/**
+ * StartAppUC - Use case for starting an application in the host environment
+ * 
+ * This use case is responsible for initializing and starting an application
+ * within the VIVED Learning platform. It handles setting up the application container,
+ * initializing the app with the appropriate state, and dispatching necessary configurations.
+ * 
+ * The StartAppUC coordinates between several subsystems:
+ * - State Machine: Provides the current application state
+ * - Dispatcher: Communicates with the app via message passing
+ * - AppSandbox: Provides development features when enabled
+ * 
+ * @extends AppObjectUC from @vived/core
+ */
 export abstract class StartAppUC extends AppObjectUC {
+  /** Type identifier for the StartAppUC component */
   static type = "StartAppUC";
 
+  /**
+   * Abstract method that starts the application
+   * 
+   * @param container - HTML element that will contain the app
+   */
   abstract start(container: HTMLElement): void;
 
+  /**
+   * Gets a StartAppUC instance from an app object
+   * 
+   * @param appObject - App object to get the StartAppUC from
+   * @returns StartAppUC instance if found, undefined otherwise
+   */
   static get(appObject: AppObject): StartAppUC | undefined {
     const asset = appObject.getComponent<StartAppUC>(StartAppUC.type);
     if (!asset) {
@@ -29,6 +55,13 @@ export abstract class StartAppUC extends AppObjectUC {
     return asset;
   }
 
+  /**
+   * Gets a StartAppUC instance by app ID
+   * 
+   * @param id - ID of the app to start
+   * @param appObjects - Repository containing app objects
+   * @returns StartAppUC instance if found, undefined otherwise
+   */
   static getByID(
     id: string,
     appObjects: AppObjectRepo
@@ -46,6 +79,13 @@ export abstract class StartAppUC extends AppObjectUC {
     return StartAppUC.get(appObject);
   }
 
+  /**
+   * Convenience method to start an app by ID
+   * 
+   * @param container - HTML element to mount the app in
+   * @param id - ID of the app to start
+   * @param appObjects - Repository containing app objects
+   */
   static startByID(
     container: HTMLElement,
     id: string,
@@ -55,10 +95,21 @@ export abstract class StartAppUC extends AppObjectUC {
   }
 }
 
+/**
+ * Factory function to create a new StartAppUC instance
+ * 
+ * @param appObject - The app object to attach the use case to
+ * @returns A concrete implementation of StartAppUC
+ */
 export function makeStartAppUC(appObject: AppObject): StartAppUC {
   return new StartAppUCImp(appObject);
 }
 
+/**
+ * Concrete implementation of StartAppUC
+ * Uses dependency injection to access required components
+ * Handles the app starting process
+ */
 class StartAppUCImp extends StartAppUC {
   private get stateMachine() {
     return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);

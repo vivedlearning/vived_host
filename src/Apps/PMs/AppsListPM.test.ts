@@ -1,6 +1,6 @@
 import { makeAppObjectRepo } from "@vived/core";
 import { makeAppRepo } from "../Entities/AppRepo";
-import { AppsListPM, makeAppListPM } from "./AppsListPM";
+import { AppsListPM, makeAppsListPM } from "./AppsListPM";
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
@@ -11,7 +11,7 @@ function makeTestRig() {
   const app = slideAppRepo.createApp("app0");
   app!.assignedToOwner = true;
 
-  const pm = makeAppListPM(ao);
+  const pm = makeAppsListPM(ao);
   return { slideAppRepo, pm, appObjects, registerSingletonSpy };
 }
 
