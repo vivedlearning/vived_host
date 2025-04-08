@@ -10,6 +10,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Lint: `npm run lint`
 - Format: `npm run format`
 
+## Testing Guidelines
+- **Unit Tests**: Place in the same directory as the file being tested, named `*.test.ts`
+- **Integration Tests**: Place in `__tests__/integration/` folder of the feature module
+  - Name integration test files with `.integration.ts` suffix (e.g., `featureName.integration.ts`)
+  - Integration tests should verify interactions between multiple components
+  - Document the components being tested in the integration test file's JSDoc
+  - Create clear setup, execution, and verification phases in integration tests
+
 ## Code Style Guidelines
 - **Architecture**: Uses AppObject Architecture (Entities, UCs, PMs, Controllers, Adapters)
 - **Naming**: PascalCase for classes, camelCase for variables/functions, "I" prefix for interfaces
@@ -20,3 +28,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Error Handling**: Verify entity existence before accessing (`if (!this.entity) return`)
 - **Class Structure**: Follow component types (Entity, UC, PM) patterns from copilot-instructions.md
 - **Value Objects**: Use immutable value objects from @vived/core when appropriate
+- **Documentation**: Use JSDoc comments for interfaces, classes, and functions; document parameters, return types, and behavior
+- **Method Style**: Use regular method syntax for class methods instead of arrow functions unless capturing `this` context
+- **Return Types**: Always specify return types for functions explicitly (e.g., `function getName(): string`)
+- **Parameter Types**: Always specify parameter types for functions explicitly
