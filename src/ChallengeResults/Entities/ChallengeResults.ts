@@ -93,6 +93,8 @@ export abstract class ChallengeResultsEntity extends AppObjectEntity {
 
   abstract getResultForSlide: (slideID: string) => ChallengeResult | undefined;
 
+  abstract getScoreForSlide: (slideID: string) => number;
+
   static get(appObjects: AppObjectRepo) {
     return getSingletonComponent<ChallengeResultsEntity>(
       ChallengeResultsEntity.type,
@@ -208,6 +210,43 @@ class ChallengeResultsImp extends ChallengeResultsEntity {
 
   getResultForSlide = (slideID: string): ChallengeResult | undefined => {
     return this.resultLookup.get(slideID);
+  };
+
+  getScoreForSlide = (slideID: string): number => {
+    const result = this.getResultForSlide(slideID);
+    if (!result) {
+      return 0;
+    }
+
+    switch (result.type) {
+      case "HIT": {
+        const hitData = result.resultData as ChallengeResultHitData;
+        return hitData.success ? 1 : 0;
+      }
+      case "MULTIHIT": {
+        const multiHitData = result.resultData as ChallengeResultMultiHitData;
+        const total = multiHitData.hits + multiHitData.unanswered;
+        return total > 0 ? multiHitData.hits / total : 0;
+      }
+      case "QUALITY": {
+        const qualityData = result.resultData as ChallengeResultQualityData;
+        return qualityData.maxStars > 0
+          ? qualityData.stars / qualityData.maxStars
+          : 0;
+      }
+      case "SCORE": {
+        const scoreData = result.resultData as ChallengeResultScoreData;
+        return scoreData.maxScore > 0
+          ? scoreData.score / scoreData.maxScore
+          : 0;
+      }
+      case "PROGRESS": {
+        const progressData = result.resultData as ChallengeResultProgressData;
+        return progressData.maxProgress;
+      }
+      default:
+        return 0;
+    }
   };
 
   submitProgressResult = (

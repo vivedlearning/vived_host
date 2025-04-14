@@ -1,6 +1,6 @@
 import { AppObjectRepo } from "@vived/core";
 import { ChallengeResultsEntity, makeChallengeResults } from "../Entities";
-import { makeChallengeResultsPM, makeHasChallengeResultsPM } from "../PMs";
+import { makeChallengeResultsPM, makeChallengeScoreListPM, makeHasChallengeResultsPM } from "../PMs";
 
 export function setupChallengeResults(
   appObjects: AppObjectRepo
@@ -11,6 +11,7 @@ export function setupChallengeResults(
 
   // PM
   makeChallengeResultsPM(ao);
+  makeChallengeScoreListPM(ao);
   makeHasChallengeResultsPM(ao);
 
   return entity;

@@ -296,4 +296,98 @@ describe("Results Entity", () => {
 
     expect(registerSingletonSpy).toBeCalledWith(results);
   });
+
+  describe("getScoreForSlide", () => {
+    it("returns 0 if slide has no result", () => {
+      const { results } = makeTestRig();
+
+      const score = results.getScoreForSlide("non-existent-slide");
+
+      expect(score).toBe(0);
+    });
+
+    it("returns 1 for successful HIT result", () => {
+      const { results } = makeTestRig();
+
+      results.submitHitResult("slide1", true, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      expect(score).toBe(1);
+    });
+
+    it("returns 0 for unsuccessful HIT result", () => {
+      const { results } = makeTestRig();
+
+      results.submitHitResult("slide1", false, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      expect(score).toBe(0);
+    });
+
+    it("calculates ratio for MULTIHIT result", () => {
+      const { results } = makeTestRig();
+
+      results.submitMultiHitResult("slide1", 8, 2, 10, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      // hits / (hits + unanswered) = 8 / (8 + 10) = 8 / 18 = 0.4444...
+      expect(score).toBeCloseTo(0.444, 3);
+    });
+
+    it("returns 0 for MULTIHIT result with no total answers", () => {
+      const { results } = makeTestRig();
+
+      results.submitMultiHitResult("slide1", 0, 0, 0, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      expect(score).toBe(0);
+    });
+
+    it("calculates ratio for QUALITY result", () => {
+      const { results } = makeTestRig();
+
+      results.submitQualityResult("slide1", 3, 5, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      // stars / maxStars = 3 / 5 = 0.6
+      expect(score).toBe(0.6);
+    });
+
+    it("returns 0 for QUALITY result with maxStars=0", () => {
+      const { results } = makeTestRig();
+
+      results.submitQualityResult("slide1", 0, 0, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      expect(score).toBe(0);
+    });
+
+    it("calculates ratio for SCORE result", () => {
+      const { results } = makeTestRig();
+
+      results.submitScoreResult("slide1", 80, 100, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      // score / maxScore = 80 / 100 = 0.8
+      expect(score).toBe(0.8);
+    });
+
+    it("returns 0 for SCORE result with maxScore=0", () => {
+      const { results } = makeTestRig();
+
+      results.submitScoreResult("slide1", 0, 0, 2, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      expect(score).toBe(0);
+    });
+
+    it("returns maxProgress for PROGRESS result", () => {
+      const { results } = makeTestRig();
+
+      results.submitProgressResult("slide1", 0.75, "A challenge!");
+      const score = results.getScoreForSlide("slide1");
+
+      expect(score).toBe(0.75);
+    });
+  });
 });
