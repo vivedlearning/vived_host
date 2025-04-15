@@ -37,16 +37,26 @@ export function makeHostEditingStateEntity(
 }
 
 class HostEditingStateEntityImp extends HostEditingStateEntity {
+  private originalStateData?: StateDTO;
+  
+  private _editingState?: HostStateEntity;
+  get editingState() {
+    return this._editingState;
+  }
+
+  get isEditing(): boolean {
+    return this._editingState !== undefined;
+  }
+
   private _isNewState = false;
   get isNewState(): boolean {
     return this._isNewState;
   }
-  private _stateValidationMessage?: string | undefined;
 
+  private _stateValidationMessage?: string | undefined;
   get stateValidationMessage(): string | undefined {
     return this._stateValidationMessage;
   }
-
   set stateValidationMessage(val: string | undefined) {
     if (this._stateValidationMessage === val) return;
 
@@ -101,18 +111,6 @@ class HostEditingStateEntityImp extends HostEditingStateEntity {
   private onStateEntityChange = (): void => {
     this.memoizedSomethingHasChanged.val = this.checkForChange();
   };
-
-  get isEditing(): boolean {
-    return this._editingState !== undefined;
-  }
-
-  private _editingState?: HostStateEntity;
-
-  get editingState() {
-    return this._editingState;
-  }
-
-  private originalStateData?: StateDTO;
 
   startNewState = (): HostStateEntity | undefined => {
     if (!this.hostStateMachine) return;

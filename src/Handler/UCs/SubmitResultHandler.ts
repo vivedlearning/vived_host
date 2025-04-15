@@ -1,6 +1,10 @@
 import { AppObject, AppObjectUC } from "@vived/core";
 import { ChallengeResultsEntity } from "../../ChallengeResults";
-import { HostStateMachine } from "../../StateMachine";
+import {
+  ChallengeResponse,
+  HostStateEntity,
+  HostStateMachine
+} from "../../StateMachine";
 import {
   HostHandlerEntity,
   RequestHandler,
@@ -53,7 +57,8 @@ export type SubmitResultAction = (
 
 export abstract class SubmitResultHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "SubmitResultHandler";
 
   readonly requestType = "SUBMIT_RESULTS";
@@ -79,6 +84,15 @@ class SubmitResultHandlerImp extends SubmitResultHandler {
     return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
   }
 
+  // Map result types to challenge responses
+  private resultTypeToResponseMap: Record<ResultType, ChallengeResponse> = {
+    HIT_V1: ChallengeResponse.HIT,
+    MULTIHIT_V1: ChallengeResponse.MULTIHIT,
+    QUALITY_V1: ChallengeResponse.QUALITY,
+    SCORE_V1: ChallengeResponse.SCORE,
+    PROGRESS_V1: ChallengeResponse.PROGRESS
+  };
+
   action = (type: ResultType, result: Results, description: string) => {
     if (!this.challengeResults || !this.stateMachine) {
       this.error("Missing Component");
@@ -90,41 +104,55 @@ class SubmitResultHandlerImp extends SubmitResultHandler {
       return;
     }
 
-    const currentSlide = this.stateMachine.activeState;
+    const currentSlideId = this.stateMachine.activeState;
+    const currentStateEntity = this.stateMachine.getStateByID(currentSlideId);
+
+    if (!currentStateEntity) {
+      this.warn("Cannot find active state entity");
+      return;
+    }
+
+    // Set the expected response based on the result type
+    currentStateEntity.expectedResponse = this.resultTypeToResponseMap[type];
 
     let tries =
-      this.challengeResults.getResultForSlide(currentSlide)?.tries ?? 0;
+      this.challengeResults.getResultForSlide(currentSlideId)?.tries ?? 0;
     if (type !== "PROGRESS_V1") {
       tries += 1;
     }
 
     if (type === "HIT_V1") {
-      this.handleHitV1(result as HitResultV1, tries, currentSlide, description);
+      this.handleHitV1(
+        result as HitResultV1,
+        tries,
+        currentSlideId,
+        description
+      );
     } else if (type === "MULTIHIT_V1") {
       this.handleMultiHitV1(
         result as MultiHitResultV1,
         tries,
-        currentSlide,
+        currentSlideId,
         description
       );
     } else if (type === "QUALITY_V1") {
       this.handleQualityV1(
         result as QualityResultV1,
         tries,
-        currentSlide,
+        currentSlideId,
         description
       );
     } else if (type === "SCORE_V1") {
       this.handleScoreV1(
         result as ScoreResultV1,
         tries,
-        currentSlide,
+        currentSlideId,
         description
       );
     } else if (type === "PROGRESS_V1") {
       this.handleProgressV1(
         result as ProgressResultV1,
-        currentSlide,
+        currentSlideId,
         description
       );
     }
