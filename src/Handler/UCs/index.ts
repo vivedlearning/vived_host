@@ -25,5 +25,6 @@ export * from "./ShowSpinnerHandler";
 export * from "./StartZSpaceHandler";
 export * from "./StopZSpaceHandler";
 export * from "./SubmitActivityAssetHandler";
+export * from "./SubmitExpectedResultHandler";
 export * from "./SubmitLogHandler";
 export * from "./SubmitResultHandler";
