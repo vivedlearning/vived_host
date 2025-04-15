@@ -384,7 +384,7 @@ describe("Results Entity", () => {
     it("returns maxProgress for PROGRESS result", () => {
       const { results } = makeTestRig();
 
-      results.submitProgressResult("slide1", 0.75, "A challenge!");
+      results.submitProgressResult("slide1", 75, "A challenge!");
       const score = results.getScoreForSlide("slide1");
 
       expect(score).toBe(0.75);

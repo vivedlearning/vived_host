@@ -242,7 +242,7 @@ class ChallengeResultsImp extends ChallengeResultsEntity {
       }
       case "PROGRESS": {
         const progressData = result.resultData as ChallengeResultProgressData;
-        return progressData.maxProgress;
+        return progressData.maxProgress / 100;
       }
       default:
         return 0;
