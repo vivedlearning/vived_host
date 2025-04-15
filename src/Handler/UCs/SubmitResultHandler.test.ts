@@ -1,8 +1,6 @@
 import { makeAppObjectRepo } from "@vived/core";
 import { makeChallengeResults } from "../../ChallengeResults";
-import {
-  makeMockHostStateEntity
-} from "../../StateMachine/Mocks";
+import { makeMockHostStateEntity } from "../../StateMachine/Mocks";
 import { makeHostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
 import { makeHostHandlerEntity } from "../Entities/HostHandler";
 import {
@@ -197,7 +195,8 @@ describe("Submit Result Base Handler", () => {
       "A question!"
     );
 
-    expect(mockSubmit).toBeCalledWith("state1", 5, 6, 7, 1, "A question!");
+    // Verifying misses (6) is used as the tries value instead of the calculated tries (1)
+    expect(mockSubmit).toBeCalledWith("state1", 5, 6, 7, 6, "A question!");
   });
 
   it("Does not submit a multi hit if the payload is wrong", () => {

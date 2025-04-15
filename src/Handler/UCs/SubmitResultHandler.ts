@@ -238,7 +238,7 @@ class SubmitResultHandlerImp extends SubmitResultHandler {
       hits,
       misses,
       unanswered,
-      tries,
+      misses, // Using misses as tries instead of the tries parameter
       message
     );
   }
