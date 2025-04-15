@@ -91,4 +91,15 @@ describe("Submit Expected Result Handler", () => {
 
     expect(() => uc.handleRequest(1, payload)).toThrowError();
   });
+
+  it("Does not set expected response if it is already set", () => {
+    const { uc, state1 } = makeTestRig();
+
+    const responseType = ChallengeResponse.SCORE;
+    state1.expectedResponse = responseType;
+
+    uc.action(responseType);
+
+    expect(state1.expectedResponse).toBe(responseType);
+  });
 });

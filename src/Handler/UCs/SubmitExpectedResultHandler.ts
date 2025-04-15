@@ -49,7 +49,9 @@ class SubmitExpectedResultHandlerImp extends SubmitExpectedResultHandler {
       return;
     }
 
-    stateEntity.expectedResponse = responseType as ChallengeResponse;
+		if(stateEntity.expectedResponse === undefined) {
+			stateEntity.expectedResponse = responseType as ChallengeResponse;
+		}
   };
 
   handleRequest = (version: number, payload: unknown) => {
