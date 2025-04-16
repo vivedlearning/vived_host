@@ -5,6 +5,7 @@ import {
   getSingletonComponent
 } from "@vived/core";
 import { HostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
+import { ChallengeResponse } from "../../StateMachine/Entities/HostStateEntity";
 import { ChallengeResultsEntity } from "../Entities/ChallengeResults";
 
 export interface SlideScoreVM {
@@ -62,10 +63,19 @@ class ChallengeScoreListPMImp extends ChallengeScoreListPM {
 
     // Process each state
     stateIds.forEach((slideId, index) => {
-      // Skip slides that don't have a result
-      if (!this.challengeResults!.getResultForSlide(slideId)) return;
-
+      // Check if slide has a result or an expected response that's not NONE
+      const hasResult = this.challengeResults!.getResultForSlide(slideId);
       const state = this.stateMachine!.getStateByID(slideId);
+
+      if (
+        !hasResult &&
+        (!state ||
+          state.expectedResponse === undefined ||
+          state.expectedResponse === ChallengeResponse.NONE)
+      ) {
+        return;
+      }
+
       if (state) {
         // Get score for this slide using the method from ChallengeResults
         const score = this.challengeResults!.getScoreForSlide(slideId);

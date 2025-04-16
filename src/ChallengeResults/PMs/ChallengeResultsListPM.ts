@@ -9,15 +9,16 @@ import {
   ChallengeResultsEntity,
   ChallengeResultType
 } from "../Entities/ChallengeResults";
+import { ChallengeResponse } from "../../StateMachine";
 
 export interface ChallengeResultVM {
   id: string;
   slideName: string;
   attempts: number;
   message: string;
-  resultType: ChallengeResultType;
+  resultType?: ChallengeResultType;
   stateIndex: number;
-  resultData:
+  resultData?:
     | ChallengeResultHitData
     | ChallengeResultMultiHitData
     | ChallengeResultQualityData
@@ -71,20 +72,42 @@ class ChallengeResultsPMImp extends ChallengeResultsListPM {
 
     const organizedResults: ChallengeResultVM[] = [];
 
-    this.results.results.forEach((result) => {
-      const state = this.stateMachine!.getStateByID(result.slideID);
-      if (state) {
-        const stateIndex =
-          this.stateMachine!.getStateIndex(result.slideID) ?? -1;
+    // Get all states from state machine
+    const stateIds = this.stateMachine.states;
 
+    // Process each state
+    stateIds.forEach((stateId) => {
+      const state = this.stateMachine!.getStateByID(stateId);
+      if (!state) return;
+
+      const stateIndex = this.stateMachine!.getStateIndex(stateId) ?? -1;
+      const result = this.results!.getResultForSlide(stateId);
+
+      // If state has a result, add it with all result data
+      if (result) {
         const vm: ChallengeResultVM = {
-          id: result.slideID,
+          id: stateId,
           slideName: state.name,
           attempts: result.tries,
           resultType: result.type,
           message: result.message,
           stateIndex,
           resultData: result.resultData
+        };
+
+        organizedResults.push(vm);
+      }
+      // If state has no result but has expected response that's not NONE, add it with partial data
+      else if (
+        state.expectedResponse !== undefined &&
+        state.expectedResponse !== ChallengeResponse.NONE
+      ) {
+        const vm: ChallengeResultVM = {
+          id: stateId,
+          slideName: state.name,
+          attempts: 0,
+          stateIndex,
+          message: "Incomplete"
         };
 
         organizedResults.push(vm);
@@ -98,6 +121,10 @@ class ChallengeResultsPMImp extends ChallengeResultsListPM {
     super(appObject, ChallengeResultsListPM.type);
     this.doUpdateView([]);
     this.results?.addChangeObserver(this.onEntityChange);
+    this.stateMachine?.addChangeObserver(this.onEntityChange);
+
+    // Initial update
+    this.onEntityChange();
 
     this.appObjects.registerSingleton(this);
   }

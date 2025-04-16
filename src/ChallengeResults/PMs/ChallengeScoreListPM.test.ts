@@ -1,6 +1,9 @@
 import { makeAppObjectRepo } from "@vived/core";
+import {
+  ChallengeResponse,
+  makeHostStateEntity
+} from "../../StateMachine/Entities/HostStateEntity";
 import { makeHostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
-import { makeHostStateEntity } from "../../StateMachine/Entities/HostStateEntity";
 import { makeChallengeResults } from "../Entities";
 import {
   ChallengeScoreListPM,
@@ -174,5 +177,46 @@ describe("ChallengeScoreListPM", () => {
     ];
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
+  });
+
+  it("Includes states with expected responses even without results", () => {
+    const { pm, state1, stateMachine } = makeTestRig();
+
+    // No results submitted, but set expected response on state1
+    state1.expectedResponse = ChallengeResponse.HIT;
+    stateMachine.notifyOnChange();
+
+    // Check VM includes the state with expected response
+    expect(pm.lastVM?.length).toBe(1);
+    expect(pm.lastVM?.[0].id).toBe(state1.id);
+    expect(pm.lastVM?.[0].displayName).toBe("Slide 1: First Slide");
+  });
+
+  it("Doesn't include states with NONE expected responses and no results", () => {
+    const { pm, state1, state2, stateMachine } = makeTestRig();
+
+    // Set NONE expected response on state1
+    state1.expectedResponse = ChallengeResponse.NONE;
+    // Set undefined expected response on state2
+    state2.expectedResponse = undefined;
+    stateMachine.notifyOnChange();
+
+    // VM should not include any states
+    expect(pm.lastVM?.length).toBe(0);
+  });
+
+  it("Updates when state expected responses change", () => {
+    const { pm, state1, stateMachine } = makeTestRig();
+
+    // Initially no states in VM
+    expect(pm.lastVM?.length).toBe(0);
+
+    // Set expected response on state1
+    state1.expectedResponse = ChallengeResponse.SCORE;
+    stateMachine.notifyOnChange();
+
+    // VM should now include state1
+    expect(pm.lastVM?.length).toBe(1);
+    expect(pm.lastVM?.[0].id).toBe(state1.id);
   });
 });

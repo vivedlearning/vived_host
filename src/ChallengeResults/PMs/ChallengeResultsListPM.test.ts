@@ -1,6 +1,9 @@
 import { makeAppObjectRepo } from "@vived/core";
-import { makeHostStateMachine } from "../../StateMachine/Entities";
-import { makeMockHostStateEntity } from "../../StateMachine/Mocks/MockHostStateEntity";
+import { makeHostStateMachine } from "../../StateMachine/Entities/HostStateMachine";
+import {
+  makeHostStateEntity,
+  ChallengeResponse
+} from "../../StateMachine/Entities/HostStateEntity";
 import { makeChallengeResults } from "../Entities";
 import {
   ChallengeResultsListPM,
@@ -16,7 +19,12 @@ function makeTestRig() {
   const stateMachine = makeHostStateMachine(
     appObjects.getOrCreate("StateMachine")
   );
-  stateMachine.setStates([makeMockHostStateEntity("state1", appObjects)]);
+
+  // Create a state we can use for testing
+  const state1 = makeHostStateEntity(appObjects.getOrCreate("state1"));
+  state1.name = "State Name";
+
+  stateMachine.setStates([state1]);
 
   const pm = makeChallengeResultsPM(appObjects.getOrCreate("PM"));
 
@@ -24,7 +32,9 @@ function makeTestRig() {
     pm,
     results,
     appObjects,
-    registerSingletonSpy
+    registerSingletonSpy,
+    state1,
+    stateMachine
   };
 }
 
@@ -144,5 +154,71 @@ describe("Challenge Results PM", () => {
         stateIndex: 0
       }
     ]);
+  });
+
+  it("Includes states with expected responses even without results", () => {
+    const { pm, state1, results, stateMachine } = makeTestRig();
+
+    // Set expected response on state1
+    state1.expectedResponse = ChallengeResponse.HIT;
+    stateMachine.notifyOnChange();
+
+    // VM should include the state with expected response
+    expect(pm.lastVM?.length).toBe(1);
+    expect(pm.lastVM?.[0].id).toBe(state1.id);
+    expect(pm.lastVM?.[0].slideName).toBe("State Name");
+    expect(pm.lastVM?.[0].attempts).toBe(0);
+    expect(pm.lastVM?.[0].resultType).toBeUndefined();
+    expect(pm.lastVM?.[0].resultData).toBeUndefined();
+
+    // Now add an actual result
+    results.submitHitResult(state1.id, true, 1, "Success!");
+
+    // VM should update with result data
+    expect(pm.lastVM?.length).toBe(1);
+    expect(pm.lastVM?.[0].attempts).toBe(1);
+    expect(pm.lastVM?.[0].resultType).toBe("HIT");
+    expect(pm.lastVM?.[0].resultData).toBeDefined();
+  });
+
+  it("Doesn't include states with NONE expected responses and no results", () => {
+    const { pm, state1 } = makeTestRig();
+
+    // Set NONE expected response
+    state1.expectedResponse = ChallengeResponse.NONE;
+
+    // VM should not include any states
+    expect(pm.lastVM?.length).toBe(0);
+  });
+
+  it("Doesn't include states with undefined expected responses and no results", () => {
+    const { pm, state1 } = makeTestRig();
+
+    // Make sure expected response is undefined
+    state1.expectedResponse = undefined;
+
+    // VM should not include any states
+    expect(pm.lastVM?.length).toBe(0);
+  });
+
+  it("Updates when state expected responses change", () => {
+    const { pm, state1, stateMachine } = makeTestRig();
+
+    // Initially no states in VM (undefined expected response)
+    expect(pm.lastVM?.length).toBe(0);
+
+    // Set expected response
+    state1.expectedResponse = ChallengeResponse.SCORE;
+    stateMachine.notifyOnChange();
+
+    // VM should now include state1
+    expect(pm.lastVM?.length).toBe(1);
+    expect(pm.lastVM?.[0].id).toBe(state1.id);
+
+    // Change to NONE should remove from VM
+    state1.expectedResponse = ChallengeResponse.NONE;
+    stateMachine.notifyOnChange();
+    
+    expect(pm.lastVM?.length).toBe(0);
   });
 });
