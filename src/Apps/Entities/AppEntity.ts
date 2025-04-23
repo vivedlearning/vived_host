@@ -2,12 +2,13 @@ import {
   AppObject,
   AppObjectEntity,
   AppObjectRepo,
-  Version
+  Version,
+  MemoizedString
 } from "@vived/core";
 
 /**
  * Enum representing the possible states of an application
- * 
+ *
  * @enum {string}
  * @property {string} INIT - Initial state before app loading starts
  * @property {string} LOADING - App is currently loading resources
@@ -23,10 +24,10 @@ export enum AppState {
 
 /**
  * AppEntity - Core entity representing an application in the system
- * 
+ *
  * This abstract class defines the properties and behaviors of an application.
  * It manages app state, versioning, mounting status, and error handling.
- * 
+ *
  * @extends AppObjectEntity from @vived/core
  */
 export abstract class AppEntity extends AppObjectEntity {
@@ -50,6 +51,7 @@ export abstract class AppEntity extends AppObjectEntity {
   abstract name: string;
   abstract description: string;
   abstract image_url: string;
+  abstract imageAssetId: string | undefined;
   abstract versions: Version[];
   abstract get latestVersion(): Version | undefined;
   abstract errorMessage?: string;
@@ -66,7 +68,7 @@ export abstract class AppEntity extends AppObjectEntity {
 
 /**
  * Factory function to create a new AppEntity instance
- * 
+ *
  * @param appObject - The app object to attach the entity to
  * @returns A concrete implementation of AppEntity
  */
@@ -79,9 +81,55 @@ class AppEntityImp extends AppEntity {
     return this.appObject.id;
   }
 
-  name: string = "";
-  description: string = "";
-  image_url: string = "";
+  private _memoizedName: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
+
+  get name(): string {
+    return this._memoizedName.val;
+  }
+
+  set name(val: string) {
+    this._memoizedName.val = val;
+  }
+
+  private _memoizedDescription: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
+
+  get description(): string {
+    return this._memoizedDescription.val;
+  }
+
+  set description(val: string) {
+    this._memoizedDescription.val = val;
+  }
+
+  private _memoizedImageUrl: MemoizedString = new MemoizedString(
+    "",
+    this.notifyOnChange
+  );
+
+  get image_url(): string {
+    return this._memoizedImageUrl.val;
+  }
+
+  set image_url(val: string) {
+    this._memoizedImageUrl.val = val;
+  }
+
+  private _memoizedImageAssetId = new MemoizedString("", this.notifyOnChange);
+
+  get imageAssetId(): string | undefined {
+    const value = this._memoizedImageAssetId.val;
+    return value === "" ? undefined : value;
+  }
+
+  set imageAssetId(val: string | undefined) {
+    this._memoizedImageAssetId.val = val ?? "";
+  }
 
   versions: Version[] = [];
 

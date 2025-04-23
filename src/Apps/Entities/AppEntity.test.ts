@@ -24,6 +24,7 @@ describe("App Entity", () => {
     expect(app.name).toEqual("");
     expect(app.description).toEqual("");
     expect(app.image_url).toEqual("");
+    expect(app.imageAssetId).toBeUndefined();
     expect(app.isMounted).toEqual(false);
     expect(app.versions).toHaveLength(0);
     expect(app.mountedVersion).toBeUndefined();
@@ -136,6 +137,59 @@ describe("App Entity", () => {
 
     expect(app.assignedToOwner).toEqual(true);
 
+    expect(observer).toBeCalled();
+  });
+
+  it("Gets and sets imageAssetId", () => {
+    const { app, observer } = makeTestRig();
+
+    expect(app.imageAssetId).toBeUndefined();
+
+    app.imageAssetId = "assetID123";
+
+    expect(app.imageAssetId).toEqual("assetID123");
+    expect(observer).toBeCalled();
+
+    observer.mockClear();
+
+    app.imageAssetId = "assetID123";
+    app.imageAssetId = "assetID123";
+
+    expect(observer).not.toBeCalled();
+
+    app.imageAssetId = "differentAssetID";
+
+    expect(app.imageAssetId).toEqual("differentAssetID");
+    expect(observer).toBeCalled();
+
+    observer.mockClear();
+
+    app.imageAssetId = undefined;
+
+    expect(app.imageAssetId).toBeUndefined();
+    expect(observer).toBeCalled();
+  });
+
+  it("Gets and sets image_url with change notifications", () => {
+    const { app, observer } = makeTestRig();
+
+    expect(app.image_url).toEqual("");
+
+    app.image_url = "https://example.com/image.jpg";
+
+    expect(app.image_url).toEqual("https://example.com/image.jpg");
+    expect(observer).toBeCalled();
+
+    observer.mockClear();
+
+    app.image_url = "https://example.com/image.jpg";
+    app.image_url = "https://example.com/image.jpg";
+
+    expect(observer).not.toBeCalled();
+
+    app.image_url = "https://example.com/different-image.jpg";
+
+    expect(app.image_url).toEqual("https://example.com/different-image.jpg");
     expect(observer).toBeCalled();
   });
 });
