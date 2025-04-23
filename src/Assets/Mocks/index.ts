@@ -1,5 +1,6 @@
 export * from "./AppAssetListPMMock";
 export * from "./AssetPMMock";
+export * from "./AssetFilePMMock";
 export * from "./EditingAppAssetPMMock";
 export * from "./MockArchiveAsset";
 export * from "./MockDeleteAssetUC";

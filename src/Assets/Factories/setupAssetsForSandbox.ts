@@ -7,6 +7,7 @@ import {
 } from "../Entities";
 import {
   makeAppAssetListPM,
+  makeAssetFilePM,
   makeAssetPM,
   makeEditingAppAssetPM,
   makeShowArchivedAppAssetPM
@@ -68,6 +69,7 @@ function makeAssetFactory(appObjects: AppObjectRepo) {
 
     // PMs
     makeAssetPM(ao);
+    makeAssetFilePM(ao); // Add our new PM to each asset
     return entity;
   };
 }
