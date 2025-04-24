@@ -22,9 +22,7 @@ export function makeDeleteStateUC(appObject: AppObject): DeleteStateUC {
 
 class DeleteStateUCImp extends DeleteStateUC {
   private get stateMachine() {
-    return this.getCachedLocalComponent<HostStateMachine>(
-      HostStateMachine.type
-    );
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
   }
 
   deleteState = (id: string): void => {

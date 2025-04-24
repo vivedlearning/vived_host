@@ -5,6 +5,7 @@ import {
   AppObjectUC
 } from "@vived/core";
 import { HostStateMachine } from "../Entities";
+import { SandboxStateData } from "./setSandboxStatesFromData";
 
 export abstract class SavePersistentStatesUC extends AppObjectUC {
   static type = "SavePersistentStatesUC";
@@ -23,13 +24,6 @@ export function makeSavePersistentStatesUC(
   appObject: AppObject
 ): SavePersistentStatesUC {
   return new SavePersistentStatesUCImp(appObject);
-}
-
-interface SandboxStateData {
-  id: string;
-  name: string;
-  data: object;
-  assets: string[];
 }
 
 class SavePersistentStatesUCImp extends SavePersistentStatesUC {

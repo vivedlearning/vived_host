@@ -25,9 +25,7 @@ export function makeDuplicateStateUC(appObject: AppObject): DuplicateStateUC {
 
 class DuplicateStateUCImp extends DuplicateStateUC {
   private get stateMachine() {
-    return this.getCachedLocalComponent<HostStateMachine>(
-      HostStateMachine.type
-    );
+    return this.getCachedSingleton<HostStateMachine>(HostStateMachine.type);
   }
 
   duplicateState = (id: string): void => {

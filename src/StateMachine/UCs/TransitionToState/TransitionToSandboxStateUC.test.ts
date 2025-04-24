@@ -86,7 +86,7 @@ describe("Transition to Sandbox State UC", () => {
     const { uc, mockDispatchSetState, stateMachine } = makeTestRig();
 
     stateMachine.transitionDuration = 4;
-
+    
     uc.transitionToState("state1");
 
     const dispatchDTO = mockDispatchSetState.doDispatch.mock
