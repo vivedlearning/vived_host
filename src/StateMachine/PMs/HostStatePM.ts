@@ -1,6 +1,6 @@
 import { AppObject, AppObjectPM, AppObjectRepo } from "@vived/core";
 import { AppRepoEntity } from "../../Apps/Entities/AppRepo";
-import { HostStateEntity } from "../Entities/HostStateEntity";
+import { HostStateEntity, StreamState } from "../Entities/HostStateEntity";
 import { HostStateMachine } from "../Entities/HostStateMachine";
 
 export interface HostStateVM {
@@ -12,6 +12,7 @@ export interface HostStateVM {
   readonly canBumpBackwards: boolean;
   readonly canBumpForward: boolean;
   readonly index: number;
+  readonly streamState: StreamState;
 }
 
 export abstract class HostStatePM extends AppObjectPM<HostStateVM> {
@@ -26,7 +27,8 @@ export abstract class HostStatePM extends AppObjectPM<HostStateVM> {
     appName: "",
     canBumpBackwards: false,
     canBumpForward: false,
-    index: -1
+    index: -1,
+    streamState: StreamState.INIT
   };
 
   // Non-singleton getter pattern
@@ -67,6 +69,7 @@ class HostStatePMImp extends HostStatePM {
     if (a.canBumpBackwards !== b.canBumpBackwards) return false;
     if (a.canBumpForward !== b.canBumpForward) return false;
     if (a.index !== b.index) return false;
+    if (a.streamState !== b.streamState) return false;
 
     // Deep comparison for the data object
     const aData = JSON.stringify(a.data);
@@ -133,7 +136,8 @@ class HostStatePMImp extends HostStatePM {
       appName,
       canBumpBackwards,
       canBumpForward,
-      index
+      index,
+      streamState: entity.streamState
     };
 
     // Update the view with the new view model

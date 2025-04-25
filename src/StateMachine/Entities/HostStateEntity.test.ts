@@ -3,7 +3,8 @@ import {
   makeHostStateEntity,
   ChallengeResponse,
   StateDTO,
-  HostStateEntity
+  HostStateEntity,
+  StreamState
 } from "./HostStateEntity";
 
 function makeTestRig() {
@@ -249,5 +250,31 @@ describe("Host State Entity", () => {
   it("Gets by ID", () => {
     const { appObjects, entity } = makeTestRig();
     expect(HostStateEntity.get("State1", appObjects)).toEqual(entity);
+  });
+
+  it("Has an initial StreamState of INIT", () => {
+    const { entity } = makeTestRig();
+    expect(entity.streamState).toEqual(StreamState.INIT);
+  });
+
+  it("Sets the streamState", () => {
+    const { entity } = makeTestRig();
+
+    entity.streamState = StreamState.LOADING;
+    expect(entity.streamState).toEqual(StreamState.LOADING);
+
+    entity.streamState = StreamState.READY;
+    expect(entity.streamState).toEqual(StreamState.READY);
+  });
+
+  it("Notifies when the streamState changes", () => {
+    const { entity, observer } = makeTestRig();
+
+    entity.streamState = StreamState.LOADING;
+    entity.streamState = StreamState.LOADING;
+    entity.streamState = StreamState.READY;
+    entity.streamState = StreamState.READY;
+
+    expect(observer).toBeCalledTimes(2);
   });
 });

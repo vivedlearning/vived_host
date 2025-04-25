@@ -1,18 +1,35 @@
 # Test Driven Development Workflow
 
-## Step 1: Write a failing test
- - Write a test that will fail
- - Avoid mocking the script you are testing
+If you are asked to follow TDD when writing any code you need to follow the following steps in order:
 
-## Step 2: Run failing test
-- Run the test and confirm it fails
-- Do not try to implement a fix yet
+1. Write a Failing Test
+	- Create a test that will fail initially
+	- Avoid mocking the component under test
+	- Focus on testing behavior, not implementation
 
-## Step 3: Commit
-- Prompt me to keep the changes and commit them
+2. Verify Test Failure
+	- Execute the test and confirm it fails
+	- Do not implement any fixes at this stage
+	- Document expected vs actual behavior
 
-## Step 4: Write the code
-- Write the code so that the tests pass
-- Do not modify the test code
-- Run the test
-- Keep iterating until the test passes
+3. Commit Failing Test
+	- Stage changes
+	- Create a clear commit message
+	- Push the failing test
+
+4. Implement Solution
+	- Write minimal code to make test pass
+	- Keep test code unchanged
+	- Run tests frequently
+	- Refactor while maintaining test coverage
+	- Iterate until all tests pass
+
+## Commands
+- Use the following command to run test: `cd LOCAL_PATH ; npm run test:once "Path to test"`
+- Example: `cd c:\Users\amosp\Documents\WebGL\vivedlearning_host ; npm run test:once "StateMachine/Entities/HostStateEntity.test.ts"`
+
+## Exceptions
+The following file should not be follow this process unless explicitly asked
+- Main.ts
+- Mocks
+- Factories

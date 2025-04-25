@@ -3,7 +3,8 @@ import { AppEntity, makeAppEntity } from "../../Apps/Entities/AppEntity";
 import { AppRepoEntity, makeAppRepo } from "../../Apps/Entities/AppRepo";
 import {
   HostStateEntity,
-  makeHostStateEntity
+  makeHostStateEntity,
+  StreamState
 } from "../Entities/HostStateEntity";
 import {
   HostStateMachine,
@@ -138,7 +139,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -148,7 +150,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(true);
@@ -164,7 +167,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "id2",
@@ -174,7 +178,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -189,7 +194,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -199,7 +205,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -214,7 +221,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -224,7 +232,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -239,7 +248,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -249,7 +259,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -264,7 +275,8 @@ describe("HostStatePM", () => {
       appName: "app1",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -274,7 +286,8 @@ describe("HostStatePM", () => {
       appName: "app2",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -289,7 +302,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -299,7 +313,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: false,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -314,7 +329,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -324,7 +340,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: false,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -339,7 +356,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 0
+      index: 0,
+      streamState: StreamState.INIT
     };
     const vm2: HostStateVM = {
       id: "same",
@@ -349,7 +367,8 @@ describe("HostStatePM", () => {
       appName: "same app",
       canBumpBackwards: true,
       canBumpForward: true,
-      index: 1
+      index: 1,
+      streamState: StreamState.INIT
     };
 
     expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
@@ -483,5 +502,45 @@ describe("HostStatePM", () => {
     // Check indexes again
     expect(pm1.lastVM?.index).toBe(1);
     expect(pm2.lastVM?.index).toBe(0);
+  });
+
+  it("should initialize with INIT stream state", () => {
+    expect(pm.lastVM?.streamState).toBe(StreamState.INIT);
+  });
+
+  it("should update view model when streaming state changes", () => {
+    const spy = jest.spyOn(pm, "doUpdateView");
+
+    entity.streamState = StreamState.LOADING;
+
+    expect(spy).toHaveBeenCalled();
+    expect(pm.lastVM?.streamState).toBe(StreamState.LOADING);
+  });
+
+  it("should return false when comparing view models with different streamState", () => {
+    const vm1: HostStateVM = {
+      id: "same",
+      name: "same",
+      data: { test: 123 },
+      isActive: false,
+      appName: "same app",
+      canBumpBackwards: true,
+      canBumpForward: true,
+      index: 0,
+      streamState: StreamState.INIT
+    };
+    const vm2: HostStateVM = {
+      id: "same",
+      name: "same",
+      data: { test: 123 },
+      isActive: false,
+      appName: "same app",
+      canBumpBackwards: true,
+      canBumpForward: true,
+      index: 0,
+      streamState: StreamState.LOADING
+    };
+
+    expect(pm.vmsAreEqual(vm1, vm2)).toBe(false);
   });
 });
