@@ -1,10 +1,12 @@
 import { AppObject, AppObjectRepo } from "@vived/core";
 import {
   ChallengeResponse,
-  HostStateEntity
+  HostStateEntity,
+  StreamState
 } from "../Entities/HostStateEntity";
 
 export class MockHostStateEntity extends HostStateEntity {
+  streamState: StreamState = StreamState.INIT;
   get id() {
     return this.appObject.id;
   }
