@@ -2,6 +2,7 @@ export * from "./Apps";
 export * from "./AppSandbox";
 export * from "./AssetPlugin";
 export * from "./Assets";
+export * from "./Cache";
 export * from "./ChallengeResults";
 export * from "./Dialog";
 export * from "./Dispatcher";
@@ -13,4 +14,3 @@ export * from "./StateMachine";
 export * from "./ThemeColors";
 export * from "./VivedAPI";
 export * from "./ZSpaceHost";
-
