@@ -6,3 +6,5 @@
 
 export * from "./GetScriptFromCacheUC";
 export * from "./StoreScriptInCacheUC";
+export * from "./GetAssetFromCacheUC";
+export * from "./StoreAssetInCacheUC";

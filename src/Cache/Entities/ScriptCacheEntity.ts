@@ -6,36 +6,83 @@ import {
 } from "@vived/core";
 import { CacheEntity } from "./CacheEntity";
 
+/**
+ * Entity responsible for managing script caching operations.
+ * Provides functionality to store, retrieve, check existence, and invalidate scripts
+ * in the cache based on app ID, version, and script path.
+ */
 export abstract class ScriptCacheEntity extends AppObjectEntity {
   static readonly type = "ScriptCacheEntity";
 
+  /**
+   * Retrieves a script from the cache.
+   * @param appId - Unique identifier of the app
+   * @param version - Version of the app
+   * @param scriptPath - Path of the script within the app
+   * @returns Promise with the script content if found, undefined otherwise
+   */
   abstract getScript(
     appId: string,
     version: string,
     scriptPath: string
   ): Promise<string | undefined>;
+
+  /**
+   * Stores a script in the cache.
+   * @param appId - Unique identifier of the app
+   * @param version - Version of the app
+   * @param scriptPath - Path of the script within the app
+   * @param content - Content of the script to store
+   */
   abstract storeScript(
     appId: string,
     version: string,
     scriptPath: string,
     content: string
   ): Promise<void>;
+
+  /**
+   * Checks if a script exists in the cache.
+   * @param appId - Unique identifier of the app
+   * @param version - Version of the app
+   * @param scriptPath - Path of the script within the app
+   * @returns Promise resolving to true if script exists, false otherwise
+   */
   abstract hasScript(
     appId: string,
     version: string,
     scriptPath: string
   ): Promise<boolean>;
+
+  /**
+   * Invalidates scripts in the cache.
+   * Can invalidate a specific script, all scripts for a version, or all scripts for an app.
+   * @param appId - Unique identifier of the app
+   * @param version - Optional version of the app
+   * @param scriptPath - Optional path of the script within the app
+   */
   abstract invalidateScript(
     appId: string,
     version?: string,
     scriptPath?: string
   ): Promise<void>;
+
+  /**
+   * Extracts app ID, version, and script path from a script URL.
+   * @param url - The URL to parse
+   * @returns Object containing extracted appId, version, and scriptPath
+   */
   abstract extractScriptInfo(url: string): {
     appId: string;
     version: string;
     scriptPath: string;
   };
 
+  /**
+   * Gets the singleton ScriptCacheEntity instance from the AppObjectRepo.
+   * @param appObjects - Repository of application objects
+   * @returns ScriptCacheEntity instance if registered, undefined otherwise
+   */
   static get(appObjects: AppObjectRepo): ScriptCacheEntity | undefined {
     return getSingletonComponent<ScriptCacheEntity>(
       ScriptCacheEntity.type,
@@ -44,6 +91,11 @@ export abstract class ScriptCacheEntity extends AppObjectEntity {
   }
 }
 
+/**
+ * Factory function to create a new ScriptCacheEntity instance.
+ * @param appObject - The parent AppObject
+ * @returns A new ScriptCacheEntity instance
+ */
 export function makeScriptCacheEntity(appObject: AppObject): ScriptCacheEntity {
   return new ScriptCacheEntityImp(appObject);
 }

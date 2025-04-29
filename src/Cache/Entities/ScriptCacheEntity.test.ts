@@ -83,18 +83,21 @@ describe("ScriptCacheEntity", () => {
 
   it("logs warning when attempting partial invalidation", async () => {
     // Create a spy on the warning method
-    const warnSpy = jest.spyOn(scriptCache, "warn");
+    const warnSpy = jest.fn();
+    const originalWarn = appObjects.submitWarning;
+    appObjects.submitWarning = warnSpy;
 
     // Test partial invalidation (currently not fully implemented)
     await scriptCache.invalidateScript("someApp");
 
     // Verify warning was logged
     expect(warnSpy).toHaveBeenCalledWith(
+      "testScriptCache/ScriptCacheEntity",
       "Partial invalidation not fully implemented"
     );
 
     // Clean up spy
-    warnSpy.mockRestore();
+    appObjects.submitWarning = originalWarn;
   });
 
   it("extracts script info from URL", () => {

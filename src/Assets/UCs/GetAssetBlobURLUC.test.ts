@@ -5,26 +5,87 @@ import { makeAssetRepo } from "../Entities/AssetRepo";
 import { makeMockGetAssetUC } from "../Mocks/MockGetAssetUC";
 import { GetAssetBlobURLUC, makeGetAssetBlobURLUC } from "./GetAssetBlobURLUC";
 
+// Mock URL methods that are not available in Node.js environment
+if (!global.URL.createObjectURL) {
+  global.URL.createObjectURL = jest.fn().mockReturnValue("mock-blob-url");
+}
+
+if (!global.URL.revokeObjectURL) {
+  global.URL.revokeObjectURL = jest.fn();
+}
+
+// Create mock functions for cache operations
+const mockGetAssetFromCache = jest.fn();
+const mockStoreAssetInCache = jest.fn();
+
+// Create mock cache components
+class MockGetAssetFromCacheUC {
+  static type = "GetAssetFromCacheUC";
+  type = "GetAssetFromCacheUC";
+  getAsset = mockGetAssetFromCache;
+
+  constructor(private appObjects: any) {
+    this.appObjects.registerSingleton(this);
+  }
+}
+
+class MockStoreAssetInCacheUC {
+  static type = "StoreAssetInCacheUC";
+  type = "StoreAssetInCacheUC";
+  storeAsset = mockStoreAssetInCache;
+
+  constructor(private appObjects: any) {
+    this.appObjects.registerSingleton(this);
+  }
+}
+
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
 
-  const assetRepo = makeAssetRepo(appObjects.getOrCreate("AssetRepo"));
+  // Reset mocks to ensure clean state
+  (global.URL.createObjectURL as jest.Mock).mockReturnValue("mock-blob-url");
+  (global.URL.revokeObjectURL as jest.Mock).mockClear();
 
-  URL.createObjectURL = jest.fn().mockReturnValue("www.some.url");
+  // Create mock fetch implementation
+  const mockFetch = makeMockFetchAssetFileFromAPIUC(appObjects);
+  const mockFetchedFile = new File([], "test-file.png");
+  mockFetch.doFetch.mockResolvedValue(mockFetchedFile);
 
+  // Create mock get asset implementation
   const mockGetAsset = makeMockGetAssetUC(appObjects);
   const mockFetchedAsset = makeAssetEntity(
     appObjects.getOrCreate("fetchedAsset")
   );
+
+  // Set a file to generate a blobURL
+  mockFetchedAsset.setFile(new File([], "test-file.png"));
+
   mockGetAsset.getAsset.mockResolvedValue(mockFetchedAsset);
 
-  const mockFetch = makeMockFetchAssetFileFromAPIUC(appObjects);
-  const mockFetchedFile = new File([], "file.name");
-  mockFetch.doFetch.mockResolvedValue(mockFetchedFile);
+  // Create asset repository
+  const assetRepo = makeAssetRepo(appObjects.getOrCreate("AssetRepo"));
 
+  // Create cache components and register as singletons
+  new MockGetAssetFromCacheUC(appObjects);
+  new MockStoreAssetInCacheUC(appObjects);
+
+  // Set up mock cache behavior for different tests
+  mockGetAssetFromCache.mockImplementation((id) => {
+    if (id === "cached-asset-id") {
+      return Promise.resolve(
+        new Blob(["cached content"], { type: "image/png" })
+      );
+    }
+    return Promise.resolve(null);
+  });
+
+  mockStoreAssetInCache.mockImplementation(() => Promise.resolve());
+
+  // Create the component under test
   const uc = makeGetAssetBlobURLUC(appObjects.getOrCreate("AssetRepo"));
 
+  // Add an existing asset to the repo
   const existingAsset = makeAssetEntity(
     appObjects.getOrCreate("existingAsset")
   );
@@ -39,11 +100,17 @@ function makeTestRig() {
     assetRepo,
     mockGetAsset,
     existingAsset,
-    mockFetchedAsset
+    mockFetchedAsset,
+    mockGetAssetFromCache,
+    mockStoreAssetInCache
   };
 }
 
-describe("Get Asset File UC", () => {
+describe("Get Asset Blob URL UC", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("Registers itself as the Singleton", () => {
     const { uc, singletonSpy } = makeTestRig();
 
@@ -64,7 +131,7 @@ describe("Get Asset File UC", () => {
 
     const blobURL = await uc.getAssetBlobURL(existingAsset.id);
 
-    expect(blobURL).toEqual("www.some.url");
+    expect(blobURL).toEqual("mock-blob-url");
     expect(mockGetAsset.getAsset).not.toBeCalled();
     expect(mockFetch.doFetch).not.toBeCalled();
   });
@@ -74,11 +141,17 @@ describe("Get Asset File UC", () => {
 
     const blobURL = await uc.getAssetBlobURL("assetID");
 
-    expect(blobURL).toEqual("www.some.url");
+    expect(blobURL).toEqual("mock-blob-url");
   });
 
   it("Stores the file on the asset", async () => {
     const { mockFetchedFile, uc, mockFetchedAsset } = makeTestRig();
+
+    // Clear the file that was set in makeTestRig
+    Object.defineProperty(mockFetchedAsset, "_file", {
+      value: undefined,
+      writable: true
+    });
 
     expect(mockFetchedAsset.file).toBeUndefined();
 
@@ -133,24 +206,71 @@ describe("Get Asset File UC", () => {
   it("Reject if the get asset rejects", () => {
     const { uc, mockGetAsset } = makeTestRig();
 
-    mockGetAsset.getAsset.mockRejectedValue(new Error("Some Error"));
+    mockGetAsset.getAsset.mockRejectedValue(new Error("Some Other Error"));
 
     return expect(uc.getAssetBlobURL("assetID")).rejects.toEqual(
-      new Error("Some Error")
+      new Error("Some Other Error")
     );
   });
 
   it("clears is fetching with error", async () => {
     const { uc, mockFetchedAsset, mockFetch } = makeTestRig();
-    mockFetchedAsset.isFetchingFile = true;
+
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
+    mockFetchedAsset.isFetchingFile = true;
 
     expect.assertions(1);
+
     try {
-      await uc.getAssetBlobURL("asset1");
+      await uc.getAssetBlobURL("assetID");
     } catch {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(mockFetchedAsset.isFetchingFile).toEqual(false);
     }
+  });
+
+  it("retrieves asset from cache when available", async () => {
+    const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+
+    const assetId = "cached-asset-id";
+    const result = await uc.getAssetBlobURL(assetId);
+
+    expect(mockGetAssetFromCache).toHaveBeenCalledWith(assetId);
+    expect(mockFetch.doFetch).not.toBeCalled();
+    expect(result).toEqual("mock-blob-url");
+  });
+
+  it("falls back to API fetch when cache retrieval fails", async () => {
+    const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+
+    mockGetAssetFromCache.mockRejectedValueOnce(new Error("Cache error"));
+
+    await uc.getAssetBlobURL("assetID");
+
+    expect(mockGetAssetFromCache).toHaveBeenCalledWith("assetID");
+    expect(mockFetch.doFetch).toHaveBeenCalled();
+  });
+
+  it("stores fetched asset in cache", async () => {
+    const { uc, mockStoreAssetInCache } = makeTestRig();
+
+    const assetId = "store-test-asset-id";
+    await uc.getAssetBlobURL(assetId);
+
+    expect(mockStoreAssetInCache).toHaveBeenCalledWith(
+      assetId,
+      expect.any(Blob),
+      expect.any(String)
+    );
+  });
+
+  it("continues even if cache storage fails", async () => {
+    const { uc, mockStoreAssetInCache } = makeTestRig();
+
+    mockStoreAssetInCache.mockRejectedValueOnce(new Error("Storage error"));
+
+    const result = await uc.getAssetBlobURL("assetID");
+
+    expect(result).toEqual("mock-blob-url");
   });
 });

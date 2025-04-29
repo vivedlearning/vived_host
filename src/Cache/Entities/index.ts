@@ -6,3 +6,4 @@
 
 export * from "./CacheEntity";
 export * from "./ScriptCacheEntity";
+export * from "./AssetCacheEntity";

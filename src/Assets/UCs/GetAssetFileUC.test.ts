@@ -5,6 +5,28 @@ import { makeAssetRepo } from "../Entities/AssetRepo";
 import { makeMockGetAssetUC } from "../Mocks/MockGetAssetUC";
 import { GetAssetFileUC, makeGetAssetFileUC } from "./GetAssetFileUC";
 
+// Add mock cache use cases
+const mockGetAssetFromCache = {
+  getAsset: jest.fn()
+};
+
+const mockStoreAssetInCache = {
+  storeAsset: jest.fn()
+};
+
+jest.mock("../../Cache", () => {
+  return {
+    GetAssetFromCacheUC: {
+      type: "GetAssetFromCacheUC",
+      get: () => mockGetAssetFromCache
+    },
+    StoreAssetInCacheUC: {
+      type: "StoreAssetInCacheUC",
+      get: () => mockStoreAssetInCache
+    }
+  };
+});
+
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
   const singletonSpy = jest.spyOn(appObjects, "registerSingleton");
@@ -17,11 +39,20 @@ function makeTestRig() {
   const mockFetchedAsset = makeAssetEntity(
     appObjects.getOrCreate("fetchedAsset")
   );
+  mockFetchedAsset.fileURL =
+    "https://example.com/assets/test-app/1.0.0/images/test.png";
+  mockFetchedAsset.filename = "test.png";
   mockGetAsset.getAsset.mockResolvedValue(mockFetchedAsset);
 
   const mockFetch = makeMockFetchAssetFileFromAPIUC(appObjects);
   const mockFetchedFile = new File([], "file.name");
   mockFetch.doFetch.mockResolvedValue(mockFetchedFile);
+
+  // Reset mock implementations before each test
+  mockGetAssetFromCache.getAsset.mockReset();
+  mockStoreAssetInCache.storeAsset.mockReset();
+  mockGetAssetFromCache.getAsset.mockResolvedValue(undefined);
+  mockStoreAssetInCache.storeAsset.mockResolvedValue(undefined);
 
   const uc = makeGetAssetFileUC(appObjects.getOrCreate("AssetRepo"));
 
@@ -39,7 +70,9 @@ function makeTestRig() {
     assetRepo,
     mockGetAsset,
     existingAsset,
-    mockFetchedAsset
+    mockFetchedAsset,
+    mockGetAssetFromCache,
+    mockStoreAssetInCache
   };
 }
 
@@ -152,5 +185,81 @@ describe("Get Asset File UC", () => {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(mockFetchedAsset.isFetchingFile).toEqual(false);
     }
+  });
+
+  // New tests for caching functionality
+  it("retrieves asset from cache when available", async () => {
+    const {
+      uc,
+      mockFetchedAsset,
+      mockFetch,
+      mockGetAssetFromCache,
+      mockGetAsset
+    } = makeTestRig();
+
+    const assetId = "cached-asset-id";
+
+    // Setup a cached blob
+    const cachedBlob = new Blob(["cached content"], { type: "image/png" });
+    mockGetAssetFromCache.getAsset.mockResolvedValue(cachedBlob);
+
+    // Request the asset by ID
+    const fetchedFile = await uc.getAssetFile(assetId);
+
+    // Check that API fetch was not called
+    expect(mockFetch.doFetch).not.toBeCalled();
+
+    // Verify we got the asset metadata with getAsset
+    expect(mockGetAsset.getAsset).toHaveBeenCalledWith(assetId);
+
+    // Verify file was created from the cached blob
+    expect(fetchedFile).toBeDefined();
+    expect(fetchedFile instanceof File).toBeTruthy();
+    expect(fetchedFile.name).toBe(mockFetchedAsset.filename);
+  });
+
+  it("falls back to API fetch when cache retrieval fails", async () => {
+    const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+
+    const assetId = "problem-asset-id";
+
+    // Setup cache to throw an error
+    mockGetAssetFromCache.getAsset.mockRejectedValue(new Error("Cache error"));
+
+    await uc.getAssetFile(assetId);
+
+    // Verify fallback to API fetch
+    expect(mockFetch.doFetch).toHaveBeenCalled();
+  });
+
+  it("stores fetched asset in cache", async () => {
+    const { uc, mockFetchedFile, mockStoreAssetInCache } = makeTestRig();
+
+    const assetId = "store-test-asset-id";
+
+    await uc.getAssetFile(assetId);
+
+    // Verify asset was stored in cache
+    expect(mockStoreAssetInCache.storeAsset).toHaveBeenCalledWith(
+      assetId,
+      expect.any(Blob),
+      expect.any(String)
+    );
+  });
+
+  it("continues even if cache storage fails", async () => {
+    const { uc, mockStoreAssetInCache } = makeTestRig();
+
+    const assetId = "store-fail-asset-id";
+
+    // Setup cache store to throw an error
+    mockStoreAssetInCache.storeAsset.mockRejectedValue(
+      new Error("Cache store error")
+    );
+
+    // This should not throw
+    const result = await uc.getAssetFile(assetId);
+
+    expect(result).toBeDefined();
   });
 });
