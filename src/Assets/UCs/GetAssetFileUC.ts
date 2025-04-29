@@ -28,7 +28,9 @@ export function makeGetAssetFileUC(appObject: AppObject): GetAssetFileUC {
 }
 
 class GetAssetFileUCImp extends GetAssetFileUC {
-  private assetRepo?: AssetRepo;
+  private get assetRepo() {
+    return this.getCachedSingleton<AssetRepo>(AssetRepo.type);
+  }
 
   private get fetchAssetFile() {
     return this.getCachedSingleton<FetchAssetFileFromAPIUC>(
@@ -179,13 +181,6 @@ class GetAssetFileUCImp extends GetAssetFileUC {
 
   constructor(appObject: AppObject) {
     super(appObject, GetAssetFileUC.type);
-
     this.appObjects.registerSingleton(this);
-
-    this.assetRepo = appObject.getComponent<AssetRepo>(AssetRepo.type);
-    if (!this.assetRepo) {
-      this.error("UC added to an App Object that does not have AssetRepo");
-      return;
-    }
   }
 }

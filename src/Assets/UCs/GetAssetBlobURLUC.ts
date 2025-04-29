@@ -28,7 +28,9 @@ export function makeGetAssetBlobURLUC(appObject: AppObject): GetAssetBlobURLUC {
 }
 
 class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
-  private assetRepo?: AssetRepo;
+  private get assetRepo() {
+    return this.getCachedSingleton<AssetRepo>(AssetRepo.type);
+  }
 
   private get fetchAssetFile() {
     return this.getCachedSingleton<FetchAssetFileFromAPIUC>(
@@ -191,11 +193,5 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
     super(appObject, GetAssetBlobURLUC.type);
 
     this.appObjects.registerSingleton(this);
-
-    this.assetRepo = appObject.getComponent<AssetRepo>(AssetRepo.type);
-    if (!this.assetRepo) {
-      this.error("UC added to an App Object that does not have AssetRepo");
-      return;
-    }
   }
 }

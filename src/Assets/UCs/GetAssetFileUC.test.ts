@@ -1,31 +1,13 @@
 import { makeAppObjectRepo } from "@vived/core";
+import {
+  makeMockGetAssetFromCacheUC,
+  makeMockStoreAssetInCacheUC
+} from "../../Cache";
 import { makeMockFetchAssetFileFromAPIUC } from "../../VivedAPI";
 import { makeAssetEntity } from "../Entities/AssetEntity";
 import { makeAssetRepo } from "../Entities/AssetRepo";
 import { makeMockGetAssetUC } from "../Mocks/MockGetAssetUC";
 import { GetAssetFileUC, makeGetAssetFileUC } from "./GetAssetFileUC";
-
-// Add mock cache use cases
-const mockGetAssetFromCache = {
-  getAsset: jest.fn()
-};
-
-const mockStoreAssetInCache = {
-  storeAsset: jest.fn()
-};
-
-jest.mock("../../Cache", () => {
-  return {
-    GetAssetFromCacheUC: {
-      type: "GetAssetFromCacheUC",
-      get: () => mockGetAssetFromCache
-    },
-    StoreAssetInCacheUC: {
-      type: "StoreAssetInCacheUC",
-      get: () => mockStoreAssetInCache
-    }
-  };
-});
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
@@ -48,11 +30,11 @@ function makeTestRig() {
   const mockFetchedFile = new File([], "file.name");
   mockFetch.doFetch.mockResolvedValue(mockFetchedFile);
 
-  // Reset mock implementations before each test
-  mockGetAssetFromCache.getAsset.mockReset();
-  mockStoreAssetInCache.storeAsset.mockReset();
+  // Create mock script cache use cases
+  const mockGetAssetFromCache = makeMockGetAssetFromCacheUC(appObjects);
+  const mockStoreAssetInCache = makeMockStoreAssetInCacheUC(appObjects);
+
   mockGetAssetFromCache.getAsset.mockResolvedValue(undefined);
-  mockStoreAssetInCache.storeAsset.mockResolvedValue(undefined);
 
   const uc = makeGetAssetFileUC(appObjects.getOrCreate("AssetRepo"));
 
@@ -80,7 +62,7 @@ describe("Get Asset File UC", () => {
   it("Registers itself as the Singleton", () => {
     const { uc, singletonSpy } = makeTestRig();
 
-    expect(singletonSpy).toBeCalledWith(uc);
+    expect(singletonSpy).toHaveBeenCalledWith(uc);
   });
 
   it("Gets the singleton", () => {
@@ -140,7 +122,9 @@ describe("Get Asset File UC", () => {
   });
 
   it("Sets a fetch error", async () => {
-    const { uc, mockFetchedAsset, mockFetch } = makeTestRig();
+    const { uc, mockFetchedAsset, mockFetch, appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
 
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
 
@@ -154,7 +138,9 @@ describe("Get Asset File UC", () => {
   });
 
   it("Reject if the fetch rejects", () => {
-    const { uc, mockFetch } = makeTestRig();
+    const { uc, mockFetch, appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
 
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
 
@@ -164,7 +150,9 @@ describe("Get Asset File UC", () => {
   });
 
   it("Reject if the get asset rejects", () => {
-    const { uc, mockGetAsset } = makeTestRig();
+    const { uc, mockGetAsset, appObjects } = makeTestRig();
+
+    appObjects.submitWarning = jest.fn();
 
     mockGetAsset.getAsset.mockRejectedValue(new Error("Some Error"));
 
@@ -174,7 +162,9 @@ describe("Get Asset File UC", () => {
   });
 
   it("clears is fetching with error", async () => {
-    const { uc, mockFetchedAsset, mockFetch } = makeTestRig();
+    const { uc, mockFetchedAsset, mockFetch, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn();
+
     mockFetchedAsset.isFetchingFile = true;
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
 
@@ -187,7 +177,6 @@ describe("Get Asset File UC", () => {
     }
   });
 
-  // New tests for caching functionality
   it("retrieves asset from cache when available", async () => {
     const {
       uc,
@@ -219,7 +208,8 @@ describe("Get Asset File UC", () => {
   });
 
   it("falls back to API fetch when cache retrieval fails", async () => {
-    const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+    const { uc, mockFetch, mockGetAssetFromCache, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn();
 
     const assetId = "problem-asset-id";
 
@@ -233,7 +223,7 @@ describe("Get Asset File UC", () => {
   });
 
   it("stores fetched asset in cache", async () => {
-    const { uc, mockFetchedFile, mockStoreAssetInCache } = makeTestRig();
+    const { uc, mockStoreAssetInCache } = makeTestRig();
 
     const assetId = "store-test-asset-id";
 
@@ -248,7 +238,8 @@ describe("Get Asset File UC", () => {
   });
 
   it("continues even if cache storage fails", async () => {
-    const { uc, mockStoreAssetInCache } = makeTestRig();
+    const { uc, mockStoreAssetInCache, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn();
 
     const assetId = "store-fail-asset-id";
 
