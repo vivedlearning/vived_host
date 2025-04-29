@@ -4,6 +4,10 @@ import { makeAssetEntity } from "../Entities/AssetEntity";
 import { makeAssetRepo } from "../Entities/AssetRepo";
 import { makeMockGetAssetUC } from "../Mocks/MockGetAssetUC";
 import { GetAssetBlobURLUC, makeGetAssetBlobURLUC } from "./GetAssetBlobURLUC";
+import {
+  makeMockGetAssetFromCacheUC,
+  makeMockStoreAssetInCacheUC
+} from "../../Cache";
 
 // Mock URL methods that are not available in Node.js environment
 if (!global.URL.createObjectURL) {
@@ -12,31 +16,6 @@ if (!global.URL.createObjectURL) {
 
 if (!global.URL.revokeObjectURL) {
   global.URL.revokeObjectURL = jest.fn();
-}
-
-// Create mock functions for cache operations
-const mockGetAssetFromCache = jest.fn();
-const mockStoreAssetInCache = jest.fn();
-
-// Create mock cache components
-class MockGetAssetFromCacheUC {
-  static type = "GetAssetFromCacheUC";
-  type = "GetAssetFromCacheUC";
-  getAsset = mockGetAssetFromCache;
-
-  constructor(private appObjects: any) {
-    this.appObjects.registerSingleton(this);
-  }
-}
-
-class MockStoreAssetInCacheUC {
-  static type = "StoreAssetInCacheUC";
-  type = "StoreAssetInCacheUC";
-  storeAsset = mockStoreAssetInCache;
-
-  constructor(private appObjects: any) {
-    this.appObjects.registerSingleton(this);
-  }
 }
 
 function makeTestRig() {
@@ -67,8 +46,10 @@ function makeTestRig() {
   const assetRepo = makeAssetRepo(appObjects.getOrCreate("AssetRepo"));
 
   // Create cache components and register as singletons
-  new MockGetAssetFromCacheUC(appObjects);
-  new MockStoreAssetInCacheUC(appObjects);
+  const mockGetAssetFromCache =
+    makeMockGetAssetFromCacheUC(appObjects).getAsset;
+  const mockStoreAssetInCache =
+    makeMockStoreAssetInCacheUC(appObjects).storeAsset;
 
   // Set up mock cache behavior for different tests
   mockGetAssetFromCache.mockImplementation((id) => {
@@ -180,7 +161,8 @@ describe("Get Asset Blob URL UC", () => {
   });
 
   it("Sets a fetch error", async () => {
-    const { uc, mockFetchedAsset, mockFetch } = makeTestRig();
+    const { uc, mockFetchedAsset, mockFetch, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn(); // Mock submitWarning for this specific test
 
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
 
@@ -194,7 +176,8 @@ describe("Get Asset Blob URL UC", () => {
   });
 
   it("Reject if the fetch rejects", () => {
-    const { uc, mockFetch } = makeTestRig();
+    const { uc, mockFetch, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn(); // Mock submitWarning for this specific test
 
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
 
@@ -204,7 +187,8 @@ describe("Get Asset Blob URL UC", () => {
   });
 
   it("Reject if the get asset rejects", () => {
-    const { uc, mockGetAsset } = makeTestRig();
+    const { uc, mockGetAsset, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn(); // Mock submitWarning for this specific test
 
     mockGetAsset.getAsset.mockRejectedValue(new Error("Some Other Error"));
 
@@ -214,7 +198,8 @@ describe("Get Asset Blob URL UC", () => {
   });
 
   it("clears is fetching with error", async () => {
-    const { uc, mockFetchedAsset, mockFetch } = makeTestRig();
+    const { uc, mockFetchedAsset, mockFetch, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn(); // Mock submitWarning for this specific test
 
     mockFetch.doFetch.mockRejectedValue(new Error("Some Error"));
     mockFetchedAsset.isFetchingFile = true;
@@ -241,7 +226,8 @@ describe("Get Asset Blob URL UC", () => {
   });
 
   it("falls back to API fetch when cache retrieval fails", async () => {
-    const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+    const { uc, mockFetch, mockGetAssetFromCache, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn(); // Mock submitWarning for this specific test
 
     mockGetAssetFromCache.mockRejectedValueOnce(new Error("Cache error"));
 
@@ -265,7 +251,8 @@ describe("Get Asset Blob URL UC", () => {
   });
 
   it("continues even if cache storage fails", async () => {
-    const { uc, mockStoreAssetInCache } = makeTestRig();
+    const { uc, mockStoreAssetInCache, appObjects } = makeTestRig();
+    appObjects.submitWarning = jest.fn(); // Mock submitWarning for this specific test
 
     mockStoreAssetInCache.mockRejectedValueOnce(new Error("Storage error"));
 

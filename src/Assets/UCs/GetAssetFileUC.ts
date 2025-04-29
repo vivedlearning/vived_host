@@ -6,7 +6,6 @@ import {
 } from "@vived/core";
 import { FetchAssetFileFromAPIUC } from "../../VivedAPI";
 import { GetAssetFromCacheUC, StoreAssetInCacheUC } from "../../Cache";
-import { AssetEntity } from "../Entities/AssetEntity";
 import { AssetRepo } from "../Entities/AssetRepo";
 import { GetAssetUC } from "./GetAssetUC";
 
@@ -54,130 +53,142 @@ class GetAssetFileUCImp extends GetAssetFileUC {
     )?.storeAsset;
   }
 
-  getAssetFile = (assetID: string): Promise<File> => {
+  getAssetFile = async (assetID: string): Promise<File> => {
     const assetRepo = this.assetRepo;
     const getAsset = this.getAsset;
     const fetchAssetFile = this.fetchAssetFile;
-    const getAssetFromCache = this.getAssetFromCache;
-    const storeAssetInCache = this.storeAssetInCache;
 
+    // Check for required dependencies
     if (!assetRepo || !getAsset || !fetchAssetFile) {
-      return Promise.reject();
+      return Promise.reject(new Error("Missing required dependencies"));
     }
 
-    // Check if asset already exists in memory
-    const existing = assetRepo.get(assetID);
-    if (existing && existing.file) {
-      return Promise.resolve(existing.file);
+    // Check if asset already exists in memory with a file
+    const existingAsset = assetRepo.get(assetID);
+    if (existingAsset?.file) {
+      return existingAsset.file;
     }
 
-    return new Promise((resolve, reject) => {
-      let fetchedAsset: AssetEntity | undefined;
-
-      // First check if the asset exists in cache
-      if (getAssetFromCache) {
-        getAssetFromCache(assetID)
-          .then((cachedBlob) => {
-            if (cachedBlob) {
-              // Asset found in cache, get metadata
-              return getAsset(assetID).then((asset) => {
-                fetchedAsset = asset;
-                // Convert Blob to File
-                const filename = asset.filename || "cached-asset";
-                return new File([cachedBlob], filename, {
-                  type: cachedBlob.type
-                });
-              });
-            } else {
-              // Not in cache, get asset and fetch from API
-              return getAsset(assetID).then((asset) => {
-                asset.isFetchingFile = true;
-                asset.fetchError = undefined;
-                fetchedAsset = asset;
-                return fetchAssetFile(asset);
-              });
-            }
-          })
-          .then((file) => {
-            if (fetchedAsset) {
-              fetchedAsset.setFile(file);
-              fetchedAsset.isFetchingFile = false;
-
-              // Store the fetched file in cache if not from cache already
-              if (storeAssetInCache) {
-                storeAssetInCache(
-                  assetID,
-                  new Blob([file], { type: file.type }),
-                  file.type
-                ).catch((e) => {
-                  this.warn(`Failed to cache asset: ${e.message}`);
-                });
-              }
-            }
-            resolve(file);
-          })
-          .catch((e: Error) => {
-            // Cache error or fetch error, try normal flow
-            this.warn(`Cache error or fetch error: ${e.message}`);
-            this.fetchAssetNormally(assetID, resolve, reject);
-          });
-      } else {
-        // No cache available, use normal flow
-        this.fetchAssetNormally(assetID, resolve, reject);
-      }
-    });
+    // Try to get from cache first, then fall back to normal fetching if needed
+    try {
+      return await this.tryGetFromCacheOrFetch(assetID);
+    } catch (error) {
+      // If cache access failed, try the normal flow
+      this.warn(`Cache error: ${(error as Error).message}`);
+      return this.fetchAssetDirectly(assetID);
+    }
   };
 
-  // Helper method for the normal asset fetching flow without cache
-  private fetchAssetNormally = (
+  private async tryGetFromCacheOrFetch(assetID: string): Promise<File> {
+    const getAssetFromCache = this.getAssetFromCache;
+
+    // If no cache is available, go straight to normal fetching
+    if (!getAssetFromCache) {
+      return this.fetchAssetDirectly(assetID);
+    }
+
+    // Try to get the asset from cache
+    const cachedBlob = await getAssetFromCache(assetID);
+
+    if (cachedBlob) {
+      // Asset found in cache, get metadata and create file
+      return this.createFileFromCachedBlob(assetID, cachedBlob);
+    } else {
+      // Not in cache, fetch directly
+      return this.fetchAssetDirectly(assetID);
+    }
+  }
+
+  private async createFileFromCachedBlob(
     assetID: string,
-    resolve: (file: File) => void,
-    reject: (error: Error) => void
-  ): void => {
+    cachedBlob: Blob
+  ): Promise<File> {
+    const getAsset = this.getAsset;
+
+    if (!getAsset) {
+      throw new Error("Required dependencies not found");
+    }
+
+    // Get asset metadata
+    const asset = await getAsset(assetID);
+
+    // Convert blob to file
+    const filename = asset.filename || "cached-asset";
+    const file = new File([cachedBlob], filename, {
+      type: cachedBlob.type
+    });
+
+    // Update asset state
+    asset.setFile(file);
+    asset.isFetchingFile = false;
+
+    return file;
+  }
+
+  private async fetchAssetDirectly(assetID: string): Promise<File> {
     const getAsset = this.getAsset;
     const fetchAssetFile = this.fetchAssetFile;
-    const storeAssetInCache = this.storeAssetInCache;
 
     if (!getAsset || !fetchAssetFile) {
-      reject(new Error("Required dependencies not found"));
+      throw new Error("Required dependencies not found");
+    }
+
+    try {
+      // Get asset and prepare for fetching
+      const asset = await getAsset(assetID);
+      asset.isFetchingFile = true;
+      asset.fetchError = undefined;
+
+      // Fetch the file
+      const file = await fetchAssetFile(asset);
+
+      // Update asset state
+      asset.setFile(file);
+      asset.isFetchingFile = false;
+
+      // Try to store in cache
+      await this.tryCacheAssetFile(assetID, file);
+
+      return file;
+    } catch (error) {
+      await this.handleFetchError(assetID, error as Error);
+      throw error;
+    }
+  }
+
+  private async handleFetchError(assetID: string, error: Error): Promise<void> {
+    const getAsset = this.getAsset;
+
+    if (!getAsset) {
       return;
     }
 
-    let fetchedAsset: AssetEntity | undefined;
+    try {
+      const asset = await getAsset(assetID);
+      asset.fetchError = error;
+      asset.isFetchingFile = false;
+    } catch {
+      // If we can't get the asset, we can't update its error state
+    }
+  }
 
-    getAsset(assetID)
-      .then((asset) => {
-        asset.isFetchingFile = true;
-        asset.fetchError = undefined;
-        fetchedAsset = asset;
-        return fetchAssetFile(asset);
-      })
-      .then((file) => {
-        if (fetchedAsset) {
-          fetchedAsset.setFile(file);
-          fetchedAsset.isFetchingFile = false;
+  private async tryCacheAssetFile(assetID: string, file: File): Promise<void> {
+    const storeAssetInCache = this.storeAssetInCache;
 
-          // Store the fetched file in cache if caching is available
-          if (storeAssetInCache) {
-            storeAssetInCache(
-              assetID,
-              new Blob([file], { type: file.type }),
-              file.type
-            ).catch((e) => {
-              this.warn(`Failed to cache asset: ${e.message}`);
-            });
-          }
-        }
-        resolve(file);
-      })
-      .catch((e: Error) => {
-        if (fetchedAsset) {
-          fetchedAsset.fetchError = e;
-          fetchedAsset.isFetchingFile = false;
-        }
-        reject(e);
-      });
-  };
+    if (!storeAssetInCache) {
+      return;
+    }
+
+    try {
+      await storeAssetInCache(
+        assetID,
+        new Blob([file], { type: file.type }),
+        file.type
+      );
+    } catch (e) {
+      this.warn(`Failed to cache asset: ${(e as Error).message}`);
+    }
+  }
 
   constructor(appObject: AppObject) {
     super(appObject, GetAssetFileUC.type);
