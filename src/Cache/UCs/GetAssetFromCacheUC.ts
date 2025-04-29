@@ -27,7 +27,7 @@ class GetAssetFromCacheUCImp extends GetAssetFromCacheUC {
     return this.getCachedSingleton<AssetCacheEntity>(AssetCacheEntity.type);
   }
 
-  async getAsset(assetId: string): Promise<Blob | undefined> {
+  getAsset = async (assetId: string): Promise<Blob | undefined> => {
     const assetCache = this.assetCacheEntity;
     if (!assetCache) {
       this.warn("AssetCacheEntity not found");

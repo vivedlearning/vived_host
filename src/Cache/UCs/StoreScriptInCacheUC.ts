@@ -32,7 +32,7 @@ class StoreScriptInCacheUCImp extends StoreScriptInCacheUC {
     return this.getCachedSingleton<ScriptCacheEntity>(ScriptCacheEntity.type);
   }
 
-  async storeScript(url: string, content: string): Promise<void> {
+  storeScript = async (url: string, content: string): Promise<void> => {
     const scriptCache = this.scriptCacheEntity;
     if (!scriptCache) {
       this.warn("ScriptCacheEntity not found");
@@ -45,7 +45,7 @@ class StoreScriptInCacheUCImp extends StoreScriptInCacheUC {
     } catch (e) {
       this.warn(`Error storing script in cache for URL: ${url}`);
     }
-  }
+  };
 
   extractScriptInfo(url: string): {
     appId: string;

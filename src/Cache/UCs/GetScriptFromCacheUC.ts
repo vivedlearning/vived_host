@@ -32,7 +32,7 @@ class GetScriptFromCacheUCImp extends GetScriptFromCacheUC {
     return this.getCachedSingleton<ScriptCacheEntity>(ScriptCacheEntity.type);
   }
 
-  async getScript(url: string): Promise<string | undefined> {
+   getScript =  async(url: string): Promise<string | undefined> => {
     const scriptCache = this.scriptCacheEntity;
     if (!scriptCache) {
       this.warn("ScriptCacheEntity not found");

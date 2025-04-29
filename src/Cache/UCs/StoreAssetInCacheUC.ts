@@ -31,11 +31,11 @@ class StoreAssetInCacheUCImp extends StoreAssetInCacheUC {
     return this.getCachedSingleton<AssetCacheEntity>(AssetCacheEntity.type);
   }
 
-  async storeAsset(
+  storeAsset = async (
     assetId: string,
     content: Blob,
     contentType?: string
-  ): Promise<void> {
+  ): Promise<void> => {
     const assetCache = this.assetCacheEntity;
     if (!assetCache) {
       this.warn("AssetCacheEntity not found");
