@@ -1,4 +1,4 @@
-import { MemoizedBoolean } from "@vived/core";
+import { MemoizedBoolean, Version } from "@vived/core";
 import {
   getSingletonComponent,
   AppObject,
@@ -15,6 +15,8 @@ import {
  * 2. Emulation mode toggling (emulate)
  * 3. Active state management (isActive)
  * 4. XR Session management
+ * 5. Application level enabling/disabling (isEnabled)
+ * 6. App version compatibility
  *
  * Usage:
  * - To check if zSpace is available: ZSpaceHostEntity.get(appObjects)?.isSupported
@@ -32,6 +34,13 @@ export abstract class ZSpaceHostEntity extends AppObjectEntity {
    */
   abstract get isSupported(): boolean;
   abstract set isSupported(val: boolean);
+
+  /**
+   * Whether zSpace is enabled at the application level
+   * Can be used to conditionally enable/disable zSpace features
+   */
+  abstract get isEnabled(): boolean;
+  abstract set isEnabled(val: boolean);
 
   /**
    * Whether to emulate zSpace hardware when not available
@@ -52,6 +61,22 @@ export abstract class ZSpaceHostEntity extends AppObjectEntity {
    * The current XR Session if zSpace is active
    */
   abstract session: XRSession | undefined;
+
+  /**
+   * Set the map of supported app versions for zSpace
+   * @param supportedVersion Map of app IDs to minimum supported versions
+   */
+  abstract setSupportedAppVersions(
+    supportedVersion: Map<string, Version>
+  ): void;
+
+  /**
+   * Check if a specific app version is supported for zSpace
+   * @param appID The ID of the app to check
+   * @param version The version to check
+   * @returns True if the app version is supported, false otherwise
+   */
+  abstract isAppSupported(appID: string, version: Version): boolean;
 
   /**
    * Get the singleton ZSpaceHostEntity instance
@@ -82,6 +107,14 @@ export function makeZSpaceHostEntity(appObject: AppObject): ZSpaceHostEntity {
  * Uses MemoizedBoolean for all properties to ensure proper change notifications
  */
 class ZSpaceHostImp extends ZSpaceHostEntity {
+  private memoizedEnabled = new MemoizedBoolean(false, this.notifyOnChange);
+  get isEnabled(): boolean {
+    return this.memoizedEnabled.val;
+  }
+  set isEnabled(val: boolean) {
+    this.memoizedEnabled.val = val;
+  }
+
   private memoizedIsSupported = new MemoizedBoolean(false, this.notifyOnChange);
   get isSupported(): boolean {
     return this.memoizedIsSupported.val;
@@ -104,6 +137,28 @@ class ZSpaceHostImp extends ZSpaceHostEntity {
   }
   set isActive(val: boolean) {
     this.memoizedActive.val = val;
+  }
+
+  private supportedVersionLookup = new Map<string, Version>();
+  setSupportedAppVersions(supportedVersion: Map<string, Version>): void {
+    this.supportedVersionLookup = supportedVersion;
+  }
+
+  isAppSupported(appID: string, version: Version): boolean {
+    const supportedVersion = this.supportedVersionLookup.get(appID);
+    if (!supportedVersion) {
+      return false;
+    }
+
+    if (version.major > supportedVersion.major) return true;
+    if (version.major < supportedVersion.major) return false;
+
+    if (version.minor > supportedVersion.minor) return true;
+    if (version.minor < supportedVersion.minor) return false;
+
+    if (version.patch < supportedVersion.patch) return false;
+
+    return true;
   }
 
   session: XRSession | undefined;

@@ -1,97 +1,137 @@
-import { makeAppObjectRepo } from "@vived/core";
-import { makeZSpaceHostEntity } from "./ZSpaceHost";
+import {
+  AppObject,
+  AppObjectRepo,
+  makeAppObjectRepo,
+  Version,
+  VersionStage
+} from "@vived/core";
+import { ZSpaceHostEntity, makeZSpaceHostEntity } from "./ZSpaceHost";
 
-function makeTestRig() {
-  const appObjects = makeAppObjectRepo();
-  const zSpace = makeZSpaceHostEntity(appObjects.getOrCreate("ZSpace"));
-  const observer = jest.fn();
-  zSpace.addChangeObserver(observer);
+let appObjects: AppObjectRepo;
+let appObject: AppObject;
+let zSpaceHostEntity: ZSpaceHostEntity;
 
-  return { zSpace, observer };
-}
+beforeEach(() => {
+  appObjects = makeAppObjectRepo();
+  appObject = appObjects.getOrCreate("test object");
+  zSpaceHostEntity = makeZSpaceHostEntity(appObject);
+});
 
-describe("ZSpace Host Entity", () => {
-  it("Notifies when is supported changes", () => {
-    const { zSpace, observer } = makeTestRig();
+it("initializes isEnabled to false", () => {
+  expect(zSpaceHostEntity.isEnabled).toBe(false);
+});
 
-    expect(zSpace.isSupported).toEqual(false);
+it("sets isEnabled property", () => {
+  zSpaceHostEntity.isEnabled = true;
+  expect(zSpaceHostEntity.isEnabled).toBe(true);
+});
 
-    zSpace.isSupported = true;
+it("notifies observers when isEnabled changes", () => {
+  const mockObserver = jest.fn();
+  zSpaceHostEntity.addChangeObserver(mockObserver);
 
-    expect(zSpace.isSupported).toEqual(true);
-    expect(observer).toBeCalled();
-    observer.mockClear();
+  zSpaceHostEntity.isEnabled = true;
 
-    zSpace.isSupported = false;
+  expect(mockObserver).toHaveBeenCalled();
+});
 
-    expect(zSpace.isSupported).toEqual(false);
-    expect(observer).toBeCalled();
-  });
+it("sets supported app versions", () => {
+  const version1 = new Version(1, 2, 3, VersionStage.RELEASED);
+  const version2 = new Version(2, 0, 0, VersionStage.RELEASED);
 
-  it("Does not notify if the is supported flag is set but does not change", () => {
-    const { zSpace, observer } = makeTestRig();
-    expect(zSpace.isSupported).toEqual(false);
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", version1);
+  supportedVersions.set("app2", version2);
 
-    zSpace.isSupported = false;
-    zSpace.isSupported = false;
-    zSpace.isSupported = false;
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
 
-    expect(observer).not.toBeCalled();
-  });
+  expect(zSpaceHostEntity.isAppSupported("app1", version1)).toBe(true);
+  expect(zSpaceHostEntity.isAppSupported("app2", version2)).toBe(true);
+});
 
-  it("Notifies when is active changes", () => {
-    const { zSpace, observer } = makeTestRig();
+it("returns false for unknown app IDs", () => {
+  const version = new Version(1, 0, 0, VersionStage.RELEASED);
+  expect(zSpaceHostEntity.isAppSupported("unknownApp", version)).toBe(false);
+});
 
-    expect(zSpace.isActive).toEqual(false);
+it("returns true when major version is higher than required", () => {
+  const minVersion = new Version(1, 2, 3, VersionStage.RELEASED);
+  const testVersion = new Version(2, 0, 0, VersionStage.RELEASED);
 
-    zSpace.isActive = true;
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
 
-    expect(zSpace.isActive).toEqual(true);
-    expect(observer).toBeCalled();
-    observer.mockClear();
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(true);
+});
 
-    zSpace.isActive = false;
+it("returns false when major version is lower than required", () => {
+  const minVersion = new Version(2, 0, 0, VersionStage.RELEASED);
+  const testVersion = new Version(1, 9, 9, VersionStage.RELEASED);
 
-    expect(zSpace.isActive).toEqual(false);
-    expect(observer).toBeCalled();
-  });
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
 
-  it("Does not notify if the is active is set but does not change", () => {
-    const { zSpace, observer } = makeTestRig();
-    expect(zSpace.isActive).toEqual(false);
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(false);
+});
 
-    zSpace.isActive = false;
-    zSpace.isActive = false;
-    zSpace.isActive = false;
+it("returns true when major version is same and minor version is higher", () => {
+  const minVersion = new Version(1, 2, 0, VersionStage.RELEASED);
+  const testVersion = new Version(1, 3, 0, VersionStage.RELEASED);
 
-    expect(observer).not.toBeCalled();
-  });
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
 
-  it("Notifies when is emulate changes", () => {
-    const { zSpace, observer } = makeTestRig();
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(true);
+});
 
-    expect(zSpace.emulate).toEqual(true);
+it("returns false when major version is same and minor version is lower", () => {
+  const minVersion = new Version(1, 2, 0, VersionStage.RELEASED);
+  const testVersion = new Version(1, 1, 9, VersionStage.RELEASED);
 
-    zSpace.emulate = false;
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
 
-    expect(zSpace.emulate).toEqual(false);
-    expect(observer).toBeCalled();
-    observer.mockClear();
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(false);
+});
 
-    zSpace.emulate = true;
+it("returns true when major and minor versions are same and patch is equal", () => {
+  const minVersion = new Version(1, 2, 3, VersionStage.RELEASED);
+  const testVersion = new Version(1, 2, 3, VersionStage.RELEASED);
 
-    expect(zSpace.emulate).toEqual(true);
-    expect(observer).toBeCalled();
-  });
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
 
-  it("Does not notify if the emulate flag is set but does not change", () => {
-    const { zSpace, observer } = makeTestRig();
-    expect(zSpace.emulate).toEqual(true);
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(true);
+});
 
-    zSpace.emulate = true;
-    zSpace.emulate = true;
-    zSpace.emulate = true;
+it("returns true when major and minor versions are same and patch is higher", () => {
+  const minVersion = new Version(1, 2, 3, VersionStage.RELEASED);
+  const testVersion = new Version(1, 2, 4, VersionStage.RELEASED);
 
-    expect(observer).not.toBeCalled();
-  });
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
+
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(true);
+});
+
+it("returns false when major and minor versions are same and patch is lower", () => {
+  const minVersion = new Version(1, 2, 3, VersionStage.RELEASED);
+  const testVersion = new Version(1, 2, 2, VersionStage.RELEASED);
+
+  const supportedVersions = new Map<string, Version>();
+  supportedVersions.set("app1", minVersion);
+  zSpaceHostEntity.setSupportedAppVersions(supportedVersions);
+
+  expect(zSpaceHostEntity.isAppSupported("app1", testVersion)).toBe(false);
+});
+
+it("can be retrieved as singleton through static get method", () => {
+  const retrievedEntity = ZSpaceHostEntity.get(appObjects);
+  expect(retrievedEntity).toBe(zSpaceHostEntity);
 });
