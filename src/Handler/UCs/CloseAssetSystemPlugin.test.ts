@@ -5,6 +5,7 @@ import {
   MockDispatchDisposeAppUC,
   MockDispatchStopAppUC
 } from "../../Dispatcher/Mocks";
+import { MockAppMounterUC } from "../../Apps/Mocks";
 import { makeHostHandlerEntity } from "../Entities";
 import { makeCloseAssetSystemPluginUC } from "./CloseAssetSystemPlugin";
 
@@ -17,6 +18,7 @@ function makeTestRig() {
   const handler = makeHostHandlerEntity(ao);
   const mockDispose = new MockDispatchDisposeAppUC(ao);
   const mockStop = new MockDispatchStopAppUC(ao);
+  const mockMounter = new MockAppMounterUC(ao);
 
   const registerSpy = jest.spyOn(handler, "registerRequestHandler");
 
@@ -28,6 +30,7 @@ function makeTestRig() {
     handler,
     mockDispose,
     mockStop,
+    mockMounter,
     registerSpy,
     uc
   };
@@ -79,6 +82,14 @@ describe("Close Plugin handler", () => {
     uc.action();
 
     expect(mockDispose.doDispatch).toBeCalled();
+  });
+
+  it("Unmounts the app when the action is triggered", () => {
+    const { uc, mockMounter } = makeTestRig();
+
+    uc.action();
+
+    expect(mockMounter.unmount).toBeCalled();
   });
 
   it("Hides the plugin when the action is triggered", () => {

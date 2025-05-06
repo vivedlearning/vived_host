@@ -7,6 +7,7 @@ import {
   RequestHandler,
   UnsupportedRequestVersion
 } from "../Entities";
+import { MounterUC } from "../../Apps";
 
 export abstract class CloseAssetSystemPluginUC
   extends AppObjectUC
@@ -63,8 +64,15 @@ export class CloseAssetSystemPluginUCImp extends CloseAssetSystemPluginUC {
       return;
     }
 
+    const mounter = MounterUC.get(this.appObject);
+    if (!mounter) {
+      this.error("Cannot find MounterUC");
+      return;
+    }
+    
     dispatchStopApp.doDispatch();
     dispatchDisposeApp.doDispatch();
+    mounter.unmount();
 
     this.assetSystemPlugin.show = false;
   };
