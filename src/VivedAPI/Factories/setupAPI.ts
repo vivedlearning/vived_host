@@ -1,4 +1,4 @@
-import { AppObjectRepo } from "@vived/core";
+import { AppObjectRepo, DomainFactoryRepo } from "@vived/core";
 import { VivedAPIFactory } from "./VivedAPIFactory";
 
 /**
@@ -8,5 +8,17 @@ import { VivedAPIFactory } from "./VivedAPIFactory";
  */
 export function setupAPI(appObjects: AppObjectRepo) {
   const vivedAPIAO = appObjects.getOrCreate("VIVED API");
-  new VivedAPIFactory(appObjects);
+
+  // Create DomainFactoryRepo if it doesn't exist
+  let domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+  if (!domainFactoryRepo) {
+    const domainFactoryRepoAO = appObjects.getOrCreate("DomainFactoryRepo");
+    domainFactoryRepo = new DomainFactoryRepo(domainFactoryRepoAO);
+  }
+
+  // Create the factory with the VIVED API AppObject
+  new VivedAPIFactory(vivedAPIAO);
+
+  // Trigger setup for all registered domain factories
+  domainFactoryRepo.setupDomain();
 }

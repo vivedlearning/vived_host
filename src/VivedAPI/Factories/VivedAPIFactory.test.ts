@@ -1,10 +1,15 @@
-import { makeAppObjectRepo } from "@vived/core";
+import { makeAppObjectRepo, DomainFactoryRepo } from "@vived/core";
 import { VivedAPIFactory } from "./VivedAPIFactory";
 import { setupVivedAPIForSandbox } from "./setupVivedAPIForSandbox";
 import { VivedAPIEntity } from "../Entities";
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
+
+  // Create DomainFactoryRepo
+  const domainFactoryRepoAO = appObjects.getOrCreate("DomainFactoryRepo");
+  new DomainFactoryRepo(domainFactoryRepoAO);
+
   return { appObjects };
 }
 
@@ -12,11 +17,13 @@ describe("VivedAPIFactory", () => {
   it("should create all required components when instantiated", () => {
     const { appObjects } = makeTestRig();
 
-    // Create the factory
-    new VivedAPIFactory(appObjects);
+    // Create the "VIVED API" AppObject and factory
+    const vivedAPIAO = appObjects.getOrCreate("VIVED API");
+    new VivedAPIFactory(vivedAPIAO);
 
-    // Verify that the required AppObject was created
-    expect(appObjects.has("VIVED API")).toBe(true);
+    // Trigger setup for all domain factories
+    const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+    domainFactoryRepo?.setupDomain();
 
     // Verify that the singleton component is registered
     const vivedAPI = VivedAPIEntity.get(appObjects);
@@ -26,7 +33,8 @@ describe("VivedAPIFactory", () => {
   it("should initialize the factory with the correct name", () => {
     const { appObjects } = makeTestRig();
 
-    const factory = new VivedAPIFactory(appObjects);
+    const vivedAPIAO = appObjects.getOrCreate("VIVED API");
+    const factory = new VivedAPIFactory(vivedAPIAO);
 
     expect(factory.factoryName).toBe("VivedAPIFactory");
   });
@@ -34,7 +42,12 @@ describe("VivedAPIFactory", () => {
   it("should call setup methods in the correct order", () => {
     const { appObjects } = makeTestRig();
 
-    const factory = new VivedAPIFactory(appObjects);
+    const vivedAPIAO = appObjects.getOrCreate("VIVED API");
+    new VivedAPIFactory(vivedAPIAO);
+
+    // Trigger setup for all domain factories
+    const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+    domainFactoryRepo?.setupDomain();
 
     // Verify the setup was successful by checking that components exist
     const vivedAPI = VivedAPIEntity.get(appObjects);
@@ -48,7 +61,12 @@ describe("VivedAPIFactory", () => {
     const { appObjects } = makeTestRig();
 
     // Set up using the new factory
-    new VivedAPIFactory(appObjects);
+    const vivedAPIAO = appObjects.getOrCreate("VIVED API");
+    new VivedAPIFactory(vivedAPIAO);
+
+    // Trigger setup for all domain factories
+    const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+    domainFactoryRepo?.setupDomain();
 
     // Verify core functionality
     const vivedAPI = VivedAPIEntity.get(appObjects);
@@ -59,8 +77,13 @@ describe("VivedAPIFactory", () => {
 
   it("should produce equivalent results to setupVivedAPIForSandbox", () => {
     // Test the factory approach
-    const factoryAppObjects = makeAppObjectRepo();
-    new VivedAPIFactory(factoryAppObjects);
+    const { appObjects: factoryAppObjects } = makeTestRig();
+    const vivedAPIAO = factoryAppObjects.getOrCreate("VIVED API");
+    new VivedAPIFactory(vivedAPIAO);
+
+    // Trigger setup for all domain factories
+    const domainFactoryRepo = DomainFactoryRepo.get(factoryAppObjects);
+    domainFactoryRepo?.setupDomain();
 
     // Test the original function approach
     const functionAppObjects = makeAppObjectRepo();

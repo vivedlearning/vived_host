@@ -1,4 +1,4 @@
-import { AppObject, AppObjectRepo, DomainFactory } from "@vived/core";
+import { DomainFactory } from "@vived/core";
 import { VivedAPIEntity } from "../Entities";
 import { makeUserTokenPM } from "../PMs";
 import {
@@ -17,64 +17,61 @@ import {
 
 /**
  * Factory responsible for setting up the VIVED API domain components.
+ *
  * This factory initializes all entities, use cases, and presentation models
- * required for the VIVED API functionality.
+ * required for the VIVED API functionality. It follows the domain-driven
+ * design pattern by organizing components into their respective layers.
+ *
+ * @extends DomainFactory
  */
 export class VivedAPIFactory extends DomainFactory {
-  // Unique name for this factory
-  readonly factoryName = "VivedAPIFactory";
-  
-  // Store reference to the VIVED API AppObject
-  private vivedAPIAO!: AppObject;
-
-  constructor(appObjects: AppObjectRepo) {
-    // DomainFactory expects an AppObject, so we need to create one for this factory
-    const factoryAO = appObjects.getOrCreate("VivedAPIFactory");
-    super(factoryAO);
-    
-    // Initialize in the proper order
-    this.setupEntities();
-    this.setupUCs();
-    this.setupPMs();
-    this.finalSetup();
-  }
+  factoryName = "VivedAPIFactory";
 
   /**
-   * Sets up all entities required for the VIVED API system
+   * Sets up all entities required for the VIVED API system.
+   *
+   * Initializes singleton entities that maintain the state and business
+   * logic for the VIVED API functionality.
    */
   setupEntities(): void {
-    this.vivedAPIAO = this.appObjects.getOrCreate("VIVED API");
-
-    // Initialize entities
-    new VivedAPIEntity(this.vivedAPIAO);
+    new VivedAPIEntity(this.appObject);
   }
 
   /**
-   * Sets up all use cases for the VIVED API system
+   * Sets up all use cases for the VIVED API system.
+   *
+   * Initializes use cases that define the business operations and
+   * workflows available in the VIVED API.
    */
   setupUCs(): void {
-    makeDeleteAssetOnAPIUC(this.vivedAPIAO);
-    makeFetchAssetFileFromAPIUC(this.vivedAPIAO);
-    makeFetchAssetMetaFromAPIUC(this.vivedAPIAO);
-    makeFileUploadUC(this.vivedAPIAO);
-    makeGetAppFromAPIUC(this.vivedAPIAO);
-    makeGetAssetsForOwnerFromAPIUC(this.vivedAPIAO);
-    makePatchAssetFileUC(this.vivedAPIAO);
-    makePatchAssetIsArchivedUC(this.vivedAPIAO);
-    makePatchAssetMetaUC(this.vivedAPIAO);
-    makePatchAssetUC(this.vivedAPIAO);
-    makePostNewAssetUC(this.vivedAPIAO);
+    makeDeleteAssetOnAPIUC(this.appObject);
+    makeFetchAssetFileFromAPIUC(this.appObject);
+    makeFetchAssetMetaFromAPIUC(this.appObject);
+    makeFileUploadUC(this.appObject);
+    makeGetAppFromAPIUC(this.appObject);
+    makeGetAssetsForOwnerFromAPIUC(this.appObject);
+    makePatchAssetFileUC(this.appObject);
+    makePatchAssetIsArchivedUC(this.appObject);
+    makePatchAssetMetaUC(this.appObject);
+    makePatchAssetUC(this.appObject);
+    makePostNewAssetUC(this.appObject);
   }
 
   /**
-   * Sets up all presentation managers for the VIVED API system
+   * Sets up all presentation managers for the VIVED API system.
+   *
+   * Initializes presentation managers that handle the view logic and
+   * state management for UI components related to the VIVED API.
    */
   setupPMs(): void {
-    makeUserTokenPM(this.vivedAPIAO);
+    makeUserTokenPM(this.appObject);
   }
 
   /**
-   * Performs any final setup operations after all components are initialized
+   * Performs any final setup operations after all components are initialized.
+   *
+   * This method is called after entities, use cases, and presentation models
+   * have been set up. Currently no additional setup is required for the VIVED API.
    */
   finalSetup(): void {
     // No additional setup required for VIVED API
