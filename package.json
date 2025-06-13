@@ -62,6 +62,6 @@
     "@types/webxr": "^0.5.20"
   },
   "peerDependencies": {
-    "@vived/core": "^1.4.5"
+    "@vived/core": "^1.5.1"
   }
 }

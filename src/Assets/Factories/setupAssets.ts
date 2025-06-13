@@ -8,5 +8,5 @@ import { AssetsFactory } from "./AssetsFactory";
  */
 export function setupAssets(appObjects: AppObjectRepo) {
   const assetsAO = appObjects.getOrCreate("Assets Domain");
-  new AssetsFactory(appObjects);
+  new AssetsFactory(assetsAO);
 }
