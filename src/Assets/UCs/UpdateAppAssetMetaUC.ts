@@ -1,17 +1,17 @@
 /**
  * UpdateAppAssetMetaUC.ts
- * 
+ *
  * This use case handles updating asset metadata (name, description, archived status)
  * for existing assets. It provides a complete workflow for modifying asset information
  * with user feedback and sandbox state management.
- * 
+ *
  * Key Concepts:
  * - Updates asset metadata without affecting the actual file content
  * - Uses API calls to persist metadata changes on the backend
  * - Provides user feedback through spinner and error dialogs
  * - Manages sandbox state transitions after successful updates
  * - Supports partial metadata updates through DTO pattern
- * 
+ *
  * Usage Patterns:
  * - Created per-asset during factory setup
  * - Accessed through static get() method with asset ID
@@ -44,7 +44,7 @@ export interface UpdateAppAssetMetaDTO {
 
 /**
  * UpdateAppAssetMetaUC manages updating the metadata of individual assets.
- * 
+ *
  * This use case provides the business logic for modifying asset metadata,
  * handling API persistence, and managing user feedback during the operation.
  */
@@ -54,7 +54,7 @@ export abstract class UpdateAppAssetMetaUC extends AppObjectUC {
 
   /**
    * Updates the metadata of the associated asset.
-   * 
+   *
    * @param data - DTO containing the updated metadata fields
    * @returns Promise that resolves when the operation completes successfully
    */
@@ -62,7 +62,7 @@ export abstract class UpdateAppAssetMetaUC extends AppObjectUC {
 
   /**
    * Retrieves an UpdateAppAssetMetaUC component for a specific asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param appObjects - Repository for accessing app objects and components
    * @returns UpdateAppAssetMetaUC instance or undefined if not found
@@ -97,7 +97,7 @@ export abstract class UpdateAppAssetMetaUC extends AppObjectUC {
 
 /**
  * Factory function to create a new UpdateAppAssetMetaUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this use case (should contain an AssetEntity)
  * @returns A new UpdateAppAssetMetaUC implementation instance
  */
@@ -109,7 +109,7 @@ export function makeUpdateAppAssetMetaUC(
 
 /**
  * Private implementation of UpdateAppAssetMetaUC that handles the concrete metadata update operations.
- * 
+ *
  * Key Implementation Details:
  * - Gets asset entity from local AppObject components
  * - Uses PatchAssetMetaUC for backend API persistence
@@ -149,7 +149,7 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
 
   /**
    * Updates the asset metadata with full error handling and user feedback.
-   * 
+   *
    * This method handles the complete metadata update workflow:
    * 1. Validates the asset exists and required dependencies are available
    * 2. Shows a spinner dialog during the API operation
@@ -157,7 +157,7 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
    * 4. Updates the local asset entity with the new metadata
    * 5. Manages sandbox state transitions for UI consistency
    * 6. Shows error dialogs and logs failures appropriately
-   * 
+   *
    * @param data - DTO containing the updated metadata fields
    * @returns Promise that resolves when the operation completes (successfully or with handled error)
    */
@@ -195,10 +195,10 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
           asset.description = description;
 
           spinnerDialog?.close();
-          
+
           // Manage sandbox state for UI consistency
           if (this.sandbox) this.sandbox.state = SandboxState.MOUNTED;
-          
+
           resolve();
         })
         .catch((e) => {
@@ -218,7 +218,7 @@ class UpdateAppAssetMetaUCImp extends UpdateAppAssetMetaUC {
 
   /**
    * Initializes the UpdateAppAssetMetaUC.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetEntity this UC will operate on
    */
   constructor(appObject: AppObject) {

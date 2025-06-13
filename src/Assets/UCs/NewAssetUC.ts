@@ -1,16 +1,16 @@
 /**
  * NewAssetUC.ts
- * 
+ *
  * This use case handles the creation of new assets, managing the complete workflow
  * from file upload through API persistence to local entity creation and storage.
- * 
+ *
  * Key Concepts:
  * - Singleton use case that handles asset creation operations
  * - Coordinates file upload with metadata persistence via API
  * - Creates and configures new asset entities in the local repository
  * - Transforms between DTO formats for API and internal use
  * - Provides unique asset IDs for tracking and reference
- * 
+ *
  * Usage Patterns:
  * - Accessed as a singleton through static get() method
  * - Called with complete asset data including file and metadata
@@ -44,7 +44,7 @@ export interface NewAssetDto {
 
 /**
  * NewAssetUC handles the creation of new assets in the VIVED system.
- * 
+ *
  * This singleton use case manages the complete asset creation workflow,
  * from initial file upload through API persistence to local entity creation.
  */
@@ -54,7 +54,7 @@ export abstract class NewAssetUC extends AppObjectUC {
 
   /**
    * Creates a new asset with the provided data.
-   * 
+   *
    * @param data - Complete asset information including file and metadata
    * @returns Promise resolving to the unique ID of the newly created asset
    */
@@ -62,7 +62,7 @@ export abstract class NewAssetUC extends AppObjectUC {
 
   /**
    * Retrieves the singleton NewAssetUC instance.
-   * 
+   *
    * @param appObjects - Repository for accessing the singleton component
    * @returns NewAssetUC instance or undefined if not found
    */
@@ -73,7 +73,7 @@ export abstract class NewAssetUC extends AppObjectUC {
 
 /**
  * Factory function to create a new NewAssetUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this singleton use case
  * @returns A new NewAssetUC implementation instance
  */
@@ -83,7 +83,7 @@ export function makeNewAssetUC(appObject: AppObject): NewAssetUC {
 
 /**
  * Private implementation of NewAssetUC that handles the concrete asset creation operations.
- * 
+ *
  * Key Implementation Details:
  * - Validates required dependencies (API and repository components)
  * - Transforms NewAssetDto to NewAssetApiDto for API communication
@@ -93,7 +93,7 @@ export function makeNewAssetUC(appObject: AppObject): NewAssetUC {
  * - Registers itself as a singleton for system-wide access
  */
 class NewAssetUCImp extends NewAssetUC {
-  /** 
+  /**
    * Gets the API use case for posting new assets to the backend
    * Cached for efficient repeated access during operations
    */
@@ -101,7 +101,7 @@ class NewAssetUCImp extends NewAssetUC {
     return this.getCachedSingleton<PostNewAssetUC>(PostNewAssetUC.type)?.doPost;
   }
 
-  /** 
+  /**
    * Gets the asset repository for entity creation and management
    * Cached for efficient repeated access during operations
    */
@@ -111,7 +111,7 @@ class NewAssetUCImp extends NewAssetUC {
 
   /**
    * Creates a new asset with complete workflow handling.
-   * 
+   *
    * This method handles the complete asset creation process:
    * 1. Validates required dependencies are available
    * 2. Transforms the DTO to API format
@@ -119,7 +119,7 @@ class NewAssetUCImp extends NewAssetUC {
    * 4. Creates a new asset entity with the returned information
    * 5. Configures the entity with file and metadata
    * 6. Adds the entity to the repository for management
-   * 
+   *
    * @param data - Complete asset creation data
    * @returns Promise resolving to the unique asset ID
    */
@@ -155,7 +155,7 @@ class NewAssetUCImp extends NewAssetUC {
 
   /**
    * Initializes the NewAssetUC and registers it as a singleton.
-   * 
+   *
    * @param appObject - The AppObject that will host this singleton use case
    */
   constructor(appObject: AppObject) {

@@ -1,15 +1,15 @@
 /**
  * editAppAsset.ts
- * 
+ *
  * This controller function initiates the asset editing workflow, transitioning
  * the application into editing mode for a specific asset.
- * 
+ *
  * Key Concepts:
  * - Initiates asset editing workflows and UI state transitions
  * - Uses EditAppAssetUC to handle editing state management
  * - Provides error handling for missing components
  * - Coordinates with asset editing UI components
- * 
+ *
  * Usage Patterns:
  * - Called from UI components when users click edit buttons
  * - Used in asset management workflows for content modification
@@ -21,11 +21,11 @@ import { EditAppAssetUC } from "../UCs/EditAppAssetUC";
 
 /**
  * Initiates the editing workflow for a specific asset.
- * 
+ *
  * This function provides a controller-level interface for starting asset editing operations.
  * It transitions the application into editing mode for the specified asset, typically
  * opening editing dialogs or forms where users can modify asset properties.
- * 
+ *
  * @param assetID - The unique identifier of the asset to edit
  * @param appObjects - Repository for accessing asset-related app objects and components
  * @returns void - The function initiates the editing workflow but doesn't return a promise

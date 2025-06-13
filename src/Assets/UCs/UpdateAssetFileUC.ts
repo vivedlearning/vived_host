@@ -1,17 +1,17 @@
 /**
  * UpdateAssetFileUC.ts
- * 
+ *
  * This use case handles updating the file content of existing assets while
  * preserving metadata and relationships. It provides a complete workflow
  * for replacing asset files with user feedback and error handling.
- * 
+ *
  * Key Concepts:
  * - Updates asset file content while preserving metadata and relationships
  * - Uses API calls to persist file changes on the backend
  * - Provides user feedback through spinner and error dialogs
  * - Manages local asset state updates after successful operations
  * - Handles filename updates from backend processing
- * 
+ *
  * Usage Patterns:
  * - Created per-asset during factory setup
  * - Accessed through static get() method with asset ID
@@ -44,7 +44,7 @@ export interface UpdateAssetMetaDTO {
 
 /**
  * UpdateAssetFileUC manages updating the file content of individual assets.
- * 
+ *
  * This use case provides the business logic for replacing asset files,
  * handling API persistence, and managing user feedback during the operation.
  */
@@ -54,7 +54,7 @@ export abstract class UpdateAssetFileUC extends AppObjectUC {
 
   /**
    * Updates the file content of the associated asset.
-   * 
+   *
    * @param file - The new file to replace the existing asset content
    * @returns Promise that resolves when the operation completes successfully
    */
@@ -62,7 +62,7 @@ export abstract class UpdateAssetFileUC extends AppObjectUC {
 
   /**
    * Retrieves an UpdateAssetFileUC component for a specific asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param appObjects - Repository for accessing app objects and components
    * @returns UpdateAssetFileUC instance or undefined if not found
@@ -97,7 +97,7 @@ export abstract class UpdateAssetFileUC extends AppObjectUC {
 
 /**
  * Factory function to create a new UpdateAssetFileUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this use case (should contain an AssetEntity)
  * @returns A new UpdateAssetFileUC implementation instance
  */
@@ -107,7 +107,7 @@ export function makeUpdateAssetFileUC(appObject: AppObject): UpdateAssetFileUC {
 
 /**
  * Private implementation of UpdateAssetFileUC that handles the concrete file update operations.
- * 
+ *
  * Key Implementation Details:
  * - Validates asset entity existence before operations
  * - Uses PatchAssetFileUC for backend API persistence
@@ -120,7 +120,7 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
   /** The asset entity this use case operates on */
   private asset?: AssetEntity;
 
-  /** 
+  /**
    * Gets the API use case for patching asset files on the backend
    * Cached for efficient repeated access during operations
    */
@@ -131,14 +131,14 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
 
   /**
    * Updates the asset file with full error handling and user feedback.
-   * 
+   *
    * This method handles the complete file update workflow:
    * 1. Validates the asset exists
    * 2. Shows a spinner dialog during the API operation
    * 3. Uploads the new file to the backend via API
    * 4. Updates the local asset with the new file and filename
    * 5. Shows error dialogs and logs failures appropriately
-   * 
+   *
    * @param file - The new file to replace the existing asset content
    * @returns Promise that resolves when the operation completes (successfully or with handled error)
    */
@@ -190,7 +190,7 @@ class UpdateAssetFileUCImp extends UpdateAssetFileUC {
 
   /**
    * Initializes the UpdateAssetFileUC with validation of required components.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetEntity this UC will operate on
    */
   constructor(appObject: AppObject) {

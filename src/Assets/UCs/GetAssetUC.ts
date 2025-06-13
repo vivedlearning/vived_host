@@ -1,17 +1,17 @@
 /**
  * GetAssetUC.ts
- * 
+ *
  * This use case handles retrieval of asset metadata, managing both local
  * repository cache and remote API fetching to ensure asset entities exist
  * and are properly configured.
- * 
+ *
  * Key Concepts:
  * - Retrieves asset entities with metadata from local cache or remote API
  * - Maintains asset repository consistency for entity management
  * - Uses lazy loading to fetch assets only when needed
  * - Transforms API DTOs to local asset entities automatically
  * - Provides singleton access for system-wide asset retrieval
- * 
+ *
  * Usage Patterns:
  * - Singleton use case accessed through static get() method
  * - Called with asset ID to ensure asset entity exists and is loaded
@@ -31,7 +31,7 @@ import { AssetRepo } from "../Entities/AssetRepo";
 
 /**
  * GetAssetUC handles retrieval and caching of asset entities with metadata.
- * 
+ *
  * This singleton use case ensures asset entities exist in the local repository,
  * fetching from the API when necessary and maintaining consistent entity state.
  */
@@ -41,7 +41,7 @@ export abstract class GetAssetUC extends AppObjectUC {
 
   /**
    * Retrieves an asset entity, fetching from API if not already cached.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @returns Promise resolving to the asset entity with loaded metadata
    */
@@ -49,7 +49,7 @@ export abstract class GetAssetUC extends AppObjectUC {
 
   /**
    * Retrieves the singleton GetAssetUC instance.
-   * 
+   *
    * @param appObjects - Repository for accessing the singleton component
    * @returns GetAssetUC instance or undefined if not found
    */
@@ -60,7 +60,7 @@ export abstract class GetAssetUC extends AppObjectUC {
 
 /**
  * Factory function to create a new GetAssetUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this singleton use case (must have AssetRepo)
  * @returns A new GetAssetUC implementation instance
  */
@@ -70,7 +70,7 @@ export function makeGetAssetUC(appObject: AppObject): GetAssetUC {
 
 /**
  * Private implementation of GetAssetUC with caching and API integration.
- * 
+ *
  * Key Implementation Details:
  * - Checks local asset repository first for immediate access
  * - Falls back to API fetch when asset is not cached locally
@@ -82,7 +82,7 @@ class GetAssetUCImp extends GetAssetUC {
   /** The asset repository for entity management and caching */
   private assetRepo?: AssetRepo;
 
-  /** 
+  /**
    * Gets the API use case for fetching asset metadata from remote sources
    * Used when assets are not available in the local repository
    */
@@ -94,14 +94,14 @@ class GetAssetUCImp extends GetAssetUC {
 
   /**
    * Retrieves an asset entity with intelligent caching.
-   * 
+   *
    * This method implements a two-tier strategy:
    * 1. Check local repository for existing entity (immediate return)
    * 2. Fetch from API and create entity if not cached
-   * 
+   *
    * The method ensures all requested assets are available as entities
    * in the local repository for subsequent operations.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @returns Promise resolving to the asset entity with loaded metadata
    */
@@ -135,7 +135,7 @@ class GetAssetUCImp extends GetAssetUC {
 
   /**
    * Initializes the GetAssetUC with required dependencies and validation.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetRepo for entity management
    */
   constructor(appObject: AppObject) {

@@ -1,16 +1,16 @@
 /**
  * DeleteAssetUC.ts
- * 
+ *
  * This use case handles the permanent deletion of assets from the system,
  * including user confirmation dialogs and cleanup of all related data.
- * 
+ *
  * Key Concepts:
  * - Permanent deletion removes assets completely from the system
  * - Includes mandatory user confirmation to prevent accidental deletions
  * - Cleans up asset from all collections and repositories
  * - Uses API calls to persist deletion on the backend
  * - Provides user feedback through dialogs during the operation
- * 
+ *
  * Usage Patterns:
  * - Created per-asset during factory setup
  * - Accessed through static get() method with asset ID
@@ -32,7 +32,7 @@ import { AssetRepo } from "../Entities/AssetRepo";
 
 /**
  * DeleteAssetUC manages the permanent deletion of individual assets.
- * 
+ *
  * This use case provides both confirmed and unconfirmed deletion methods,
  * handling complete cleanup of asset data from all system components.
  */
@@ -42,7 +42,7 @@ export abstract class DeleteAssetUC extends AppObjectUC {
 
   /**
    * Permanently deletes the associated asset without user confirmation.
-   * 
+   *
    * @returns Promise that resolves when the deletion completes successfully
    */
   abstract delete(): Promise<void>;
@@ -55,7 +55,7 @@ export abstract class DeleteAssetUC extends AppObjectUC {
 
   /**
    * Retrieves a DeleteAssetUC component for a specific asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param appObjects - Repository for accessing app objects and components
    * @returns DeleteAssetUC instance or undefined if not found
@@ -88,7 +88,7 @@ export abstract class DeleteAssetUC extends AppObjectUC {
 
 /**
  * Factory function to create a new DeleteAssetUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this use case (should contain an AssetEntity)
  * @returns A new DeleteAssetUC implementation instance
  */
@@ -98,7 +98,7 @@ export function makeDeleteAssetUC(appObject: AppObject): DeleteAssetUC {
 
 /**
  * Private implementation of DeleteAssetUC that handles the concrete deletion operations.
- * 
+ *
  * Key Implementation Details:
  * - Validates asset entity existence before operations
  * - Uses DeleteAssetOnAPIUC for backend persistence
@@ -112,7 +112,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
   /** The asset entity this use case operates on */
   private asset?: AssetEntity;
 
-  /** 
+  /**
    * Gets the API use case for deleting assets from the backend
    * Cached for efficient repeated access during operations
    */
@@ -121,7 +121,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
       ?.doDelete;
   }
 
-  /** 
+  /**
    * Gets the app assets collection entity for cleanup operations
    * Used to remove the asset from collection displays
    */
@@ -129,7 +129,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
     return this.getCachedSingleton<AppAssetsEntity>(AppAssetsEntity.type);
   }
 
-  /** 
+  /**
    * Gets the asset repository for cleanup operations
    * Used to remove the asset from the global asset repository
    */
@@ -139,7 +139,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
 
   /**
    * Initiates asset deletion with user confirmation.
-   * 
+   *
    * Shows a confirmation dialog with warnings about the irreversible nature
    * of the operation and suggests archiving as an alternative.
    */
@@ -159,14 +159,14 @@ class DeleteAssetUCImp extends DeleteAssetUC {
 
   /**
    * Permanently deletes the asset with full cleanup and user feedback.
-   * 
+   *
    * This method handles the complete deletion workflow:
    * 1. Validates the asset exists
    * 2. Shows a spinner dialog during the API operation
    * 3. Removes the asset from backend via API
    * 4. Cleans up the asset from all local collections and repositories
    * 5. Shows error dialogs and logs failures appropriately
-   * 
+   *
    * @returns Promise that resolves when the operation completes (successfully or with handled error)
    */
   delete = (): Promise<void> => {
@@ -223,7 +223,7 @@ class DeleteAssetUCImp extends DeleteAssetUC {
 
   /**
    * Initializes the DeleteAssetUC with validation of required components.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetEntity this UC will operate on
    */
   constructor(appObject: AppObject) {
