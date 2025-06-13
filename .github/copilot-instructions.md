@@ -23,7 +23,7 @@ This TypeScript project creates the @vived/host NPM package, which serves as the
 
 ## Project Structure
 
-- The `/src/FEATURE` folder contains source for each feature, organized into the Feature Folders. 
+- The `/src/FEATURE` folder contains source for each feature, organized into the Feature Folders.
 - Under each feature folder are subfolders that group the code into components
 - Use the ExampleFeature in the Github Repo `vivedlearning/vived_core` as a reference on best practices
 - All component types are defined in the Github Repo `vivedlearning/vived_core`
@@ -51,14 +51,25 @@ This TypeScript project creates the @vived/host NPM package, which serves as the
 - Minimize comments - code should be self-explanatory
 
 ### Required Before Each Commit
+
 - Run `format` before committing any changes to ensure proper code formatting
-- This will run gofmt on all Go files to maintain consistent style
+- This will run Prettier on your TypeScript files to maintain consistent style
+- Run `lint` before committing any changes to ensure proper code formatting
+- This will run tslint on your TypeScript files to maintain consistent style
+
+### Development Flow
+- Lint: `npm run lint`
+- Format: `npm run format:all`
+- Unit Test: `npm run test:once`
+- Integration Tests: `npm run test:integration:once`
+- Build: `npm run build`
 
 ## Build Commands
 
-- Format code: `npm run format:all`
-- Lint code: `npm run lint`
-- Run all tests: `npm run test:once`
-- Run integration tests: `npm run test:integration:once`
-- Run single test: `npm run test:once "test name pattern"`
-- Build: `npm run build`
+- Format code: `npm run format:all` or `npm run format <filename>` to format a specific file
+- Lint code: `npm run lint` (runs TSLint to check code quality)
+- Run all tests: `npm run test:once` (runs all Jest tests once)
+- Run unit tests only: `npm run test:unit:once` (runs only unit tests)
+- Run integration tests: `npm run test:integration:once` (runs only integration tests)
+- Run single test: `npm run test:once "AssetsFactory"` (runs tests matching the pattern)
+- Build: `npm run build` (builds both ESM and CommonJS modules)
