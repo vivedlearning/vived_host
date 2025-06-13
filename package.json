@@ -43,7 +43,6 @@
   "homepage": "https://bitbucket.org/cyberscience3d/vivedlearning_host#readme",
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "@vived/core": "^1.5.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^26.0.0",
