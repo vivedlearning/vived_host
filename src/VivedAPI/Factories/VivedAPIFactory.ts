@@ -1,4 +1,4 @@
-import { AppObject, AppObjectRepo } from "@vived/core";
+import { AppObject, AppObjectRepo, DomainFactory } from "@vived/core";
 import { VivedAPIEntity } from "../Entities";
 import { makeUserTokenPM } from "../PMs";
 import {
@@ -20,14 +20,18 @@ import {
  * This factory initializes all entities, use cases, and presentation models
  * required for the VIVED API functionality.
  */
-export class VivedAPIFactory {
+export class VivedAPIFactory extends DomainFactory {
   // Unique name for this factory
   readonly factoryName = "VivedAPIFactory";
-
+  
   // Store reference to the VIVED API AppObject
   private vivedAPIAO!: AppObject;
 
-  constructor(private appObjects: AppObjectRepo) {
+  constructor(appObjects: AppObjectRepo) {
+    // DomainFactory expects an AppObject, so we need to create one for this factory
+    const factoryAO = appObjects.getOrCreate("VivedAPIFactory");
+    super(factoryAO);
+    
     // Initialize in the proper order
     this.setupEntities();
     this.setupUCs();
