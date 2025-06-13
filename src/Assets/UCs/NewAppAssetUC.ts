@@ -1,3 +1,10 @@
+/**
+ * NewAppAssetUC.ts
+ * 
+ * This use case handles creation of new assets within application contexts,
+ * managing the complete workflow from file upload to UI state transitions.
+ */
+
 import {
   getSingletonComponent,
   AppObject,
@@ -13,26 +20,59 @@ import {
 import { NewAssetApiDto, PostNewAssetUC } from "../../VivedAPI/UCs";
 import { AppAssetsEntity, AssetRepo } from "../Entities";
 
+/**
+ * Data transfer object for new application asset creation requests.
+ */
 export interface NewAppAssetDTO {
+  /** The file object to be uploaded and stored as the asset */
   file: File;
+  /** Display name for the asset */
   name: string;
+  /** Detailed description of the asset's purpose or content */
   description: string;
 }
 
+/**
+ * NewAppAssetUC handles creation of new assets within application contexts.
+ * 
+ * This singleton use case manages asset creation with UI feedback and state transitions.
+ */
 export abstract class NewAppAssetUC extends AppObjectUC {
+  /** Static type identifier for component registration */
   static type = "NewAppAssetUC";
 
+  /**
+   * Creates a new asset with the provided data.
+   * 
+   * @param data - Complete asset information including file and metadata
+   * @returns Promise that resolves when the asset is successfully created
+   */
   abstract create(data: NewAppAssetDTO): Promise<void>;
 
+  /**
+   * Retrieves the singleton NewAppAssetUC instance.
+   * 
+   * @param appObjects - Repository for accessing the singleton component
+   * @returns NewAppAssetUC instance or undefined if not found
+   */
   static get(appObjects: AppObjectRepo): NewAppAssetUC | undefined {
     return getSingletonComponent(NewAppAssetUC.type, appObjects);
   }
 }
 
+/**
+ * Factory function to create a new NewAppAssetUC instance.
+ * 
+ * @param appObject - The AppObject that will host this singleton use case
+ * @returns A new NewAppAssetUC implementation instance
+ */
 export function makeNewAppAssetUC(appObject: AppObject): NewAppAssetUC {
   return new NewAppAssetUCImp(appObject);
 }
 
+/**
+ * Private implementation of NewAppAssetUC with app context and state management.
+ */
 class NewAppAssetUCImp extends NewAppAssetUC {
   private appAssets?: AppAssetsEntity;
 
