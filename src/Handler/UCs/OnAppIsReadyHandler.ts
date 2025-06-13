@@ -9,7 +9,8 @@ import {
 
 export abstract class OnAppIsReadyHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "OnAppIsReadyHandler";
 
   readonly requestType = "APP_IS_READY";

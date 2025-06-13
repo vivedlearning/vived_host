@@ -22,8 +22,8 @@ function makeTestRig() {
   ]);
   stateMachine.setActiveStateByID("state2");
 
-  const mockTransitionToState = makeMockTransitionToStateUC(appObjects)
-    .transitionToState;
+  const mockTransitionToState =
+    makeMockTransitionToStateUC(appObjects).transitionToState;
 
   const uc = makeGoToPreviousStateHandler(ao);
   return { registerSpy, uc, mockTransitionToState, stateMachine };

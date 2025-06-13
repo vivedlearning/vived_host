@@ -218,7 +218,7 @@ describe("Challenge Results PM", () => {
     // Change to NONE should remove from VM
     state1.expectedResponse = ChallengeResponse.NONE;
     stateMachine.notifyOnChange();
-    
+
     expect(pm.lastVM?.length).toBe(0);
   });
 });

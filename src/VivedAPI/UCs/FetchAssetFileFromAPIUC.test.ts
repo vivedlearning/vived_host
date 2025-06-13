@@ -47,12 +47,8 @@ describe("Fetch Asset File", () => {
   });
 
   it("Rejects if the fetcher rejects", async () => {
-    const {
-      fetchAssetFile,
-      mockRequestBlob,
-      appObjects,
-      asset
-    } = makeTestRig();
+    const { fetchAssetFile, mockRequestBlob, appObjects, asset } =
+      makeTestRig();
     appObjects.submitWarning = jest.fn();
     mockRequestBlob.doRequest.mockRejectedValue(new Error("Some Error"));
 

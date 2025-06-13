@@ -35,7 +35,7 @@ export class SelectModelDialogEntity extends Dialog {
 
   readonly dialogType = selectModelDialogType;
   hasBeenClosed: boolean = false;
-  
+
   private _isOpen = new MemoizedBoolean(false, this.notifyOnChange);
   get isOpen(): boolean {
     return this._isOpen.val;

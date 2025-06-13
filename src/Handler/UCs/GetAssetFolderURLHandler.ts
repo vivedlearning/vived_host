@@ -13,7 +13,8 @@ export type GetAssetFolderURLAction = (
 
 export abstract class GetAssetFolderURLHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "GetAssetFolderURLHandler";
 
   readonly requestType = "GET_APP_ASSET_URL";

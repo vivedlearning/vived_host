@@ -9,7 +9,8 @@ import {
 
 export abstract class GoToPreviousStateHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "GoToPreviousStateHandler";
 
   readonly requestType = "GO_TO_PREVIOUS_STATE";

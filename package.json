@@ -22,7 +22,7 @@
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "format:all": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test:once && npm run test:integration:once && npm run lint",

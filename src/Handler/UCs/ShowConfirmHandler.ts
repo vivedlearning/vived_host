@@ -24,7 +24,8 @@ export type ShowConfirmAction = (confirmData: ShowConfirmActionDTO) => void;
 
 export abstract class ShowConfirmHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "ShowConfirmHandler";
 
   readonly requestType = "SHOW_CONFIRM";

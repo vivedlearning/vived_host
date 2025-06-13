@@ -8,7 +8,8 @@ import {
 
 export abstract class StartZSpaceHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "StartZSpaceHandler";
 
   readonly requestType = "START_ZSPACE";

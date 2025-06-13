@@ -91,8 +91,8 @@ export function makeAssetFilePM(appObject: AppObject): AssetFilePM {
  */
 class AssetFilePMImp extends AssetFilePM {
   private get asset() {
-		return this.getCachedLocalComponent<AssetEntity>(AssetEntity.type);
-	}
+    return this.getCachedLocalComponent<AssetEntity>(AssetEntity.type);
+  }
 
   /**
    * Compares two AssetFileVM instances for equality

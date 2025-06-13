@@ -14,7 +14,8 @@ export type HasNextStateAction = (
 
 export abstract class HasNextStateHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "HasNextStateHandler";
 
   readonly requestType = "HAS_NEXT_STATE";

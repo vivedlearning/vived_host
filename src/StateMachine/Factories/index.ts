@@ -1,1 +1,1 @@
-export * from "./setupStateMachineForSandbox"
+export * from "./setupStateMachineForSandbox";

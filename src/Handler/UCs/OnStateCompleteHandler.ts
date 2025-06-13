@@ -12,7 +12,8 @@ import {
 
 export abstract class OnStateCompleteHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "OnStateCompleteHandler";
 
   readonly requestType = "ON_STATE_COMPLETED";

@@ -16,7 +16,8 @@ export type GetLinkedAssetsAction = (
 
 export abstract class GetLinkedAssetsHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "GetLinkedAssetsHandler";
 
   readonly requestType = "GET_LINKED_ASSETS";

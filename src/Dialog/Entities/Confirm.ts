@@ -64,7 +64,7 @@ export class ConfirmDialogEntity extends Dialog {
   confirm = () => {
     this.hasBeenClosed = true;
     this.isOpen = false;
-  
+
     if (this.postConfirm) {
       this.postConfirm();
     }

@@ -128,14 +128,12 @@ describe("Host Dispatch Entity", () => {
   it("Requests the payload versions after an app version is returned", () => {
     const { dispatcher } = makeTestRig();
 
-    const handleGetVersion = jest
-      .fn()
-      .mockImplementation((req: Request) => {
-        if (req.type === "GET_APP_HANDLER_VERSION") {
-          const cb = (req.payload as any).callback;
-          cb(1);
-        }
-      });
+    const handleGetVersion = jest.fn().mockImplementation((req: Request) => {
+      if (req.type === "GET_APP_HANDLER_VERSION") {
+        const cb = (req.payload as any).callback;
+        cb(1);
+      }
+    });
 
     dispatcher.registerAppHandler(handleGetVersion);
 

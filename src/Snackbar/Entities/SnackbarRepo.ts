@@ -59,18 +59,18 @@ export abstract class SnackbarRepo extends AppObjectEntity {
     snackbarAction?: SnackbarAction,
     durationInSeconds?: number
   ): void;
-  
+
   /**
    * Gets the currently active snackbar, if any
    * @returns The current snackbar or undefined if none is active
    */
   abstract getCurrentSnackbar(): Snackbar | undefined;
-  
+
   /**
    * Dismisses the currently active snackbar, if any
    */
   abstract dismissActiveSnackbar(): void;
-  
+
   /**
    * Executes the action of the currently active snackbar, if it has one
    * Also dismisses the snackbar after executing the action

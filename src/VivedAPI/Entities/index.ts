@@ -1,1 +1,1 @@
-export * from "./VivedAPIEntity"
+export * from "./VivedAPIEntity";

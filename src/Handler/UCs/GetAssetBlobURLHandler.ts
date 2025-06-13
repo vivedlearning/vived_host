@@ -14,7 +14,8 @@ export type GetAssetBlobURLHandlerAction = (
 
 export abstract class GetAssetBlobURLHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "GetAssetBlobURLHandler";
 
   readonly requestType = "GET_ASSET_BLOB";

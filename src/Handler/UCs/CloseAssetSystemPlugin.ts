@@ -11,7 +11,8 @@ import { MounterUC } from "../../Apps";
 
 export abstract class CloseAssetSystemPluginUC
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "CloseAssetSystemPluginUC";
 
   readonly requestType = "CLOSE_PLUGIN";
@@ -69,7 +70,7 @@ export class CloseAssetSystemPluginUCImp extends CloseAssetSystemPluginUC {
       this.error("Cannot find MounterUC");
       return;
     }
-    
+
     dispatchStopApp.doDispatch();
     dispatchDisposeApp.doDispatch();
     mounter.unmount();

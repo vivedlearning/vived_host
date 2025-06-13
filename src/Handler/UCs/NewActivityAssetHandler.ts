@@ -14,7 +14,8 @@ export type NewActivityAssetAction = (
 
 export abstract class NewActivityAssetHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "NewActivityAssetHandler";
 
   readonly requestType = "NEW_ACTIVITY_ASSET";

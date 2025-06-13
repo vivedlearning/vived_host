@@ -40,7 +40,7 @@ class GetAssetFromCacheUCImp extends GetAssetFromCacheUC {
       this.warn(`Error retrieving asset from cache for ID: ${assetId}`);
       return undefined;
     }
-  }
+  };
 
   constructor(appObject: AppObject) {
     super(appObject, GetAssetFromCacheUC.type);

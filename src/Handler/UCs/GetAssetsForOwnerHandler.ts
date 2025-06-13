@@ -15,7 +15,8 @@ export type GetOwnerAssetsMetaAction = (
 
 export abstract class GetAssetsForOwnerHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "GetAssetsForOwnerHandler";
 
   readonly requestType = "GET_ASSET_FOR_OWNER";

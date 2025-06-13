@@ -2,7 +2,7 @@ export class MockXRSession implements XRSession {
   inputSources: XRInputSourceArray = [];
   renderState: XRRenderState = {
     depthFar: 0,
-    depthNear: 0,
+    depthNear: 0
   };
   environmentBlendMode: XREnvironmentBlendMode = "additive";
   visibilityState: XRVisibilityState = "hidden";

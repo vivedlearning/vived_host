@@ -14,7 +14,8 @@ export type ShowSelectModelAction = (
 
 export abstract class ShowSelectModelHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "ShowSelectModelHandler";
 
   readonly requestType = "SHOW_SELECT_MODEL";

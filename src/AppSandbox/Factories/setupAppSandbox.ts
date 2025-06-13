@@ -44,13 +44,13 @@ export function setupAppSandbox(
   makeShowInspectorPM(ao);
   makeStartInZSpacePM(ao);
 
-  const submitActivityAssetUC = appObjects.getSingleton<SubmitActivityAssetHandler>(
-    SubmitActivityAssetHandler.type
-  );
-  if (submitActivityAssetUC) {
-    submitActivityAssetUC.action = makeSubmitActivityAssetHandlerSandbox(
-      appObjects
+  const submitActivityAssetUC =
+    appObjects.getSingleton<SubmitActivityAssetHandler>(
+      SubmitActivityAssetHandler.type
     );
+  if (submitActivityAssetUC) {
+    submitActivityAssetUC.action =
+      makeSubmitActivityAssetHandlerSandbox(appObjects);
   }
 
   return entity;

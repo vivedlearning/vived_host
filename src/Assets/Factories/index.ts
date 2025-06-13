@@ -1,3 +1,3 @@
-export * from "./setupAssetsForSandbox"
-export * from "./AssetsFactory"
-export * from "./setupAssets"
+export * from "./setupAssetsForSandbox";
+export * from "./AssetsFactory";
+export * from "./setupAssets";

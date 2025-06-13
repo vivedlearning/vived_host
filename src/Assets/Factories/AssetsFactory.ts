@@ -36,12 +36,12 @@ import {
 export class AssetsFactory {
   // Unique name for this factory
   readonly factoryName = "AssetsFactory";
-  
+
   // Store references to key AppObjects needed across setup phases
   private assetRepoAO!: AppObject;
   private appAssetsAO!: AppObject;
   private assetRepo: any; // This will hold the asset repository
-  
+
   constructor(private appObjects: AppObjectRepo) {
     // Initialize in the proper order
     this.setupEntities();
@@ -83,7 +83,7 @@ export class AssetsFactory {
       // PMs for each asset
       makeAssetPM(ao);
       makeAssetFilePM(ao);
-      
+
       return entity;
     };
   }
@@ -99,7 +99,7 @@ export class AssetsFactory {
     makeGetAssetUC(this.assetRepoAO);
     makePrefetchAssets(this.assetRepoAO);
     makeNewAssetUC(this.assetRepoAO);
-    
+
     // App Assets UCs
     makeNewAppAssetUC(this.appAssetsAO);
     makeGetAppAssetUC(this.appAssetsAO);

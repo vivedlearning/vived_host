@@ -86,7 +86,7 @@ describe("Transition to Sandbox State UC", () => {
     const { uc, mockDispatchSetState, stateMachine } = makeTestRig();
 
     stateMachine.transitionDuration = 4;
-    
+
     uc.transitionToState("state1");
 
     const dispatchDTO = mockDispatchSetState.doDispatch.mock
@@ -145,12 +145,8 @@ describe("Transition to Sandbox State UC", () => {
   });
 
   it("Passes hide nav as true if there there are less than two states", () => {
-    const {
-      uc,
-      mockDispatchSetState,
-      appObjects,
-      stateMachine
-    } = makeTestRig();
+    const { uc, mockDispatchSetState, appObjects, stateMachine } =
+      makeTestRig();
 
     stateMachine.setStates([makeMockHostStateEntity("state1", appObjects)]);
 

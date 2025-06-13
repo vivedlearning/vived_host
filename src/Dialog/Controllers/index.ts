@@ -1,1 +1,1 @@
-export * from "./activeDialogHasClosed"
+export * from "./activeDialogHasClosed";

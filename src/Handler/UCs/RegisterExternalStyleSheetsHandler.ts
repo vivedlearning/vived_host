@@ -12,7 +12,8 @@ export type RegisterStylesheetsAction = (stylesheets: string[]) => void;
 
 export abstract class RegisterExternalStyleSheetsHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "RegisterExternalStyleSheetsHandler";
 
   readonly requestType = "REGISTER_EXTERNAL_STYLESHEETS";

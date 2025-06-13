@@ -3,7 +3,7 @@ import { AssetsFactory } from "./AssetsFactory";
 
 /**
  * Sets up the Assets system using the domain factory pattern
- * 
+ *
  * @param appObjects The application's object repository
  */
 export function setupAssets(appObjects: AppObjectRepo) {

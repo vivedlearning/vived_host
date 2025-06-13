@@ -14,7 +14,8 @@ export type SubmitActivityAssetAction = (
 
 export abstract class SubmitActivityAssetHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "SubmitActivityAssetHandler";
 
   readonly requestType = "SUBMIT_ACTIVITY_ASSET";

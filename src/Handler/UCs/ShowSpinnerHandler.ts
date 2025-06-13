@@ -18,7 +18,8 @@ export type ShowSpinnerAction = (confirmData: ShowSpinnerActionDTO) => void;
 
 export abstract class ShowSpinnerHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "ShowSpinnerHandler";
 
   readonly requestType = "SHOW_SPINNER";

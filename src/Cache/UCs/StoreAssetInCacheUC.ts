@@ -47,7 +47,7 @@ class StoreAssetInCacheUCImp extends StoreAssetInCacheUC {
     } catch (e) {
       this.warn(`Error storing asset in cache for ID: ${assetId}`);
     }
-  }
+  };
 
   constructor(appObject: AppObject) {
     super(appObject, StoreAssetInCacheUC.type);

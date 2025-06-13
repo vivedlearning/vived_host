@@ -18,7 +18,8 @@ export type IsAssetFetchedAction = (
 
 export abstract class IsAssetFetchedHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "IsAssetFetchedHandler";
 
   readonly requestType = "IS_ASSET_FILE_FETCHED";

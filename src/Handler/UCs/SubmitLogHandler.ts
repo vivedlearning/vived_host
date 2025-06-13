@@ -18,7 +18,8 @@ export type SubmitLogAction = (
 
 export abstract class SubmitLogHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "SubmitLogHandler";
 
   readonly requestType = "SUBMIT_LOG";

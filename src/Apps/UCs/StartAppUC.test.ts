@@ -181,13 +181,8 @@ describe("Start App UC", () => {
   });
 
   it("Sends start in author mode when true", () => {
-    const {
-      mockSetAuthoring,
-      uc,
-      container,
-      editingState,
-      state1
-    } = makeTestRig();
+    const { mockSetAuthoring, uc, container, editingState, state1 } =
+      makeTestRig();
     editingState.startEditing(state1);
 
     uc.start(container);

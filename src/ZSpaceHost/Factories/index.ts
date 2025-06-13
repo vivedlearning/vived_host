@@ -1,1 +1,1 @@
-export * from "./setupZSpaceForSandbox"
+export * from "./setupZSpaceForSandbox";

@@ -1,1 +1,1 @@
-export * from "./setupChallengeResults"
+export * from "./setupChallengeResults";

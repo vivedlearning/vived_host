@@ -18,7 +18,8 @@ export type ShowAlertAction = (actionDTO: ShowAlertActionDTO) => void;
 
 export abstract class ShowAlertHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "ShowAlertHandler";
 
   readonly requestType = "SHOW_ALERT";

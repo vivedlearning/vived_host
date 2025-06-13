@@ -17,7 +17,8 @@ export type OnStateChangeAction = (
 
 export abstract class OnStateChangeHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "OnStateChangeHandler";
 
   readonly requestType = "ON_STATE_CHANGE";
@@ -69,24 +70,16 @@ export class OnStateChangeHandlerImp extends OnStateChangeHandler {
       const { stateObject } = this.castPayloadV1(payload);
       this.action(stateObject, []);
     } else if (version === 2) {
-      const { stateObject, validationErrorMessage } = this.castPayloadV2(
-        payload
-      );
+      const { stateObject, validationErrorMessage } =
+        this.castPayloadV2(payload);
       this.action(stateObject, [], validationErrorMessage);
     } else if (version === 3) {
-      const {
-        stateObject,
-        assets,
-        validationErrorMessage
-      } = this.castPayloadV3(payload);
+      const { stateObject, assets, validationErrorMessage } =
+        this.castPayloadV3(payload);
       this.action(stateObject, assets, validationErrorMessage);
     } else if (version === 4) {
-      const {
-        stateObject,
-        assets,
-        validationErrorMessage,
-        responseType
-      } = this.castPayloadV4(payload);
+      const { stateObject, assets, validationErrorMessage, responseType } =
+        this.castPayloadV4(payload);
       this.action(stateObject, assets, validationErrorMessage, responseType);
     } else {
       throw new UnsupportedRequestVersion(this.requestType, version);

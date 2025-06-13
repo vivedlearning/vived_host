@@ -3,7 +3,7 @@ import { SnackbarRepo } from "../Entities/SnackbarRepo";
 
 /**
  * Dismisses the currently active snackbar, if any exists
- * 
+ *
  * @param appObjects The application object repository
  */
 export function dismissActiveSnackbar(appObjects: AppObjectRepo): void {

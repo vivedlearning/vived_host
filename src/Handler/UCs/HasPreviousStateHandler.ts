@@ -14,7 +14,8 @@ export type HasPreviousStateAction = (
 
 export abstract class HasPreviousStateHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "HasPreviousStateHandler";
 
   readonly requestType = "HAS_PREVIOUS_STATE";

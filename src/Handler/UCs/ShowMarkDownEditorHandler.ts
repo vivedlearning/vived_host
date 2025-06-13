@@ -24,7 +24,8 @@ export type ShowMarkDownEditorAction = (
 
 export abstract class ShowMarkDownEditorHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "ShowMarkDownEditorHandler";
 
   readonly requestType = "SHOW_MARKDOWN_EDITOR";

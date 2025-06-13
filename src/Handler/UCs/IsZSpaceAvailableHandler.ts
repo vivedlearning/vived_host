@@ -13,7 +13,8 @@ export type IsZSpaceAvailableAction = (
 
 export abstract class IsZSpaceAvailableHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "IsZSpaceAvailableHandler";
 
   readonly requestType = "IS_ZSPACE_AVAILABLE";

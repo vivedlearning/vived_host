@@ -1,1 +1,1 @@
-export * from "./setupLoggerForSandbox"
+export * from "./setupLoggerForSandbox";

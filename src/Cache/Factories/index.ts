@@ -1,2 +1,1 @@
-
-export * from "./setupCache"
+export * from "./setupCache";

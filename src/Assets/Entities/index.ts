@@ -1,3 +1,3 @@
-export * from './AppAssetsEntity';
-export * from './AssetEntity';
-export * from './AssetRepo';
+export * from "./AppAssetsEntity";
+export * from "./AssetEntity";
+export * from "./AssetRepo";

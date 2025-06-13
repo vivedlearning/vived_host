@@ -10,7 +10,7 @@ export type ChallengeResultType =
   | "MULTIHIT"
   | "QUALITY"
   | "SCORE"
-  | "PROGRESS"
+  | "PROGRESS";
 
 export interface ChallengeResult {
   slideID: string;

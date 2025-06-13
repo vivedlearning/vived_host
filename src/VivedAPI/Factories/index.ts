@@ -1,1 +1,1 @@
-export * from "./setupVivedAPIForSandbox"
+export * from "./setupVivedAPIForSandbox";

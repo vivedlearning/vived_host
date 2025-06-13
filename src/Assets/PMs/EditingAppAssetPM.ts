@@ -50,13 +50,8 @@ class EditingAppAssetPMImp extends EditingAppAssetPM {
     if (!this.appAssets) return;
 
     if (this.appAssets.editingAsset) {
-      const {
-        id,
-        name,
-        description,
-        archived,
-        filename
-      } = this.appAssets.editingAsset;
+      const { id, name, description, archived, filename } =
+        this.appAssets.editingAsset;
       const vm: EditingAppAssetVM = {
         id,
         name,

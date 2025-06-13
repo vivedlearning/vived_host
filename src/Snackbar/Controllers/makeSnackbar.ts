@@ -3,7 +3,7 @@ import { SnackbarAction, SnackbarRepo } from "../Entities/SnackbarRepo";
 
 /**
  * Creates and displays a new snackbar notification
- * 
+ *
  * @param appObjects The application object repository
  * @param message The message to display in the snackbar
  * @param snackbarAction Optional action button configuration with text and callback

@@ -15,7 +15,8 @@ export type GetAssetMetaAction = (
 
 export abstract class GetAssetMetaHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "GetAssetMetaHandler";
 
   readonly requestType = "GET_ASSET_META";

@@ -28,7 +28,7 @@ describe("Cache Controller", () => {
 
     // Spy on submitWarning
     const submitWarningSpy = jest.fn();
-		appObjects.submitWarning = submitWarningSpy;
+    appObjects.submitWarning = submitWarningSpy;
 
     // Ensure the original get method is preserved
     const originalGet = CacheEntity.get;

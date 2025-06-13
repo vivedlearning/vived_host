@@ -9,7 +9,8 @@ import { HasPreviousStateHandler } from "./HasPreviousStateHandler";
 
 export abstract class RestoreCurrentStateHandler
   extends AppObjectUC
-  implements RequestHandler {
+  implements RequestHandler
+{
   static readonly type = "RestoreCurrentStateHandler";
 
   readonly requestType = "RESTORE_CURRENT_STATE";

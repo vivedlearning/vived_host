@@ -1,7 +1,9 @@
 import {
   AppObject,
   AppObjectEntity,
-  AppObjectRepo, getSingletonComponent, MemoizedBoolean
+  AppObjectRepo,
+  getSingletonComponent,
+  MemoizedBoolean
 } from "@vived/core";
 import { AppEntity, makeAppEntity } from "../../Apps/Entities/AppEntity";
 

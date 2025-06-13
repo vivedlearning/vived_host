@@ -1,1 +1,1 @@
-export * from "./setupAssetsPluginForSandbox"
+export * from "./setupAssetsPluginForSandbox";
