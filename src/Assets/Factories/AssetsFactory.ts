@@ -1,4 +1,4 @@
-import { AppObject, AppObjectRepo } from "@vived/core";
+import { AppObject, AppObjectRepo, DomainFactory } from "@vived/core";
 import {
   AssetEntity,
   makeAppAssets,
@@ -33,7 +33,7 @@ import {
  * This factory initializes all entities, use cases, and presentation models
  * required for the Assets functionality.
  */
-export class AssetsFactory {
+export class AssetsFactory extends DomainFactory {
   // Unique name for this factory
   readonly factoryName = "AssetsFactory";
 
@@ -42,7 +42,9 @@ export class AssetsFactory {
   private appAssetsAO!: AppObject;
   private assetRepo: any; // This will hold the asset repository
 
-  constructor(private appObjects: AppObjectRepo) {
+  constructor(appObject: AppObject) {
+    super(appObject);
+    
     // Initialize in the proper order
     this.setupEntities();
     this.setupUCs();
