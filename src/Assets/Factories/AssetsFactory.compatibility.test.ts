@@ -54,7 +54,7 @@ describe("Assets Factory Compatibility", () => {
     setupAssets(appObjects);
 
     // Verify all expected AppObjects exist
-    expect(appObjects.has("Assets Domain")).toBe(true);
+    expect(appObjects.has("Assets")).toBe(true);
     expect(appObjects.has("Asset Repository")).toBe(true);
     expect(appObjects.has("App Assets")).toBe(true);
 

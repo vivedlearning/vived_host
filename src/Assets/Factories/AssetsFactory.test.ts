@@ -14,7 +14,7 @@ describe("AssetsFactory", () => {
     const { appObjects } = makeTestRig();
 
     // Create the factory
-    const assetsAO = appObjects.getOrCreate("Assets Domain");
+    const assetsAO = appObjects.getOrCreate("Assets");
     new AssetsFactory(assetsAO);
 
     // Verify that the required AppObjects were created
@@ -32,7 +32,7 @@ describe("AssetsFactory", () => {
   it("should set up the asset factory correctly", () => {
     const { appObjects } = makeTestRig();
 
-    const assetsAO = appObjects.getOrCreate("Assets Domain");
+    const assetsAO = appObjects.getOrCreate("Assets");
     new AssetsFactory(assetsAO);
 
     const assetRepo = AssetRepo.get(appObjects);
@@ -46,13 +46,13 @@ describe("AssetsFactory", () => {
 });
 
 describe("setupAssets", () => {
-  it("should create AssetsFactory and Assets Domain AppObject", () => {
+  it("should create AssetsFactory and Assets AppObject", () => {
     const { appObjects } = makeTestRig();
 
     setupAssets(appObjects);
 
-    // Verify that the Assets Domain AppObject was created
-    expect(appObjects.has("Assets Domain")).toBe(true);
+    // Verify that the Assets AppObject was created
+    expect(appObjects.has("Assets")).toBe(true);
 
     // Verify that the asset system components are set up
     expect(appObjects.has("Asset Repository")).toBe(true);

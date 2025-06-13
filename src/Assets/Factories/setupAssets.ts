@@ -7,6 +7,6 @@ import { AssetsFactory } from "./AssetsFactory";
  * @param appObjects The application's object repository
  */
 export function setupAssets(appObjects: AppObjectRepo) {
-  const assetsAO = appObjects.getOrCreate("Assets Domain");
+  const assetsAO = appObjects.getOrCreate("Assets");
   new AssetsFactory(assetsAO);
 }
