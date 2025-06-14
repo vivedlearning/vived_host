@@ -1,17 +1,17 @@
 /**
  * AssetPM.ts
- * 
+ *
  * This presentation manager handles the view model generation and change tracking
  * for individual asset entities, providing a clean interface between asset data
  * and UI components.
- * 
+ *
  * Key Concepts:
  * - Transforms asset entity data into view models for UI consumption
  * - Tracks entity changes and triggers UI updates when needed
  * - Provides efficient comparison methods for view model equality
  * - Manages asset entity lifecycle and observer patterns
  * - Follows the PM pattern for separation of concerns between domain and presentation
- * 
+ *
  * Usage Patterns:
  * - Created per-asset during factory setup
  * - Accessed through static getByID() method with asset ID
@@ -39,7 +39,7 @@ export interface AssetVM {
 
 /**
  * AssetPM manages presentation logic for individual asset entities.
- * 
+ *
  * This presentation manager bridges the gap between asset domain entities
  * and UI components by providing optimized view models and change tracking.
  */
@@ -49,7 +49,7 @@ export abstract class AssetPM extends AppObjectPM<AssetVM> {
 
   /**
    * Retrieves an AssetPM component for a specific asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param appObjects - Repository for accessing app objects and components
    * @returns AssetPM instance or undefined if not found
@@ -81,7 +81,7 @@ export abstract class AssetPM extends AppObjectPM<AssetVM> {
 
 /**
  * Factory function to create a new AssetPM instance.
- * 
+ *
  * @param appObject - The AppObject that will host this PM (should contain an AssetEntity)
  * @returns A new AssetPM implementation instance
  */
@@ -91,7 +91,7 @@ export function makeAssetPM(appObject: AppObject): AssetPM {
 
 /**
  * Private implementation of AssetPM with entity integration and change tracking.
- * 
+ *
  * Key Implementation Details:
  * - Observes AssetEntity changes and generates view models accordingly
  * - Implements efficient view model comparison for performance optimization
@@ -104,7 +104,7 @@ class AssetPMImp extends AssetPM {
 
   /**
    * Compares two asset view models for equality to optimize UI updates.
-   * 
+   *
    * @param a - First asset view model to compare
    * @param b - Second asset view model to compare
    * @returns true if view models are equal, false otherwise

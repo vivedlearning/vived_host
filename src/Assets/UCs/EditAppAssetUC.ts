@@ -1,16 +1,16 @@
 /**
  * EditAppAssetUC.ts
- * 
+ *
  * This use case handles initiating the asset editing workflow by transitioning
  * the application to editing mode for a specific asset.
- * 
+ *
  * Key Concepts:
  * - Manages application state transitions for asset editing workflows
  * - Sets the editing context in AppAssetsEntity for UI components
  * - Transitions sandbox state to enable editing interfaces
  * - Validates asset existence before initiating editing
  * - Provides error handling for missing assets or dependencies
- * 
+ *
  * Usage Patterns:
  * - Singleton use case accessed through static get() method
  * - Called with asset ID to initiate editing for specific assets
@@ -32,7 +32,7 @@ import { AppAssetsEntity, AssetRepo } from "../Entities";
 
 /**
  * EditAppAssetUC handles initiating asset editing workflows and state transitions.
- * 
+ *
  * This singleton use case manages the transition from normal asset viewing
  * to editing mode, setting up the necessary context for editing interfaces.
  */
@@ -42,14 +42,14 @@ export abstract class EditAppAssetUC extends AppObjectUC {
 
   /**
    * Initiates editing mode for the specified asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset to edit
    */
   abstract editAsset(assetID: string): void;
 
   /**
    * Retrieves the singleton EditAppAssetUC instance.
-   * 
+   *
    * @param appObjects - Repository for accessing the singleton component
    * @returns EditAppAssetUC instance or undefined if not found
    */
@@ -63,7 +63,7 @@ export abstract class EditAppAssetUC extends AppObjectUC {
 
 /**
  * Factory function to create a new EditAppAssetUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this singleton use case (must have AssetRepo)
  * @returns A new EditAppAssetUC implementation instance
  */
@@ -73,7 +73,7 @@ export function makeEditAppAsset(appObject: AppObject): EditAppAssetUC {
 
 /**
  * Private implementation of EditAppAssetUC that handles state transitions for asset editing.
- * 
+ *
  * Key Implementation Details:
  * - Validates asset existence in repository before initiating editing
  * - Sets editing context in AppAssetsEntity for UI component access
@@ -97,14 +97,14 @@ class GetAssetUCImp extends EditAppAssetUC {
 
   /**
    * Initiates asset editing by setting up editing context and transitioning state.
-   * 
+   *
    * This method handles the complete editing initiation workflow:
    * 1. Validates required dependencies are available
    * 2. Looks up the asset in the repository
    * 3. Sets the editing context in AppAssetsEntity
    * 4. Transitions sandbox state to editing mode
    * 5. Provides appropriate warnings for missing assets
-   * 
+   *
    * @param assetID - The unique identifier of the asset to edit
    */
   editAsset = (assetID: string): void => {
@@ -123,7 +123,7 @@ class GetAssetUCImp extends EditAppAssetUC {
 
   /**
    * Initializes the EditAppAssetUC with required dependencies and validation.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetRepo for asset lookup
    */
   constructor(appObject: AppObject) {

@@ -1,6 +1,6 @@
 /**
  * NewAppAssetUC.ts
- * 
+ *
  * This use case handles creation of new assets within application contexts,
  * managing the complete workflow from file upload to UI state transitions.
  */
@@ -34,7 +34,7 @@ export interface NewAppAssetDTO {
 
 /**
  * NewAppAssetUC handles creation of new assets within application contexts.
- * 
+ *
  * This singleton use case manages asset creation with UI feedback and state transitions.
  */
 export abstract class NewAppAssetUC extends AppObjectUC {
@@ -43,7 +43,7 @@ export abstract class NewAppAssetUC extends AppObjectUC {
 
   /**
    * Creates a new asset with the provided data.
-   * 
+   *
    * @param data - Complete asset information including file and metadata
    * @returns Promise that resolves when the asset is successfully created
    */
@@ -51,7 +51,7 @@ export abstract class NewAppAssetUC extends AppObjectUC {
 
   /**
    * Retrieves the singleton NewAppAssetUC instance.
-   * 
+   *
    * @param appObjects - Repository for accessing the singleton component
    * @returns NewAppAssetUC instance or undefined if not found
    */
@@ -62,7 +62,7 @@ export abstract class NewAppAssetUC extends AppObjectUC {
 
 /**
  * Factory function to create a new NewAppAssetUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this singleton use case
  * @returns A new NewAppAssetUC implementation instance
  */

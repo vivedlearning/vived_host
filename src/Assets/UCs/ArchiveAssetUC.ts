@@ -1,17 +1,17 @@
 /**
  * ArchiveAssetUC.ts
- * 
+ *
  * This use case handles the archiving and unarchiving of assets, providing
  * a reversible soft-deletion mechanism that hides assets from normal views
  * while preserving them in the system.
- * 
+ *
  * Key Concepts:
  * - Archive operations are reversible soft-deletion mechanisms
  * - Archived assets remain in the system but are hidden from normal views
  * - Uses API calls to persist archive state changes
  * - Provides user feedback through spinner and error dialogs
  * - Updates both local entity state and collection notifications
- * 
+ *
  * Usage Patterns:
  * - Created per-asset during factory setup
  * - Accessed through static get() method with asset ID
@@ -31,7 +31,7 @@ import { AssetEntity } from "../Entities/AssetEntity";
 
 /**
  * ArchiveAssetUC manages the archiving and unarchiving operations for individual assets.
- * 
+ *
  * This use case provides the business logic for toggling asset archive status,
  * handling API persistence, and managing user feedback during the operation.
  * Archive operations are reversible and provide a soft-deletion mechanism.
@@ -42,7 +42,7 @@ export abstract class ArchiveAssetUC extends AppObjectUC {
 
   /**
    * Sets the archived status of the associated asset.
-   * 
+   *
    * @param archived - True to archive (hide) the asset, false to unarchive (show) it
    * @returns Promise that resolves when the operation completes successfully
    */
@@ -50,7 +50,7 @@ export abstract class ArchiveAssetUC extends AppObjectUC {
 
   /**
    * Retrieves an ArchiveAssetUC component for a specific asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param appObjects - Repository for accessing app objects and components
    * @returns ArchiveAssetUC instance or undefined if not found
@@ -83,7 +83,7 @@ export abstract class ArchiveAssetUC extends AppObjectUC {
 
 /**
  * Factory function to create a new ArchiveAssetUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this use case (should contain an AssetEntity)
  * @returns A new ArchiveAssetUC implementation instance
  */
@@ -93,7 +93,7 @@ export function makeArchiveAssetUC(appObject: AppObject): ArchiveAssetUC {
 
 /**
  * Private implementation of ArchiveAssetUC that handles the concrete archive operations.
- * 
+ *
  * Key Implementation Details:
  * - Validates asset entity existence and current archive state
  * - Uses PatchAssetIsArchivedUC for API persistence
@@ -106,7 +106,7 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
   /** The asset entity this use case operates on */
   private asset?: AssetEntity;
 
-  /** 
+  /**
    * Gets the API use case for patching asset archive status
    * Cached for efficient repeated access during operations
    */
@@ -116,7 +116,7 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
     )?.doPatch;
   }
 
-  /** 
+  /**
    * Gets the app assets collection entity for triggering collection updates
    * Used to notify UI components when asset visibility changes
    */
@@ -126,13 +126,13 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
 
   /**
    * Sets the archived status of the asset with full error handling and user feedback.
-   * 
+   *
    * This method handles the complete archive workflow:
    * 1. Validates the asset exists and state change is needed
    * 2. Shows a spinner dialog during the API operation
    * 3. Updates the asset entity and collection on success
    * 4. Shows error dialogs and logs failures appropriately
-   * 
+   *
    * @param archived - True to archive the asset, false to unarchive it
    * @returns Promise that resolves when the operation completes (successfully or with handled error)
    */
@@ -194,7 +194,7 @@ class ArchiveAssetUCImp extends ArchiveAssetUC {
 
   /**
    * Initializes the ArchiveAssetUC with validation of required components.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetEntity this UC will operate on
    */
   constructor(appObject: AppObject) {

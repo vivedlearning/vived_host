@@ -1,9 +1,9 @@
 /**
  * GetAssetBlobURLUC.ts
- * 
+ *
  * This use case provides optimized asset file retrieval with caching support,
  * returning blob URLs for immediate use in web applications.
- * 
+ *
  * Key Concepts:
  * - Provides blob URLs for asset files with multi-level caching optimization
  * - Checks memory cache (existing entities) first for immediate access
@@ -11,7 +11,7 @@
  * - Finally fetches from remote API when cache misses occur
  * - Manages fetch state indicators for UI feedback
  * - Automatically stores fetched files in cache for future access
- * 
+ *
  * Usage Patterns:
  * - Singleton use case accessed through static get() method
  * - Called with asset ID to retrieve blob URL for display or download
@@ -33,7 +33,7 @@ import { GetAssetUC } from "./GetAssetUC";
 
 /**
  * GetAssetBlobURLUC handles optimized retrieval of asset files as blob URLs.
- * 
+ *
  * This singleton use case implements a multi-level caching strategy to minimize
  * network requests and provide fast access to asset files for web applications.
  */
@@ -43,7 +43,7 @@ export abstract class GetAssetBlobURLUC extends AppObjectUC {
 
   /**
    * Retrieves a blob URL for the specified asset file.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @returns Promise resolving to a blob URL for immediate use
    */
@@ -51,7 +51,7 @@ export abstract class GetAssetBlobURLUC extends AppObjectUC {
 
   /**
    * Retrieves the singleton GetAssetBlobURLUC instance.
-   * 
+   *
    * @param appObjects - Repository for accessing the singleton component
    * @returns GetAssetBlobURLUC instance or undefined if not found
    */
@@ -65,7 +65,7 @@ export abstract class GetAssetBlobURLUC extends AppObjectUC {
 
 /**
  * Factory function to create a new GetAssetBlobURLUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this singleton use case
  * @returns A new GetAssetBlobURLUC implementation instance
  */
@@ -75,7 +75,7 @@ export function makeGetAssetBlobURLUC(appObject: AppObject): GetAssetBlobURLUC {
 
 /**
  * Private implementation of GetAssetBlobURLUC with multi-level caching strategy.
- * 
+ *
  * Key Implementation Details:
  * - Implements three-tier caching: memory (entities), persistent cache, and remote API
  * - Manages fetch state indicators for user feedback during operations
@@ -118,15 +118,15 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
 
   /**
    * Retrieves an asset blob URL using optimized multi-level caching.
-   * 
+   *
    * This method implements a three-tier caching strategy:
    * 1. Memory cache: Check if asset entity already has a blob URL
    * 2. Persistent cache: Check IndexedDB/localStorage for cached file
    * 3. Remote API: Fetch from backend as last resort
-   * 
+   *
    * Each level provides progressively better performance, with automatic
    * population of higher-level caches for future access optimization.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @returns Promise resolving to a blob URL for the asset file
    */
@@ -211,11 +211,11 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
 
   /**
    * Helper method for direct asset fetching without cache support.
-   * 
+   *
    * This method handles the direct API fetch workflow when caching
    * is not available or has failed. It still attempts to store the
    * result in cache for future optimization.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param resolve - Success callback with blob URL
    * @param reject - Error callback with error details
@@ -280,7 +280,7 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
 
   /**
    * Initializes the GetAssetBlobURLUC and registers it as a singleton.
-   * 
+   *
    * @param appObject - The AppObject that will host this singleton use case
    */
   constructor(appObject: AppObject) {

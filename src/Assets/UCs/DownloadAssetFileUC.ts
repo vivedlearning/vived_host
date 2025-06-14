@@ -1,16 +1,16 @@
 /**
  * DownloadAssetFileUC.ts
- * 
+ *
  * This use case handles downloading asset files to the user's local system,
  * managing both cached and remote file retrieval with browser download triggers.
- * 
+ *
  * Key Concepts:
  * - Downloads asset files to user's local file system via browser
  * - Handles both cached (blob URL) and remote file sources
  * - Uses GetAssetFileUC for remote file retrieval when needed
  * - Provides user feedback through spinner dialogs during downloads
  * - Triggers browser download mechanism using temporary anchor elements
- * 
+ *
  * Usage Patterns:
  * - Created per-asset during factory setup
  * - Accessed through static get() method with asset ID
@@ -29,7 +29,7 @@ import { GetAssetFileUC } from "./GetAssetFileUC";
 
 /**
  * DownloadAssetFileUC manages downloading asset files to the user's local system.
- * 
+ *
  * This use case handles the complete download workflow, from file retrieval
  * (if necessary) to triggering the browser's download mechanism.
  */
@@ -39,7 +39,7 @@ export abstract class DownloadAssetFileUC extends AppObjectUC {
 
   /**
    * Downloads the associated asset file to the user's local system.
-   * 
+   *
    * @returns Promise that resolves when the download operation completes
    */
   abstract download(): Promise<void>;
@@ -52,7 +52,7 @@ export abstract class DownloadAssetFileUC extends AppObjectUC {
 
   /**
    * Retrieves a DownloadAssetFileUC component for a specific asset.
-   * 
+   *
    * @param assetID - The unique identifier of the asset
    * @param appObjects - Repository for accessing app objects and components
    * @returns DownloadAssetFileUC instance or undefined if not found
@@ -87,7 +87,7 @@ export abstract class DownloadAssetFileUC extends AppObjectUC {
 
 /**
  * Factory function to create a new DownloadAssetFileUC instance.
- * 
+ *
  * @param appObject - The AppObject that will host this use case (should contain an AssetEntity)
  * @returns A new DownloadAssetFileUC implementation instance
  */
@@ -99,7 +99,7 @@ export function makeDownloadAssetFileUC(
 
 /**
  * Private implementation of DownloadAssetFileUC that handles the concrete download operations.
- * 
+ *
  * Key Implementation Details:
  * - Checks for cached blob URLs to enable immediate downloads
  * - Falls back to GetAssetFileUC for remote file retrieval
@@ -112,7 +112,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
   /** The asset entity this use case operates on */
   private asset?: AssetEntity;
 
-  /** 
+  /**
    * Gets the use case for retrieving asset files from remote sources
    * Used when the asset file is not already cached locally
    */
@@ -123,7 +123,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
 
   /**
    * Downloads the asset file with smart caching and user feedback.
-   * 
+   *
    * This method implements the complete download workflow:
    * 1. Validates the asset exists
    * 2. If a blob URL exists, triggers immediate download
@@ -131,7 +131,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
    * 4. Shows spinner dialog during remote fetch operations
    * 5. Triggers download once file is available locally
    * 6. Handles errors with appropriate user feedback
-   * 
+   *
    * @returns Promise that resolves when the download operation completes
    */
   download = (): Promise<void> => {
@@ -187,7 +187,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
 
   /**
    * Triggers the browser's download mechanism for the cached asset file.
-   * 
+   *
    * This method creates a temporary anchor element with the blob URL and
    * programmatically clicks it to trigger the browser download. The download
    * preserves the original filename from the asset metadata.
@@ -212,7 +212,7 @@ class DownloadAssetFileUCImp extends DownloadAssetFileUC {
 
   /**
    * Initializes the DownloadAssetFileUC with validation of required components.
-   * 
+   *
    * @param appObject - The AppObject that should contain the AssetEntity this UC will operate on
    */
   constructor(appObject: AppObject) {
