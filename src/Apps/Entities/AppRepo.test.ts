@@ -16,7 +16,7 @@ test("Creating an app", () => {
 
   expect(repo.getAllApps()).toHaveLength(0);
 
-  const app = repo.createApp("appID");
+  const app = repo.getOrCreate("appID");
 
   expect(app.id).toEqual("appID");
   expect(repo.getAllApps()).toHaveLength(1);
@@ -26,7 +26,7 @@ test("Creating an app", () => {
 test("Has", () => {
   const { repo } = makeTestRig();
 
-  repo.createApp("appID");
+  repo.getOrCreate("appID");
 
   expect(repo.hasApp("appID")).toEqual(true);
   expect(repo.hasApp("otherApp")).toEqual(false);
@@ -35,7 +35,7 @@ test("Has", () => {
 test("Getting an app", () => {
   const { repo } = makeTestRig();
 
-  const app = repo.createApp("appID");
+  const app = repo.getOrCreate("appID");
   const gottenApp = repo.getApp("appID");
 
   expect(gottenApp).toEqual(app);
@@ -49,7 +49,7 @@ test("Getting an unknown app should return undefined", () => {
 
 test("Deleting an app", () => {
   const { repo, repoChangeObserver } = makeTestRig();
-  repo.createApp("appID");
+  repo.getOrCreate("appID");
 
   repoChangeObserver.mockClear();
 
@@ -61,7 +61,7 @@ test("Deleting an app", () => {
 
 test("Deleting an unknown app should not notify", () => {
   const { repo, repoChangeObserver } = makeTestRig();
-  repo.createApp("appID");
+  repo.getOrCreate("appID");
 
   repoChangeObserver.mockClear();
 
@@ -73,7 +73,7 @@ test("Deleting an unknown app should not notify", () => {
 test("Any app change observer is hooked up", () => {
   const { repo, repoChangeObserver } = makeTestRig();
 
-  const app = repo.createApp("appID");
+  const app = repo.getOrCreate("appID");
 
   app.errorMessage = "An Error";
 
@@ -82,9 +82,9 @@ test("Any app change observer is hooked up", () => {
 
 test("Deleting all apps", () => {
   const { repo, repoChangeObserver } = makeTestRig();
-  repo.createApp("app1");
-  repo.createApp("app2");
-  repo.createApp("app3");
+  repo.getOrCreate("app1");
+  repo.getOrCreate("app2");
+  repo.getOrCreate("app3");
 
   repoChangeObserver.mockClear();
 
@@ -92,4 +92,52 @@ test("Deleting all apps", () => {
 
   expect(repo.getAllApps()).toHaveLength(0);
   expect(repoChangeObserver).toBeCalledTimes(3);
+});
+
+test("getOrCreate returns existing app when one exists", () => {
+  const { repo } = makeTestRig();
+
+  const app1 = repo.getOrCreate("appID");
+  const app2 = repo.getOrCreate("appID");
+
+  expect(app1).toBe(app2);
+  expect(repo.getAllApps()).toHaveLength(1);
+});
+
+test("getOrCreate creates new app using factory when none exists", () => {
+  const { repo } = makeTestRig();
+
+  expect(repo.getAllApps()).toHaveLength(0);
+
+  const app = repo.getOrCreate("newAppID");
+
+  expect(app.id).toEqual("newAppID");
+  expect(repo.getAllApps()).toHaveLength(1);
+});
+
+test("appFactory creates valid AppEntity instances", () => {
+  const { repo } = makeTestRig();
+
+  const app = repo.appFactory("factoryTestID");
+
+  expect(app.id).toEqual("factoryTestID");
+  expect(app).toBeDefined();
+});
+
+test("Factory method can be overridden for custom behavior", () => {
+  const { repo } = makeTestRig();
+
+  // Store original factory
+  const originalFactory = repo.appFactory;
+
+  // Override the factory
+  repo.appFactory = (id: string) => {
+    const app = originalFactory.call(repo, id);
+    app.name = "Factory Created App";
+    return app;
+  };
+
+  const newApp = repo.getOrCreate("overriddenID");
+
+  expect(newApp.name).toEqual("Factory Created App");
 });
