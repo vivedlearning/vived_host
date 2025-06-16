@@ -44,12 +44,6 @@ export class AssetsFactory extends DomainFactory {
 
   constructor(appObject: AppObject) {
     super(appObject);
-    
-    // Initialize in the proper order
-    this.setupEntities();
-    this.setupUCs();
-    this.setupPMs();
-    this.finalSetup();
   }
 
   /**
