@@ -43,7 +43,7 @@ describe("appListPMAdapter Integration", () => {
     mockSetVM.mockClear();
 
     // Create an app
-    const app1 = appRepo.createApp("app1");
+    const app1 = appRepo.getOrCreate("app1");
 
     // Set it as assigned to owner (which should make it appear in the list)
     app1.assignedToOwner = true;
@@ -58,7 +58,7 @@ describe("appListPMAdapter Integration", () => {
     mockSetVM.mockClear();
 
     // Create a second app
-    const app2 = appRepo.createApp("app2");
+    const app2 = appRepo.getOrCreate("app2");
     app2.assignedToOwner = true;
 
     // Wait for changes to propagate
@@ -83,7 +83,7 @@ describe("appListPMAdapter Integration", () => {
     appListPMAdapter.unsubscribe(appObjects, mockSetVM);
 
     // Make a change that shouldn't reach the view function
-    const app3 = appRepo.createApp("app3");
+    const app3 = appRepo.getOrCreate("app3");
     app3.assignedToOwner = true;
 
     // Wait for any potential changes to propagate

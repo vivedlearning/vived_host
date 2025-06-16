@@ -8,7 +8,7 @@ function makeTestRig() {
   const ao = appObjects.getOrCreate("Apps");
   const slideAppRepo = makeAppRepo(ao);
 
-  const app = slideAppRepo.createApp("app0");
+  const app = slideAppRepo.getOrCreate("app0");
   app!.assignedToOwner = true;
 
   const pm = makeAppsListPM(ao);
@@ -77,7 +77,7 @@ describe("Slide App List PM", () => {
   it("Updates the VM when the app list changes", () => {
     const { pm, slideAppRepo } = makeTestRig();
 
-    const app = slideAppRepo.createApp("app2");
+    const app = slideAppRepo.getOrCreate("app2");
     app.assignedToOwner = true;
     expect(pm.lastVM).toEqual(["app0", "app2"]);
   });
@@ -85,7 +85,7 @@ describe("Slide App List PM", () => {
   it("Limits the list to the apps that belong to the owner", () => {
     const { pm, slideAppRepo } = makeTestRig();
 
-    const app = slideAppRepo.createApp("app2");
+    const app = slideAppRepo.getOrCreate("app2");
     app.assignedToOwner = false;
     expect(pm.lastVM).toEqual(["app0"]);
   });

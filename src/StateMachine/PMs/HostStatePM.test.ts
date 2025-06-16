@@ -37,7 +37,7 @@ describe("HostStatePM", () => {
     appRepo = makeAppRepo(appRepoObject);
 
     // Create a test app
-    app = appRepo.createApp(testAppId);
+    app = appRepo.getOrCreate(testAppId);
     app.name = testAppName;
 
     // Create the state entity
