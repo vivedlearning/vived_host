@@ -19,11 +19,12 @@ export abstract class AppRepoEntity extends AppObjectEntityRepo<AppEntity> {
     return appObjects.getSingleton<AppRepoEntity>(AppRepoEntity.type);
   }
 
-  abstract createApp: (id: string) => AppEntity;
+  abstract getOrCreate: (id: string) => AppEntity;
   abstract getApp: (id: string) => AppEntity | undefined;
   abstract getAllApps: () => AppEntity[];
   abstract deleteApp: (id: string) => void;
   abstract hasApp: (id: string) => boolean;
+  abstract appFactory: (id: string) => AppEntity;
 
   abstract appReleaseStage: AppReleaseStage;
 
@@ -37,15 +38,17 @@ export function makeAppRepo(appObject: AppObject): AppRepoEntity {
 class AppRepoImp extends AppRepoEntity {
   appReleaseStage: AppReleaseStage = AppReleaseStage.RELEASE;
 
-  createApp = (id: string): AppEntity => {
+  appFactory = (id: string): AppEntity => {
+    return makeAppEntity(this.appObjects.getOrCreate(id));
+  };
+
+  getOrCreate = (id: string): AppEntity => {
     const existingApp = this.getForAppObject(id);
     if (existingApp) {
       return existingApp;
     }
 
-    const ao = this.appObjects.getOrCreate(id);
-
-    const app = makeAppEntity(ao);
+    const app = this.appFactory(id);
     this.add(app);
     return app;
   };

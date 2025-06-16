@@ -1,11 +1,15 @@
-import { makeAppObjectRepo } from "@vived/core";
+import { makeAppObjectRepo, DomainFactoryRepo } from "@vived/core";
 import { AssetsFactory } from "./AssetsFactory";
-import { setupAssets } from "./setupAssets";
 import { AssetRepo } from "../Entities/AssetRepo";
 import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
+
+  // Create DomainFactoryRepo
+  const domainFactoryRepoAO = appObjects.getOrCreate("DomainFactoryRepo");
+  new DomainFactoryRepo(domainFactoryRepoAO);
+
   return { appObjects };
 }
 
@@ -16,6 +20,10 @@ describe("AssetsFactory", () => {
     // Create the factory
     const assetsAO = appObjects.getOrCreate("Assets");
     new AssetsFactory(assetsAO);
+
+    // Trigger setup for all domain factories
+    const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+    domainFactoryRepo?.setupDomain();
 
     // Verify that the required AppObjects were created
     expect(appObjects.has("Asset Repository")).toBe(true);
@@ -35,6 +43,10 @@ describe("AssetsFactory", () => {
     const assetsAO = appObjects.getOrCreate("Assets");
     new AssetsFactory(assetsAO);
 
+    // Trigger setup for all domain factories
+    const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+    domainFactoryRepo?.setupDomain();
+
     const assetRepo = AssetRepo.get(appObjects);
     expect(assetRepo?.assetFactory).toBeDefined();
 
@@ -42,39 +54,5 @@ describe("AssetsFactory", () => {
     const testAsset = assetRepo?.assetFactory("test-asset");
     expect(testAsset).toBeDefined();
     expect(testAsset?.id).toBe("test-asset");
-  });
-});
-
-describe("setupAssets", () => {
-  it("should create AssetsFactory and Assets AppObject", () => {
-    const { appObjects } = makeTestRig();
-
-    setupAssets(appObjects);
-
-    // Verify that the Assets AppObject was created
-    expect(appObjects.has("Assets")).toBe(true);
-
-    // Verify that the asset system components are set up
-    expect(appObjects.has("Asset Repository")).toBe(true);
-    expect(appObjects.has("App Assets")).toBe(true);
-  });
-
-  it("should maintain the same functionality as setupAssetsForSandbox", () => {
-    const { appObjects } = makeTestRig();
-
-    // Set up using the new factory
-    setupAssets(appObjects);
-
-    // Verify core functionality
-    const assetRepo = AssetRepo.get(appObjects);
-    expect(assetRepo).toBeDefined();
-
-    const appAssets = AppAssetsEntity.get(appObjects);
-    expect(appAssets).toBeDefined();
-
-    // Test asset creation
-    const asset = assetRepo?.getOrCreate("test-asset");
-    expect(asset).toBeDefined();
-    expect(asset?.id).toBe("test-asset");
   });
 });
