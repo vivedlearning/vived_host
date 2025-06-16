@@ -196,16 +196,14 @@ class AssetRepositoryImp extends AssetRepo {
   has = (id: string): boolean => {
     return this.assetLookup.has(id);
   };
-
   /**
    * Factory method for creating new AssetEntity instances
-   * Logs an error if called without injection, then uses default factory
+   * Uses default factory if not injected via dependency injection
    * This allows for dependency injection of custom asset creation logic
    * @param id - The unique identifier for the new asset
    * @returns A new AssetEntity instance using the default factory
    */
   assetFactory = (id: string): AssetEntity => {
-    this.error("Asset factory has not been injected");
     return makeAssetEntity(this.appObjects.getOrCreate(id));
   };
 
