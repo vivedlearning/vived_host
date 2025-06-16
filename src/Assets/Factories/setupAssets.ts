@@ -1,4 +1,4 @@
-import { AppObjectRepo } from "@vived/core";
+import { AppObjectRepo, DomainFactoryRepo } from "@vived/core";
 import { AssetsFactory } from "./AssetsFactory";
 
 /**
@@ -8,5 +8,17 @@ import { AssetsFactory } from "./AssetsFactory";
  */
 export function setupAssets(appObjects: AppObjectRepo) {
   const assetsAO = appObjects.getOrCreate("Assets");
+
+  // Create DomainFactoryRepo if it doesn't exist
+  let domainFactoryRepo = DomainFactoryRepo.get(appObjects);
+  if (!domainFactoryRepo) {
+    const domainFactoryRepoAO = appObjects.getOrCreate("DomainFactoryRepo");
+    domainFactoryRepo = new DomainFactoryRepo(domainFactoryRepoAO);
+  }
+
+  // Create the factory with the Assets AppObject
   new AssetsFactory(assetsAO);
+
+  // Trigger setup for all registered domain factories
+  domainFactoryRepo.setupDomain();
 }
