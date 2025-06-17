@@ -14,7 +14,39 @@ describe("App Entity", () => {
   it("Gets by ID", () => {
     const { app, appObjects } = makeTestRig();
 
-    expect(AppEntity.get("appID", appObjects)).toEqual(app);
+    expect(AppEntity.getById("appID", appObjects)).toEqual(app);
+  });
+
+  it("Gets from AppObject", () => {
+    const { app, appObjects } = makeTestRig();
+    const appObject = appObjects.get("appID");
+
+    expect(AppEntity.get(appObject!)).toEqual(app);
+  });
+
+  it("Adds if missing - creates new entity", () => {
+    const appObjects = makeAppObjectRepo();
+    const appObject = appObjects.getOrCreate("newAppID");
+
+    // Initially no AppEntity should exist
+    expect(AppEntity.get(appObject)).toBeUndefined();
+
+    // addIfMissing should create a new one
+    const appEntity = AppEntity.addIfMissing(appObject);
+    expect(appEntity).toBeDefined();
+    expect(appEntity.id).toEqual("newAppID");
+
+    // Now get should return the same entity
+    expect(AppEntity.get(appObject)).toEqual(appEntity);
+  });
+
+  it("Adds if missing - returns existing entity", () => {
+    const { app, appObjects } = makeTestRig();
+    const appObject = appObjects.get("appID")!;
+
+    // addIfMissing should return the existing entity
+    const returnedEntity = AppEntity.addIfMissing(appObject);
+    expect(returnedEntity).toEqual(app);
   });
 
   it("Initializes as expected", () => {
