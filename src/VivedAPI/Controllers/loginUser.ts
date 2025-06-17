@@ -1,17 +1,17 @@
 /**
  * loginUser.ts
- * 
+ *
  * This file defines a controller function for user authentication login operations.
  * The loginUser controller provides a simple interface for authenticating users
  * with username and password credentials through the VIVED API.
- * 
+ *
  * Key concepts:
  * - Controller functions handle user input and direct authentication operations
  * - Validates UserAuthUC existence before performing login operations
  * - Provides error handling and warning messages for missing components
  * - Returns promises for async authentication workflows
  * - Coordinates with UserAuthUC for actual authentication logic
- * 
+ *
  * Usage pattern:
  * 1. Call loginUser with credentials and appObjects repository
  * 2. Controller validates UC existence and initiates login workflow

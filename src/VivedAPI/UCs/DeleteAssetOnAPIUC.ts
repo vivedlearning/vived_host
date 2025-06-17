@@ -1,17 +1,17 @@
 /**
  * DeleteAssetOnAPIUC.ts
- * 
+ *
  * This file defines the Use Case for deleting assets via the VIVED API.
  * DeleteAssetOnAPIUC handles the workflow of removing asset records from
  * the backend storage system through authenticated API requests.
- * 
+ *
  * Key concepts:
  * - Orchestrates asset deletion through API endpoints
  * - Manages authentication tokens for authorized deletion requests
  * - Coordinates between JsonRequestUC and SignedAuthTokenUC
  * - Handles error cases and provides feedback for deletion operations
  * - Ensures proper cleanup of asset data and metadata
- * 
+ *
  * Usage pattern:
  * 1. Get a UC instance using DeleteAssetOnAPIUC.get(appObjects) or makeDeleteAssetOnAPIUC
  * 2. Call doDelete with the asset ID to remove

@@ -1,17 +1,17 @@
 /**
  * VivedAPIEntity.ts
- * 
+ *
  * This file defines the core entity for managing VIVED API configuration and authentication.
  * The VivedAPIEntity acts as a singleton component that centralizes API communication settings,
  * including environment-specific base URLs and user authentication tokens.
- * 
+ *
  * Key concepts:
  * - Manages API stage configuration (Production, Staging, Development, Local)
  * - Stores and tracks user authentication tokens
  * - Provides environment-specific base URLs for API requests
  * - Notifies observers when API settings change
  * - Implements singleton pattern for system-wide API configuration
- * 
+ *
  * Usage pattern:
  * 1. Get the singleton entity using VivedAPIEntity.get(appObjects)
  * 2. Configure API stage and user token as needed
@@ -81,7 +81,7 @@ export class VivedAPIEntity extends AppObjectEntity {
   get apiStage() {
     return this.memoizedApiState.val as APIStage;
   }
-  
+
   /**
    * Sets the API stage and notifies observers of the change
    * @param apiState The new APIStage to set
@@ -118,7 +118,7 @@ export class VivedAPIEntity extends AppObjectEntity {
 
   /** Memoized user authentication token that notifies on changes */
   private memoizedUserToken = new MemoizedString("", this.notifyOnChange);
-  
+
   /**
    * Gets the current user authentication token
    * @returns The current user token string
@@ -126,7 +126,7 @@ export class VivedAPIEntity extends AppObjectEntity {
   get userToken(): string {
     return this.memoizedUserToken.val;
   }
-  
+
   /**
    * Sets the user authentication token and notifies observers
    * @param val The new user token to set

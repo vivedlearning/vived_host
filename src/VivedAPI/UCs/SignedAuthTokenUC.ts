@@ -1,17 +1,17 @@
 /**
  * SignedAuthTokenUC.ts
- * 
+ *
  * This file defines the Use Case for retrieving signed authentication tokens.
  * SignedAuthTokenUC provides functionality for obtaining JWT or signed tokens
  * used to authenticate API requests with the VIVED backend services.
- * 
+ *
  * Key concepts:
  * - Abstract UC defining the interface for authentication token retrieval
  * - Handles token generation, validation, and renewal workflows
  * - Provides secure access to authentication credentials
  * - Implements singleton pattern for system-wide token management
  * - Returns promises for async token operations
- * 
+ *
  * Usage pattern:
  * 1. Get the singleton UC using SignedAuthTokenUC.get(appObjects)
  * 2. Call getAuthToken to retrieve current valid authentication token

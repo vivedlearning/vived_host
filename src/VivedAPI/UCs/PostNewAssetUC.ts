@@ -1,17 +1,17 @@
 /**
  * PostNewAssetUC.ts
- * 
+ *
  * This file defines the Use Case for creating new assets via the VIVED API.
  * PostNewAssetUC handles the complete workflow of uploading asset files and
  * creating asset metadata records through API requests.
- * 
+ *
  * Key concepts:
  * - Orchestrates file upload and metadata creation for new assets
  * - Handles multipart file uploads with asset information
  * - Manages authentication tokens and API endpoints
  * - Coordinates between multiple UCs (JsonRequest, FileUpload, SignedAuthToken)
  * - Returns asset creation response with generated IDs
- * 
+ *
  * Usage pattern:
  * 1. Get a UC instance using PostNewAssetUC.get(appObjects) or makePostNewAssetUC
  * 2. Call doPost with asset data including file and metadata

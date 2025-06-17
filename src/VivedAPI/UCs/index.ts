@@ -1,17 +1,17 @@
 /**
  * VivedAPI Use Cases Index
- * 
+ *
  * This module exports all use case classes for the VivedAPI feature.
  * Use cases contain the business logic for API operations and coordinate
  * between entities, external services, and user interface components.
- * 
+ *
  * Key Concepts:
  * - Use cases implement specific API operations and workflows
  * - They coordinate between entities, HTTP requests, and authentication
  * - Each UC handles validation, error management, and API communication
  * - Some UCs manage singleton operations, others handle per-request workflows
  * - UCs provide clean interfaces for controllers and other components
- * 
+ *
  * Available Use Cases:
  * - HTTP Operations: BasicFetchUC, JsonRequestUC, BlobRequestUC
  * - Authentication: SignedAuthTokenUC, UserAuthUC

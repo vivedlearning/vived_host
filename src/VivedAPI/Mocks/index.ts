@@ -1,17 +1,17 @@
 /**
  * VivedAPI Mocks Index
- * 
+ *
  * This module exports all mock implementations for the VivedAPI feature.
  * Mocks provide test doubles and stub implementations for development and testing
  * scenarios where real API communication is not desired or available.
- * 
+ *
  * Key Concepts:
  * - Mocks implement the same interfaces as production components
  * - They provide predictable, controllable behavior for testing
  * - Mocks can simulate various success and failure scenarios
  * - They enable development without requiring live API connections
  * - Mock implementations support isolated unit testing
- * 
+ *
  * Available Mock Components:
  * - Presentation Manager Mocks: ApiStagePMMock, UserTokenPMMock
  * - HTTP Request Mocks: MockBasicFetchUC, MockJsonRequestUC, MockBlobRequestUC
