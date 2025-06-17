@@ -34,17 +34,83 @@ export abstract class AppEntity extends AppObjectEntity {
   /** Type identifier for the AppEntity component */
   static type = "AppEntity";
 
-  static get(id: string, appObjects: AppObjectRepo) {
+  /**
+   * Retrieves an AppEntity from a specific AppObject
+   * @param appObj - The AppObject to retrieve the AppEntity from
+   * @returns The AppEntity instance if found, undefined otherwise
+   * @throws Error if appObj is null or undefined
+   * @example
+   * ```typescript
+   * const appObject = appObjects.getOrCreate("myApp");
+   * const appEntity = AppEntity.get(appObject);
+   * ```
+   */
+  static get(appObj: AppObject): AppEntity | undefined {
+    if (!appObj) {
+      throw new Error("AppObject cannot be null or undefined");
+    }
+    return appObj.getComponent<AppEntity>(AppEntity.type);
+  }
+
+  /**
+   * Retrieves an AppEntity by ID from the AppObjectRepo
+   * @param id - The unique identifier of the app
+   * @param appObjects - The AppObjectRepo to search within
+   * @returns The AppEntity instance if found, undefined otherwise
+   * @throws Error if id is empty or appObjects is null
+   * @example
+   * ```typescript
+   * const appEntity = AppEntity.getById("myAppId", appObjects);
+   * if (appEntity) {
+   *   console.log(`Found app: ${appEntity.name}`);
+   * }
+   * ```
+   */
+  static getById(id: string, appObjects: AppObjectRepo): AppEntity | undefined {
+    if (!id) {
+      throw new Error("ID cannot be empty");
+    }
+    if (!appObjects) {
+      throw new Error("AppObjectRepo cannot be null or undefined");
+    }
+
     const ao = appObjects.get(id);
     if (!ao) {
       appObjects.submitWarning(
-        "AppEntity.get",
+        "AppEntity.getById",
         `Unable to find app object by ID: ${id}`
       );
       return;
     }
 
     return ao.getComponent<AppEntity>(AppEntity.type);
+  }
+
+  /**
+   * Safely creates an AppEntity if it doesn't already exist on the AppObject
+   * @param appObject - The AppObject to add the AppEntity to
+   * @returns The AppEntity instance (existing or newly created)
+   * @throws Error if appObject is null or undefined
+   * @example
+   * ```typescript
+   * const appObject = appObjects.getOrCreate("newApp");
+   * const appEntity = AppEntity.addIfMissing(appObject);
+   * // appEntity is guaranteed to exist
+   * ```
+   */
+  static addIfMissing(appObject: AppObject): AppEntity {
+    if (!appObject) {
+      throw new Error("AppObject cannot be null or undefined");
+    }
+
+    // Check if AppEntity already exists
+    const existingEntity = appObject.getComponent<AppEntity>(AppEntity.type);
+    if (existingEntity) {
+      return existingEntity;
+    }
+
+    // Create new AppEntity if it doesn't exist
+    return makeAppEntity(appObject);
   }
 
   abstract get id(): string;
@@ -81,54 +147,54 @@ class AppEntityImp extends AppEntity {
     return this.appObject.id;
   }
 
-  private _memoizedName: MemoizedString = new MemoizedString(
+  private memoizedName: MemoizedString = new MemoizedString(
     "",
     this.notifyOnChange
   );
 
   get name(): string {
-    return this._memoizedName.val;
+    return this.memoizedName.val;
   }
 
   set name(val: string) {
-    this._memoizedName.val = val;
+    this.memoizedName.val = val;
   }
 
-  private _memoizedDescription: MemoizedString = new MemoizedString(
+  private memoizedDescription: MemoizedString = new MemoizedString(
     "",
     this.notifyOnChange
   );
 
   get description(): string {
-    return this._memoizedDescription.val;
+    return this.memoizedDescription.val;
   }
 
   set description(val: string) {
-    this._memoizedDescription.val = val;
+    this.memoizedDescription.val = val;
   }
 
-  private _memoizedImageUrl: MemoizedString = new MemoizedString(
+  private memoizedImageUrl: MemoizedString = new MemoizedString(
     "",
     this.notifyOnChange
   );
 
   get image_url(): string {
-    return this._memoizedImageUrl.val;
+    return this.memoizedImageUrl.val;
   }
 
   set image_url(val: string) {
-    this._memoizedImageUrl.val = val;
+    this.memoizedImageUrl.val = val;
   }
 
-  private _memoizedImageAssetId = new MemoizedString("", this.notifyOnChange);
+  private memoizedImageAssetId = new MemoizedString("", this.notifyOnChange);
 
   get imageAssetId(): string | undefined {
-    const value = this._memoizedImageAssetId.val;
+    const value = this.memoizedImageAssetId.val;
     return value === "" ? undefined : value;
   }
 
   set imageAssetId(val: string | undefined) {
-    this._memoizedImageAssetId.val = val ?? "";
+    this.memoizedImageAssetId.val = val ?? "";
   }
 
   versions: Version[] = [];
