@@ -1,17 +1,17 @@
 /**
  * MockJsonRequestUC.ts
- * 
+ *
  * This file provides a mock implementation of JsonRequestUC for testing and development.
  * MockJsonRequestUC replaces real HTTP request functionality with Jest mock functions,
  * enabling controlled testing scenarios and development without live API dependencies.
- * 
+ *
  * Key concepts:
  * - Mock extends the real JsonRequestUC class to maintain interface compatibility
  * - Uses Jest mock functions to provide controllable request behavior
  * - Enables testing of components that depend on JSON HTTP requests
  * - Allows simulation of various response scenarios (success, failure, delays)
  * - Supports isolated unit testing without external API dependencies
- * 
+ *
  * Usage pattern:
  * 1. Use makeMockJsonRequestUC to create and register the mock
  * 2. Configure mock behavior using Jest mock function methods

@@ -1,17 +1,17 @@
 /**
  * BlobRequestUC.ts
- * 
+ *
  * This file defines the Use Case for making HTTP requests that return binary data as Blobs.
  * BlobRequestUC provides functionality for downloading files, images, and other binary
  * content from API endpoints, returning the data as Blob objects for further processing.
- * 
+ *
  * Key concepts:
  * - Abstract UC defining the interface for binary data HTTP requests
  * - Supports all standard HTTP methods for blob retrieval
  * - Returns Blob objects suitable for file downloads or binary processing
  * - Handles request headers, parameters, and body data
  * - Implements singleton pattern for system-wide blob request handling
- * 
+ *
  * Usage pattern:
  * 1. Get the singleton UC using BlobRequestUC.get(appObjects)
  * 2. Call doRequest with URL and request options

@@ -1,17 +1,17 @@
 /**
  * setApiStage.ts
- * 
+ *
  * This file defines a controller function for setting the API stage configuration.
  * The setApiStage controller provides a simple interface for changing the API environment
  * that the application communicates with.
- * 
+ *
  * Key concepts:
  * - Controller functions handle user input and direct operations
  * - Validates entity existence before performing operations
  * - Provides error handling and warning messages for missing components
  * - Updates the VivedAPIEntity singleton with new stage configuration
  * - Triggers change notifications to update dependent components
- * 
+ *
  * Usage pattern:
  * 1. Call setApiStage with desired stage and appObjects repository
  * 2. Controller validates entity existence and updates configuration

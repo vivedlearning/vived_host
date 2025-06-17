@@ -1,17 +1,17 @@
 /**
  * logoutUser.ts
- * 
+ *
  * This file defines a controller function for user logout operations.
  * The logoutUser controller provides a simple interface for terminating user
  * sessions and clearing authentication state through the VIVED API.
- * 
+ *
  * Key concepts:
  * - Controller functions handle user input and direct logout operations
  * - Validates UserAuthUC existence before performing logout operations
  * - Provides error handling and warning messages for missing components
  * - Returns promises for async logout workflows
  * - Coordinates with UserAuthUC for actual logout logic
- * 
+ *
  * Usage pattern:
  * 1. Call logoutUser with appObjects repository
  * 2. Controller validates UC existence and initiates logout workflow

@@ -1,17 +1,17 @@
 /**
  * ApiStagePM.ts
- * 
+ *
  * This file defines the Presentation Manager for API stage configuration.
  * ApiStagePM bridges the VivedAPIEntity domain logic with UI components,
  * managing the display and interaction of API environment settings.
- * 
+ *
  * Key concepts:
  * - PM extends AppObjectPM and manages view model state for API stage
  * - Observes VivedAPIEntity changes and updates UI accordingly
  * - Provides value comparison logic for efficient view updates
  * - Implements singleton pattern for system-wide stage management
  * - Handles API stage transitions and notifications
- * 
+ *
  * Usage pattern:
  * 1. Get the singleton PM using ApiStagePM.get(appObjects)
  * 2. Connect to UI components that display/edit API stage

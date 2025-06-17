@@ -1,17 +1,17 @@
 /**
  * BasicFetchUC.ts
- * 
+ *
  * This file defines the core Use Case for making basic HTTP fetch requests.
  * BasicFetchUC provides a standardized interface for HTTP operations that return
  * raw Response objects rather than parsed JSON data.
- * 
+ *
  * Key concepts:
  * - Abstract UC defining the interface for basic HTTP fetch operations
  * - Supports all standard HTTP methods (GET, POST, PUT, PATCH, DELETE)
  * - Returns raw Response objects for flexible response handling
  * - Handles request headers, parameters, and body data
  * - Implements singleton pattern for system-wide request handling
- * 
+ *
  * Usage pattern:
  * 1. Get the singleton UC using BasicFetchUC.get(appObjects)
  * 2. Call doRequest with URL and request options

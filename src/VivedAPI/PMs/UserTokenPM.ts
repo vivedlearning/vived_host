@@ -1,17 +1,17 @@
 /**
  * UserTokenPM.ts
- * 
+ *
  * This file defines the Presentation Manager for user authentication token display.
  * UserTokenPM bridges the VivedAPIEntity token state with UI components,
  * managing the display and interaction of user authentication tokens.
- * 
+ *
  * Key concepts:
  * - PM extends AppObjectPM and manages view model state for user tokens
  * - Observes VivedAPIEntity token changes and updates UI accordingly
  * - Provides value comparison logic for efficient view updates
  * - Implements singleton pattern for system-wide token display management
  * - Handles token state transitions and notifications
- * 
+ *
  * Usage pattern:
  * 1. Get the singleton PM using UserTokenPM.get(appObjects)
  * 2. Connect to UI components that display user authentication tokens

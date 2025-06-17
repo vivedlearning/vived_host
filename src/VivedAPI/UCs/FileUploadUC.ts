@@ -1,17 +1,17 @@
 /**
  * FileUploadUC.ts
- * 
+ *
  * This file defines the Use Case for uploading files to the VIVED API.
  * FileUploadUC handles the process of uploading file data to storage endpoints,
  * managing multipart form data and upload progress.
- * 
+ *
  * Key concepts:
  * - Abstract UC defining the interface for file upload operations
  * - Handles file upload workflows with progress tracking
  * - Coordinates with BasicFetchUC for HTTP transport
  * - Manages multipart form data encoding and transmission
  * - Provides error handling for upload failures
- * 
+ *
  * Usage pattern:
  * 1. Get a UC instance using FileUploadUC.get(appObjects) or makeFileUploadUC
  * 2. Call doUpload with File object to upload

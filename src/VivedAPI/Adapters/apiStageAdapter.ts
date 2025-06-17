@@ -1,17 +1,17 @@
 /**
  * apiStageAdapter.ts
- * 
+ *
  * This file defines an adapter for connecting API stage presentation logic to UI frameworks.
  * The apiStageAdapter provides a standardized interface for binding API stage configuration
  * to view components, handling subscriptions and view model updates.
- * 
+ *
  * Key concepts:
  * - Adapter implements SingletonPmAdapter interface for UI framework integration
  * - Manages subscription lifecycle for view components
  * - Provides default view model values for initialization
  * - Handles error cases when presentation manager is unavailable
  * - Enables reactive UI updates when API stage configuration changes
- * 
+ *
  * Usage pattern:
  * 1. UI frameworks use this adapter to bind to API stage state
  * 2. Adapter manages PM subscriptions and view function callbacks
@@ -30,7 +30,7 @@ import { ApiStagePM } from "../PMs/ApiStagePM";
 export const apiStageAdapter: SingletonPmAdapter<APIStage> = {
   /** Default view model value used when PM is not available */
   defaultVM: APIStage.PRODUCTION,
-  
+
   /**
    * Subscribes a view function to receive API stage updates
    * @param appObjects The AppObjectRepo containing the ApiStagePM
@@ -44,7 +44,7 @@ export const apiStageAdapter: SingletonPmAdapter<APIStage> = {
     }
     pm.addView(setVM);
   },
-  
+
   /**
    * Unsubscribes a view function from API stage updates
    * @param appObjects The AppObjectRepo containing the ApiStagePM
