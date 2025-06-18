@@ -45,9 +45,13 @@ export abstract class GetAssetBlobURLUC extends AppObjectUC {
    * Retrieves a blob URL for the specified asset file.
    *
    * @param assetID - The unique identifier of the asset
+   * @param useCache - Optional flag to control caching behavior (defaults to true)
    * @returns Promise resolving to a blob URL for immediate use
    */
-  abstract getAssetBlobURL(assetID: string): Promise<string>;
+  abstract getAssetBlobURL(
+    assetID: string,
+    useCache?: boolean
+  ): Promise<string>;
 
   /**
    * Retrieves the singleton GetAssetBlobURLUC instance.
@@ -128,9 +132,13 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
    * population of higher-level caches for future access optimization.
    *
    * @param assetID - The unique identifier of the asset
+   * @param useCache - Optional flag to control caching behavior (defaults to true)
    * @returns Promise resolving to a blob URL for the asset file
    */
-  getAssetBlobURL = (assetID: string): Promise<string> => {
+  getAssetBlobURL = (
+    assetID: string,
+    useCache: boolean = true
+  ): Promise<string> => {
     const assetRepo = this.assetRepo;
     const getAsset = this.getAsset;
     const fetchAssetFile = this.fetchAssetFile;
@@ -139,6 +147,13 @@ class GetAssetBlobURLUCImp extends GetAssetBlobURLUC {
 
     if (!assetRepo || !getAsset || !fetchAssetFile) {
       return Promise.reject();
+    }
+
+    // If cache is disabled, skip all cache checks and go directly to API
+    if (!useCache) {
+      return new Promise((resolve, reject) => {
+        this.fetchAssetNormally(assetID, resolve, reject);
+      });
     }
 
     // Level 1: Check memory cache (existing entities with blob URLs)

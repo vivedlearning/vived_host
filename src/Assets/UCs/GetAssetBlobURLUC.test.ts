@@ -260,4 +260,83 @@ describe("Get Asset Blob URL UC", () => {
 
     expect(result).toEqual("mock-blob-url");
   });
+
+  // Tests for cache bypass functionality
+  describe("useCache parameter", () => {
+    it("bypasses all cache when useCache is false", async () => {
+      const { uc, mockFetch, mockGetAssetFromCache, assetRepo, existingAsset } =
+        makeTestRig();
+
+      // Set up an existing asset with blob URL to verify it's bypassed
+      const file = new File([], "existing-file.png");
+      existingAsset.setFile(file);
+      assetRepo.add(existingAsset);
+
+      const result = await uc.getAssetBlobURL(existingAsset.id, false);
+
+      // Should not check cache at all
+      expect(mockGetAssetFromCache).not.toHaveBeenCalled();
+
+      // Should call API directly
+      expect(mockFetch.doFetch).toHaveBeenCalled();
+
+      expect(result).toEqual("mock-blob-url");
+    });
+
+    it("uses cache when useCache is true", async () => {
+      const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+
+      const assetId = "cached-asset-id";
+      const result = await uc.getAssetBlobURL(assetId, true);
+
+      expect(mockGetAssetFromCache).toHaveBeenCalledWith(assetId);
+      expect(mockFetch.doFetch).not.toBeCalled();
+      expect(result).toEqual("mock-blob-url");
+    });
+
+    it("uses cache when useCache is not provided (default behavior)", async () => {
+      const { uc, mockFetch, mockGetAssetFromCache } = makeTestRig();
+
+      const assetId = "cached-asset-id";
+      const result = await uc.getAssetBlobURL(assetId);
+
+      expect(mockGetAssetFromCache).toHaveBeenCalledWith(assetId);
+      expect(mockFetch.doFetch).not.toBeCalled();
+      expect(result).toEqual("mock-blob-url");
+    });
+
+    it("still manages fetch state when bypassing cache", async () => {
+      const { uc, mockFetchedAsset } = makeTestRig();
+
+      // Clear any existing file to ensure we go through the fetch process
+      Object.defineProperty(mockFetchedAsset, "_file", {
+        value: undefined,
+        writable: true
+      });
+
+      expect(mockFetchedAsset.isFetchingFile).toBeFalsy();
+
+      await uc.getAssetBlobURL("assetID", false);
+
+      // Should have properly managed fetch state
+      expect(mockFetchedAsset.isFetchingFile).toEqual(false);
+    });
+
+    it("handles errors properly when bypassing cache", async () => {
+      const { uc, mockFetch, mockFetchedAsset, appObjects } = makeTestRig();
+      appObjects.submitWarning = jest.fn();
+
+      mockFetch.doFetch.mockRejectedValue(new Error("API Error"));
+
+      expect.assertions(2);
+      try {
+        await uc.getAssetBlobURL("assetID", false);
+      } catch (error) {
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect(error).toEqual(new Error("API Error"));
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect(mockFetchedAsset.fetchError).toEqual(new Error("API Error"));
+      }
+    });
+  });
 });
