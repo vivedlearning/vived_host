@@ -23,6 +23,7 @@ export * from "./deleteAsset";
 export * from "./downloadAssetFile";
 export * from "./editAppAsset";
 export * from "./getAppAssets";
+export * from "./getAssetFile";
 export * from "./newAppAsset";
 export * from "./toggleShowArchivedAssets";
 export * from "./updateAppAssetMeta";
