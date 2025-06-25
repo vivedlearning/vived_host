@@ -24,9 +24,6 @@ describe("AppsFeatureFactory", () => {
     const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
     domainFactoryRepo?.setupDomain();
 
-    // Verify that the required AppObjects were created
-    expect(appObjects.has("App Repository")).toBe(true);
-
     // Verify that the singleton components are registered
     const appRepo = AppRepoEntity.get(appObjects);
     expect(appRepo).toBeDefined();

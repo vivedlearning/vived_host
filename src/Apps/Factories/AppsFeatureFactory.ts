@@ -11,9 +11,6 @@ export class AppsFeatureFactory extends DomainFactory {
   // Unique name for this factory
   readonly factoryName = "AppsFeatureFactory";
 
-  // Store references to key AppObjects needed across setup phases
-  private appRepoAO!: AppObject;
-
   constructor(appObject: AppObject) {
     super(appObject);
   }
@@ -22,10 +19,8 @@ export class AppsFeatureFactory extends DomainFactory {
    * Sets up all entities required for the Apps system
    */
   setupEntities(): void {
-    this.appRepoAO = this.appObjects.getOrCreate("App Repository");
-
     // Initialize entities
-    makeAppRepo(this.appRepoAO);
+    makeAppRepo(this.appObject);
   }
 
   /**
@@ -41,7 +36,7 @@ export class AppsFeatureFactory extends DomainFactory {
    */
   setupPMs(): void {
     // App Repository PMs
-    makeAppsListPM(this.appRepoAO);
+    makeAppsListPM(this.appObject);
   }
 
   /**
