@@ -20,9 +20,6 @@ export class CacheFeatureFactory extends DomainFactory {
   // Unique name for this factory
   readonly factoryName = "CacheFeatureFactory";
 
-  // Store references to key AppObjects needed across setup phases
-  private cacheEntityAO!: AppObject;
-
   constructor(appObject: AppObject) {
     super(appObject);
   }
@@ -31,12 +28,10 @@ export class CacheFeatureFactory extends DomainFactory {
    * Sets up all entities required for the Cache system
    */
   setupEntities(): void {
-    this.cacheEntityAO = this.appObjects.getOrCreate("Cache");
-
     // Initialize entities
-    makeCacheEntity(this.cacheEntityAO);
-    makeScriptCacheEntity(this.cacheEntityAO);
-    makeAssetCacheEntity(this.cacheEntityAO);
+    makeCacheEntity(this.appObject);
+    makeScriptCacheEntity(this.appObject);
+    makeAssetCacheEntity(this.appObject);
   }
 
   /**
@@ -44,10 +39,10 @@ export class CacheFeatureFactory extends DomainFactory {
    */
   setupUCs(): void {
     // Cache use cases
-    makeGetScriptFromCacheUC(this.cacheEntityAO);
-    makeStoreScriptInCacheUC(this.cacheEntityAO);
-    makeGetAssetFromCacheUC(this.cacheEntityAO);
-    makeStoreAssetInCacheUC(this.cacheEntityAO);
+    makeGetScriptFromCacheUC(this.appObject);
+    makeStoreScriptInCacheUC(this.appObject);
+    makeGetAssetFromCacheUC(this.appObject);
+    makeStoreAssetInCacheUC(this.appObject);
   }
 
   /**
