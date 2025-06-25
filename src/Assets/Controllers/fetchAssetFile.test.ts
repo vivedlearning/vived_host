@@ -1,6 +1,6 @@
 import { makeAppObjectRepo } from "@vived/core";
 import { makeMockGetAssetFileUC } from "../Mocks/MockGetAssetFileUC";
-import { getAssetFile } from "./getAssetFile";
+import { fetchAssetFile } from "./fetchAssetFile";
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
@@ -13,11 +13,11 @@ function makeTestRig() {
   };
 }
 
-describe("Get Asset File Controller", () => {
+describe("Fetch Asset File Controller", () => {
   it("Calls the UC as expected", () => {
     const { appObjects, mockGetAssetFileUC } = makeTestRig();
 
-    getAssetFile("anAsset", appObjects);
+    fetchAssetFile("anAsset", appObjects);
 
     expect(mockGetAssetFileUC.getAssetFile).toBeCalledWith("anAsset");
   });
@@ -26,11 +26,11 @@ describe("Get Asset File Controller", () => {
     const appObjects = makeAppObjectRepo();
     const submitWarningSpy = jest.spyOn(appObjects, "submitWarning");
 
-    const result = getAssetFile("anAsset", appObjects);
+    const result = fetchAssetFile("anAsset", appObjects);
 
     expect(result).toBeUndefined();
     expect(submitWarningSpy).toHaveBeenCalledWith(
-      "getAssetFile",
+      "fetchAssetFile",
       "Unable to find GetAssetFileUC"
     );
   });
@@ -40,7 +40,7 @@ describe("Get Asset File Controller", () => {
     const mockPromise = Promise.resolve(new File([], "test.txt"));
     mockGetAssetFileUC.getAssetFile.mockReturnValue(mockPromise);
 
-    const result = getAssetFile("anAsset", appObjects);
+    const result = fetchAssetFile("anAsset", appObjects);
 
     expect(result).toBe(mockPromise);
   });

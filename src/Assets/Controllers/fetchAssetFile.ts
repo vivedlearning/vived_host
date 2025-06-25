@@ -1,5 +1,5 @@
 /**
- * getAssetFile.ts
+ * fetchAssetFile.ts
  *
  * This controller function retrieves an asset file as a File object,
  * handling caching and error management for file access operations.
@@ -31,13 +31,13 @@ import { GetAssetFileUC } from "../UCs/GetAssetFileUC";
  * @returns Promise<File> - A promise that resolves to the File object for the asset,
  *                         or undefined if the operation cannot be completed
  */
-export function getAssetFile(
+export function fetchAssetFile(
   assetID: string,
   appObjects: AppObjectRepo
 ): Promise<File> | undefined {
   const uc = GetAssetFileUC.get(appObjects);
   if (!uc) {
-    appObjects.submitWarning("getAssetFile", "Unable to find GetAssetFileUC");
+    appObjects.submitWarning("fetchAssetFile", "Unable to find GetAssetFileUC");
     return;
   }
 
