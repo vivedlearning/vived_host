@@ -1,30 +1,22 @@
 import { AppObject, AppObjectRepo, DomainFactory } from "@vived/core";
 import {
   AssetEntity,
-  makeAppAssets,
   makeAssetEntity,
   makeAssetRepo
 } from "../Entities";
 import {
-  makeAppAssetListPM,
   makeAssetFilePM,
-  makeAssetPM,
-  makeEditingAppAssetPM,
-  makeShowArchivedAppAssetPM
+  makeAssetPM
 } from "../PMs";
 import {
   makeArchiveAssetUC,
   makeDeleteAssetUC,
   makeDownloadAssetFileUC,
-  makeEditAppAsset,
-  makeGetAppAssetUC,
   makeGetAssetBlobURLUC,
   makeGetAssetFileUC,
   makeGetAssetUC,
-  makeNewAppAssetUC,
   makeNewAssetUC,
   makePrefetchAssets,
-  makeUpdateAppAssetMetaUC,
   makeUpdateAssetFileUC
 } from "../UCs";
 
@@ -37,11 +29,6 @@ export class AssetsFactory extends DomainFactory {
   // Unique name for this factory
   readonly factoryName = "AssetsFactory";
 
-  // Store references to key AppObjects needed across setup phases
-  private assetRepoAO!: AppObject;
-  private appAssetsAO!: AppObject;
-  private assetRepo: any; // This will hold the asset repository
-
   constructor(appObject: AppObject) {
     super(appObject);
   }
@@ -50,13 +37,9 @@ export class AssetsFactory extends DomainFactory {
    * Sets up all entities required for the Assets system
    */
   setupEntities(): void {
-    this.assetRepoAO = this.appObjects.getOrCreate("Asset Repository");
-    this.appAssetsAO = this.appObjects.getOrCreate("App Assets");
-
     // Initialize entities
-    this.assetRepo = makeAssetRepo(this.assetRepoAO);
-    this.assetRepo.assetFactory = this.makeAssetFactory();
-    makeAppAssets(this.appAssetsAO);
+    const assetRepo = makeAssetRepo(this.appObject);
+    assetRepo.assetFactory = this.makeAssetFactory();
   }
 
   /**
@@ -74,7 +57,6 @@ export class AssetsFactory extends DomainFactory {
       makeDeleteAssetUC(ao);
       makeDownloadAssetFileUC(ao);
       makeUpdateAssetFileUC(ao);
-      makeUpdateAppAssetMetaUC(ao);
 
       // PMs for each asset
       makeAssetPM(ao);
@@ -89,26 +71,18 @@ export class AssetsFactory extends DomainFactory {
    */
   setupUCs(): void {
     // Repository UCs
-    makeEditAppAsset(this.assetRepoAO);
-    makeGetAssetBlobURLUC(this.assetRepoAO);
-    makeGetAssetFileUC(this.assetRepoAO);
-    makeGetAssetUC(this.assetRepoAO);
-    makePrefetchAssets(this.assetRepoAO);
-    makeNewAssetUC(this.assetRepoAO);
-
-    // App Assets UCs
-    makeNewAppAssetUC(this.appAssetsAO);
-    makeGetAppAssetUC(this.appAssetsAO);
+    makeGetAssetBlobURLUC(this.appObject);
+    makeGetAssetFileUC(this.appObject);
+    makeGetAssetUC(this.appObject);
+    makePrefetchAssets(this.appObject);
+    makeNewAssetUC(this.appObject);
   }
 
   /**
    * Sets up all presentation managers for the Assets system
    */
   setupPMs(): void {
-    // App Assets PMs
-    makeAppAssetListPM(this.appAssetsAO);
-    makeShowArchivedAppAssetPM(this.appAssetsAO);
-    makeEditingAppAssetPM(this.appAssetsAO);
+    // No PMs needed for core asset functionality
   }
 
   /**

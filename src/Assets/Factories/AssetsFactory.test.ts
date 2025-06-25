@@ -1,7 +1,6 @@
 import { makeAppObjectRepo, DomainFactoryRepo } from "@vived/core";
 import { AssetsFactory } from "./AssetsFactory";
 import { AssetRepo } from "../Entities/AssetRepo";
-import { AppAssetsEntity } from "../Entities/AppAssetsEntity";
 
 function makeTestRig() {
   const appObjects = makeAppObjectRepo();
@@ -25,16 +24,9 @@ describe("AssetsFactory", () => {
     const domainFactoryRepo = DomainFactoryRepo.get(appObjects);
     domainFactoryRepo?.setupDomain();
 
-    // Verify that the required AppObjects were created
-    expect(appObjects.has("Asset Repository")).toBe(true);
-    expect(appObjects.has("App Assets")).toBe(true);
-
     // Verify that the singleton components are registered
     const assetRepo = AssetRepo.get(appObjects);
     expect(assetRepo).toBeDefined();
-
-    const appAssets = AppAssetsEntity.get(appObjects);
-    expect(appAssets).toBeDefined();
   });
 
   it("should set up the asset factory correctly", () => {
