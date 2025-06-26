@@ -42,4 +42,26 @@ describe("AssetFile Adapter", () => {
 
     expect(mockPM.removeView).toBeCalledWith(setVM);
   });
+
+  it("Returns early on subscribe if id is empty", () => {
+    const { mockPM, appObjects } = makeTestRig();
+
+    mockPM.addView = jest.fn();
+    const setVM = jest.fn();
+
+    assetFileAdapter.subscribe("", appObjects, setVM);
+
+    expect(mockPM.addView).not.toBeCalled();
+  });
+
+  it("Returns early on unsubscribe if id is empty", () => {
+    const { mockPM, appObjects } = makeTestRig();
+
+    mockPM.removeView = jest.fn();
+    const setVM = jest.fn();
+
+    assetFileAdapter.unsubscribe("", appObjects, setVM);
+
+    expect(mockPM.removeView).not.toBeCalled();
+  });
 });

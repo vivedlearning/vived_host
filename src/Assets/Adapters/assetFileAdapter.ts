@@ -28,6 +28,9 @@ export const assetFileAdapter: PmAdapter<AssetFileVM> = {
     appObjects: AppObjectRepo,
     setVM: (vm: AssetFileVM) => void
   ) => {
+    if (!id) {
+      return;
+    }
     const pm = AssetFilePM.getByID(id, appObjects);
     if (!pm) {
       appObjects.submitError("assetFileAdapter", "Unable to find AssetFilePM");
@@ -48,6 +51,9 @@ export const assetFileAdapter: PmAdapter<AssetFileVM> = {
     appObjects: AppObjectRepo,
     setVM: (vm: AssetFileVM) => void
   ) => {
+    if (!id) {
+      return;
+    }
     const pm = AssetFilePM.getByID(id, appObjects);
     if (!pm) {
       appObjects.submitError("assetFileAdapter", "Unable to find AssetFilePM");
