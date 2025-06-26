@@ -1,9 +1,5 @@
 import { AppObject, DomainFactory } from "@vived/core";
-import {
-  makeCacheEntity,
-  makeAssetCacheEntity,
-  makeScriptCacheEntity
-} from "../Entities";
+import { makeAssetCacheEntity, makeScriptCacheEntity } from "../Entities";
 import {
   makeGetAssetFromCacheUC,
   makeGetScriptFromCacheUC,
@@ -29,7 +25,6 @@ export class CacheFeatureFactory extends DomainFactory {
    */
   setupEntities(): void {
     // Initialize entities
-    makeCacheEntity(this.appObject);
     makeScriptCacheEntity(this.appObject);
     makeAssetCacheEntity(this.appObject);
   }

@@ -1,6 +1,5 @@
 import { makeAppObjectRepo, DomainFactoryRepo } from "@vived/core";
 import { CacheFeatureFactory } from "./CacheFeatureFactory";
-import { CacheEntity } from "../Entities/CacheEntity";
 import { ScriptCacheEntity } from "../Entities/ScriptCacheEntity";
 import { AssetCacheEntity } from "../Entities/AssetCacheEntity";
 import { GetScriptFromCacheUC } from "../UCs/GetScriptFromCacheUC";
@@ -34,9 +33,6 @@ describe("CacheFeatureFactory", () => {
     expect(appObjects.has("Cache")).toBe(true);
 
     // Verify that the singleton components are registered
-    const cacheEntity = CacheEntity.get(appObjects);
-    expect(cacheEntity).toBeDefined();
-
     const scriptCacheEntity = ScriptCacheEntity.get(appObjects);
     expect(scriptCacheEntity).toBeDefined();
 
